@@ -7,91 +7,305 @@
   <meta name="theme-color" content="#123b2c">
   <title>Menu Ontal Kopi - KopiHub</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    .menu-header {
-      padding: 32px 6%;
-      background: #123b2c;
-      color: white;
+  
+<style>
+  :root {
+    --green: #123b2c;
+    --green-light: #1e5a41;
+    --cream: #f7f5ed;
+    --orange: #e99a48;
+    --text: #26372d;
+    --muted: #788279;
+    --border: #e8e8dd;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+  }
+
+  .navbar {
+    padding: 16px 5%;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo {
+    color: var(--green);
+    font-size: 23px;
+    font-weight: 850;
+    text-decoration: none;
+  }
+
+  .logo span {
+    color: var(--orange);
+  }
+
+  .owner-link {
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: none;
+  }
+
+  .menu-header {
+    padding: 38px 6% 44px;
+    color: white;
+    background:
+      radial-gradient(circle at 90% 15%, #387354 0, transparent 35%),
+      linear-gradient(135deg, #123b2c, #1c5139);
+    border-radius: 0 0 28px 28px;
+  }
+
+  .menu-header .eyebrow {
+    color: #f4bd7d;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  .menu-header h1 {
+    margin: 12px 0;
+    font-size: clamp(30px, 6vw, 42px);
+    letter-spacing: -1px;
+  }
+
+  .menu-header p:last-child {
+    color: #e0e9e1;
+    line-height: 1.6;
+  }
+
+  .menu-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 24px;
+    padding: 28px 5%;
+    align-items: start;
+    max-width: 1400px;
+    margin: auto;
+  }
+
+  .menu-category {
+    margin-bottom: 32px;
+  }
+
+  .menu-category h2 {
+    color: var(--green);
+    font-size: 21px;
+    margin: 0 0 15px;
+  }
+
+  .menu-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .menu-item,
+  .cart-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 5px 18px rgba(18, 59, 44, 0.045);
+  }
+
+  .menu-item {
+    padding: 18px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .menu-item h3 {
+    color: var(--text);
+    margin: 0 0 8px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .menu-item p {
+    margin: 0 0 17px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .menu-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .price {
+    color: var(--green);
+    font-weight: 850;
+    font-size: 14px;
+  }
+
+  .add-button,
+  .checkout-button {
+    border: 0;
+    border-radius: 10px;
+    background: var(--green);
+    color: white;
+    padding: 11px 13px;
+    font-size: 12px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .add-button:hover,
+  .checkout-button:hover {
+    background: var(--green-light);
+  }
+
+  .add-button:active,
+  .checkout-button:active {
+    transform: scale(0.97);
+  }
+
+  .cart-box {
+    padding: 22px;
+    position: sticky;
+    top: 14px;
+  }
+
+  .cart-box h2 {
+    margin: 0 0 18px;
+    color: var(--green);
+    font-size: 21px;
+  }
+
+  .cart-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #efefe8;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .cart-row span:last-child {
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 20px 0;
+    padding-top: 15px;
+    border-top: 1px dashed #d8ddd3;
+    color: var(--green);
+    font-weight: 850;
+    font-size: 16px;
+  }
+
+  .checkout-button {
+    width: 100%;
+    padding: 14px;
+    background: var(--orange);
+    color: #26372d;
+    font-size: 14px;
+  }
+
+  .checkout-button:hover {
+    background: #f1ad63;
+  }
+
+  .cart-empty {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .cart-note {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 760px) {
+    .navbar {
+      padding: 15px 5%;
     }
 
-    .menu-header a { color: #f0b477; }
-    .menu-header h1 { margin: 8px 0; font-size: 34px; }
-    .menu-header p { color: #d8e7dd; }
+    .logo {
+      font-size: 21px;
+    }
+
+    .owner-link {
+      font-size: 12px;
+    }
+
+    .menu-header {
+      padding: 30px 6% 34px;
+    }
 
     .menu-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
-      gap: 25px;
-      padding: 30px 6%;
-      align-items: start;
+      grid-template-columns: 1fr;
+      padding: 24px 5%;
+      gap: 22px;
     }
-
-    .menu-category { margin-bottom: 30px; }
-    .menu-category h2 { color: #123b2c; font-size: 22px; }
 
     .menu-list {
-      display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 10px;
     }
 
-    .menu-item, .cart-box {
-      padding: 17px;
-      background: white;
-      border: 1px solid #e8ece7;
-      border-radius: 15px;
+    .menu-item {
+      padding: 13px;
+      border-radius: 14px;
     }
 
-    .menu-item h3 { margin: 0 0 5px; font-size: 16px; }
-    .menu-item p { margin: 0 0 14px; color: #778078; font-size: 13px; }
+    .menu-item h3 {
+      font-size: 14px;
+    }
+
+    .price {
+      font-size: 12px;
+    }
+
+    .add-button {
+      padding: 9px 10px;
+      font-size: 11px;
+    }
 
     .menu-action {
-      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .cart-box {
+      position: static;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .menu-list {
+      grid-template-columns: 1fr;
+    }
+
+    .menu-action {
+      flex-direction: row;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px;
     }
+  }
+</style>
 
-    .price { font-weight: 800; color: #123b2c; }
-
-    .add-button, .checkout-button {
-      border: 0;
-      border-radius: 8px;
-      background: #123b2c;
-      color: white;
-      padding: 10px 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .cart-box { position: sticky; top: 12px; }
-    .cart-box h2 { margin-top: 0; color: #123b2c; }
-    .cart-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 13px;
-    }
-
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-      margin: 18px 0;
-      font-weight: 800;
-    }
-
-    .checkout-button { width: 100%; }
-    .cart-empty { color: #778078; font-size: 13px; }
-    .cart-note { color: #778078; font-size: 11px; }
-
-    @media (max-width: 760px) {
-      .menu-layout { grid-template-columns: 1fr; padding: 22px 5%; }
-      .menu-list { grid-template-columns: 1fr; }
-      .cart-box { position: static; }
-    }
-  </style>
 </head>
 <body>
   <header class="navbar">

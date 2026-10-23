@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123b2c">
+  <title>Menu Ontal Kopi - KopiHub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .menu-header {
+      padding: 32px 6%;
+      background: #123b2c;
+      color: white;
+    }
+
+    .menu-header a { color: #f0b477; }
+    .menu-header h1 { margin: 8px 0; font-size: 34px; }
+    .menu-header p { color: #d8e7dd; }
+
+    .menu-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 25px;
+      padding: 30px 6%;
+      align-items: start;
+    }
+
+    .menu-category { margin-bottom: 30px; }
+    .menu-category h2 { color: #123b2c; font-size: 22px; }
+
+    .menu-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .menu-item, .cart-box {
+      padding: 17px;
+      background: white;
+      border: 1px solid #e8ece7;
+      border-radius: 15px;
+    }
+
+    .menu-item h3 { margin: 0 0 5px; font-size: 16px; }
+    .menu-item p { margin: 0 0 14px; color: #778078; font-size: 13px; }
+
+    .menu-action {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .price { font-weight: 800; color: #123b2c; }
+
+    .add-button, .checkout-button {
+      border: 0;
+      border-radius: 8px;
+      background: #123b2c;
+      color: white;
+      padding: 10px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cart-box { position: sticky; top: 12px; }
+    .cart-box h2 { margin-top: 0; color: #123b2c; }
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 13px;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      margin: 18px 0;
+      font-weight: 800;
+    }
+
+    .checkout-button { width: 100%; }
+    .cart-empty { color: #778078; font-size: 13px; }
+    .cart-note { color: #778078; font-size: 11px; }
+
+    @media (max-width: 760px) {
+      .menu-layout { grid-template-columns: 1fr; padding: 22px 5%; }
+      .menu-list { grid-template-columns: 1fr; }
+      .cart-box { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo" href="index.html">Kopi<span>Hub</span></a>
+    <a class="owner-link" href="index.html">← Kembali ke beranda</a>
+  </header>
+
+  <section class="menu-header">
+    <p class="eyebrow">RACIKAN RASA, CERITA KITA.</p>
+    <h1>Ontal Kopi ☕</h1>
+    <p>Pilih minuman favoritmu dan masukkan ke keranjang.</p>
+  </section>
+
+  <main class="menu-layout">
+    <div id="menu-container">
+      <p>Memuat menu...</p>
+    </div>
+
+    <aside class="cart-box">
+      <h2>Keranjang 🛒</h2>
+      <div id="cart-items">
+        <p class="cart-empty">Keranjang kamu masih kosong.</p>
+      </div>
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cart-total">Rp0</span>
+      </div>
+      <button class="checkout-button" id="checkout">
+        Lanjutkan Pesanan
+      </button>
+      <p class="cart-note">
+        Ini masih demo. Pesanan belum dikirim ke kedai atau disimpan ke database.
+      </p>
+    </aside>
+  </main>
+
+  <script>
+    const products = [
+      { name: "Ontal Kopi", category: "Coffee Signature", price: 25000 },
+      { name: "Bula City Oil", category: "Coffee Signature", price: 25000 },
+      { name: "Kurma Coffee Latte", category: "Coffee Signature", price: 25000 },
+      { name: "Ice Coffee Lemonade", category: "Coffee Signature", price: 20000 },
+      { name: "Ice Peach Coffee", category: "Coffee Signature", price: 20000 },
+      { name: "Eskocie", category: "Coffee Signature", price: 20000 },
+      { name: "Strawberry Americano", category: "Coffee Signature", price: 20000 },
+
+      { name: "Matcha Latte", category: "Non Coffee Favorite", price: 25000 },
+      { name: "Red Velvet Latte", category: "Non Coffee Favorite", price: 20000 },
+      { name: "Air Panas Niff", category: "Non Coffee Favorite", price: 20000 },
+      { name: "Matcha Strawberry", category: "Non Coffee Favorite", price: 25000 },
+      { name: "Taro Latte", category: "Non Coffee Favorite", price: 18000 },
+      { name: "Chocolate Latte", category: "Non Coffee Favorite", price: 18000 },
+
+      { name: "Coffee Pandan", category: "Coffee Latte Series", price: 25000 },
+      { name: "Vanilla Coffee Latte", category: "Coffee Latte Series", price: 20000 },
+      { name: "Hazelnut Coffee Latte", category: "Coffee Latte Series", price: 20000 },
+      { name: "Caramel Coffee Latte", category: "Coffee Latte Series", price: 23000 },
+      { name: "Butterscotch Coffee", category: "Coffee Latte Series", price: 23000 },
+      { name: "Red Velvet Coffee Latte", category: "Coffee Latte Series", price: 23000 },
+      { name: "Matelas Coffee", category: "Coffee Latte Series", price: 20000 },
+      { name: "Matcha Coffee Latte", category: "Coffee Latte Series", price: 25000 },
+
+      { name: "Tubruk", category: "Classic Coffee", price: 20000 },
+      { name: "Espresso", category: "Classic Coffee", price: 20000 },
+      { name: "Capoccino", category: "Classic Coffee", price: 20000 },
+      { name: "Americano", category: "Classic Coffee", price: 20000 },
+      { name: "V60 Manual Brew", category: "Classic Coffee", price: 35000 },
+      { name: "Japanese Coffee", category: "Classic Coffee", price: 35000 }
+    ];
+
+    const cart = {};
+    const rupiah = value =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(value);
+
+    function renderMenu() {
+      const container = document.getElementById("menu-container");
+      const categories = [...new Set(products.map(p => p.category))];
+
+      container.innerHTML = categories.map(category => {
+        const items = products.filter(p => p.category === category);
+
+        return `
+          <section class="menu-category">
+            <h2>${category}</h2>
+            <div class="menu-list">
+              ${items.map(p => {
+                const index = products.indexOf(p);
+                return `
+                  <article class="menu-item">
+                    <h3>${p.name}</h3>
+                    <p>Minuman pilihan Ontal Kopi</p>
+                    <div class="menu-action">
+                      <span class="price">${rupiah(p.price)}</span>
+                      <button class="add-button" data-add="${index}">
+                        + Tambah
+                      </button>
+                    </div>
+                  </article>
+                `;
+              }).join("")}
+            </div>
+          </section>
+        `;
+      }).join("");
+    }
+
+    function renderCart() {
+      const container = document.getElementById("cart-items");
+      const entries = Object.entries(cart).filter(([, qty]) => qty > 0);
+      let total = 0;
+
+      if (entries.length === 0) {
+        container.innerHTML =
+          '<p class="cart-empty">Keranjang kamu masih kosong.</p>';
+      } else {
+        container.innerHTML = entries.map(([index, qty]) => {
+          const p = products[Number(index)];
+          total += p.price * qty;
+
+          return `
+            <div class="cart-row">
+              <span>${p.name} × ${qty}</span>
+              <span>${rupiah(p.price * qty)}</span>
+            </div>
+          `;
+        }).join("");
+      }
+
+      document.getElementById("cart-total").textContent = rupiah(total);
+    }
+
+    document.getElementById("menu-container").addEventListener("click", event => {
+      const button = event.target.closest("[data-add]");
+      if (!button) return;
+
+      const index = button.dataset.add;
+      cart[index] = (cart[index] || 0) + 1;
+      renderCart();
+    });
+
+    document.getElementById("checkout").addEventListener("click", () => {
+      const entries = Object.entries(cart).filter(([, qty]) => qty > 0);
+
+      if (entries.length === 0) {
+        alert("Silakan pilih menu terlebih dahulu.");
+        return;
+      }
+
+      alert(
+        "Demo keranjang berhasil! Langkah berikutnya kita akan membuat halaman checkout dan menyimpan pesanan dengan Supabase."
+      );
+    });
+
+    renderMenu();
+    renderCart();
+  </script>
+</body>
+</html>

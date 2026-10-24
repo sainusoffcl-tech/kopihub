@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#064e3b">
+  <title>Daftar Kedai - KopiHub</title>
+
+  <style>
+    :root {
+      --green: #064e3b;
+      --green2: #087f5b;
+      --mint: #d9f7eb;
+      --cream: #f7f8f3;
+      --text: #173d32;
+      --muted: #64776f;
+      --line: #dce8e1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid var(--line);
+    }
+
+    nav {
+      max-width: 1100px;
+      margin: auto;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 850;
+      color: var(--green);
+    }
+
+    .back {
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    main {
+      max-width: 1050px;
+      margin: 40px auto;
+      padding: 0 5%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 45px;
+      align-items: center;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--mint);
+      color: var(--green2);
+      padding: 7px 12px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: clamp(34px, 4vw, 48px);
+      line-height: 1.12;
+      margin: 20px 0;
+    }
+
+    .intro p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .benefits {
+      list-style: none;
+      padding: 0;
+      margin-top: 28px;
+    }
+
+    .benefits li {
+      margin: 16px 0;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .check {
+      background: var(--mint);
+      color: var(--green);
+      padding: 4px 9px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: 0 15px 45px #073d2b0d;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      padding: 5px;
+      background: #edf4ef;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .tab {
+      border: 0;
+      padding: 12px;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: white;
+      color: var(--green);
+    }
+
+    h2 { margin: 0 0 6px; }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .field { margin: 15px 0; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 750;
+      margin-bottom: 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccdcd2;
+      border-radius: 11px;
+      background: white;
+      color: var(--text);
+      font: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid #10b98155;
+      border-color: var(--green2);
+    }
+
+    .submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--green);
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .submit:hover { background: var(--green2); }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: 16px;
+    }
+
+    .notice {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #fff4df;
+      color: #7c4a00;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .hidden { display: none; }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        grid-template-columns: 1fr;
+        margin: 22px auto;
+        gap: 20px;
+      }
+
+      h1 { font-size: 38px; }
+      .card { padding: 21px; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <nav>
+    <a href="index.html" class="logo">☕ KopiHub</a>
+    <a href="index.html" class="back">← Beranda</a>
+  </nav>
+</header>
+
+<main>
+  <section class="intro">
+    <span class="tag">UNTUK KEDAI KOPI & RESTORAN</span>
+
+    <h1>
+      Mulai kelola kedaimu bersama
+      <span style="color:#10a878">KopiHub.</span>
+    </h1>
+
+    <p>
+      Kelola menu, pesanan, kasir, dan laporan usaha
+      dalam satu platform yang mudah digunakan.
+    </p>
+
+    <ul class="benefits">
+      <li><span class="check">✓</span> Menu dan pemesanan QR</li>
+      <li><span class="check">✓</span> Dashboard kasir</li>
+      <li><span class="check">✓</span> Laporan usaha</li>
+      <li><span class="check">✓</span> Pengelolaan banyak kedai</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <div class="tabs">
+      <button class="tab active" id="registerTab" type="button">
+        Daftar Kedai
+      </button>
+      <button class="tab" id="loginTab" type="button">
+        Masuk
+      </button>
+    </div>
+
+    <form id="registerForm">
+      <h2>Buat akun kedai</h2>
+      <p class="sub">Isi data awal kedai kamu.</p>
+
+      <div class="field">
+        <label for="shopName">Nama kedai / restoran</label>
+        <input id="shopName" name="shopName"
+          placeholder="Contoh: Ontal Kopi"
+          maxlength="100" required>
+      </div>
+
+      <div class="field">
+        <label for="ownerName">Nama pemilik</label>
+        <input id="ownerName" name="ownerName"
+          placeholder="Nama lengkap"
+          maxlength="100" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">Nomor WhatsApp</label>
+        <input id="phone" name="phone" type="tel"
+          placeholder="08xxxxxxxxxx"
+          maxlength="20" required>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email"
+          placeholder="nama@email.com"
+          autocomplete="email" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Buat kata sandi</label>
+        <input id="password" name="password" type="password"
+          placeholder="Minimal 8 karakter"
+          minlength="8" autocomplete="new-password" required>
+      </div>
+
+      <div class="field">
+        <label for="shopType">Jenis usaha</label>
+        <select id="shopType" name="shopType" required>
+          <option value="">Pilih jenis usaha</option>
+          <option>Kedai kopi</option>
+          <option>Restoran</option>
+          <option>Warung makan</option>
+          <option>Bakery</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+
+      <button class="submit" type="submit">
+        Lanjutkan Pendaftaran →
+      </button>
+
+      <p class="small">
+        Demo: data belum disimpan. Supabase Auth dan database
+        perlu dipasang sebelum pendaftaran sungguhan diaktifkan.
+      </p>
+    </form>
+
+    <form id="loginForm" class="hidden">
+      <h2>Selamat datang kembali</h2>
+      <p class="sub">Masuk ke akun KopiHub kamu.</p>
+
+      <div class="field">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email"
+          placeholder="nama@email.com"
+          autocomplete="email" required>
+      </div>
+
+      <div class="field">
+        <label for="loginPassword">Kata sandi</label>
+        <input id="loginPassword" type="password"
+          placeholder="Masukkan kata sandi"
+          autocomplete="current-password" required>
+      </div>
+
+      <button class="submit" type="submit">
+        Masuk ke KopiHub →
+      </button>
+
+      <p class="small">
+        Login belum terhubung ke sistem autentikasi.
+        Jangan masukkan kata sandi asli pada demo ini.
+      </p>
+    </form>
+
+    <div class="notice" id="notice" role="status"></div>
+  </section>
+</main>
+
+<footer>
+  © 2026 KopiHub · Sedang dikembangkan untuk kedai Indonesia.
+</footer>
+
+<script>
+  const registerTab = document.getElementById("registerTab");
+  const loginTab = document.getElementById("loginTab");
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
+  const notice = document.getElementById("notice");
+
+  function showForm(mode) {
+    const isRegister = mode === "register";
+
+    registerForm.classList.toggle("hidden", !isRegister);
+    loginForm.classList.toggle("hidden", isRegister);
+    registerTab.classList.toggle("active", isRegister);
+    loginTab.classList.toggle("active", !isRegister);
+    notice.style.display = "none";
+  }
+
+  registerTab.addEventListener("click", () => showForm("register"));
+  loginTab.addEventListener("click", () => showForm("login"));
+
+  registerForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    notice.textContent =
+      "Form berhasil diperiksa, tetapi data belum disimpan. " +
+      "Selanjutnya kita perlu menghubungkan Supabase dengan aman.";
+    notice.style.display = "block";
+  });
+
+  loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    notice.textContent =
+      "Login belum aktif. Kita perlu memasang Supabase Auth terlebih dahulu.";
+    notice.style.display = "block";
+  });
+</script>
+</body>
+</html>

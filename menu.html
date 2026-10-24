@@ -479,5 +479,27 @@ document.getElementById("checkout").addEventListener("click", () => {
     renderMenu();
     renderCart();
   </script>
+
+<script>
+(() => {
+  const params = new URLSearchParams(window.location.search);
+  const shop = params.get("shop");
+  const table = params.get("table");
+
+  // Simpan identitas jika halaman dibuka melalui QR meja.
+  if (shop && table) {
+    sessionStorage.setItem("kopihubShop", shop);
+    sessionStorage.setItem("kopihubTable", table);
+  }
+
+  // Siapkan informasi meja untuk tahap checkout.
+  const savedShop = sessionStorage.getItem("kopihubShop");
+  const savedTable = sessionStorage.getItem("kopihubTable");
+
+  console.log("Coffee shop:", savedShop || "Belum dipilih");
+  console.log("Nomor meja:", savedTable || "Belum dipilih");
+})();
+</script>
+
 </body>
 </html>

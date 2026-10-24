@@ -450,7 +450,33 @@
       renderCart();
     });
 
-    document.getElementById("checkout").addEventListener("click", () => {
+    
+document.getElementById("checkout").addEventListener("click", () => {
+  const entries = Object.entries(cart).filter(([, qty]) => qty > 0);
+
+  if (entries.length === 0) {
+    alert("Silakan pilih menu terlebih dahulu.");
+    return;
+  }
+
+  const order = entries.map(([index, qty]) => ({
+    name: products[Number(index)].name,
+    price: products[Number(index)].price,
+    qty: qty
+  }));
+
+  try {
+    sessionStorage.setItem(
+      "kopihubCheckout",
+      JSON.stringify(order)
+    );
+
+    window.location.href = "checkout.html";
+  } catch (error) {
+    alert("Keranjang gagal disimpan. Silakan coba lagi.");
+  }
+});
+
       const entries = Object.entries(cart).filter(([, qty]) => qty > 0);
 
       if (entries.length === 0) {

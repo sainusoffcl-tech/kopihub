@@ -43,3 +43,24 @@ const kopihubSupabaseClient = window.supabase.createClient(
 );
 
 console.log("KopiHub: klien Supabase berhasil dibuat.");
+
+/* ===== TES BACA DATABASE KOPIHUB ===== */
+async function tesKoneksiKopiHub() {
+  try {
+    const { data, error } = await kopihubSupabaseClient
+      .from("kh_shops")
+      .select("id")
+      .limit(1);
+
+    if (error) {
+      console.error("Tes Supabase gagal:", error.message);
+      return;
+    }
+
+    console.log("Tes Supabase berhasil. Database dapat dibaca.", data);
+  } catch (err) {
+    console.error("Kesalahan koneksi:", err.message);
+  }
+}
+
+tesKoneksiKopiHub();

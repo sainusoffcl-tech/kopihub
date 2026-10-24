@@ -2,461 +2,689 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#103f32">
-<title>Ontal Kopi — KopiHub</title>
-<style>
-:root {
-  --green:#103f32;
-  --green2:#1c5946;
-  --mint:#e9f3ec;
-  --cream:#faf9f4;
-  --orange:#e9a15b;
-  --text:#18372f;
-  --muted:#778780;
-  --white:#fff;
-}
-* {box-sizing:border-box}
-body {
-  margin:0;
-  background:var(--cream);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-button {font:inherit;cursor:pointer}
-header {
-  background:var(--green);
-  color:white;
-  padding:22px 18px 27px;
-  border-radius:0 0 27px 27px;
-}
-.topbar {
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-}
-.brand {font-size:14px;letter-spacing:2px;font-weight:800;color:#c5dfcf}
-.cart-pill {
-  border:1px solid #ffffff45;
-  background:#ffffff12;
-  color:white;
-  padding:10px 14px;
-  border-radius:30px;
-  font-weight:700;
-}
-.hero {
-  max-width:1100px;
-  margin:28px auto 0;
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  gap:20px;
-  align-items:center;
-}
-.eyebrow {
-  color:#e8b981;
-  font-size:12px;
-  letter-spacing:2px;
-  font-weight:800;
-}
-h1 {
-  font-family:Georgia,serif;
-  font-size:clamp(34px,7vw,55px);
-  line-height:1.05;
-  margin:10px 0;
-}
-.hero p {color:#d6e6dd;line-height:1.7;margin:0}
-.hero-img {
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  border-radius:22px;
-  border:1px solid #ffffff30;
-}
-main {max-width:1100px;margin:auto;padding:24px 16px 145px}
-.section-heading {
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  gap:10px;
-  margin:8px 0 17px;
-}
-h2 {font-size:23px;margin:0}
-.section-heading p {font-size:13px;color:var(--muted);margin:6px 0 0}
-.search {
-  width:100%;
-  border:1px solid #dce5dd;
-  border-radius:15px;
-  padding:14px 15px;
-  background:white;
-  outline:none;
-  margin-bottom:15px;
-  font-size:15px;
-}
-.search:focus {border-color:var(--green2)}
-.categories {
-  display:flex;
-  gap:9px;
-  overflow-x:auto;
-  padding:2px 0 15px;
-  scrollbar-width:none;
-}
-.categories button {
-  flex-shrink:0;
-  border:1px solid #dce5dd;
-  background:white;
-  color:var(--green);
-  border-radius:30px;
-  padding:10px 15px;
-  font-size:13px;
-  font-weight:700;
-}
-.categories button.active {
-  background:var(--green);
-  color:white;
-  border-color:var(--green);
-}
-.grid {
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
-}
-.card {
-  background:white;
-  border:1px solid #e7ebe5;
-  border-radius:19px;
-  overflow:hidden;
-  box-shadow:0 5px 18px #173f3010;
-  min-width:0;
-}
-.product-image {
-  width:100%;
-  height:155px;
-  display:block;
-  object-fit:cover;
-  background:var(--mint);
-}
-.card-body {padding:13px}
-.category-label {
-  color:#648073;
-  font-size:10px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.7px;
-}
-.product-name {
-  font-size:15px;
-  line-height:1.35;
-  font-weight:800;
-  margin:7px 0 12px;
-  min-height:40px;
-}
-.card-bottom {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:6px;
-}
-.price {font-size:14px;font-weight:800;color:var(--green)}
-.add {
-  border:0;
-  width:35px;
-  height:35px;
-  flex-shrink:0;
-  border-radius:12px;
-  background:var(--green);
-  color:white;
-  font-size:23px;
-  line-height:1;
-}
-.add:active {transform:scale(.94)}
-.empty {
-  grid-column:1/-1;
-  text-align:center;
-  color:var(--muted);
-  padding:35px 10px;
-}
-.cart-panel {
-  position:fixed;
-  z-index:5;
-  bottom:0;
-  left:0;
-  right:0;
-  padding:13px 16px calc(13px + env(safe-area-inset-bottom));
-  background:#fff;
-  border-top:1px solid #e3e9e2;
-  box-shadow:0 -8px 30px #163d2d12;
-}
-.cart-inner {
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.cart-info strong {display:block;font-size:15px}
-.cart-info small {color:var(--muted);font-size:12px}
-.checkout-btn {
-  border:0;
-  background:var(--green);
-  color:white;
-  border-radius:14px;
-  padding:14px 19px;
-  font-weight:800;
-  white-space:nowrap;
-}
-.checkout-btn:disabled {opacity:.45;cursor:not-allowed}
-footer {
-  padding:24px 12px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-}
-@media(min-width:750px) {
-  header {padding-left:28px;padding-right:28px}
-  main {padding-left:28px;padding-right:28px}
-  .hero-img {height:210px}
-}
-@media(max-width:650px) {
-  .hero {grid-template-columns:1fr;gap:16px;margin-top:25px}
-  .hero-img {height:155px}
-  .grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-  .product-image {height:135px}
-  .card-body {padding:11px}
-  .product-name {font-size:14px;min-height:38px}
-  .price {font-size:13px}
-  .section-heading h2 {font-size:21px}
-}
-@media(max-width:360px) {
-  .product-image {height:115px}
-  .card-body {padding:9px}
-  .product-name {font-size:13px}
-  .price {font-size:12px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123c2c">
+  <meta name="description" content="Pesan kopi dan menu favorit Ontal Kopi melalui KopiHub.">
+  <title>Menu Ontal Kopi | KopiHub</title>
+
+  <style>
+    :root {
+      --green: #123c2c;
+      --green-light: #205b43;
+      --cream: #f7f5ed;
+      --white: #ffffff;
+      --mint: #e7f2e9;
+      --orange: #d88b43;
+      --text: #24352c;
+      --muted: #788078;
+      --border: #e7e9e2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Arial, sans-serif;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .topbar {
+      background: var(--green);
+      color: white;
+      padding: 17px 18px;
+    }
+
+    .topbar-inner {
+      max-width: 1050px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: 850;
+      letter-spacing: -0.8px;
+    }
+
+    .brand span {
+      color: #a8d7b5;
+    }
+
+    .shop-label {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 3px;
+    }
+
+    .cart-top {
+      border: 1px solid #ffffff45;
+      color: white;
+      background: #ffffff12;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 24px 16px 17px;
+    }
+
+    .hero-card {
+      background: linear-gradient(125deg, #123c2c, #28664a);
+      color: white;
+      border-radius: 20px;
+      padding: 23px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .eyebrow {
+      color: #c8e5ce;
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(27px, 6vw, 39px);
+      line-height: 1.12;
+      margin: 10px 0;
+      max-width: 500px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #e2eee4;
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 420px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 7px 11px;
+      border-radius: 20px;
+      color: #173e2b;
+      background: #e4f1d9;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .content {
+      max-width: 1050px;
+      margin: auto;
+      padding: 0 16px 115px;
+    }
+
+    .search-wrap {
+      margin: 0 0 15px;
+    }
+
+    .search {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 13px;
+      padding: 13px 15px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .search:focus {
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 3px #205b4314;
+    }
+
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0 14px;
+      scrollbar-width: none;
+    }
+
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-btn {
+      border: 1px solid #e1e5dc;
+      background: white;
+      color: #4e5c51;
+      border-radius: 22px;
+      padding: 9px 14px;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .category-btn.active {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 10px 0 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 21px;
+      color: var(--green);
+    }
+
+    .section-heading p {
+      margin: 5px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .product-count {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .product-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      overflow: hidden;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 3px 10px #173d2908;
+    }
+
+    /* GAMBAR MENU KECIL */
+    .product-image {
+      width: 100%;
+      height: 100px;
+      display: block;
+      object-fit: cover;
+      background: #e9eee6;
+    }
+
+    .product-info {
+      padding: 11px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .product-category {
+      color: #68806d;
+      font-size: 10px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 5px;
+    }
+
+    .product-name {
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 800;
+      min-height: 36px;
+      margin: 0 0 7px;
+      overflow-wrap: anywhere;
+    }
+
+    .product-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      margin-top: auto;
+    }
+
+    .price {
+      color: var(--green);
+      font-weight: 850;
+      font-size: 13px;
+    }
+
+    .add-btn {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border: 0;
+      border-radius: 11px;
+      color: white;
+      background: var(--green);
+      font-size: 23px;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .add-btn:active {
+      transform: scale(0.95);
+      background: var(--green-light);
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      background: white;
+      padding: 35px 15px;
+      border-radius: 14px;
+      color: var(--muted);
+    }
+
+    .bottom-cart {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      background: #ffffffed;
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .bottom-cart-inner {
+      max-width: 1050px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cart-summary {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-summary small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .cart-total {
+      font-weight: 850;
+      color: var(--green);
+      font-size: 17px;
+    }
+
+    .checkout-btn {
+      background: var(--green);
+      color: white;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 17px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .checkout-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 20px 10px;
+    }
+
+    @media (min-width: 600px) {
+      .menu-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .product-image {
+        height: 125px;
+      }
+
+      .product-info {
+        padding: 13px;
+      }
+
+      .product-name {
+        font-size: 14px;
+      }
+
+      .price {
+        font-size: 14px;
+      }
+
+      .hero-card {
+        padding: 32px;
+      }
+    }
+
+    @media (min-width: 850px) {
+      .menu-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .product-image {
+        height: 135px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .menu-grid {
+        gap: 8px;
+      }
+
+      .product-info {
+        padding: 9px;
+      }
+
+      .product-image {
+        height: 85px;
+      }
+
+      .product-name {
+        font-size: 12px;
+      }
+
+      .price {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="brand">Kopi<span>Hub</span></div>
+        <div class="shop-label">MENU DIGITAL · ONTAL KOPI</div>
+      </div>
 
-<header>
-  <div class="topbar">
-    <div class="brand">KOPIHUB · COFFEE EXPERIENCE</div>
-    <button class="cart-pill" onclick="document.getElementById('keranjang').scrollIntoView({behavior:'smooth'})">
-      🛍️ Keranjang <span id="badge">0</span>
-    </button>
-  </div>
-
-  <div class="hero">
-    <div>
-      <div class="eyebrow">YOUR DAILY COFFEE RITUAL</div>
-      <h1>Ontal Kopi<span style="color:#e8b981">.</span></h1>
-      <p>Racikan Rasa, Cerita Kita.<br>Pilih favoritmu, pesan dengan mudah, dan nikmati di meja pilihanmu.</p>
+      <button class="cart-top" onclick="goToCheckout()">
+        Keranjang (<span id="cartCount">0</span>)
+      </button>
     </div>
-    <img class="hero-img"
-      src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=85"
-      alt="Ilustrasi minuman kopi"
-      onerror="this.style.display='none'">
-  </div>
-</header>
+  </header>
 
-<main>
-  <div class="section-heading">
-    <div>
-      <h2>Menu favoritmu ☕</h2>
-      <p>Temukan teman terbaik untuk harimu.</p>
+  <section class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">Welcome to Ontal Kopi</div>
+      <h1>Temukan kopi<br>favoritmu.</h1>
+      <p>
+        Racikan istimewa untuk menemani setiap cerita.
+        Pilih menu favoritmu dan pesan dengan mudah.
+      </p>
+      <span class="hero-badge">Freshly made with care</span>
+    </div>
+  </section>
+
+  <main class="content">
+    <div class="search-wrap">
+      <input
+        class="search"
+        id="searchInput"
+        type="search"
+        placeholder="Cari kopi atau minuman favorit..."
+        aria-label="Cari menu"
+      >
+    </div>
+
+    <nav class="categories" aria-label="Kategori menu">
+      <button class="category-btn active" data-category="Semua">Semua</button>
+      <button class="category-btn" data-category="Coffee">Coffee</button>
+      <button class="category-btn" data-category="Non Coffee">Non Coffee</button>
+      <button class="category-btn" data-category="Signature">Signature</button>
+      <button class="category-btn" data-category="Manual Brew">Manual Brew</button>
+    </nav>
+
+    <div class="section-heading">
+      <div>
+        <h2>Menu Favorit</h2>
+        <p>Pilih menu, lalu tekan tombol +</p>
+      </div>
+      <span class="product-count" id="productCount">27 menu</span>
+    </div>
+
+    <section class="menu-grid" id="menuGrid" aria-label="Daftar menu"></section>
+
+    <footer>
+      KopiHub · Platform Pemesanan Coffee Shop<br>
+      Ontal Kopi
+    </footer>
+  </main>
+
+  <div class="bottom-cart">
+    <div class="bottom-cart-inner">
+      <div class="cart-summary">
+        <small><span id="cartCountBottom">0</span> item dipilih</small>
+        <div class="cart-total" id="cartTotal">Rp0</div>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn" onclick="goToCheckout()" disabled>
+        Lanjut Pesan →
+      </button>
     </div>
   </div>
 
-  <input class="search" id="search" type="search"
-    placeholder="🔍  Cari nama minuman..."
-    aria-label="Cari menu">
+  <script>
+    const products = [
+      { name: "Ontal Kopi", price: 25000, category: "Signature", search: "coffee" },
+      { name: "Bula City Oil", price: 25000, category: "Signature", search: "coffee" },
+      { name: "Kurma Coffee Latte", price: 25000, category: "Coffee", search: "latte" },
+      { name: "Ice Coffee Lemonade", price: 20000, category: "Coffee", search: "lemon" },
+      { name: "Ice Peach Coffee", price: 20000, category: "Coffee", search: "peach" },
+      { name: "Eskocie", price: 20000, category: "Coffee", search: "es kopi" },
+      { name: "Strawberry Americano", price: 20000, category: "Coffee", search: "strawberry" },
+      { name: "Matcha Latte", price: 25000, category: "Non Coffee", search: "matcha" },
+      { name: "Red Velvet Latte", price: 20000, category: "Non Coffee", search: "red velvet" },
+      { name: "Air Panas Niff", price: 20000, category: "Non Coffee", search: "panas" },
+      { name: "Matcha Strawberry", price: 25000, category: "Non Coffee", search: "matcha strawberry" },
+      { name: "Taro Latte", price: 18000, category: "Non Coffee", search: "taro" },
+      { name: "Chocolate Latte", price: 18000, category: "Non Coffee", search: "cokelat chocolate" },
+      { name: "Coffee Pandan", price: 25000, category: "Coffee", search: "pandan" },
+      { name: "Vanilla Coffee Latte", price: 20000, category: "Coffee", search: "vanilla" },
+      { name: "Hazelnut Coffee Latte", price: 20000, category: "Coffee", search: "hazelnut" },
+      { name: "Caramel Coffee Latte", price: 23000, category: "Coffee", search: "caramel" },
+      { name: "Butterscotch Coffee", price: 23000, category: "Coffee", search: "butterscotch" },
+      { name: "Red Velvet Coffee Latte", price: 23000, category: "Coffee", search: "red velvet" },
+      { name: "Matelas Coffee", price: 20000, category: "Signature", search: "coffee" },
+      { name: "Matcha Coffee Latte", price: 25000, category: "Coffee", search: "matcha" },
+      { name: "Tubruk", price: 20000, category: "Coffee", search: "kopi hitam" },
+      { name: "Espresso", price: 20000, category: "Coffee", search: "kopi hitam" },
+      { name: "Capoccino", price: 20000, category: "Coffee", search: "cappuccino" },
+      { name: "Americano", price: 20000, category: "Coffee", search: "kopi hitam" },
+      { name: "V60 Manual Brew", price: 35000, category: "Manual Brew", search: "filter coffee" },
+      { name: "Japanese Coffee", price: 35000, category: "Manual Brew", search: "cold brew filter" }
+    ];
 
-  <div class="categories" id="categories">
-    <button class="active" data-category="Semua">Semua Menu</button>
-    <button data-category="Signature">Signature</button>
-    <button data-category="Non Coffee">Non Coffee</button>
-    <button data-category="Coffee">Coffee</button>
-    <button data-category="Manual Brew">Manual Brew</button>
-  </div>
+    const cart = new Map();
+    let activeCategory = "Semua";
 
-  <div class="grid" id="menuGrid"></div>
-</main>
+    const rupiah = value =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(value);
 
-<footer>
-  <strong>Ontal Kopi · KopiHub</strong><br><br>
-  KopiHub · Platform Pemesanan Coffee Shop
-</footer>
+    function imageFor(product) {
+      const n = product.name.toLowerCase();
 
-<div class="cart-panel" id="keranjang">
-  <div class="cart-inner">
-    <div class="cart-info">
-      <strong id="cartTotal">Rp0</strong>
-      <small id="cartDetails">Belum ada pesanan</small>
-    </div>
-    <button class="checkout-btn" id="checkoutBtn" disabled>
-      Lanjut Checkout →
-    </button>
-  </div>
-</div>
+      if (n.includes("matcha")) {
+        return "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=500&q=75";
+      }
 
-<script>
-const photo = {
-  coffee: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80",
-  iced: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80",
-  latte: "https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600&q=80",
-  matcha: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80",
-  chocolate: "https://images.unsplash.com/photo-1542990253-0b8be8e8dc5b?auto=format&fit=crop&w=600&q=80",
-  espresso: "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?auto=format&fit=crop&w=600&q=80",
-  brew: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80",
-  tea: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80"
-};
+      if (n.includes("strawberry") || n.includes("peach") || n.includes("lemonade")) {
+        return "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=500&q=75";
+      }
 
-const products = [
-  {name:"Ontal Kopi",price:25000,category:"Signature",image:"coffee"},
-  {name:"Bula City Oil",price:25000,category:"Signature",image:"iced"},
-  {name:"Kurma Coffee Latte",price:25000,category:"Signature",image:"latte"},
-  {name:"Ice Coffee Lemonade",price:20000,category:"Coffee",image:"iced"},
-  {name:"Ice Peach Coffee",price:20000,category:"Coffee",image:"iced"},
-  {name:"Eskocie",price:20000,category:"Coffee",image:"coffee"},
-  {name:"Strawberry Americano",price:20000,category:"Coffee",image:"iced"},
-  {name:"Matcha Latte",price:25000,category:"Non Coffee",image:"matcha"},
-  {name:"Red Velvet Latte",price:20000,category:"Non Coffee",image:"latte"},
-  {name:"Air Panas Niff",price:20000,category:"Non Coffee",image:"tea"},
-  {name:"Matcha Strawberry",price:25000,category:"Non Coffee",image:"matcha"},
-  {name:"Taro Latte",price:18000,category:"Non Coffee",image:"latte"},
-  {name:"Chocolate Latte",price:18000,category:"Non Coffee",image:"chocolate"},
-  {name:"Coffee Pandan",price:25000,category:"Coffee",image:"latte"},
-  {name:"Vanilla Coffee Latte",price:20000,category:"Coffee",image:"latte"},
-  {name:"Hazelnut Coffee Latte",price:20000,category:"Coffee",image:"coffee"},
-  {name:"Caramel Coffee Latte",price:23000,category:"Coffee",image:"latte"},
-  {name:"Butterscotch Coffee",price:23000,category:"Coffee",image:"coffee"},
-  {name:"Red Velvet Coffee Latte",price:23000,category:"Coffee",image:"latte"},
-  {name:"Matelas Coffee",price:20000,category:"Coffee",image:"coffee"},
-  {name:"Matcha Coffee Latte",price:25000,category:"Coffee",image:"matcha"},
-  {name:"Tubruk",price:20000,category:"Coffee",image:"coffee"},
-  {name:"Espresso",price:20000,category:"Coffee",image:"espresso"},
-  {name:"Capoccino",price:20000,category:"Coffee",image:"latte"},
-  {name:"Americano",price:20000,category:"Coffee",image:"coffee"},
-  {name:"V60 Manual Brew",price:35000,category:"Manual Brew",image:"brew"},
-  {name:"Japanese Coffee",price:35000,category:"Manual Brew",image:"iced"}
-];
+      if (n.includes("chocolate") || n.includes("taro") || n.includes("velvet")) {
+        return "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=500&q=75";
+      }
 
-let cart = {};
-let activeCategory = "Semua";
+      if (n.includes("v60") || n.includes("japanese")) {
+        return "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=500&q=75";
+      }
 
-function rupiah(value) {
-  return "Rp" + value.toLocaleString("id-ID");
-}
+      return "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=500&q=75";
+    }
 
-function renderMenu() {
-  const query = document.getElementById("search").value.toLowerCase().trim();
+    function renderProducts() {
+      const grid = document.getElementById("menuGrid");
+      const search = document.getElementById("searchInput").value
+        .trim()
+        .toLowerCase();
 
-  const filtered = products.filter(product => {
-    const matchesName = product.name.toLowerCase().includes(query);
-    const matchesCategory =
-      activeCategory === "Semua" ||
-      (activeCategory === "Signature" && product.category === "Signature") ||
-      (activeCategory === "Non Coffee" && product.category === "Non Coffee") ||
-      (activeCategory === "Coffee" && product.category === "Coffee") ||
-      (activeCategory === "Manual Brew" && product.category === "Manual Brew");
+      const filtered = products.filter(product => {
+        const matchesCategory =
+          activeCategory === "Semua" ||
+          product.category === activeCategory;
 
-    return matchesName && matchesCategory;
-  });
+        const matchesSearch =
+          (product.name + " " + product.category + " " + product.search)
+            .toLowerCase()
+            .includes(search);
 
-  const grid = document.getElementById("menuGrid");
+        return matchesCategory && matchesSearch;
+      });
 
-  if (!filtered.length) {
-    grid.innerHTML = '<div class="empty">Menu tidak ditemukan. Coba kata kunci lain.</div>';
-    return;
-  }
+      document.getElementById("productCount").textContent =
+        filtered.length + " menu";
 
-  grid.innerHTML = filtered.map(product => {
-    const index = products.indexOf(product);
-    const image = photo[product.image] || photo.coffee;
-    const qty = cart[product.name] ? cart[product.name].qty : 0;
+      if (!filtered.length) {
+        grid.innerHTML =
+          '<div class="empty">Menu tidak ditemukan. Coba kata pencarian lain.</div>';
+        return;
+      }
 
-    return `
-      <article class="card">
-        <img class="product-image"
-          src="${image}"
-          alt="Ilustrasi ${product.name}"
-          loading="lazy"
-          onerror="this.onerror=null;this.src='${photo.coffee}'">
-        <div class="card-body">
-          <div class="category-label">${product.category}</div>
-          <div class="product-name">${product.name}</div>
-          <div class="card-bottom">
-            <div class="price">${rupiah(product.price)}</div>
-            <button class="add" aria-label="Tambah ${product.name}"
-              onclick="addToCart(${index})">${qty ? qty : "+"}</button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
-}
+      grid.innerHTML = filtered.map((product, index) => {
+        const originalIndex = products.indexOf(product);
 
-function addToCart(index) {
-  const product = products[index];
+        return `
+          <article class="product-card">
+            <img
+              class="product-image"
+              src="${imageFor(product)}"
+              alt="${product.name}"
+              loading="lazy"
+              decoding="async"
+            >
+            <div class="product-info">
+              <div class="product-category">${product.category}</div>
+              <h3 class="product-name">${product.name}</h3>
+              <div class="product-bottom">
+                <span class="price">${rupiah(product.price)}</span>
+                <button
+                  class="add-btn"
+                  type="button"
+                  aria-label="Tambah ${product.name}"
+                  onclick="addToCart(${originalIndex})"
+                >+</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
 
-  if (!cart[product.name]) {
-    cart[product.name] = {
-      name: product.name,
-      price: product.price,
-      qty: 0
-    };
-  }
+    function addToCart(index) {
+      const product = products[index];
+      const existing = cart.get(product.name);
 
-  cart[product.name].qty++;
-  updateCart();
-  renderMenu();
-}
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.set(product.name, {
+          name: product.name,
+          price: product.price,
+          qty: 1
+        });
+      }
 
-function updateCart() {
-  const items = Object.values(cart).filter(item => item.qty > 0);
-  const count = items.reduce((sum, item) => sum + item.qty, 0);
-  const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+      updateCart();
+    }
 
-  document.getElementById("badge").textContent = count;
-  document.getElementById("cartTotal").textContent = rupiah(total);
-  document.getElementById("cartDetails").textContent =
-    count ? `${count} item dalam keranjang` : "Belum ada pesanan";
+    function updateCart() {
+      let count = 0;
+      let total = 0;
 
-  document.getElementById("checkoutBtn").disabled = count === 0;
+      cart.forEach(item => {
+        count += item.qty;
+        total += item.price * item.qty;
+      });
 
-  sessionStorage.setItem("kopihubCheckout", JSON.stringify(items));
-}
+      document.getElementById("cartCount").textContent = count;
+      document.getElementById("cartCountBottom").textContent = count;
+      document.getElementById("cartTotal").textContent = rupiah(total);
+      document.getElementById("checkoutBtn").disabled = count === 0;
+    }
 
-document.getElementById("search").addEventListener("input", renderMenu);
+    function goToCheckout() {
+      const items = Array.from(cart.values());
 
-document.getElementById("categories").addEventListener("click", event => {
-  const button = event.target.closest("button[data-category]");
-  if (!button) return;
+      if (!items.length) {
+        alert("Silakan pilih menu terlebih dahulu.");
+        return;
+      }
 
-  activeCategory = button.dataset.category;
+      try {
+        sessionStorage.setItem("kopihubCheckout", JSON.stringify(items));
+        sessionStorage.setItem("kopihubShop", "ontal-kopi");
+        window.location.href = "checkout.html";
+      } catch (error) {
+        alert("Keranjang tidak dapat disimpan. Silakan coba lagi.");
+      }
+    }
 
-  document.querySelectorAll("#categories button").forEach(item => {
-    item.classList.toggle("active", item === button);
-  });
+    document.getElementById("searchInput").addEventListener("input", renderProducts);
 
-  renderMenu();
-});
+    document.querySelectorAll(".category-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".category-btn").forEach(btn => {
+          btn.classList.remove("active");
+        });
 
-document.getElementById("checkoutBtn").addEventListener("click", () => {
-  const items = Object.values(cart).filter(item => item.qty > 0);
-  if (!items.length) return;
+        button.classList.add("active");
+        activeCategory = button.dataset.category;
+        renderProducts();
+      });
+    });
 
-  sessionStorage.setItem("kopihubCheckout", JSON.stringify(items));
-  sessionStorage.setItem("kopihubShop", "ontal-kopi");
-
-  window.location.href = "checkout.html";
-});
-
-renderMenu();
-updateCart();
-</script>
+    renderProducts();
+    updateCart();
+  </script>
 </body>
 </html>

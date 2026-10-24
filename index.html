@@ -4,73 +4,532 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#123b2c">
-  <title>KopiHub - Pesan Kopi Favoritmu</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#064e3b">
+  <title>KopiHub — Kelola Kedai Lebih Mudah</title>
+  <style>
+    :root {
+      --green: #064e3b;
+      --mint: #d9f7eb;
+      --accent: #10b981;
+      --cream: #f7f8f3;
+      --text: #173d32;
+      --muted: #60756e;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      width: min(1100px, 90%);
+      margin: auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: white;
+      border-bottom: 1px solid #e5eee9;
+    }
+
+    nav {
+      min-height: 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 850;
+      color: var(--green);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      background: var(--accent);
+      color: #063b2b;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .hero {
+      background: linear-gradient(125deg, #032c23, #087f5b);
+      color: white;
+      padding: 76px 0;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 45px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: #ffffff18;
+      border: 1px solid #ffffff30;
+      padding: 7px 13px;
+      border-radius: 30px;
+      font-size: 13px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin: 22px 0;
+    }
+
+    h1 span { color: #63e0b2; }
+
+    .hero p {
+      color: #d8eae2;
+      font-size: 17px;
+      margin-bottom: 28px;
+    }
+
+    .secondary {
+      display: inline-block;
+      padding: 11px 18px;
+      border: 1px solid #ffffff80;
+      border-radius: 12px;
+      margin-left: 8px;
+    }
+
+    .dashboard {
+      background: #f8fcf9;
+      color: var(--text);
+      padding: 22px;
+      border-radius: 20px;
+      box-shadow: 0 25px 60px #001b1480;
+      transform: rotate(1deg);
+    }
+
+    .dash-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      color: #087f5b;
+      background: var(--mint);
+      border-radius: 20px;
+      padding: 4px 9px;
+      font-size: 11px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat, .chart, .orders {
+      background: white;
+      border: 1px solid #e5eee9;
+      border-radius: 12px;
+      padding: 13px;
+    }
+
+    .stat small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .stat strong { font-size: 17px; }
+
+    .chart { margin-top: 12px; }
+
+    .bars {
+      height: 120px;
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      padding-top: 15px;
+      border-bottom: 1px solid #e5eee9;
+    }
+
+    .bars span {
+      flex: 1;
+      background: linear-gradient(#5ee0ad, #087f5b);
+      border-radius: 5px 5px 0 0;
+    }
+
+    .orders {
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    .section { padding: 75px 0; }
+
+    .soft { background: var(--cream); }
+
+    .section-title {
+      max-width: 680px;
+      text-align: center;
+      margin: 0 auto 38px;
+    }
+
+    .kicker {
+      color: #087f5b;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      font-size: clamp(27px, 3vw, 38px);
+      line-height: 1.2;
+      margin: 10px 0;
+    }
+
+    .section-title p { color: var(--muted); }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .feature {
+      padding: 24px;
+      border: 1px solid #e1ebe5;
+      border-radius: 17px;
+      background: white;
+    }
+
+    .feature-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      background: var(--mint);
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      margin-bottom: 14px;
+    }
+
+    .feature h3 { margin: 0 0 8px; }
+
+    .feature p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .step-number {
+      background: var(--green);
+      color: white;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      font-weight: 800;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .cta {
+      margin-top: 45px;
+      padding: 32px;
+      border-radius: 20px;
+      background: var(--green);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .cta h2 { font-size: 28px; }
+
+    footer {
+      background: #032c23;
+      color: #d8eae2;
+      padding: 35px 0;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    footer a { margin-right: 15px; }
+
+    .copyright {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 18px;
+      border-top: 1px solid #ffffff25;
+      font-size: 12px;
+      color: #aac8bb;
+    }
+
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+      .hero { padding: 50px 0; }
+      .hero-grid { grid-template-columns: 1fr; gap: 35px; }
+      h1 { font-size: 43px; }
+      .features { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .cta { flex-direction: column; align-items: flex-start; }
+      .dashboard { padding: 14px; }
+      .stat { padding: 8px; }
+      .stat strong { font-size: 13px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="navbar">
-    <a class="logo" href="#">Kopi<span>Hub</span></a>
-    <a class="owner-link" href="#daftar">Gabung sebagai Mitra</a>
-  </header>
 
-  <main>
-    <section class="hero">
-      <p class="eyebrow">SATU PLATFORM, BANYAK CERITA</p>
-      <h1>Kopi favoritmu,<br>lebih dekat.</h1>
-      <p class="intro">
-        Temukan coffee shop favorit, pilih menu,
-        dan pesan dengan mudah dari satu tempat.
-      </p>
-      <a class="primary-button" href="#kedai">Jelajahi Coffee Shop</a>
-    </section>
+<header>
+  <nav class="container">
+    <a href="#beranda" class="logo">☕ KopiHub</a>
 
-    <section class="shops" id="kedai">
-      <p class="eyebrow">TEMUKAN TEMPAT FAVORITMU</p>
-      <h2>Coffee shop pilihan</h2>
-      <p class="muted">
-        Mulai dengan contoh kedai. Nantinya daftar ini
-        terhubung dengan database Supabase.
-      </p>
+    <div class="nav-links">
+      <a href="#beranda">Beranda</a>
+      <a href="#fitur">Fitur</a>
+      <a href="#cara-kerja">Cara Kerja</a>
+      <a href="#tentang">Tentang Kami</a>
+    </div>
 
-      <div class="shop-grid">
-        <article class="shop-card">
-          <div class="shop-image">☕</div>
-          <div class="shop-info">
-            <span class="tag">COFFEE & SIGNATURE</span>
-            <h3>Ontal Kopi</h3>
-            <p>Racikan Rasa, Cerita Kita.</p>
-            <a href="menu.html" class="menu-button">Lihat Menu →</a>
+    <a class="button" href="#mulai">Daftar Kedai →</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="beranda">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Platform Kasir & Manajemen Kedai</span>
+
+        <h1>
+          Kelola Kedai Kopi Lebih Mudah Bersama
+          <span>KopiHub</span>
+        </h1>
+
+        <p>
+          Kelola menu, pesanan, kasir, dan laporan usaha
+          dalam satu platform yang mudah digunakan.
+        </p>
+
+        <a class="button" href="#mulai">Mulai Jelajahi KopiHub →</a>
+        <a class="secondary" href="kasir.html">Lihat Demo Kasir</a>
+
+        <p>✓ Mudah digunakan &nbsp; ✓ Bisa dibuka di HP</p>
+      </div>
+
+      <div class="dashboard">
+        <div class="dash-head">
+          <span>☕ KopiHub / Dashboard</span>
+          <span class="pill">Kedai Demo</span>
+        </div>
+
+        <h3>Ringkasan Kedai</h3>
+
+        <div class="stats">
+          <div class="stat">
+            <small>Total Penjualan</small>
+            <strong>Rp 4,25 jt</strong>
+            <small>Contoh data</small>
           </div>
+
+          <div class="stat">
+            <small>Pesanan</small>
+            <strong>42</strong>
+            <small>Contoh data</small>
+          </div>
+
+          <div class="stat">
+            <small>Menu Aktif</small>
+            <strong>18</strong>
+            <small>Contoh data</small>
+          </div>
+        </div>
+
+        <div class="chart">
+          <strong>Ilustrasi Penjualan Mingguan</strong>
+          <div class="bars">
+            <span style="height:28%"></span>
+            <span style="height:44%"></span>
+            <span style="height:38%"></span>
+            <span style="height:59%"></span>
+            <span style="height:52%"></span>
+            <span style="height:76%"></span>
+            <span style="height:91%"></span>
+          </div>
+        </div>
+
+        <div class="orders">
+          ☕ Kopi Susu — Rp 18.000<br>
+          🥐 Croissant — Rp 22.000<br>
+          <small>Semua angka di atas adalah contoh.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="fitur">
+    <div class="container">
+      <div class="section-title">
+        <span class="kicker">Fitur Unggulan</span>
+        <h2>Semua kebutuhan kedai dalam satu tempat</h2>
+        <p>KopiHub dirancang untuk membantu operasional kedai lebih praktis.</p>
+      </div>
+
+      <div class="features">
+        <article class="feature">
+          <div class="feature-icon">▦</div>
+          <h3>Menu & Pemesanan QR</h3>
+          <p>Pelanggan melihat menu melalui HP dan memesan dengan alur sederhana.</p>
         </article>
 
-        <article class="shop-card">
-          <div class="shop-image second">🍵</div>
-          <div class="shop-info">
-            <span class="tag">COFFEE & NON COFFEE</span>
-            <h3>Kedai Contoh</h3>
-            <p>Tempat santai untuk setiap cerita.</p>
-            <a href="#daftar" class="menu-button">Segera Hadir</a>
-          </div>
+        <article class="feature">
+          <div class="feature-icon">▣</div>
+          <h3>Dashboard Kasir</h3>
+          <p>Pantau pesanan masuk dan perbarui status pesanan.</p>
+        </article>
+
+        <article class="feature">
+          <div class="feature-icon">▥</div>
+          <h3>Laporan Penjualan</h3>
+          <p>Bantu pemilik memantau transaksi dan laporan usaha.</p>
+        </article>
+
+        <article class="feature">
+          <div class="feature-icon">📦</div>
+          <h3>Menu & Stok</h3>
+          <p>Kelola daftar menu, harga, dan persediaan kedai.</p>
+        </article>
+
+        <article class="feature">
+          <div class="feature-icon">♙</div>
+          <h3>Akun Pemilik & Kasir</h3>
+          <p>Setiap pengguna nantinya memiliki akses sesuai tugasnya.</p>
+        </article>
+
+        <article class="feature">
+          <div class="feature-icon">▱</div>
+          <h3>Multi-Kedai</h3>
+          <p>Platform dirancang untuk melayani banyak kedai dengan data terpisah.</p>
         </article>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="partner" id="daftar">
-      <h2>Punya coffee shop?</h2>
-      <p>Gabung ke KopiHub dan kelola menu serta pesananmu secara digital.</p>
-      <a class="primary-button" href="mailto:mitra@example.com?subject=Daftar%20Mitra%20KopiHub">
-        Tertarik menjadi mitra
-      </a>
-      <p class="small-note">Kontak mitra akan kita sesuaikan sebelum website diluncurkan.</p>
-    </section>
-  </main>
+  <section class="section" id="cara-kerja">
+    <div class="container">
+      <div class="section-title">
+        <span class="kicker">Cara Kerja</span>
+        <h2>Mulai dengan langkah sederhana</h2>
+        <p>Alur yang akan kita bangun secara bertahap.</p>
+      </div>
 
-  <footer>
-    <a class="logo" href="#">Kopi<span>Hub</span></a>
-    <p>Platform pemesanan coffee shop.</p>
-    <p>© 2026 KopiHub</p>
-  </footer>
-<script src="script.js"></script>
+      <div class="steps">
+        <article class="step">
+          <div class="step-number">1</div>
+          <h3>Daftarkan Kedai</h3>
+          <p>Pemilik mengisi informasi kedai dan membuat akun.</p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">2</div>
+          <h3>Lengkapi Data</h3>
+          <p>Atur profil, menu, harga, dan pegawai.</p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">3</div>
+          <h3>Siapkan Operasional</h3>
+          <p>Atur pesanan, meja, dan dashboard kasir.</p>
+        </article>
+
+        <article class="step">
+          <div class="step-number">4</div>
+          <h3>Mulai Melayani</h3>
+          <p>Uji sistem dan keamanan sebelum digunakan pelanggan.</p>
+        </article>
+      </div>
+
+      <div class="cta" id="mulai">
+        <div>
+          <h2>Siap berkembang bersama KopiHub?</h2>
+          <p>Kita bangun fitur KopiHub satu per satu.</p>
+        </div>
+        <a class="button" href="menu.html">Lihat Demo Menu →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft" id="tentang">
+    <div class="container section-title">
+      <span class="kicker">Tentang KopiHub</span>
+      <h2>Satu platform untuk membantu kedai berkembang</h2>
+      <p>
+        KopiHub sedang dikembangkan. Login, sinkronisasi database,
+        pembayaran online, keamanan produksi, dan pencadangan otomatis
+        harus diselesaikan dan diuji sebelum digunakan untuk transaksi nyata.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-row">
+      <div class="logo" style="color:white">☕ KopiHub</div>
+      <div>
+        <a href="#beranda">Beranda</a>
+        <a href="#fitur">Fitur</a>
+        <a href="menu.html">Demo Menu</a>
+        <a href="kasir.html">Demo Kasir</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 KopiHub. Sedang dikembangkan untuk kedai kopi dan restoran Indonesia.
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>

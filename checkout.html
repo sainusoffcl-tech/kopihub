@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123b2c">
+  <title>Checkout - KopiHub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkout-page {
+      max-width: 760px;
+      margin: 30px auto;
+      padding: 0 18px 40px;
+    }
+
+    .checkout-card {
+      background: white;
+      border: 1px solid #e8e8dd;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .checkout-card h1,
+    .checkout-card h2 {
+      color: #123b2c;
+      margin-top: 0;
+    }
+
+    .checkout-card h1 {
+      font-size: 28px;
+    }
+
+    .checkout-card label {
+      display: block;
+      font-weight: 700;
+      font-size: 13px;
+      margin: 15px 0 7px;
+    }
+
+    .checkout-card input,
+    .checkout-card textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #dce2d9;
+      border-radius: 10px;
+      background: #fff;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    .checkout-card textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .order-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    .grand-total {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+      color: #123b2c;
+      font-weight: 850;
+      font-size: 18px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      background: #f4f7f0;
+      border: 1px solid #dce7d9;
+      border-radius: 12px;
+      line-height: 1.5;
+    }
+
+    .payment-option input {
+      width: auto;
+      margin-top: 5px;
+    }
+
+    .confirm-button {
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+      padding: 15px;
+      background: #123b2c;
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #1c5940;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .notice {
+      color: #778078;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .success-message {
+      display: none;
+      padding: 16px;
+      margin-top: 18px;
+      border-radius: 12px;
+      background: #e8f2e9;
+      color: #123b2c;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 480px) {
+      .checkout-page {
+        margin-top: 20px;
+        padding: 0 14px 30px;
+      }
+
+      .checkout-card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo" href="index.html">Kopi<span>Hub</span></a>
+    <a class="owner-link" href="menu.html">← Kembali ke menu</a>
+  </header>
+
+  <main class="checkout-page">
+    <a class="back-link" href="menu.html">← Pilih menu lainnya</a>
+
+    <section class="checkout-card">
+      <p class="eyebrow">SATU LANGKAH LAGI</p>
+      <h1>Checkout pesanan ☕</h1>
+      <p>Isi data pelanggan dan periksa pesananmu sebelum konfirmasi.</p>
+    </section>
+
+    <form id="checkout-form">
+      <section class="checkout-card">
+        <h2>Data pelanggan</h2>
+
+        <label for="customer-name">Nama lengkap</label>
+        <input id="customer-name" name="customerName"
+          autocomplete="name" required maxlength="100"
+          placeholder="Masukkan nama kamu">
+
+        <label for="customer-phone">Nomor WhatsApp</label>
+        <input id="customer-phone" name="customerPhone"
+          type="tel" autocomplete="tel" required
+          maxlength="20" placeholder="Contoh: 081234567890">
+
+        <label for="customer-note">Catatan untuk kedai (opsional)</label>
+        <textarea id="customer-note" name="customerNote"
+          maxlength="300"
+          placeholder="Contoh: gula sedikit, tanpa sedotan"></textarea>
+      </section>
+
+      <section class="checkout-card">
+        <h2>Ringkasan pesanan</h2>
+        <div id="order-summary"></div>
+        <div class="grand-total">
+          <span>Total pembayaran</span>
+          <span id="order-total">Rp0</span>
+        </div>
+      </section>
+
+      <section class="checkout-card">
+        <h2>Metode pembayaran</h2>
+        <label class="payment-option">
+          <input type="radio" name="payment" value="kasir" checked>
+          <span>
+            <strong>Bayar di kasir</strong><br>
+            Bayar langsung saat berada di Ontal Kopi.
+          </span>
+        </label>
+        <p class="notice">
+          Ini masih demo. Pesanan belum terkirim ke kedai dan belum
+          disimpan ke database.
+        </p>
+      </section>
+
+      <button class="confirm-button" type="submit">
+        Konfirmasi Pesanan
+      </button>
+
+      <div id="success-message" class="success-message"
+        role="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script>
+    const rupiah = value =>
+      new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(value);
+
+    let order = [];
+
+    try {
+      const saved = sessionStorage.getItem("kopihubCheckout");
+      const parsed = saved ? JSON.parse(saved) : [];
+
+      if (Array.isArray(parsed)) {
+        order = parsed.filter(item =>
+          item &&
+          typeof item.name === "string" &&
+          Number.isSafeInteger(item.price) &&
+          item.price > 0 &&
+          Number.isSafeInteger(item.qty) &&
+          item.qty > 0 &&
+          item.qty <= 99
+        );
+      }
+    } catch (error) {
+      order = [];
+    }
+
+    const summary = document.getElementById("order-summary");
+    const totalElement = document.getElementById("order-total");
+    const form = document.getElementById("checkout-form");
+    const success = document.getElementById("success-message");
+
+    function renderOrder() {
+      if (order.length === 0) {
+        summary.innerHTML =
+          '<p>Belum ada pesanan. Silakan pilih minuman terlebih dahulu.</p>' +
+          '<a class="back-link" href="menu.html">Kembali ke menu Ontal Kopi</a>';
+
+        totalElement.textContent = rupiah(0);
+        form.querySelector('button[type="submit"]').disabled = true;
+        form.querySelector('button[type="submit"]').style.opacity = "0.5";
+        return;
+      }
+
+      let total = 0;
+
+      summary.innerHTML = order.map(item => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
+
+        return `
+          <div class="order-line">
+            <span>${escapeHTML(item.name)} × ${item.qty}</span>
+            <strong>${rupiah(subtotal)}</strong>
+          </div>
+        `;
+      }).join("");
+
+      totalElement.textContent = rupiah(total);
+    }
+
+    function escapeHTML(value) {
+      return value.replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+
+      if (order.length === 0) {
+        alert("Silakan pilih menu terlebih dahulu.");
+        return;
+      }
+
+      const name = document.getElementById("customer-name").value.trim();
+      const phone = document.getElementById("customer-phone").value.trim();
+      const note = document.getElementById("customer-note").value.trim();
+
+      if (!name || !phone) {
+        alert("Lengkapi nama dan nomor WhatsApp.");
+        return;
+      }
+
+      const total = order.reduce(
+        (sum, item) => sum + item.price * item.qty, 0
+      );
+
+      const orderNumber = "DEMO-" +
+        Date.now().toString().slice(-8);
+
+      success.style.display = "block";
+      success.innerHTML = `
+        <h3>Pesanan demo berhasil dibuat!</h3>
+        <p>Nomor pesanan: <strong>${orderNumber}</strong></p>
+        <p>Nama: ${escapeHTML(name)}</p>
+        <p>Total: <strong>${rupiah(total)}</strong></p>
+        <p>Pembayaran: Bayar di kasir Ontal Kopi</p>
+        <p class="notice">
+          Ini hanya konfirmasi di browser, bukan pesanan yang telah
+          diterima kedai. Jangan tutup halaman jika ingin melihat
+          ringkasan ini.
+        </p>
+      `;
+
+      success.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    renderOrder();
+  </script>
+</body>
+</html>

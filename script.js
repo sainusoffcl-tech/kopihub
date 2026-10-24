@@ -42,25 +42,41 @@ const kopihubSupabaseClient = window.supabase.createClient(
   KOPIHUB_SUPABASE_KEY
 );
 
-console.log("KopiHub: klien Supabase berhasil dibuat.");
-
-/* ===== TES BACA DATABASE KOPIHUB ===== */
+console.log("KopiHub: klien Supabase berhasil
+ 
+/* ===== TES KONEKSI KOPIHUB ===== */
 async function tesKoneksiKopiHub() {
+  const status = document.createElement("div");
+
+  status.style.cssText =
+    "position:fixed;bottom:12px;left:12px;right:12px;" +
+    "z-index:99999;padding:14px;border-radius:10px;" +
+    "background:#123b2a;color:white;font:14px sans-serif;";
+
+  status.textContent = "Memeriksa koneksi database KopiHub...";
+  document.body.appendChild(status);
+
   try {
-    const { data, error } = await kopihubSupabaseClient
+    const { error } = await kopihubSupabaseClient
       .from("kh_shops")
       .select("id")
       .limit(1);
 
     if (error) {
-      console.error("Tes Supabase gagal:", error.message);
+      status.textContent =
+        "Koneksi database gagal: " + error.message;
+      status.style.background = "#8b2525";
       return;
     }
 
-    console.log("Tes Supabase berhasil. Database dapat dibaca.", data);
+    status.textContent =
+      "Tes berhasil: KopiHub dapat membaca tabel kh_shops.";
   } catch (err) {
-    console.error("Kesalahan koneksi:", err.message);
+    status.textContent =
+      "Terjadi kesalahan: " + err.message;
+    status.style.background = "#8b2525";
   }
 }
 
 tesKoneksiKopiHub();
+        

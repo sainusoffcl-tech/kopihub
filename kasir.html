@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kasir | KopiHub</title>
+<style>
+:root {
+  --green:#1d3d30;
+  --green2:#315c46;
+  --cream:#f7f5ed;
+  --orange:#e4a05f;
+  --muted:#7c847c;
+  --line:#e3e6dc;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--cream);color:#26372e;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+header{
+  background:var(--green);color:white;padding:24px 20px 28px;
+}
+.top{max-width:1000px;margin:auto}
+.logo{font-size:27px;font-weight:900}
+.logo span{color:#a8d0b4}
+header p{margin:8px 0 0;color:#dce6de}
+main{max-width:1000px;margin:auto;padding:24px 16px 50px}
+h1{font-size:30px;margin:8px 0}
+.sub{color:var(--muted);line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
+.stat,.panel,.order{
+  background:white;border:1px solid var(--line);
+  border-radius:18px;padding:17px;
+}
+.stat small{display:block;color:var(--muted);margin-bottom:9px}
+.stat strong{font-size:23px;color:var(--green)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+select,button{
+  font:inherit;border-radius:12px;padding:12px 14px;
+}
+select{border:1px solid var(--line);background:white;flex:1;min-width:150px}
+button{border:0;cursor:pointer;font-weight:750}
+.refresh{background:var(--green);color:white}
+.order{margin:13px 0}
+.order-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.order-id{font-weight:900;color:var(--green);font-size:17px}
+.time{font-size:13px;color:var(--muted);margin-top:5px}
+.tag{font-size:12px;font-weight:800;padding:7px 10px;border-radius:30px;background:#fff0dc;color:#85521f}
+.details{border-top:1px solid var(--line);margin-top:14px;padding-top:13px;line-height:1.8}
+.items{margin:8px 0;padding-left:20px}
+.total{display:flex;justify-content:space-between;gap:10px;font-weight:900;font-size:18px;margin:12px 0;color:var(--green)}
+.note{background:#f7f5ed;border-radius:10px;padding:10px;font-size:14px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.actions button{flex:1;min-width:115px}
+.next{background:var(--green);color:white}
+.done{background:#e5f1e7;color:#24583a}
+.cancel{background:#fbe9e6;color:#923c32}
+.empty{text-align:center;padding:35px 15px;color:var(--muted)}
+.warning{background:#fff0dc;border-radius:12px;padding:13px 15px;font-size:14px;line-height:1.5}
+@media(max-width:480px){
+  .stats{gap:7px}
+  .stat{padding:12px 9px}
+  .stat strong{font-size:18px}
+  .stat small{font-size:12px}
+  h1{font-size:27px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="logo">Kopi<span>Hub</span></div>
+    <p>Dashboard Kasir · Ontal Kopi</p>
+  </div>
+</header>
+
+<main>
+  <h1>Pesanan Masuk</h1>
+  <p class="sub">Pantau pesanan dan perbarui status penyajiannya.</p>
+
+  <div class="warning">
+    Mode demo: daftar pesanan hanya membaca penyimpanan browser ini.
+    Belum tersambung ke perangkat pelanggan atau database online.
+  </div>
+
+  <section class="stats">
+    <div class="stat"><small>Total pesanan</small><strong id="count">0</strong></div>
+    <div class="stat"><small>Menunggu</small><strong id="pending">0</strong></div>
+    <div class="stat"><small>Selesai</small><strong id="finished">0</strong></div>
+  </section>
+
+  <div class="toolbar">
+    <select id="filter" aria-label="Filter status">
+      <option value="all">Semua status</option>
+      <option value="Menunggu">Menunggu</option>
+      <option value="Diproses">Diproses</option>
+      <option value="Selesai">Selesai</option>
+      <option value="Dibatalkan">Dibatalkan</option>
+    </select>
+    <button class="refresh" onclick="render()">↻ Perbarui</button>
+  </div>
+
+  <div id="orders"></div>
+</main>
+
+<script>
+const STORAGE_KEY = "kopihubDemoOrders";
+
+function readOrders(){
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch(e) {
+    return [];
+  }
+}
+
+function money(value){
+  return new Intl.NumberFormat("id-ID", {
+    style:"currency",currency:"IDR",maximumFractionDigits:0
+  }).format(Number(value)||0);
+}
+
+function safe(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function getStatus(order){
+  return order.status || order.orderStatus || "Menunggu";
+}
+
+function getItems(order){
+  return Array.isArray(order.items) ? order.items :
+         Array.isArray(order.cart) ? order.cart : [];
+}
+
+function getTotal(order){
+  if(order.total != null) return Number(order.total)||0;
+  if(order.grandTotal != null) return Number(order.grandTotal)||0;
+  return getItems(order).reduce((sum,item)=>
+    sum + (Number(item.price)||0)*(Number(item.qty ?? item.quantity)||1),0);
+}
+
+function render(){
+  const all = readOrders();
+  document.getElementById("count").textContent = all.length;
+  document.getElementById("pending").textContent =
+    all.filter(o => getStatus(o)==="Menunggu").length;
+  document.getElementById("finished").textContent =
+    all.filter(o => getStatus(o)==="Selesai").length;
+
+  const filter = document.getElementById("filter").value;
+  const shown = all.map((order,index)=>({...order,_index:index}))
+    .filter(o => filter==="all" || getStatus(o)===filter)
+    .reverse();
+
+  const container = document.getElementById("orders");
+  if(!shown.length){
+    container.innerHTML = `<div class="panel empty">
+      <h3>Belum ada pesanan</h3>
+      <p>Pesanan demo yang tersimpan di browser ini akan muncul di sini.</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = shown.map(order=>{
+    const status = getStatus(order);
+    const items = getItems(order);
+    const number = order.orderNumber || order.orderId || order.id ||
+      ("DEMO-"+String(order._index+1).padStart(3,"0"));
+    const table = order.table || order.tableNumber || order.meja || "-";
+    const note = order.note || order.notes || order.customerNote || "";
+    const time = order.createdAt || order.date || order.timestamp || "";
+    const itemLines = items.length ? items.map(item=>{
+      const qty = Number(item.qty ?? item.quantity)||1;
+      return `<li>${safe(item.name || item.title || "Menu")} × ${qty}
+        — ${money((Number(item.price)||0)*qty)}</li>`;
+    }).join("") : "<li>Detail menu tidak tersedia pada format pesanan ini.</li>";
+
+    return `<article class="order">
+      <div class="order-head">
+        <div>
+          <div class="order-id">${safe(number)}</div>
+          <div class="time">${safe(time ? String(time).replace("T"," ").slice(0,19) : "Waktu tidak tersedia")}</div>
+        </div>
+        <span class="tag">${safe(status)}</span>
+      </div>
+      <div class="details">
+        <div><b>Meja:</b> ${safe(table)}</div>
+        <div><b>Nama pelanggan:</b> ${safe(order.customerName || order.name || "-")}</div>
+        <ul class="items">${itemLines}</ul>
+        ${note ? `<div class="note"><b>Catatan barista:</b> ${safe(note)}</div>` : ""}
+        <div class="total"><span>Total</span><span>${money(getTotal(order))}</span></div>
+        <div><b>Pembayaran:</b> ${safe(order.paymentMethod || order.payment || "Bayar di kasir")}</div>
+      </div>
+      <div class="actions">
+        ${status!=="Diproses" && status!=="Selesai" && status!=="Dibatalkan"
+          ? `<button class="next" onclick="setStatus(${order._index,'Diproses'})">Terima / Proses</button>`:""}
+        ${status!=="Selesai" && status!=="Dibatalkan"
+          ? `<button class="done" onclick="setStatus(${order._index,'Selesai'})">Tandai Selesai</button>`:""}
+        ${status!=="Dibatalkan" && status!=="Selesai"
+          ? `<button class="cancel" onclick="setStatus(${order._index,'Dibatalkan'})">Batalkan</button>`:""}
+      </div>
+    </article>`;
+  }).join("");
+}
+
+function setStatus(index,status){
+  const orders = readOrders();
+  if(!orders[index]) return;
+  orders[index].status = status;
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(orders));
+  render();
+}
+
+document.getElementById("filter").addEventListener("change",render);
+render();
+</script>
+</body>
+</html>

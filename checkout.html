@@ -280,46 +280,115 @@
       })[char]);
     }
 
-    form.addEventListener("submit", event => {
-      event.preventDefault();
 
-      if (order.length === 0) {
-        alert("Silakan pilih menu terlebih dahulu.");
-        return;
-      }
+form.addEventListener("submit", event => {
+  event.preventDefault();
 
-      const name = document.getElementById("customer-name").value.trim();
-      const phone = document.getElementById("customer-phone").value.trim();
-      const note = document.getElementById("customer-note").value.trim();
+  const name = document
+    .getElementById("customer-name").value.trim();
 
-      if (!name || !phone) {
-        alert("Lengkapi nama dan nomor WhatsApp.");
-        return;
-      }
+  const phone = document
+    .getElementById("customer-phone").value.trim();
 
-      const total = order.reduce(
-        (sum, item) => sum + item.price * item.qty, 0
-      );
+  const note = document
+    .getElementById("customer-note").value.trim();
 
-      const orderNumber = "DEMO-" +
-        Date.now().toString().slice(-8);
+  const payment = document.querySelector(
+    'input[name="payment"]:checked'
+  );
 
-      success.style.display = "block";
-      success.innerHTML = `
-        <h3>Pesanan demo berhasil dibuat!</h3>
-        <p>Nomor pesanan: <strong>${orderNumber}</strong></p>
-        <p>Nama: ${escapeHTML(name)}</p>
-        <p>Total: <strong>${rupiah(total)}</strong></p>
-        <p>Pembayaran: Bayar di kasir Ontal Kopi</p>
-        <p class="notice">
-          Ini hanya konfirmasi di browser, bukan pesanan yang telah
-          diterima kedai. Jangan tutup halaman jika ingin melihat
-          ringkasan ini.
-        </p>
-      `;
+  if (!name || !phone) {
+    alert("Nama dan nomor WhatsApp wajib diisi.");
+    return;
+  }
 
-      success.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+  if (!Array.isArray(orderItems) || orderItems.length === 0) {
+    alert("Keranjang kosong. Silakan pilih menu terlebih dahulu.");
+    return;
+  }
+
+  const items = orderItems.map(item => {
+    const price = Number(item.price);
+    const qty = Number(item.qty);
+
+    if (
+      !Number.isSafeInteger(price) ||
+      price <= 0 ||
+      !Number.isSafeInteger(qty) ||
+      qty <= 0 ||
+      qty > 99
+    ) {
+      throw new Error("Data menu tidak valid.");
+    }
+
+    return {
+      name: String(item.name || "Menu"),
+      price,
+      qty,
+      subtotal: price * qty
+    };
+  });
+
+  const total = items.reduce(
+    (sum, item) => sum + item.subtotal, 0
+  );
+
+  const orderNumber =
+    "DEMO-" + Date.now().toString().slice(-8);
+
+  const rupiah = value =>
+    "Rp" + value.toLocaleString("id-ID");
+
+  const itemRows = items.map(item => `
+    <div class="order-item">
+      <div>
+        <strong>${escapeHTML(item.name)}</strong>
+        <p>${item.qty} × ${rupiah(item.price)}</p>
+      </div>
+      <strong>${rupiah(item.subtotal)}</strong>
+    </div>
+  `).join("");
+
+  const success = document.getElementById("success");
+
+  success.innerHTML = `
+    <div class="success-card">
+      <h2>🎉 Pesanan demo berhasil dibuat!</h2>
+      <p>Nomor pesanan:</p>
+      <h3>${escapeHTML(orderNumber)}</h3>
+
+      <hr>
+
+      <p><strong>Nama:</strong> ${escapeHTML(name)}</p>
+      <p><strong>WhatsApp:</strong> ${escapeHTML(phone)}</p>
+
+      <h3>Ringkasan Pesanan</h3>
+      ${itemRows}
+
+      <hr>
+
+      <p><strong>Total:</strong> ${rupiah(total)}</p>
+      <p><strong>Pembayaran:</strong>
+        ${escapeHTML(payment ? payment.value : "Kasir")}
+      </p>
+
+      ${note ? `
+        <p><strong>Catatan:</strong> ${escapeHTML(note)}</p>
+      ` : ""}
+
+      <p class="demo-notice">
+        Ini konfirmasi demo. Pesanan belum tersimpan
+        permanen dan belum dikirim ke pihak Ontal Kopi.
+      </p>
+    </div>
+  `;
+
+  success.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
 
     renderOrder();
   </script>

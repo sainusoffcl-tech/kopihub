@@ -19,27 +19,27 @@ body{
   margin:0;background:var(--cream);color:#26372e;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-header{
-  background:var(--green);color:white;padding:24px 20px 28px;
-}
-.top{max-width:1000px;margin:auto}
+header{background:var(--green);color:white;padding:24px 20px 28px}
+.top,main{max-width:1000px;margin:auto}
 .logo{font-size:27px;font-weight:900}
 .logo span{color:#a8d0b4}
 header p{margin:8px 0 0;color:#dce6de}
-main{max-width:1000px;margin:auto;padding:24px 16px 50px}
-h1{font-size:30px;margin:8px 0}
+main{padding:24px 16px 50px}
+h1{font-size:29px;margin:8px 0}
 .sub{color:var(--muted);line-height:1.5}
+.warning{
+  background:#fff0dc;border-radius:12px;padding:13px 15px;
+  font-size:14px;line-height:1.6;margin-top:18px
+}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
 .stat,.panel,.order{
   background:white;border:1px solid var(--line);
-  border-radius:18px;padding:17px;
+  border-radius:18px;padding:17px
 }
 .stat small{display:block;color:var(--muted);margin-bottom:9px}
 .stat strong{font-size:23px;color:var(--green)}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
-select,button{
-  font:inherit;border-radius:12px;padding:12px 14px;
-}
+select,button{font:inherit;border-radius:12px;padding:12px 14px}
 select{border:1px solid var(--line);background:white;flex:1;min-width:150px}
 button{border:0;cursor:pointer;font-weight:750}
 .refresh{background:var(--green);color:white}
@@ -51,19 +51,17 @@ button{border:0;cursor:pointer;font-weight:750}
 .details{border-top:1px solid var(--line);margin-top:14px;padding-top:13px;line-height:1.8}
 .items{margin:8px 0;padding-left:20px}
 .total{display:flex;justify-content:space-between;gap:10px;font-weight:900;font-size:18px;margin:12px 0;color:var(--green)}
-.note{background:#f7f5ed;border-radius:10px;padding:10px;font-size:14px}
+.note{background:var(--cream);border-radius:10px;padding:10px;font-size:14px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .actions button{flex:1;min-width:115px}
 .next{background:var(--green);color:white}
 .done{background:#e5f1e7;color:#24583a}
 .cancel{background:#fbe9e6;color:#923c32}
 .empty{text-align:center;padding:35px 15px;color:var(--muted)}
-.warning{background:#fff0dc;border-radius:12px;padding:13px 15px;font-size:14px;line-height:1.5}
+#lastUpdated{font-size:12px;color:var(--muted);margin-top:10px}
 @media(max-width:480px){
-  .stats{gap:7px}
-  .stat{padding:12px 9px}
-  .stat strong{font-size:18px}
-  .stat small{font-size:12px}
+  .stats{gap:7px}.stat{padding:12px 9px}
+  .stat strong{font-size:18px}.stat small{font-size:12px}
   h1{font-size:27px}
 }
 </style>
@@ -81,8 +79,8 @@ button{border:0;cursor:pointer;font-weight:750}
   <p class="sub">Pantau pesanan dan perbarui status penyajiannya.</p>
 
   <div class="warning">
-    Mode demo: daftar pesanan hanya membaca penyimpanan browser ini.
-    Belum tersambung ke perangkat pelanggan atau database online.
+    <b>Mode demo.</b> Data dibaca dari penyimpanan browser ini.
+    Pesanan belum tersinkron otomatis ke perangkat lain atau database online.
   </div>
 
   <section class="stats">
@@ -99,34 +97,38 @@ button{border:0;cursor:pointer;font-weight:750}
       <option value="Selesai">Selesai</option>
       <option value="Dibatalkan">Dibatalkan</option>
     </select>
-    <button class="refresh" onclick="render()">↻ Perbarui</button>
+    <button class="refresh" id="refreshButton" type="button">↻ Perbarui</button>
   </div>
 
-  <div id="orders"></div>
+  <div id="orders" aria-live="polite"></div>
+  <div id="lastUpdated"></div>
 </main>
 
 <script>
+"use strict";
+
 const STORAGE_KEY = "kopihubDemoOrders";
 
 function readOrders(){
-  try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const data = JSON.parse(raw || "[]");
     return Array.isArray(data) ? data : [];
-  } catch(e) {
+  }catch(error){
     return [];
   }
 }
 
 function money(value){
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("id-ID",{
     style:"currency",currency:"IDR",maximumFractionDigits:0
   }).format(Number(value)||0);
 }
 
 function safe(value){
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
+  }[character]));
 }
 
 function getStatus(order){
@@ -134,79 +136,99 @@ function getStatus(order){
 }
 
 function getItems(order){
-  return Array.isArray(order.items) ? order.items :
-         Array.isArray(order.cart) ? order.cart : [];
+  if(Array.isArray(order.items)) return order.items;
+  if(Array.isArray(order.cart)) return order.cart;
+  return [];
 }
 
 function getTotal(order){
   if(order.total != null) return Number(order.total)||0;
   if(order.grandTotal != null) return Number(order.grandTotal)||0;
-  return getItems(order).reduce((sum,item)=>
-    sum + (Number(item.price)||0)*(Number(item.qty ?? item.quantity)||1),0);
+  return getItems(order).reduce((sum,item)=>{
+    const quantity = Number(item.qty ?? item.quantity)||1;
+    return sum + (Number(item.price)||0)*quantity;
+  },0);
 }
 
 function render(){
   const all = readOrders();
+
   document.getElementById("count").textContent = all.length;
   document.getElementById("pending").textContent =
-    all.filter(o => getStatus(o)==="Menunggu").length;
+    all.filter(order=>getStatus(order)==="Menunggu").length;
   document.getElementById("finished").textContent =
-    all.filter(o => getStatus(o)==="Selesai").length;
+    all.filter(order=>getStatus(order)==="Selesai").length;
 
   const filter = document.getElementById("filter").value;
   const shown = all.map((order,index)=>({...order,_index:index}))
-    .filter(o => filter==="all" || getStatus(o)===filter)
+    .filter(order=>filter==="all" || getStatus(order)===filter)
     .reverse();
 
   const container = document.getElementById("orders");
+
   if(!shown.length){
-    container.innerHTML = `<div class="panel empty">
-      <h3>Belum ada pesanan</h3>
-      <p>Pesanan demo yang tersimpan di browser ini akan muncul di sini.</p>
-    </div>`;
-    return;
+    container.innerHTML = `
+      <div class="panel empty">
+        <h3>Belum ada pesanan</h3>
+        <p>Belum ada pesanan demo yang ditemukan di penyimpanan browser ini.</p>
+        <p>Jika kamu baru membuat pesanan, checkout mungkin menyimpan data dengan kunci atau format berbeda.</p>
+      </div>`;
+  }else{
+    container.innerHTML = shown.map(order=>{
+      const status = getStatus(order);
+      const items = getItems(order);
+      const number = order.orderNumber || order.orderId || order.id ||
+        ("DEMO-"+String(order._index+1).padStart(3,"0"));
+      const table = order.table || order.tableNumber || order.meja || "-";
+      const customer = order.customerName || order.name || "-";
+      const note = order.note || order.notes || order.customerNote || "";
+      const time = order.createdAt || order.date || order.timestamp || "";
+
+      const itemLines = items.length ? items.map(item=>{
+        const qty = Number(item.qty ?? item.quantity)||1;
+        return `<li>${safe(item.name || item.title || "Menu")} × ${qty}
+          — ${money((Number(item.price)||0)*qty)}</li>`;
+      }).join("") : "<li>Detail menu tidak tersedia.</li>";
+
+      const processButton = !["Diproses","Selesai","Dibatalkan"].includes(status)
+        ? `<button class="next" data-index="${order._index}" data-status="Diproses">Terima / Proses</button>` : "";
+      const finishButton = !["Selesai","Dibatalkan"].includes(status)
+        ? `<button class="done" data-index="${order._index}" data-status="Selesai">Tandai Selesai</button>` : "";
+      const cancelButton = !["Dibatalkan","Selesai"].includes(status)
+        ? `<button class="cancel" data-index="${order._index}" data-status="Dibatalkan">Batalkan</button>` : "";
+
+      return `<article class="order">
+        <div class="order-head">
+          <div>
+            <div class="order-id">${safe(number)}</div>
+            <div class="time">${safe(time ? String(time).replace("T"," ").slice(0,19) : "Waktu tidak tersedia")}</div>
+          </div>
+          <span class="tag">${safe(status)}</span>
+        </div>
+        <div class="details">
+          <div><b>Meja:</b> ${safe(table)}</div>
+          <div><b>Nama pelanggan:</b> ${safe(customer)}</div>
+          <ul class="items">${itemLines}</ul>
+          ${note ? `<div class="note"><b>Catatan barista:</b> ${safe(note)}</div>` : ""}
+          <div class="total"><span>Total</span><span>${money(getTotal(order))}</span></div>
+          <div><b>Pembayaran:</b> ${safe(order.paymentMethod || order.payment || "Bayar di kasir")}</div>
+        </div>
+        <div class="actions">${processButton}${finishButton}${cancelButton}</div>
+      </article>`;
+    }).join("");
   }
 
-  container.innerHTML = shown.map(order=>{
-    const status = getStatus(order);
-    const items = getItems(order);
-    const number = order.orderNumber || order.orderId || order.id ||
-      ("DEMO-"+String(order._index+1).padStart(3,"0"));
-    const table = order.table || order.tableNumber || order.meja || "-";
-    const note = order.note || order.notes || order.customerNote || "";
-    const time = order.createdAt || order.date || order.timestamp || "";
-    const itemLines = items.length ? items.map(item=>{
-      const qty = Number(item.qty ?? item.quantity)||1;
-      return `<li>${safe(item.name || item.title || "Menu")} × ${qty}
-        — ${money((Number(item.price)||0)*qty)}</li>`;
-    }).join("") : "<li>Detail menu tidak tersedia pada format pesanan ini.</li>";
+  document.getElementById("lastUpdated").textContent =
+    "Terakhir diperbarui: " + new Date().toLocaleTimeString("id-ID");
+}
 
-    return `<article class="order">
-      <div class="order-head">
-        <div>
-          <div class="order-id">${safe(number)}</div>
-          <div class="time">${safe(time ? String(time).replace("T"," ").slice(0,19) : "Waktu tidak tersedia")}</div>
-        </div>
-        <span class="tag">${safe(status)}</span>
-      </div>
-      <div class="details">
-        <div><b>Meja:</b> ${safe(table)}</div>
-        <div><b>Nama pelanggan:</b> ${safe(order.customerName || order.name || "-")}</div>
-        <ul class="items">${itemLines}</ul>
-        ${note ? `<div class="note"><b>Catatan barista:</b> ${safe(note)}</div>` : ""}
-        <div class="total"><span>Total</span><span>${money(getTotal(order))}</span></div>
-        <div><b>Pembayaran:</b> ${safe(order.paymentMethod || order.payment || "Bayar di kasir")}</div>
-      </div>
-      <div class="actions">
-        ${status!=="Diproses" && status!=="Selesai" && status!=="Dibatalkan"
-          ? `<button class="next" onclick="setStatus(${order._index,'Diproses'})">Terima / Proses</button>`:""}
-        ${status!=="Selesai" && status!=="Dibatalkan"
-          ? `<button class="done" onclick="setStatus(${order._index,'Selesai'})">Tandai Selesai</button>`:""}
-        ${status!=="Dibatalkan" && status!=="Selesai"
-          ? `<button class="cancel" onclick="setStatus(${order._index,'Dibatalkan'})">Batalkan</button>`:""}
-      </div>
-    </article>`;
-  }).join("");
+function refreshOrders(){
+  render();
+  const button = document.getElementById("refreshButton");
+  button.textContent = "✓ Diperbarui";
+  setTimeout(()=>{
+    button.textContent = "↻ Perbarui";
+  },1500);
 }
 
 function setStatus(index,status){
@@ -217,7 +239,15 @@ function setStatus(index,status){
   render();
 }
 
+document.getElementById("refreshButton").addEventListener("click",refreshOrders);
 document.getElementById("filter").addEventListener("change",render);
+
+document.getElementById("orders").addEventListener("click",event=>{
+  const button = event.target.closest("button[data-index][data-status]");
+  if(!button) return;
+  setStatus(Number(button.dataset.index),button.dataset.status);
+});
+
 render();
 </script>
 </body>

@@ -35,3 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ===== KONFIGURASI SUPABASE KOPIHUB ===== */
 const KOPIHUB_SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co/rest/v1/";
 const KOPIHUB_SUPABASE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+/* ===== TES KONEKSI SUPABASE KOPIHUB ===== */
+const kopihubSupabaseClient = window.supabase.createClient(
+  KOPIHUB_SUPABASE_URL,
+  KOPIHUB_SUPABASE_KEY
+);
+
+console.log("KopiHub: klien Supabase berhasil dibuat.");

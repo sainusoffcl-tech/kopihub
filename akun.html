@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Akun KopiHub</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px 16px;
+      background: #f5f7f2;
+      color: #173c2e;
+      font-family: Arial, sans-serif;
+    }
+    .card {
+      max-width: 440px;
+      margin: 35px auto;
+      padding: 26px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px #173c2e12;
+    }
+    h1 { margin-top: 0; }
+    p { color: #64746b; line-height: 1.5; }
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d5ded7;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 14px;
+      border: 0;
+      border-radius: 9px;
+      background: #50b68a;
+      color: #103b2a;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .secondary { background: #e8f1eb; }
+    #pesan { overflow-wrap: anywhere; }
+    a { color: #16744e; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>☕ KopiHub</h1>
+    <p>Buat akun pemilik kedai atau masuk ke akun Anda.</p>
+
+    <form id="formAkun">
+      <label for="nama">Nama lengkap</label>
+      <input id="nama" type="text" autocomplete="name"
+        placeholder="Nama Anda" required>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email"
+        placeholder="nama@email.com" required>
+
+      <label for="password">Kata sandi</label>
+      <input id="password" type="password"
+        autocomplete="new-password" minlength="8"
+        placeholder="Minimal 8 karakter" required>
+
+      <button type="submit">Daftar akun</button>
+      <button type="button" class="secondary" id="tombolLogin">
+        Saya sudah punya akun — Login
+      </button>
+    </form>
+
+    <p id="pesan" role="status" aria-live="polite"></p>
+    <p><a href="index.html">Kembali ke halaman utama</a></p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "GANTI_DENGAN_PROJECT_URL_ANDA";
+    const SUPABASE_KEY = "GANTI_DENGAN_PUBLISHABLE_KEY_ANDA";
+
+    const pesan = document.getElementById("pesan");
+    const form = document.getElementById("formAkun");
+    const tombolLogin = document.getElementById("tombolLogin");
+    const nama = document.getElementById("nama");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    let supabaseClient = null;
+
+    try {
+      if (
+        SUPABASE_URL.startsWith("https://") &&
+        !SUPABASE_URL.includes("GANTI_DENGAN") &&
+        SUPABASE_KEY &&
+        !SUPABASE_KEY.includes("GANTI_DENGAN") &&
+        window.supabase
+      ) {
+        supabaseClient = window.supabase.createClient(
+          SUPABASE_URL, SUPABASE_KEY
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    function tampilkanPesan(teks) {
+      pesan.textContent = teks;
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (!supabaseClient) {
+        tampilkanPesan(
+          "Konfigurasi Supabase belum diisi. Periksa URL dan publishable key."
+        );
+        return;
+      }
+
+      const tombol = form.querySelector('button[type="submit"]');
+      tombol.disabled = true;
+      tampilkanPesan("Sedang membuat akun...");
+
+      try {
+        const { data, error } =
+          await supabaseClient.auth.signUp({
+            email: email.value.trim(),
+            password: password.value,
+            options: {
+              data: { full_name: nama.value.trim() }
+            }
+          });
+
+        if (error) throw error;
+
+        if (data.session) {
+          tampilkanPesan(
+            "Pendaftaran berhasil. Akun sudah masuk. Berikutnya kita siapkan pendaftaran kedai."
+          );
+        } else {
+          tampilkanPesan(
+            "Permintaan pendaftaran diterima. Periksa email untuk tautan verifikasi jika diminta, lalu login."
+          );
+        }
+      } catch (error) {
+        tampilkanPesan("Pendaftaran gagal: " + error.message);
+      } finally {
+        tombol.disabled = false;
+      }
+    });
+
+    tombolLogin.addEventListener("click", async function () {
+      if (!supabaseClient) {
+        tampilkanPesan(
+          "Konfigurasi Supabase belum diisi. Periksa URL dan publishable key."
+        );
+        return;
+      }
+
+      const emailMasuk = email.value.trim();
+      const passwordMasuk = password.value;
+
+      if (!emailMasuk || !passwordMasuk) {
+        tampilkanPesan("Isi email dan kata sandi terlebih dahulu.");
+        return;
+      }
+
+      tombolLogin.disabled = true;
+      tampilkanPesan("Sedang masuk...");
+
+      try {
+        const { data, error } =
+          await supabaseClient.auth.signInWithPassword({
+            email: emailMasuk,
+            password: passwordMasuk
+          });
+
+        if (error) throw error;
+
+        tampilkanPesan("Login berhasil. Selamat datang di KopiHub!");
+        console.log("Status login:", data.user ? "berhasil" : "belum masuk");
+      } catch (error) {
+        tampilkanPesan("Login gagal: " + error.message);
+      } finally {
+        tombolLogin.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

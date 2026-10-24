@@ -476,19 +476,6 @@ document.getElementById("checkout").addEventListener("click", () => {
     alert("Keranjang gagal disimpan. Silakan coba lagi.");
   }
 });
-
-      const entries = Object.entries(cart).filter(([, qty]) => qty > 0);
-
-      if (entries.length === 0) {
-        alert("Silakan pilih menu terlebih dahulu.");
-        return;
-      }
-
-      alert(
-        "Demo keranjang berhasil! Langkah berikutnya kita akan membuat halaman checkout dan menyimpan pesanan dengan Supabase."
-      );
-    });
-
     renderMenu();
     renderCart();
   </script>

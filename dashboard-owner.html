@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Pemilik | KopiHub</title>
+  <style>
+    :root {
+      --green: #174c38;
+      --green-light: #e8f2ec;
+      --bg: #f5f7f5;
+      --white: #ffffff;
+      --text: #26352d;
+      --muted: #748078;
+      --border: #e4e9e5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--green);
+      color: white;
+      padding: 20px;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      color: #d7e9de;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px 16px 40px;
+    }
+
+    .welcome {
+      margin-bottom: 22px;
+    }
+
+    .welcome h1 {
+      font-size: 24px;
+      margin-bottom: 7px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      margin-top: 0;
+      font-size: 14px;
+    }
+
+    .notice {
+      background: var(--green-light);
+      border: 1px solid #d1e4d7;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .card, .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 17px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .stat-number {
+      font-size: 23px;
+      font-weight: bold;
+      margin-top: 12px;
+      color: var(--green);
+    }
+
+    .panel {
+      margin-bottom: 18px;
+    }
+
+    .panel h2 {
+      font-size: 18px;
+      margin: 0 0 15px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    button, .action-link {
+      border: 0;
+      border-radius: 10px;
+      padding: 13px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .secondary {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .menu-item:last-child { border-bottom: 0; }
+
+    .menu-item small {
+      display: block;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .price {
+      color: var(--green);
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .qr-box {
+      background: #f8faf8;
+      border: 1px dashed #aabbb0;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 22px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (min-width: 650px) {
+      .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">☕ KopiHub</div>
+    <p>Dashboard Pemilik Kedai</p>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h1>Selamat datang, Pemilik Kedai!</h1>
+      <p>Kelola kedai dan pantau aktivitas bisnis Anda.</p>
+    </section>
+
+    <div class="notice">
+      <strong>Persiapan kedai</strong><br>
+      Ini adalah tampilan awal dashboard. Lengkapi profil kedai
+      dan hubungkan Supabase sebelum digunakan untuk transaksi nyata.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="stat-label">Penjualan hari ini</div>
+        <div class="stat-number">Rp0</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Pesanan hari ini</div>
+        <div class="stat-number">0</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Menu tersedia</div>
+        <div class="stat-number">0</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Pesanan diproses</div>
+        <div class="stat-number">0</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Menu Pengelolaan</h2>
+      <div class="actions">
+        <button class="primary" onclick="showMessage('Fitur profil kedai akan dibuat berikutnya.')">
+          Profil Kedai
+        </button>
+        <button class="secondary" onclick="showMessage('Fitur tambah dan edit menu akan dibuat berikutnya.')">
+          Kelola Menu
+        </button>
+        <button class="secondary" onclick="showMessage('Daftar pesanan akan dihubungkan ke Supabase.')">
+          Pesanan
+        </button>
+        <button class="secondary" onclick="showMessage('Laporan penjualan akan tersedia setelah data transaksi terhubung.')">
+          Laporan
+        </button>
+      </div>
+      <p id="message" class="empty" aria-live="polite"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Menu Kedai</h2>
+      <p class="empty">
+        Belum ada menu yang ditampilkan. Setelah database terhubung,
+        menu, harga, dan stok akan dimuat dari Supabase.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>QR Menu Kedai</h2>
+      <div class="qr-box">
+        <p><strong>QR utama kedai</strong></p>
+        <p class="empty">
+          QR akan dibuat otomatis setelah profil kedai terdaftar.
+          Setiap kedai memiliki tautan menu yang unik.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    KopiHub © 2026 · Dashboard Pemilik Kedai
+  </footer>
+
+  <script>
+    function showMessage(message) {
+      document.getElementById('message').textContent = message;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profil Kedai | KopiHub</title>
+  <style>
+    :root {
+      --green: #174c38;
+      --light: #e8f2ec;
+      --bg: #f5f7f5;
+      --text: #26352d;
+      --muted: #718078;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 14px 40px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      max-width: 620px;
+      margin: 0 auto 22px;
+      padding: 20px;
+      background: var(--green);
+      color: white;
+      border-radius: 16px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    header p {
+      margin: 0;
+      color: #dcebe1;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 620px;
+      margin: auto;
+      padding: 22px;
+      background: white;
+      border: 1px solid #e2e9e3;
+      border-radius: 16px;
+    }
+
+    label {
+      display: block;
+      margin: 17px 0 7px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d5ded7;
+      border-radius: 9px;
+      background: white;
+      color: var(--text);
+      font: inherit;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .hint {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--green);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .message {
+      display: none;
+      margin-top: 16px;
+      padding: 13px;
+      border-radius: 9px;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .message.show { display: block; }
+    .message.info { background: var(--light); color: var(--green); }
+    .message.error { background: #fff0ef; color: #a32d25; }
+
+    .back {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: var(--green);
+      font-size: 14px;
+    }
+
+    footer {
+      max-width: 620px;
+      margin: 20px auto 0;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>☕ Profil Kedai</h1>
+    <p>
+      Selamat datang di KopiHub. Isi informasi kedai Anda
+      untuk mempersiapkan halaman menu digital.
+    </p>
+  </header>
+
+  <main>
+    <form id="shopForm">
+      <label for="shopName">Nama kedai *</label>
+      <input
+        id="shopName"
+        name="shopName"
+        type="text"
+        placeholder="Contoh: Kedai Kopi Saya"
+        maxlength="100"
+        required
+      >
+
+      <label for="businessType">Jenis usaha *</label>
+      <select id="businessType" name="businessType" required>
+        <option value="">Pilih jenis usaha</option>
+        <option value="coffee_shop">Coffee shop</option>
+        <option value="cafe">Kafe</option>
+        <option value="restaurant">Restoran</option>
+        <option value="food_stall">Warung makan</option>
+        <option value="other">Lainnya</option>
+      </select>
+
+      <label for="address">Alamat kedai *</label>
+      <textarea
+        id="address"
+        name="address"
+        placeholder="Masukkan alamat lengkap kedai"
+        maxlength="500"
+        required
+      ></textarea>
+
+      <label for="phone">Nomor telepon</label>
+      <input
+        id="phone"
+        name="phone"
+        type="tel"
+        placeholder="Contoh: 08xxxxxxxxxx"
+        maxlength="25"
+      >
+
+      <label for="slug">Nama tautan menu</label>
+      <input
+        id="slug"
+        name="slug"
+        type="text"
+        placeholder="Akan dibuat dari nama kedai"
+        maxlength="80"
+        pattern="[a-z0-9]+(-[a-z0-9]+)*"
+        autocomplete="off"
+      >
+      <p class="hint">
+        Gunakan huruf kecil, angka, dan tanda hubung.
+        Tautan belum aktif sampai profil tersimpan.
+      </p>
+
+      <button type="submit">Periksa Profil Kedai</button>
+
+      <div id="message" class="message" role="status"
+        aria-live="polite"></div>
+    </form>
+
+    <a class="back" href="dashboard-owner.html">
+      Kembali ke Dashboard Pemilik
+    </a>
+  </main>
+
+  <footer>KopiHub © 2026</footer>
+
+  <script>
+    const form = document.getElementById("shopForm");
+    const nameInput = document.getElementById("shopName");
+    const slugInput = document.getElementById("slug");
+    const message = document.getElementById("message");
+
+    function makeSlug(value) {
+      return value
+        .normalize("NFKD")
+        .toLowerCase()
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 80)
+        .replace(/-+$/g, "");
+    }
+
+    nameInput.addEventListener("input", () => {
+      if (!slugInput.dataset.edited) {
+        slugInput.value = makeSlug(nameInput.value);
+      }
+    });
+
+    slugInput.addEventListener("input", () => {
+      slugInput.dataset.edited = "true";
+      slugInput.value = makeSlug(slugInput.value);
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      message.className = "message show info";
+      message.textContent =
+        "Formulir berhasil diperiksa. Data belum disimpan ke database. " +
+        "Langkah berikutnya adalah menghubungkan formulir ke Supabase " +
+        "dan memastikan akun pemilik memiliki hak akses yang benar.";
+    });
+  </script>
+</body>
+</html>

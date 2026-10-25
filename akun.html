@@ -4,286 +4,355 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b2a">
   <title>Akun KopiHub</title>
+
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       padding: 24px 16px;
-      background: #f5f7f2;
-      color: #173c2e;
       font-family: Arial, sans-serif;
+      background: #f3f6f3;
+      color: #183b2b;
     }
-    .card {
+
+    .container {
       max-width: 440px;
-      margin: 35px auto;
-      padding: 26px;
+      margin: 25px auto;
+      padding: 28px 22px;
       background: white;
       border-radius: 18px;
-      box-shadow: 0 8px 30px #173c2e12;
+      box-shadow: 0 8px 28px #123b2a12;
     }
-    h1 { margin-top: 0; }
-    p { color: #64746b; line-height: 1.5; }
+
+    .logo {
+      text-align: center;
+      color: #14532d;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .subjudul {
+      text-align: center;
+      color: #647067;
+      margin-bottom: 26px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 24px;
+    }
+
     label {
       display: block;
-      margin: 16px 0 7px;
+      font-size: 14px;
       font-weight: bold;
+      margin: 15px 0 7px;
     }
+
     input {
       width: 100%;
       padding: 13px;
-      border: 1px solid #d5ded7;
+      border: 1px solid #cbd5ce;
       border-radius: 9px;
       font-size: 16px;
+      background: white;
     }
+
+    input:focus {
+      outline: 2px solid #7ba98b;
+      border-color: #14532d;
+    }
+
     button {
       width: 100%;
-      padding: 14px;
-      margin-top: 14px;
-      border: 0;
+      padding: 13px;
+      margin-top: 13px;
+      border: none;
       border-radius: 9px;
-      background: #50b68a;
-      color: #103b2a;
       font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
     }
-    .secondary { background: #e8f1eb; }
-    #pesan { overflow-wrap: anywhere; }
-    a { color: #16744e; }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .utama {
+      background: #14532d;
+      color: white;
+    }
+
+    .sekunder {
+      background: #e9f1eb;
+      color: #14532d;
+    }
+
+    .tautan {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: #14532d;
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    #pesan {
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+      font-size: 14px;
+      margin-top: 18px;
+    }
+
+    .catatan {
+      color: #647067;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 20px;
+    }
   </style>
 </head>
+
 <body>
-  <main class="card">
-    <h1>☕ KopiHub</h1>
-    <p>Buat akun pemilik kedai atau masuk ke akun Anda.</p>
+  <main class="container">
+    <div class="logo">☕ KopiHub</div>
+    <p class="subjudul">
+      Satu akun untuk memulai perjalanan kedai kamu.
+    </p>
 
-    <form id="formAkun">
+    <h2>Buat akun</h2>
+
+    <form id="formDaftar">
       <label for="nama">Nama lengkap</label>
-      <input id="nama" type="text" autocomplete="name"
-        placeholder="Nama Anda" required>
+      <input id="nama" type="text"
+        autocomplete="name" required
+        placeholder="Nama kamu">
 
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="email"
-        placeholder="nama@email.com" required>
+      <label for="email">Alamat email</label>
+      <input id="email" type="email"
+        autocomplete="email" required
+        placeholder="nama@email.com">
 
       <label for="password">Kata sandi</label>
       <input id="password" type="password"
-        autocomplete="new-password" minlength="8"
-        placeholder="Minimal 8 karakter" required>
+        autocomplete="new-password" minlength="6"
+        required placeholder="Minimal 6 karakter">
 
-      <button type="submit">Daftar akun</button>
-      <button type="button" class="secondary" id="tombolLogin">
-        Saya sudah punya akun — Login
-      </button>
+      <button type="button" id="lihatSandi"
+        class="sekunder">Tampilkan kata sandi</button>
+
+      <button type="submit" id="tombolDaftar"
+        class="utama">Daftar akun</button>
     </form>
 
+    <h2>Sudah punya akun?</h2>
+
+    <button type="button" id="tombolLogin"
+      class="utama">Login</button>
+
+    <button type="button" id="tombolLupa"
+      class="sekunder">Lupa kata sandi?</button>
+
     <p id="pesan" role="status" aria-live="polite"></p>
-    <p><a href="index.html">Kembali ke halaman utama</a></p>
+
+    <p class="catatan">
+      Dengan menggunakan KopiHub, pastikan email yang kamu masukkan
+      benar dan dapat diakses untuk verifikasi atau pemulihan akun.
+    </p>
+
+    <a href="index.html" class="tautan">
+      Kembali ke halaman utama
+    </a>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
+    // Ganti dengan Project URL dan publishable key milikmu.
+    // Gunakan publishable key, bukan service_role atau secret key.
     const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
     const pesan = document.getElementById("pesan");
-    const form = document.getElementById("formAkun");
-    const tombolLogin = document.getElementById("tombolLogin");
+    const formDaftar = document.getElementById("formDaftar");
     const nama = document.getElementById("nama");
     const email = document.getElementById("email");
     const password = document.getElementById("password");
+    const tombolDaftar = document.getElementById("tombolDaftar");
+    const tombolLogin = document.getElementById("tombolLogin");
+    const tombolLupa = document.getElementById("tombolLupa");
+    const lihatSandi = document.getElementById("lihatSandi");
+
+    function tampilkanPesan(teks) {
+      pesan.textContent = teks;
+    }
 
     let supabaseClient = null;
 
     try {
       if (
         SUPABASE_URL.startsWith("https://") &&
-        !SUPABASE_URL.includes("GANTI_DENGAN") &&
-        SUPABASE_KEY &&
-        !SUPABASE_KEY.includes("GANTI_DENGAN") &&
-        window.supabase
+        !SUPABASE_URL.includes("GANTI_") &&
+        SUPABASE_PUBLISHABLE_KEY &&
+        !SUPABASE_PUBLISHABLE_KEY.includes("GANTI_")
       ) {
         supabaseClient = window.supabase.createClient(
-          SUPABASE_URL, SUPABASE_KEY
+          SUPABASE_URL,
+          SUPABASE_PUBLISHABLE_KEY
         );
       }
     } catch (error) {
-      console.error(error);
+      tampilkanPesan("Konfigurasi Supabase tidak valid.");
     }
 
-    
-function tampilkanPesan(teks) {
-  pesan.textContent = teks;
-}
+    function periksaKonfigurasi() {
+      if (!supabaseClient) {
+        tampilkanPesan(
+          "Isi Project URL dan publishable key Supabase terlebih dahulu."
+        );
+        return false;
+      }
+      return true;
+    }
 
-function buatTombol(id, teks) {
-  let tombol = document.getElementById(id);
+    lihatSandi.addEventListener("click", function () {
+      const tampil = password.type === "text";
+      password.type = tampil ? "password" : "text";
+      lihatSandi.textContent = tampil
+        ? "Tampilkan kata sandi"
+        : "Sembunyikan kata sandi";
+    });
 
-  if (!tombol) {
-    tombol = document.createElement("button");
-    tombol.type = "button";
-    tombol.id = id;
-    tombol.textContent = teks;
-    tombol.style.marginTop = "10px";
-    tombol.style.cursor = "pointer";
-    tombol.style.padding = "10px 14px";
-    tombol.style.borderRadius = "8px";
-    tombol.style.border = "1px solid #0f5132";
-    tombol.style.background = "#ffffff";
-    tombol.style.color = "#0f5132";
+    formDaftar.addEventListener("submit", async function (event) {
+      event.preventDefault();
 
-    form.insertAdjacentElement("afterend", tombol);
-  }
+      if (!periksaKonfigurasi()) return;
 
-  return tombol;
-}
+      if (password.value.length < 6) {
+        tampilkanPesan("Kata sandi minimal 6 karakter.");
+        return;
+      }
 
-const tombolLupaSandi = buatTombol(
-  "tombolLupaSandi",
-  "Lupa kata sandi?"
-);
+      tombolDaftar.disabled = true;
+      tampilkanPesan("Sedang membuat akun...");
 
-const tombolTampilkanSandi = buatTombol(
-  "tombolTampilkanSandi",
-  "Tampilkan kata sandi"
-);
+      try {
+        const { data, error } =
+          await supabaseClient.auth.signUp({
+            email: email.value.trim(),
+            password: password.value,
+            options: {
+              data: {
+                full_name: nama.value.trim()
+              },
+              emailRedirectTo:
+                "https://sainusoffcl-tech.github.io/kopihub/"
+            }
+          });
 
-tombolTampilkanSandi.addEventListener("click", function () {
-  const sedangTampil = password.type === "text";
-  password.type = sedangTampil ? "password" : "text";
-  tombolTampilkanSandi.textContent = sedangTampil
-    ? "Tampilkan kata sandi"
-    : "Sembunyikan kata sandi";
-});
+        if (error) throw error;
 
-form.addEventListener("submit", async function (event) {
-  event.preventDefault();
-
-  if (!supabaseClient) {
-    tampilkanPesan("Konfigurasi Supabase belum diisi.");
-    return;
-  }
-
-  const tombolDaftar = form.querySelector(
-    'button[type="submit"]'
-  );
-
-  if (!nama.value.trim() || !email.value.trim() || !password.value) {
-    tampilkanPesan("Isi nama, email, dan kata sandi.");
-    return;
-  }
-
-  if (password.value.length < 6) {
-    tampilkanPesan("Kata sandi minimal 6 karakter.");
-    return;
-  }
-
-  tombolDaftar.disabled = true;
-  tampilkanPesan("Sedang membuat akun...");
-
-  try {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email: email.value.trim(),
-      password: password.value,
-      options: {
-        data: { full_name: nama.value.trim() }
+        if (data.session) {
+          tampilkanPesan(
+            "Pendaftaran berhasil. Kamu sudah login ke KopiHub."
+          );
+        } else {
+          tampilkanPesan(
+            "Pendaftaran diterima. Periksa email untuk verifikasi, lalu login."
+          );
+        }
+      } catch (error) {
+        tampilkanPesan(
+          "Pendaftaran gagal: " + error.message
+        );
+      } finally {
+        tombolDaftar.disabled = false;
       }
     });
 
-    if (error) throw error;
+    tombolLogin.addEventListener("click", async function () {
+      if (!periksaKonfigurasi()) return;
 
-    if (data.session) {
-      tampilkanPesan(
-        "Pendaftaran berhasil. Kamu sudah login ke KopiHub."
-      );
-    } else {
-      tampilkanPesan(
-        "Pendaftaran diterima. Periksa email untuk verifikasi, lalu login."
-      );
-    }
-  } catch (error) {
-    tampilkanPesan("Pendaftaran gagal: " + error.message);
-  } finally {
-    tombolDaftar.disabled = false;
-  }
-});
+      const emailMasuk = email.value.trim();
+      const passwordMasuk = password.value;
 
-tombolLogin.addEventListener("click", async function () {
-  if (!supabaseClient) {
-    tampilkanPesan("Konfigurasi Supabase belum diisi.");
-    return;
-  }
+      if (!emailMasuk || !passwordMasuk) {
+        tampilkanPesan(
+          "Isi email dan kata sandi pada kolom di atas."
+        );
+        return;
+      }
 
-  const emailMasuk = email.value.trim();
-  const passwordMasuk = password.value;
+      tombolLogin.disabled = true;
+      tampilkanPesan("Sedang masuk...");
 
-  if (!emailMasuk || !passwordMasuk) {
-    tampilkanPesan("Isi email dan kata sandi terlebih dahulu.");
-    return;
-  }
+      try {
+        const { error } =
+          await supabaseClient.auth.signInWithPassword({
+            email: emailMasuk,
+            password: passwordMasuk
+          });
 
-  tombolLogin.disabled = true;
-  tampilkanPesan("Sedang masuk...");
+        if (error) throw error;
 
-  try {
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email: emailMasuk,
-        password: passwordMasuk
-      });
+        tampilkanPesan(
+          "Login berhasil! Selamat datang di KopiHub."
+        );
+      } catch (error) {
+        tampilkanPesan("Login gagal: " + error.message);
+      } finally {
+        tombolLogin.disabled = false;
+      }
+    });
 
-    if (error) throw error;
+    tombolLupa.addEventListener("click", async function () {
+      if (!periksaKonfigurasi()) return;
 
-    tampilkanPesan("Login berhasil. Selamat datang di KopiHub!");
-    console.log("Status login:", data.user ? "berhasil" : "belum masuk");
-  } catch (error) {
-    tampilkanPesan("Login gagal: " + error.message);
-  } finally {
-    tombolLogin.disabled = false;
-  }
-});
+      const emailPemulihan = email.value.trim();
 
-tombolLupaSandi.addEventListener("click", async function () {
-  if (!supabaseClient) {
-    tampilkanPesan("Konfigurasi Supabase belum diisi.");
-    return;
-  }
+      if (!emailPemulihan) {
+        tampilkanPesan(
+          "Masukkan email akun pada kolom Alamat email terlebih dahulu."
+        );
+        email.focus();
+        return;
+      }
 
-  const emailPemulihan = email.value.trim();
+      tombolLupa.disabled = true;
+      tampilkanPesan("Sedang memproses permintaan pemulihan...");
 
-  if (!emailPemulihan) {
-    tampilkanPesan(
-      "Masukkan email akun kamu pada kolom email terlebih dahulu."
-    );
-    email.focus();
-    return;
-  }
+      try {
+        const { error } =
+          await supabaseClient.auth.resetPasswordForEmail(
+            emailPemulihan,
+            {
+              redirectTo:
+                "https://sainusoffcl-tech.github.io/kopihub/reset-password.html"
+            }
+          );
 
-  tombolLupaSandi.disabled = true;
-  tampilkanPesan("Sedang memproses permintaan pemulihan...");
+        if (error) throw error;
 
-  try {
-    const { error } =
-      await supabaseClient.auth.resetPasswordForEmail(
-        emailPemulihan,
-        {
-          redirectTo:
-            "https://sainusoffcl-tech.github.io/kopihub/reset-password.html"
-        }
-      );
-
-    if (error) throw error;
-
-    tampilkanPesan(
-      "Permintaan diproses. Periksa email dan folder Spam untuk tautan pemulihan."
-    );
-  } catch (error) {
-    tampilkanPesan(
-      "Pemulihan gagal: " + error.message
-    );
-  } finally {
-    tombolLupaSandi.disabled = false;
-  }
-});
-
-    
+        tampilkanPesan(
+          "Permintaan diproses. Periksa email dan folder Spam untuk tautan pemulihan."
+        );
+      } catch (error) {
+        tampilkanPesan(
+          "Permintaan pemulihan gagal: " + error.message
+        );
+      } finally {
+        tombolLupa.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

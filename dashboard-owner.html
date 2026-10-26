@@ -176,23 +176,62 @@
       </div>
     </section>
 
-    <section class="panel">
-      <h2>Menu Pengelolaan</h2>
-      <div class="actions">
-        <a class="action-link primary" href="profil-kedai.html">Profil Kedai</a>
-        <a class="action-link secondary" href="#kelola-menu">Kelola Menu</a>
-        <a class="action-link secondary" href="#pesanan">Pesanan</a>
-        <a class="action-link secondary" href="#laporan">Laporan</a>
-      </div>
-    </section>
 
-    <section class="panel" id="kelola-menu">
-      <h2>Kelola Menu</h2>
-      <p class="muted">
-        Pengelolaan menu belum terhubung ke database. Fitur tambah,
-        edit, dan ketersediaan menu akan dibuat berikutnya.
-      </p>
-    </section>
+<section class="panel" id="kelola-menu">
+  <h2>Kelola Menu</h2>
+  <p class="muted">
+    Tambahkan menu dan atur harga produk kedai Anda.
+  </p>
+
+  <form id="menu-form">
+    <div class="field">
+      <label for="menu-name">Nama Menu</label>
+      <input id="menu-name" type="text"
+        placeholder="Contoh: Kopi Susu" required>
+    </div>
+
+    <div class="field">
+      <label for="menu-category">Kategori</label>
+      <select id="menu-category" required>
+        <option value="Coffee">Coffee</option>
+        <option value="Non Coffee">Non Coffee</option>
+        <option value="Makanan">Makanan</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="menu-price">Harga (Rupiah)</label>
+      <input id="menu-price" type="number"
+        min="1" placeholder="20000" required>
+    </div>
+
+    <div class="field">
+      <label for="menu-available">Ketersediaan</label>
+      <select id="menu-available">
+        <option value="true">Tersedia</option>
+        <option value="false">Habis</option>
+      </select>
+    </div>
+
+    <button class="primary" type="submit">
+      Tambah Menu
+    </button>
+  </form>
+
+  <hr>
+
+  <h3>Daftar Menu</h3>
+  <div id="menu-list">
+    <p class="muted">
+      Belum ada menu yang ditampilkan.
+    </p>
+  </div>
+
+  <p id="menu-message" class="muted">
+    Formulir tampilan siap. Penyimpanan database
+    akan dihubungkan pada langkah berikutnya.
+  </p>
+</section>
 
     <section class="panel" id="pesanan">
       <h2>Pesanan</h2>

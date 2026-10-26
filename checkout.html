@@ -671,11 +671,59 @@
           ". Total " + rupiah(total) +
           ". Pembayaran masih menunggu kasir. Catatan: pesanan belum otomatis diterima oleh staf Aroma Coffee."
         );
-      } catch (error) {
-        showStatus(
-          "Browser tidak dapat menyimpan pesanan. Silakan coba lagi."
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Mengirim pesanan...";
+
+      try {
+        const response = await fetch(
+          "https://ozcliasebeydgyvgluht.supabase.co/functions/v1/create-order",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": "TEMPELKAN_PUBLISHABLE_KEY_DI_SINI",
+              "Authorization": "Bearer TEMPELKAN_PUBLISHABLE_KEY_DI_SINI"
+            },
+            body: JSON.stringify({
+              customerName,
+              customerPhone,
+              table: table.value,
+              note: orderNote,
+              shop: sessionStorage.getItem("kopihubShop") || "aroma-coffee",
+              items,
+              paymentMethod: "cashier"
+            })
+          }
         );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || "Pesanan gagal disimpan.");
+        }
+
+        sessionStorage.removeItem("kopihubCheckout");
+        form.style.display = "none";
+
+        showStatus(
+          "Pesanan berhasil dikirim ke database. Nomor pesanan: " +
+          result.orderCode +
+          ". Meja " + table.value +
+          ". Total " + rupiah(total) +
+          ". Pembayaran dilakukan di kasir. Simpan nomor pesanan ini."
+        );
+      } catch (error) {
+        console.error("Checkout error:", error);
+        showStatus(
+          error.message ||
+          "Pesanan belum berhasil dikirim. Silakan coba lagi."
+        );
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Coba Kirim Pesanan Lagi";
       }
+
+
     });
 
     renderTables();

@@ -550,6 +550,153 @@
       window.location.href = "akun.html";
     });
 
+    // ===== KELOLA MENU KOPIHUB =====
+    const menuForm = document.getElementById("menu-form");
+    const menuCategory = document.getElementById("menu-category");
+    const menuList = document.getElementById("menu-list");
+    const menuMessage = document.getElementById("menu-message");
+
+    function showMenuMessage(message, isError = false) {
+      menuMessage.textContent = message;
+      menuMessage.style.color = isError ? "#b42318" : "";
+    }
+
+    async function loadCategories() {
+      const shopId = shopSelect.value;
+      if (!client || !shopId) return;
+
+      menuCategory.innerHTML = '<option value="">Memuat kategori...</option>';
+
+      const { data, error } = await client
+        .from("kh_categories")
+        .select("id, name")
+        .eq("shop_id", shopId)
+        .eq("is_active", true)
+        .order("sort_order");
+
+      if (error) {
+        menuCategory.innerHTML = '<option value="">Gagal memuat kategori</option>';
+        showMenuMessage("Kategori gagal dimuat: " + error.message, true);
+        return;
+      }
+
+      menuCategory.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        menuCategory.innerHTML = '<option value="">Belum ada kategori aktif</option>';
+        showMenuMessage("Tambahkan kategori untuk kedai ini terlebih dahulu.", true);
+        return;
+      }
+
+      data.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        menuCategory.appendChild(option);
+      });
+    }
+
+    async function loadProducts() {
+      const shopId = shopSelect.value;
+      if (!client || !shopId) return;
+
+      menuList.textContent = "Memuat menu...";
+
+      const { data, error } = await client
+        .from("kh_products")
+        .select("id, name, price, is_available, kh_categories(name)")
+        .eq("shop_id", shopId)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        menuList.textContent = "Gagal memuat menu: " + error.message;
+        showMenuMessage("Periksa izin akses tabel kh_products.", true);
+        return;
+      }
+
+      menuList.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        menuList.textContent = "Belum ada menu untuk kedai ini.";
+        return;
+      }
+
+      data.forEach(product => {
+        const item = document.createElement("div");
+        item.className = "field";
+
+        const name = document.createElement("strong");
+        name.textContent = product.name;
+
+        const details = document.createElement("p");
+        details.className = "muted";
+        details.textContent =
+          (product.kh_categories?.name || "Tanpa kategori") +
+          " • Rp " + Number(product.price).toLocaleString("id-ID") +
+          " • " + (product.is_available ? "Tersedia" : "Habis");
+
+        item.appendChild(name);
+        item.appendChild(details);
+        menuList.appendChild(item);
+      });
+    }
+
+    async function refreshMenu() {
+      await loadCategories();
+      await loadProducts();
+    }
+
+    menuForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const shopId = shopSelect.value;
+      const name = document.getElementById("menu-name").value.trim();
+      const categoryId = menuCategory.value;
+      const price = Number(document.getElementById("menu-price").value);
+      const isAvailable =
+        document.getElementById("menu-available").value === "true";
+
+      if (!client || !shopId) {
+        showMenuMessage("Pilih kedai terlebih dahulu.", true);
+        return;
+      }
+
+      if (!name || !categoryId || !Number.isFinite(price) || price <= 0) {
+        showMenuMessage("Lengkapi nama, kategori, dan harga menu.", true);
+        return;
+      }
+
+      const submitButton = menuForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+
+      const { error } = await client
+        .from("kh_products")
+        .insert({
+          shop_id: shopId,
+          category_id: categoryId,
+          name: name,
+          price: price,
+          is_available: isAvailable,
+          item_type: "product"
+        });
+
+      submitButton.disabled = false;
+
+      if (error) {
+        showMenuMessage("Menu gagal disimpan: " + error.message, true);
+        return;
+      }
+
+      menuForm.reset();
+      showMenuMessage("Menu berhasil disimpan!");
+      await refreshMenu();
+    });
+
+    shopSelect.addEventListener("change", async function () {
+      renderSelectedShop();
+      await refreshMenu();
+    });
+
     loadShops();
   </script>
 </body>

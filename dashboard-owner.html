@@ -3,182 +3,99 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Pemilik | KopiHub</title>
   <style>
     :root {
       --green: #174c38;
-      --green-light: #e8f2ec;
+      --light: #e8f2ec;
       --bg: #f5f7f5;
-      --white: #ffffff;
+      --white: #fff;
       --text: #26352d;
       --muted: #748078;
       --border: #e4e9e5;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
-
     header {
       background: var(--green);
       color: white;
-      padding: 20px;
+      padding: 22px 18px;
     }
-
-    .brand {
-      font-size: 23px;
-      font-weight: bold;
-    }
-
-    header p {
-      margin: 7px 0 0;
-      color: #d7e9de;
-      font-size: 14px;
-    }
-
-    main {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px 16px 40px;
-    }
-
-    .welcome {
-      margin-bottom: 22px;
-    }
-
-    .welcome h1 {
-      font-size: 24px;
-      margin-bottom: 7px;
-    }
-
-    .welcome p {
-      color: var(--muted);
-      margin-top: 0;
-      font-size: 14px;
-    }
-
-    .notice {
-      background: var(--green-light);
-      border: 1px solid #d1e4d7;
-      padding: 14px;
-      border-radius: 12px;
-      margin-bottom: 22px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .card, .panel {
+    .brand { font-size: 24px; font-weight: bold; }
+    header p { color: #d7e9de; margin: 7px 0 0; }
+    main { max-width: 1000px; margin: auto; padding: 20px 16px 40px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin-top: 0; }
+    .muted { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .notice, .panel, .stat {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 17px;
+      margin-bottom: 16px;
     }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 13px;
+    .notice { background: var(--light); line-height: 1.6; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
     }
-
-    .stat-number {
-      font-size: 23px;
-      font-weight: bold;
-      margin-top: 12px;
-      color: var(--green);
-    }
-
-    .panel {
-      margin-bottom: 18px;
-    }
-
-    .panel h2 {
-      font-size: 18px;
-      margin: 0 0 15px;
-    }
-
+    .stat-label { font-size: 13px; color: var(--muted); }
+    .stat-number { font-size: 23px; font-weight: bold; color: var(--green); margin-top: 10px; }
     .actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
-
-    button, .action-link {
+    .action-link, button {
+      display: block;
+      width: 100%;
       border: 0;
       border-radius: 10px;
       padding: 13px 10px;
       font-size: 14px;
       font-weight: bold;
-      cursor: pointer;
       text-align: center;
       text-decoration: none;
+      cursor: pointer;
+      font-family: inherit;
     }
-
-    .primary {
-      background: var(--green);
-      color: white;
+    .primary { background: var(--green); color: white; }
+    .secondary { background: var(--light); color: var(--green); }
+    .field { margin: 12px 0; }
+    label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 7px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 16px;
     }
-
-    .secondary {
-      background: var(--green-light);
-      color: var(--green);
-    }
-
-    .menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .menu-item:last-child { border-bottom: 0; }
-
-    .menu-item small {
-      display: block;
-      color: var(--muted);
-      margin-top: 5px;
-    }
-
-    .price {
-      color: var(--green);
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .empty {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
     .qr-box {
+      text-align: center;
       background: #f8faf8;
       border: 1px dashed #aabbb0;
       border-radius: 12px;
-      padding: 18px;
-      text-align: center;
+      padding: 16px;
     }
-
-    footer {
-      text-align: center;
-      padding: 22px;
-      color: var(--muted);
-      font-size: 12px;
+    #qr-image {
+      display: block;
+      width: 220px;
+      max-width: 100%;
+      height: auto;
+      margin: 14px auto;
+      background: white;
     }
-
+    .url-text { overflow-wrap: anywhere; font-size: 13px; color: var(--muted); }
+    .button-stack { display: grid; gap: 10px; margin-top: 12px; }
+    footer { text-align: center; padding: 22px; color: var(--muted); font-size: 12px; }
     @media (min-width: 650px) {
       .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -192,31 +109,30 @@
   </header>
 
   <main>
-    <section class="welcome">
-      <h1>Selamat datang, Pemilik Kedai!</h1>
-      <p>Kelola kedai dan pantau aktivitas bisnis Anda.</p>
-    </section>
+    <h1>Selamat datang, Pemilik Kedai!</h1>
+    <p class="muted">Kelola kedai dan persiapkan menu digital Anda.</p>
 
     <div class="notice">
-      <strong>Persiapan kedai</strong><br>
-      Ini adalah tampilan awal dashboard. Lengkapi profil kedai
-      dan hubungkan Supabase sebelum digunakan untuk transaksi nyata.
+      <strong>Informasi</strong><br>
+      Dashboard ini masih dalam tahap pengembangan.
+      Data penjualan dan pesanan akan ditampilkan setelah database
+      serta proses transaksi terhubung.
     </div>
 
     <section class="stats">
-      <div class="card">
+      <div class="stat">
         <div class="stat-label">Penjualan hari ini</div>
         <div class="stat-number">Rp0</div>
       </div>
-      <div class="card">
+      <div class="stat">
         <div class="stat-label">Pesanan hari ini</div>
         <div class="stat-number">0</div>
       </div>
-      <div class="card">
+      <div class="stat">
         <div class="stat-label">Menu tersedia</div>
         <div class="stat-number">0</div>
       </div>
-      <div class="card">
+      <div class="stat">
         <div class="stat-label">Pesanan diproses</div>
         <div class="stat-number">0</div>
       </div>
@@ -225,50 +141,163 @@
     <section class="panel">
       <h2>Menu Pengelolaan</h2>
       <div class="actions">
-        <button class="primary" onclick="showMessage('Fitur profil kedai akan dibuat berikutnya.')">
-          Profil Kedai
-        </button>
-        <button class="secondary" onclick="showMessage('Fitur tambah dan edit menu akan dibuat berikutnya.')">
-          Kelola Menu
-        </button>
-        <button class="secondary" onclick="showMessage('Daftar pesanan akan dihubungkan ke Supabase.')">
-          Pesanan
-        </button>
-        <button class="secondary" onclick="showMessage('Laporan penjualan akan tersedia setelah data transaksi terhubung.')">
-          Laporan
-        </button>
+        <a class="action-link primary" href="profil-kedai.html">Profil Kedai</a>
+        <a class="action-link secondary" href="#kelola-menu">Kelola Menu</a>
+        <a class="action-link secondary" href="#pesanan">Pesanan</a>
+        <a class="action-link secondary" href="#laporan">Laporan</a>
       </div>
-      <p id="message" class="empty" aria-live="polite"></p>
+      <p class="muted">Pilih fitur untuk melihat bagian yang tersedia.</p>
     </section>
 
-    <section class="panel">
-      <h2>Menu Kedai</h2>
-      <p class="empty">
-        Belum ada menu yang ditampilkan. Setelah database terhubung,
-        menu, harga, dan stok akan dimuat dari Supabase.
+    <section class="panel" id="kelola-menu">
+      <h2>Kelola Menu</h2>
+      <p class="muted">
+        Bagian ini akan digunakan untuk menambah, mengubah, dan mengatur
+        ketersediaan menu. Data menu belum terhubung ke database.
       </p>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="pesanan">
+      <h2>Pesanan</h2>
+      <p class="muted">
+        Daftar pesanan pelanggan akan tampil di sini setelah sistem pesanan
+        terhubung ke database.
+      </p>
+    </section>
+
+    <section class="panel" id="laporan">
+      <h2>Laporan Penjualan</h2>
+      <p class="muted">
+        Laporan akan tersedia setelah transaksi tersimpan dan terhubung
+        ke sistem.
+      </p>
+    </section>
+
+    <section class="panel" id="qr-menu">
       <h2>QR Menu Kedai</h2>
-      <div class="qr-box">
-        <p><strong>QR utama kedai</strong></p>
-        <p class="empty">
-          QR akan dibuat otomatis setelah profil kedai terdaftar.
-          Setiap kedai memiliki tautan menu yang unik.
+      <p class="muted">
+        Masukkan nama tautan kedai untuk membuat QR menu. Contoh:
+        ontal-kopi. QR ini menggunakan tautan menu publik KopiHub.
+      </p>
+
+      <div class="field">
+        <label for="shop-slug">Nama tautan kedai</label>
+        <input id="shop-slug" value="ontal-kopi"
+          maxlength="60" autocomplete="off">
+      </div>
+
+      <button class="primary" id="make-qr" type="button">
+        Buat QR Menu
+      </button>
+
+      <div class="qr-box" style="margin-top:14px">
+        <strong>QR Menu KopiHub</strong>
+        <img id="qr-image" alt="QR Menu Kedai"
+          hidden>
+        <p class="url-text" id="menu-url"></p>
+        <p class="muted" id="qr-status">
+          Tekan Buat QR Menu untuk menampilkan kode.
         </p>
       </div>
+
+      <div class="button-stack">
+        <a class="action-link secondary" id="open-menu"
+          href="menu.html" target="_blank" rel="noopener">
+          Buka Menu Pelanggan
+        </a>
+        <button class="secondary" id="print-qr" type="button">
+          Cetak QR Menu
+        </button>
+      </div>
+
+      <p class="muted">
+        Catatan: QR dibuat melalui layanan QR eksternal dan membutuhkan
+        koneksi internet. Menu multi-kedai belum aktif sampai halaman menu
+        dan data kedai dihubungkan. Jangan gunakan sebagai sistem transaksi
+        sebelum pengujian selesai.
+      </p>
     </section>
   </main>
 
-  <footer>
-    KopiHub © 2026 · Dashboard Pemilik Kedai
-  </footer>
+  <footer>KopiHub © 2026 · Dashboard Pemilik Kedai</footer>
 
   <script>
-    function showMessage(message) {
-      document.getElementById('message').textContent = message;
+    const slugInput = document.getElementById('shop-slug');
+    const qrImage = document.getElementById('qr-image');
+    const menuUrlText = document.getElementById('menu-url');
+    const qrStatus = document.getElementById('qr-status');
+    const openMenu = document.getElementById('open-menu');
+
+    function getMenuUrl() {
+      const slug = slugInput.value.trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+
+      if (!slug) {
+        return '';
+      }
+
+      return new URL(
+        'menu.html?kedai=' + encodeURIComponent(slug),
+        window.location.href
+      ).href;
     }
+
+    document.getElementById('make-qr').addEventListener('click', function () {
+      const url = getMenuUrl();
+
+      if (!url) {
+        qrStatus.textContent = 'Masukkan nama tautan kedai terlebih dahulu.';
+        qrImage.hidden = true;
+        menuUrlText.textContent = '';
+        return;
+      }
+
+      menuUrlText.textContent = url;
+      openMenu.href = url;
+      qrStatus.textContent = 'Memuat QR Menu...';
+      qrImage.hidden = false;
+      qrImage.src =
+        'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' +
+        encodeURIComponent(url);
+
+      qrImage.onload = function () {
+        qrStatus.textContent = 'QR berhasil dibuat. Coba pindai dengan kamera HP.';
+      };
+
+      qrImage.onerror = function () {
+        qrStatus.textContent =
+          'QR gagal dimuat. Periksa koneksi internet lalu coba lagi.';
+      };
+    });
+
+    document.getElementById('print-qr').addEventListener('click', function () {
+      if (qrImage.hidden || !qrImage.src) {
+        qrStatus.textContent = 'Buat QR Menu terlebih dahulu.';
+        return;
+      }
+
+      const printWindow = window.open('', '_blank');
+
+      if (!printWindow) {
+        qrStatus.textContent =
+          'Jendela cetak diblokir. Izinkan pop-up atau buka QR di tab baru.';
+        return;
+      }
+
+      printWindow.document.write(
+        '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">' +
+        '<title>QR Menu KopiHub</title></head><body style="font-family:Arial;text-align:center;padding:24px">' +
+        '<h1>Menu Kedai KopiHub</h1>' +
+        '<img src="' + qrImage.src + '" style="width:260px;max-width:90%">' +
+        '<p>' + menuUrlText.textContent + '</p>' +
+        '<script>window.onload=function(){window.print()}<\/script>' +
+        '</body></html>'
+      );
+      printWindow.document.close();
+    });
   </script>
 </body>
 </html>

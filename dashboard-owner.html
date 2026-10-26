@@ -4,98 +4,156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#174c38">
   <title>Dashboard Pemilik | KopiHub</title>
+
   <style>
     :root {
       --green: #174c38;
-      --light: #e8f2ec;
+      --green-light: #e8f2ec;
       --bg: #f5f7f5;
       --white: #fff;
       --text: #26352d;
       --muted: #748078;
-      --border: #e4e9e5;
+      --border: #e1e8e2;
+      --danger: #a72d2d;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: var(--bg);
       color: var(--text);
+      background: var(--bg);
     }
+
     header {
-      background: var(--green);
-      color: white;
       padding: 22px 18px;
+      color: white;
+      background: var(--green);
     }
+
     .brand { font-size: 24px; font-weight: bold; }
-    header p { color: #d7e9de; margin: 7px 0 0; }
-    main { max-width: 1000px; margin: auto; padding: 20px 16px 40px; }
+    header p { margin: 7px 0 0; color: #d7e9de; }
+
+    main {
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px 16px 40px;
+    }
+
     h1 { font-size: 24px; margin-bottom: 8px; }
-    h2 { font-size: 18px; margin-top: 0; }
-    .muted { color: var(--muted); font-size: 14px; line-height: 1.6; }
-    .notice, .panel, .stat {
+    h2 { margin-top: 0; font-size: 19px; }
+    h3 { font-size: 17px; }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .panel, .notice, .stat {
+      padding: 17px;
+      margin-bottom: 16px;
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 17px;
-      margin-bottom: 16px;
     }
-    .notice { background: var(--light); line-height: 1.6; }
+
+    .notice {
+      background: var(--green-light);
+      line-height: 1.6;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       margin-bottom: 20px;
     }
-    .stat-label { font-size: 13px; color: var(--muted); }
+
+    .stat-label { color: var(--muted); font-size: 13px; }
     .stat-number {
-      font-size: 23px;
-      font-weight: bold;
-      color: var(--green);
       margin-top: 10px;
+      color: var(--green);
+      font-size: 21px;
+      font-weight: bold;
     }
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .action-link, button {
+
+    .field { margin: 13px 0; }
+
+    label {
       display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
       width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+      color: var(--text);
+      font: inherit;
+    }
+
+    button, .action-link {
+      display: inline-block;
+      width: 100%;
+      padding: 13px;
       border: 0;
       border-radius: 10px;
-      padding: 13px 10px;
+      font-family: inherit;
       font-size: 14px;
       font-weight: bold;
       text-align: center;
       text-decoration: none;
       cursor: pointer;
-      font-family: inherit;
     }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
     .primary { background: var(--green); color: white; }
-    .secondary { background: var(--light); color: var(--green); }
-    .field { margin: 12px 0; }
-    label {
-      display: block;
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 7px;
+    .secondary { background: var(--green-light); color: var(--green); }
+    .danger { background: #fff0ef; color: var(--danger); }
+
+    .button-stack {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
     }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      font-size: 16px;
-      background: white;
+
+    .menu-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
     }
+
+    .menu-item:last-child { border-bottom: 0; }
+    .menu-item strong { display: block; font-size: 16px; }
+    .menu-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .menu-actions button { padding: 10px 6px; }
+
     .qr-box {
+      padding: 16px;
       text-align: center;
       background: #f8faf8;
       border: 1px dashed #aabbb0;
       border-radius: 12px;
-      padding: 16px;
     }
+
     #qr-image {
       display: block;
       width: 220px;
@@ -104,600 +162,779 @@
       margin: 14px auto;
       background: white;
     }
-    .url-text {
-      overflow-wrap: anywhere;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .button-stack { display: grid; gap: 10px; margin-top: 12px; }
+
+    .url-text { overflow-wrap: anywhere; font-size: 13px; color: var(--muted); }
+
     footer {
-      text-align: center;
       padding: 22px;
       color: var(--muted);
       font-size: 12px;
+      text-align: center;
     }
+
     @media (min-width: 650px) {
       .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-      .actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .button-stack.two { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="brand">☕ KopiHub</div>
-    <p>Dashboard Pemilik Kedai</p>
-  </header>
+<header>
+  <div class="brand">☕ KopiHub</div>
+  <p>Dashboard Pemilik Kedai</p>
+</header>
 
-  <main>
-    <h1>Selamat datang, Pemilik Kedai!</h1>
-    <p class="muted">Kelola kedai dan persiapkan menu digital Anda.</p>
+<main>
+  <h1>Dashboard Pemilik</h1>
+  <p class="muted">Kelola kedai, menu, dan QR pemesanan Anda.</p>
 
-    <div class="notice" id="connection-status" role="status">
-      Menghubungkan ke Supabase...
-    </div>
-
-    <section class="panel">
-      <h2>Kedai Saya</h2>
-      <p class="muted">Pilih kedai yang ingin kamu kelola.</p>
-      <div class="field">
-        <label for="shop-select">Pilih kedai</label>
-        <select id="shop-select" disabled>
-          <option value="">Memuat kedai...</option>
-        </select>
-      </div>
-      <p class="muted" id="shop-details">Daftar kedai akan tampil di sini.</p>
-      <a class="action-link secondary" href="profil-kedai.html">
-        Tambah Kedai
-      </a>
-    </section>
-
-    <div class="notice">
-      <strong>Status sistem</strong><br>
-      Dashboard kedai sedang dikembangkan. Angka penjualan, pesanan,
-      dan menu belum diambil dari database transaksi.
-    </div>
-
-    <section class="stats">
-      <div class="stat">
-        <div class="stat-label">Penjualan hari ini</div>
-        <div class="stat-number">Belum aktif</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Pesanan hari ini</div>
-        <div class="stat-number">Belum aktif</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Menu tersedia</div>
-        <div class="stat-number">Belum aktif</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Pesanan diproses</div>
-        <div class="stat-number">Belum aktif</div>
-      </div>
-    </section>
-
-
-<section class="panel" id="kelola-menu">
-  <h2>Kelola Menu</h2>
-  <p class="muted">
-    Tambahkan menu dan atur harga produk kedai Anda.
-  </p>
-
-  <form id="menu-form">
-    <div class="field">
-      <label for="menu-name">Nama Menu</label>
-      <input id="menu-name" type="text"
-        placeholder="Contoh: Kopi Susu" required>
-    </div>
-
-    <div class="field">
-      <label for="menu-category">Kategori</label>
-      <select id="menu-category" required>
-        <option value="Coffee">Coffee</option>
-        <option value="Non Coffee">Non Coffee</option>
-        <option value="Makanan">Makanan</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label for="menu-price">Harga (Rupiah)</label>
-      <input id="menu-price" type="number"
-        min="1" placeholder="20000" required>
-    </div>
-
-    <div class="field">
-      <label for="menu-available">Ketersediaan</label>
-      <select id="menu-available">
-        <option value="true">Tersedia</option>
-        <option value="false">Habis</option>
-      </select>
-    </div>
-
-    <button class="primary" type="submit">
-      Tambah Menu
-    </button>
-  </form>
-
-  <hr>
-
-  <h3>Daftar Menu</h3>
-  <div id="menu-list">
-    <p class="muted">
-      Belum ada menu yang ditampilkan.
-    </p>
+  <div class="notice" id="connection-status" role="status">
+    Menghubungkan ke Supabase...
   </div>
 
-  <p id="menu-message" class="muted">
-    Formulir tampilan siap. Penyimpanan database
-    akan dihubungkan pada langkah berikutnya.
-  </p>
-</section>
+  <section class="panel">
+    <h2>Kedai Saya</h2>
+    <p class="muted">Pilih kedai yang ingin dikelola.</p>
 
-    <section class="panel" id="pesanan">
-      <h2>Pesanan</h2>
-      <p class="muted">
-        Daftar pesanan akan tampil setelah sistem pemesanan dihubungkan.
-      </p>
-    </section>
+    <div class="field">
+      <label for="shop-select">Pilih kedai</label>
+      <select id="shop-select" disabled>
+        <option value="">Memuat kedai...</option>
+      </select>
+    </div>
 
-    <section class="panel" id="laporan">
-      <h2>Laporan Penjualan</h2>
-      <p class="muted">
-        Laporan tersedia setelah transaksi tersimpan di database.
-      </p>
-    </section>
+    <p id="shop-details" class="muted">Memuat informasi kedai...</p>
 
-    <section class="panel" id="qr-menu">
-      <h2>QR Menu Kedai</h2>
-      <p class="muted">
-        Pilih kedai di atas, lalu buat QR yang mengarah ke halaman menu
-        kedai tersebut.
-      </p>
+    <a class="action-link secondary" href="profil-kedai.html">
+      Tambah Kedai
+    </a>
+  </section>
 
-      <button class="primary" id="make-qr" type="button" disabled>
-        Buat QR Menu
-      </button>
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">Menu ditampilkan</div>
+      <div class="stat-number" id="menu-count">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Menu tersedia</div>
+      <div class="stat-number" id="available-count">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Pesanan hari ini</div>
+      <div class="stat-number">Belum aktif</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Penjualan hari ini</div>
+      <div class="stat-number">Belum aktif</div>
+    </div>
+  </section>
 
-      <div class="qr-box" style="margin-top:14px">
-        <strong id="qr-title">QR Menu KopiHub</strong>
-        <img id="qr-image" alt="QR Menu Kedai" hidden>
-        <p class="url-text" id="menu-url"></p>
-        <p class="muted" id="qr-status">
-          Pilih kedai untuk membuat QR menu.
-        </p>
+  <section class="panel" id="kelola-menu">
+    <h2>Kelola Menu</h2>
+    <p class="muted">
+      Tambah menu baru atau edit dan hapus menu yang sudah ada.
+    </p>
+
+    <form id="menu-form">
+      <div class="field">
+        <label for="menu-name">Nama menu</label>
+        <input id="menu-name" type="text"
+          maxlength="120" placeholder="Contoh: Kopi Susu"
+          required>
       </div>
 
-      <div class="button-stack">
-        <a class="action-link secondary" id="open-menu"
-           href="menu.html" target="_blank" rel="noopener">
-          Buka Menu Pelanggan
-        </a>
-        <button class="secondary" id="print-qr" type="button">
-          Cetak QR Menu
+      <div class="field">
+        <label for="menu-category">Kategori</label>
+        <select id="menu-category" required disabled>
+          <option value="">Memuat kategori...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="menu-price">Harga (Rupiah)</label>
+        <input id="menu-price" type="number" min="1"
+          step="1" max="100000000" placeholder="20000" required>
+      </div>
+
+      <div class="field">
+        <label for="menu-description">Deskripsi (opsional)</label>
+        <textarea id="menu-description" rows="2"
+          maxlength="1000" placeholder="Deskripsi menu"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="menu-available">Ketersediaan</label>
+        <select id="menu-available">
+          <option value="true">Tersedia</option>
+          <option value="false">Habis</option>
+        </select>
+      </div>
+
+      <div class="button-stack two">
+        <button class="primary" id="save-menu" type="submit">
+          Simpan Menu
+        </button>
+        <button class="secondary" id="cancel-edit" type="button" hidden>
+          Batal Edit
         </button>
       </div>
+    </form>
 
-      <p class="muted">
-        QR dibuat melalui layanan eksternal dan membutuhkan internet.
-        QR ini membuka halaman menu, bukan pembayaran QRIS.
-        Pastikan halaman menu mendukung pemilihan kedai sebelum
-        digunakan oleh pelanggan.
-      </p>
-    </section>
+    <p id="menu-message" class="muted" role="status" aria-live="polite">
+      Menyiapkan pengelolaan menu...
+    </p>
 
-    <button class="secondary" id="logout" type="button">
-      Keluar dari Akun
+    <hr style="border:0;border-top:1px solid var(--border);margin:22px 0">
+
+    <h3>Daftar Menu</h3>
+    <div id="menu-list" class="muted">Menunggu data kedai...</div>
+  </section>
+
+  <section class="panel" id="qr-menu">
+    <h2>QR Menu Kedai</h2>
+    <p class="muted">
+      QR ini membuka halaman menu pelanggan untuk kedai yang dipilih.
+      Ini bukan QRIS pembayaran.
+    </p>
+
+    <button class="primary" id="make-qr" type="button" disabled>
+      Buat QR Menu
     </button>
-  </main>
 
-  <footer>KopiHub © 2026 · Dashboard Pemilik Kedai</footer>
+    <div class="qr-box" style="margin-top:14px">
+      <strong id="qr-title">QR Menu KopiHub</strong>
+      <img id="qr-image" alt="QR menu kedai" hidden>
+      <p class="url-text" id="menu-url"></p>
+      <p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p>
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // Gunakan konfigurasi yang SAMA dengan akun.html.
-    // Ganti kedua nilai di bawah sebelum menyimpan file.
-    const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+    <div class="button-stack two">
+      <a class="action-link secondary" id="open-menu"
+        href="menu.html" target="_blank" rel="noopener">
+        Buka Menu Pelanggan
+      </a>
+      <button class="secondary" id="print-qr" type="button">
+        Cetak QR
+      </button>
+    </div>
+  </section>
 
-    const statusBox = document.getElementById("connection-status");
-    const shopSelect = document.getElementById("shop-select");
-    const shopDetails = document.getElementById("shop-details");
-    const makeQrButton = document.getElementById("make-qr");
-    const qrImage = document.getElementById("qr-image");
-    const qrStatus = document.getElementById("qr-status");
-    const menuUrlText = document.getElementById("menu-url");
-    const openMenu = document.getElementById("open-menu");
-    const qrTitle = document.getElementById("qr-title");
+  <section class="panel">
+    <h2>Pesanan</h2>
+    <p class="muted">
+      Pengelolaan pesanan akan diaktifkan setelah alur pemesanan dan
+      penyimpanan transaksi selesai dibuat.
+    </p>
+  </section>
 
-    let client = null;
-    let shops = [];
+  <section class="panel">
+    <h2>Laporan Penjualan</h2>
+    <p class="muted">
+      Laporan akan tersedia setelah transaksi tersimpan dan tervalidasi
+      di database.
+    </p>
+  </section>
 
-    function showStatus(message, isError = false) {
-      statusBox.textContent = message;
-      statusBox.style.background = isError ? "#fff0ef" : "#e8f2ec";
-      statusBox.style.color = isError ? "#9b2525" : "#174c38";
+  <button class="secondary" id="logout" type="button">
+    Keluar dari Akun
+  </button>
+</main>
+
+<footer>KopiHub © 2026 · Dashboard Pemilik Kedai</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+"use strict";
+
+// Ganti kedua nilai berikut dengan konfigurasi dari akun.html.
+// Jangan gunakan service_role key di browser.
+const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+const $ = id => document.getElementById(id);
+
+const statusBox = $("connection-status");
+const shopSelect = $("shop-select");
+const shopDetails = $("shop-details");
+const menuForm = $("menu-form");
+const menuCategory = $("menu-category");
+const menuList = $("menu-list");
+const menuMessage = $("menu-message");
+const saveButton = $("save-menu");
+const cancelEditButton = $("cancel-edit");
+const qrImage = $("qr-image");
+const qrStatus = $("qr-status");
+const menuUrlText = $("menu-url");
+const openMenu = $("open-menu");
+const makeQrButton = $("make-qr");
+
+let client = null;
+let shops = [];
+let categories = [];
+let products = [];
+let editingProductId = null;
+let loadingShopId = null;
+
+function showStatus(message, isError = false) {
+  statusBox.textContent = message;
+  statusBox.style.background = isError ? "#fff0ef" : "#e8f2ec";
+  statusBox.style.color = isError ? "#9b2525" : "#174c38";
+}
+
+function showMenuMessage(message, isError = false) {
+  menuMessage.textContent = message;
+  menuMessage.style.color = isError ? "#b42318" : "";
+}
+
+function rupiah(value) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(Number(value) || 0);
+}
+
+function selectedShop() {
+  return shops.find(shop => shop.id === shopSelect.value) || null;
+}
+
+function getMenuUrl(slug) {
+  return new URL(
+    "menu.html?kedai=" + encodeURIComponent(slug),
+    window.location.href
+  ).href;
+}
+
+function clearQr(message) {
+  qrImage.hidden = true;
+  qrImage.removeAttribute("src");
+  menuUrlText.textContent = "";
+  qrStatus.textContent = message;
+  openMenu.href = "menu.html";
+}
+
+function renderSelectedShop() {
+  const shop = selectedShop();
+
+  if (!shop) {
+    shopDetails.textContent = "Belum ada kedai yang dipilih.";
+    makeQrButton.disabled = true;
+    clearQr("Pilih kedai terlebih dahulu.");
+    return;
+  }
+
+  shopDetails.textContent =
+    "Kedai: " + shop.name + " · Slug: " + shop.slug;
+
+  $("qr-title").textContent = "QR Menu " + shop.name;
+  makeQrButton.disabled = false;
+  clearQr("Tekan Buat QR Menu untuk membuat QR.");
+}
+
+async function loadShops() {
+  if (
+    SUPABASE_URL.includes("TEMPEL_SUPABASE") ||
+    SUPABASE_PUBLISHABLE_KEY.includes("TEMPEL_SUPABASE")
+  ) {
+    showStatus(
+      "Konfigurasi Supabase belum diisi. Masukkan URL dan publishable key yang benar.",
+      true
+    );
+    shopSelect.innerHTML = '<option value="">Konfigurasi belum diisi</option>';
+    return;
+  }
+
+  if (!window.supabase) {
+    showStatus("Library Supabase gagal dimuat. Periksa koneksi internet.", true);
+    return;
+  }
+
+  try {
+    client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const { data: sessionData, error: sessionError } =
+      await client.auth.getSession();
+
+    if (sessionError) throw sessionError;
+
+    const session = sessionData.session;
+
+    if (!session) {
+      showStatus("Sesi login tidak ditemukan. Silakan login kembali.", true);
+      shopSelect.innerHTML = '<option value="">Silakan login</option>';
+      return;
     }
 
-    function getMenuUrl(slug) {
-      return new URL(
-        "menu.html?kedai=" + encodeURIComponent(slug),
-        window.location.href
-      ).href;
-    }
+    const { data: memberships, error: memberError } = await client
+      .from("kh_shop_members")
+      .select("shop_id, role")
+      .eq("user_id", session.user.id);
 
-    function clearQr(message) {
-      qrImage.hidden = true;
-      qrImage.removeAttribute("src");
-      menuUrlText.textContent = "";
-      qrStatus.textContent = message;
-      openMenu.href = "menu.html";
-    }
+    if (memberError) throw memberError;
 
-    function renderSelectedShop() {
-      const shop = shops.find(item => item.id === shopSelect.value);
+    const shopIds = [...new Set(
+      (memberships || []).map(item => item.shop_id).filter(Boolean)
+    )];
 
-      if (!shop) {
-        shopDetails.textContent = "Belum ada kedai yang dipilih.";
-        makeQrButton.disabled = true;
-        clearQr("Pilih kedai untuk membuat QR menu.");
-        return;
-      }
-
+    if (shopIds.length === 0) {
+      shops = [];
+      shopSelect.innerHTML = '<option value="">Belum ada kedai</option>';
+      shopSelect.disabled = true;
+      makeQrButton.disabled = true;
       shopDetails.textContent =
-        "Kedai: " + shop.name + " · Tautan: " + shop.slug;
-
-      qrTitle.textContent = "QR Menu " + shop.name;
-      makeQrButton.disabled = false;
-      clearQr("Tekan Buat QR Menu untuk kedai ini.");
+        "Akun ini belum terhubung dengan kedai. Gunakan Tambah Kedai.";
+      menuList.textContent = "Belum ada kedai untuk akun ini.";
+      showStatus("Login berhasil, tetapi akun ini belum memiliki kedai.");
+      return;
     }
 
-    async function loadShops() {
-      if (
-        SUPABASE_URL.startsWith("GANTI_DENGAN") ||
-        SUPABASE_PUBLISHABLE_KEY.startsWith("GANTI_DENGAN")
-      ) {
-        showStatus(
-          "Konfigurasi Supabase belum diisi. Salin URL dan publishable key dari akun.html.",
-          true
-        );
-        shopSelect.innerHTML =
-          '<option value="">Konfigurasi belum diisi</option>';
-        return;
-      }
+    const { data: shopData, error: shopsError } = await client
+      .from("kh_shops")
+      .select("id, name, slug, is_active")
+      .in("id", shopIds)
+      .order("name");
 
-      try {
-        client = window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_PUBLISHABLE_KEY
-        );
+    if (shopsError) throw shopsError;
 
-        const { data: sessionData, error: sessionError } =
-          await client.auth.getSession();
+    shops = shopData || [];
 
-        if (sessionError) throw sessionError;
-
-        const session = sessionData.session;
-
-        if (!session) {
-          showStatus(
-            "Sesi login tidak ditemukan. Silakan login kembali.",
-            true
-          );
-          shopSelect.innerHTML =
-            '<option value="">Silakan login</option>';
-          return;
-        }
-
-        const userId = session.user.id;
-
-        const { data: memberships, error: memberError } = await client
-          .from("kh_shop_members")
-          .select("shop_id, role")
-          .eq("user_id", userId);
-
-        if (memberError) throw memberError;
-
-        const shopIds = [...new Set(
-          (memberships || []).map(item => item.shop_id)
-        )];
-
-        if (shopIds.length === 0) {
-          shops = [];
-          shopSelect.innerHTML =
-            '<option value="">Belum ada kedai</option>';
-          shopSelect.disabled = true;
-          makeQrButton.disabled = true;
-          shopDetails.textContent =
-            "Akun ini belum terhubung dengan kedai. Gunakan Tambah Kedai.";
-          showStatus("Login berhasil, tetapi belum ada kedai untuk akun ini.");
-          return;
-        }
-
-        const { data: shopData, error: shopsError } = await client
-          .from("kh_shops")
-          .select("id, name, slug, is_active")
-          .in("id", shopIds)
-          .order("name");
-
-        if (shopsError) throw shopsError;
-
-        shops = shopData || [];
-
-        if (shops.length === 0) {
-          shopSelect.innerHTML =
-            '<option value="">Kedai tidak ditemukan</option>';
-          shopSelect.disabled = true;
-          showStatus(
-            "Kedai belum dapat dibaca. Periksa izin akses Supabase.",
-            true
-          );
-          return;
-        }
-
-        shopSelect.innerHTML = "";
-
-        shops.forEach(shop => {
-          const option = document.createElement("option");
-          option.value = shop.id;
-          option.textContent = shop.name + " (" + shop.slug + ")";
-          shopSelect.appendChild(option);
-        });
-
-        // Pilih Arome Coffee bila tersedia; jika tidak, pilih kedai pertama.
-        const aromeShop = shops.find(
-          shop => shop.slug === "aroma-coffee"
-        );
-
-        shopSelect.value = aromeShop ? aromeShop.id : shops[0].id;
-        shopSelect.disabled = false;
-        makeQrButton.disabled = false;
-        renderSelectedShop();
-
-        showStatus(
-          "Terhubung ke Supabase. " + shops.length +
-          " kedai ditemukan untuk akun ini."
-        );
-      } catch (error) {
-        console.error("KopiHub dashboard error:", error);
-        showStatus(
-          "Gagal memuat kedai: " +
-          (error.message || "Periksa koneksi dan izin Supabase."),
-          true
-        );
-        shopSelect.innerHTML =
-          '<option value="">Gagal memuat kedai</option>';
-        shopSelect.disabled = true;
-      }
+    if (shops.length === 0) {
+      shopSelect.innerHTML = '<option value="">Kedai tidak ditemukan</option>';
+      shopSelect.disabled = true;
+      throw new Error("Kedai belum dapat dibaca dari database.");
     }
 
-    shopSelect.addEventListener("change", renderSelectedShop);
+    shopSelect.innerHTML = "";
 
-    makeQrButton.addEventListener("click", function () {
-      const shop = shops.find(item => item.id === shopSelect.value);
-
-      if (!shop) {
-        qrStatus.textContent = "Pilih kedai terlebih dahulu.";
-        return;
-      }
-
-      const url = getMenuUrl(shop.slug);
-
-      menuUrlText.textContent = url;
-      openMenu.href = url;
-      qrStatus.textContent = "Memuat QR menu...";
-      qrImage.hidden = false;
-      qrImage.src =
-        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
-        encodeURIComponent(url);
-
-      qrImage.onload = function () {
-        qrStatus.textContent =
-          "QR berhasil dibuat. Uji dengan memindainya menggunakan kamera HP.";
-      };
-
-      qrImage.onerror = function () {
-        qrImage.hidden = true;
-        qrStatus.textContent =
-          "QR gagal dimuat. Periksa koneksi internet dan coba lagi.";
-      };
+    shops.forEach(shop => {
+      const option = document.createElement("option");
+      option.value = shop.id;
+      option.textContent = shop.name + " (" + shop.slug + ")";
+      shopSelect.appendChild(option);
     });
 
-    document.getElementById("print-qr").addEventListener("click", function () {
-      if (qrImage.hidden || !qrImage.src) {
-        qrStatus.textContent = "Buat QR menu terlebih dahulu.";
-        return;
-      }
+    const previousShopId = shopSelect.value;
+    const preferredShop = shops.find(
+      shop => shop.slug === "aroma-coffee"
+    );
 
-      const printWindow = window.open("", "_blank");
+    shopSelect.value =
+      shops.some(shop => shop.id === previousShopId) ? previousShopId :
+      preferredShop ? preferredShop.id : shops[0].id;
 
-      if (!printWindow) {
-        qrStatus.textContent =
-          "Jendela cetak diblokir. Izinkan pop-up atau buka QR di tab baru.";
-        return;
-      }
+    shopSelect.disabled = false;
+    renderSelectedShop();
 
-      const title = qrTitle.textContent;
-      const url = menuUrlText.textContent;
+    showStatus(
+      "Terhubung ke Supabase. " + shops.length +
+      " kedai ditemukan untuk akun ini."
+    );
 
-      printWindow.document.write(
-        "<!DOCTYPE html><html lang='id'><head><meta charset='UTF-8'>" +
-        "<title>QR Menu KopiHub</title></head>" +
-        "<body style='font-family:Arial;text-align:center;padding:24px'>" +
-        "<h1></h1><img style='width:260px;max-width:90%'>" +
-        "<p></p><script>window.onload=function(){window.print()}<\/script>" +
-        "</body></html>"
-      );
+    await refreshMenu();
+  } catch (error) {
+    console.error("KopiHub loadShops error:", error);
+    showStatus(
+      "Gagal memuat kedai: " + (error.message || "Kesalahan tidak diketahui."),
+      true
+    );
+    shopSelect.disabled = true;
+    menuList.textContent = "Kedai gagal dimuat. Periksa pesan status di atas.";
+  }
+}
 
-      printWindow.document.querySelector("h1").textContent = title;
-      printWindow.document.querySelector("img").src = qrImage.src;
-      printWindow.document.querySelector("p").textContent = url;
-      printWindow.document.close();
-    });
+async function loadCategories() {
+  const shopId = shopSelect.value;
 
-    document.getElementById("logout").addEventListener("click", async function () {
-      if (!client) {
-        showStatus("Supabase belum terhubung.", true);
-        return;
-      }
+  if (!client || !shopId) return;
 
-      const { error } = await client.auth.signOut();
+  menuCategory.disabled = true;
+  menuCategory.innerHTML = '<option value="">Memuat kategori...</option>';
 
-      if (error) {
-        showStatus("Gagal keluar: " + error.message, true);
-        return;
-      }
+  const { data, error } = await client
+    .from("kh_categories")
+    .select("id, name")
+    .eq("shop_id", shopId)
+    .eq("is_active", true)
+    .order("sort_order");
 
-      window.location.href = "akun.html";
-    });
+  if (error) {
+    categories = [];
+    menuCategory.innerHTML = '<option value="">Kategori gagal dimuat</option>';
+    showMenuMessage("Kategori gagal dimuat: " + error.message, true);
+    return;
+  }
 
-    // ===== KELOLA MENU KOPIHUB =====
-    const menuForm = document.getElementById("menu-form");
-    const menuCategory = document.getElementById("menu-category");
-    const menuList = document.getElementById("menu-list");
-    const menuMessage = document.getElementById("menu-message");
+  categories = data || [];
+  menuCategory.innerHTML = "";
 
-    function showMenuMessage(message, isError = false) {
-      menuMessage.textContent = message;
-      menuMessage.style.color = isError ? "#b42318" : "";
+  if (categories.length === 0) {
+    menuCategory.innerHTML = '<option value="">Belum ada kategori aktif</option>';
+    showMenuMessage(
+      "Kedai ini belum memiliki kategori aktif. Tambahkan kategori terlebih dahulu.",
+      true
+    );
+    return;
+  }
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Pilih kategori";
+  menuCategory.appendChild(placeholder);
+
+  categories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    menuCategory.appendChild(option);
+  });
+
+  menuCategory.disabled = false;
+}
+
+async function loadProducts() {
+  const shopId = shopSelect.value;
+
+  if (!client || !shopId) {
+    menuList.textContent = "Pilih kedai untuk melihat menu.";
+    return;
+  }
+
+  loadingShopId = shopId;
+  menuList.textContent = "Memuat menu...";
+
+  // Tidak menggunakan join kategori, sehingga pembacaan menu
+  // tidak bergantung pada relasi select kh_categories(name).
+  const { data, error } = await client
+    .from("kh_products")
+    .select("id, shop_id, category_id, name, description, price, is_available, created_at")
+    .eq("shop_id", shopId)
+    .order("created_at", { ascending: false });
+
+  if (shopSelect.value !== shopId) return;
+
+  if (error) {
+    products = [];
+    menuList.textContent = "Gagal memuat menu: " + error.message;
+    $("menu-count").textContent = "—";
+    $("available-count").textContent = "—";
+    showMenuMessage("Periksa izin akses tabel kh_products.", true);
+    return;
+  }
+
+  products = data || [];
+  renderProducts();
+}
+
+function renderProducts() {
+  menuList.innerHTML = "";
+
+  $("menu-count").textContent = String(products.length);
+  $("available-count").textContent = String(
+    products.filter(product => product.is_available).length
+  );
+
+  if (products.length === 0) {
+    menuList.textContent = "Belum ada menu untuk kedai ini.";
+    return;
+  }
+
+  products.forEach(product => {
+    const category = categories.find(
+      item => item.id === product.category_id
+    );
+
+    const item = document.createElement("article");
+    item.className = "menu-item";
+
+    const name = document.createElement("strong");
+    name.textContent = product.name;
+
+    const details = document.createElement("p");
+    details.className = "muted";
+    details.textContent =
+      (category ? category.name : "Kategori tidak tersedia") +
+      " · " + rupiah(product.price) +
+      " · " + (product.is_available ? "Tersedia" : "Habis");
+
+    item.appendChild(name);
+    item.appendChild(details);
+
+    if (product.description) {
+      const description = document.createElement("p");
+      description.className = "muted";
+      description.textContent = product.description;
+      item.appendChild(description);
     }
 
-    async function loadCategories() {
-      const shopId = shopSelect.value;
-      if (!client || !shopId) return;
+    const actions = document.createElement("div");
+    actions.className = "menu-actions";
 
-      menuCategory.innerHTML = '<option value="">Memuat kategori...</option>';
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "secondary";
+    editButton.textContent = "Edit";
+    editButton.addEventListener("click", () => startEdit(product.id));
 
-      const { data, error } = await client
-        .from("kh_categories")
-        .select("id, name")
-        .eq("shop_id", shopId)
-        .eq("is_active", true)
-        .order("sort_order");
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "danger";
+    deleteButton.textContent = "Hapus";
+    deleteButton.addEventListener("click", () => deleteProduct(product.id));
 
-      if (error) {
-        menuCategory.innerHTML = '<option value="">Gagal memuat kategori</option>';
-        showMenuMessage("Kategori gagal dimuat: " + error.message, true);
-        return;
-      }
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+    item.appendChild(actions);
+    menuList.appendChild(item);
+  });
+}
 
-      menuCategory.innerHTML = "";
+async function refreshMenu() {
+  const shopId = shopSelect.value;
 
-      if (!data || data.length === 0) {
-        menuCategory.innerHTML = '<option value="">Belum ada kategori aktif</option>';
-        showMenuMessage("Tambahkan kategori untuk kedai ini terlebih dahulu.", true);
-        return;
-      }
+  if (!client || !shopId) {
+    menuList.textContent = "Pilih kedai untuk memuat menu.";
+    return;
+  }
 
-      data.forEach(category => {
-        const option = document.createElement("option");
-        option.value = category.id;
-        option.textContent = category.name;
-        menuCategory.appendChild(option);
-      });
-    }
+  await loadCategories();
+  if (shopSelect.value !== shopId) return;
 
-    async function loadProducts() {
-      const shopId = shopSelect.value;
-      if (!client || !shopId) return;
+  await loadProducts();
+}
 
-      menuList.textContent = "Memuat menu...";
+function resetMenuForm() {
+  editingProductId = null;
+  menuForm.reset();
+  saveButton.textContent = "Simpan Menu";
+  cancelEditButton.hidden = true;
+}
 
-      const { data, error } = await client
+function startEdit(productId) {
+  const product = products.find(item => item.id === productId);
+  if (!product) return;
+
+  if (!categories.some(item => item.id === product.category_id)) {
+    showMenuMessage(
+      "Kategori menu ini tidak tersedia atau tidak aktif. Periksa kategori kedai.",
+      true
+    );
+    return;
+  }
+
+  editingProductId = product.id;
+  $("menu-name").value = product.name || "";
+  $("menu-price").value = product.price;
+  $("menu-description").value = product.description || "";
+  $("menu-available").value = String(Boolean(product.is_available));
+  menuCategory.value = product.category_id;
+  saveButton.textContent = "Simpan Perubahan";
+  cancelEditButton.hidden = false;
+  $("kelola-menu").scrollIntoView({ behavior: "smooth" });
+  showMenuMessage("Mode edit aktif. Periksa kembali data sebelum menyimpan.");
+}
+
+menuForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const shopId = shopSelect.value;
+  const name = $("menu-name").value.trim();
+  const categoryId = menuCategory.value;
+  const price = Number($("menu-price").value);
+  const description = $("menu-description").value.trim();
+  const isAvailable = $("menu-available").value === "true";
+
+  if (!client || !shopId) {
+    showMenuMessage("Pilih kedai terlebih dahulu.", true);
+    return;
+  }
+
+  if (!categories.some(item => item.id === categoryId)) {
+    showMenuMessage("Pilih kategori yang valid.", true);
+    return;
+  }
+
+  if (!name || !Number.isSafeInteger(price) || price <= 0) {
+    showMenuMessage("Nama menu dan harga yang valid wajib diisi.", true);
+    return;
+  }
+
+  const currentShop = selectedShop();
+  if (!currentShop) {
+    showMenuMessage("Kedai tidak ditemukan. Muat ulang dashboard.", true);
+    return;
+  }
+
+  saveButton.disabled = true;
+  showMenuMessage("Menyimpan menu...");
+
+  try {
+    const payload = {
+      shop_id: shopId,
+      category_id: categoryId,
+      name,
+      description: description || null,
+      price,
+      is_available: isAvailable,
+      item_type: "product"
+    };
+
+    let result;
+
+    if (editingProductId) {
+      // Pastikan perubahan hanya menargetkan produk di kedai terpilih.
+      result = await client
         .from("kh_products")
-        .select("id, name, price, is_available, kh_categories(name)")
-        .eq("shop_id", shopId)
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        menuList.textContent = "Gagal memuat menu: " + error.message;
-        showMenuMessage("Periksa izin akses tabel kh_products.", true);
-        return;
-      }
-
-      menuList.innerHTML = "";
-
-      if (!data || data.length === 0) {
-        menuList.textContent = "Belum ada menu untuk kedai ini.";
-        return;
-      }
-
-      data.forEach(product => {
-        const item = document.createElement("div");
-        item.className = "field";
-
-        const name = document.createElement("strong");
-        name.textContent = product.name;
-
-        const details = document.createElement("p");
-        details.className = "muted";
-        details.textContent =
-          (product.kh_categories?.name || "Tanpa kategori") +
-          " • Rp " + Number(product.price).toLocaleString("id-ID") +
-          " • " + (product.is_available ? "Tersedia" : "Habis");
-
-        item.appendChild(name);
-        item.appendChild(details);
-        menuList.appendChild(item);
-      });
-    }
-
-    async function refreshMenu() {
-      await loadCategories();
-      await loadProducts();
-    }
-
-    menuForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      const shopId = shopSelect.value;
-      const name = document.getElementById("menu-name").value.trim();
-      const categoryId = menuCategory.value;
-      const price = Number(document.getElementById("menu-price").value);
-      const isAvailable =
-        document.getElementById("menu-available").value === "true";
-
-      if (!client || !shopId) {
-        showMenuMessage("Pilih kedai terlebih dahulu.", true);
-        return;
-      }
-
-      if (!name || !categoryId || !Number.isFinite(price) || price <= 0) {
-        showMenuMessage("Lengkapi nama, kategori, dan harga menu.", true);
-        return;
-      }
-
-      const submitButton = menuForm.querySelector('button[type="submit"]');
-      submitButton.disabled = true;
-
-      const { error } = await client
+        .update(payload)
+        .eq("id", editingProductId)
+        .eq("shop_id", shopId);
+    } else {
+      result = await client
         .from("kh_products")
-        .insert({
-          shop_id: shopId,
-          category_id: categoryId,
-          name: name,
-          price: price,
-          is_available: isAvailable,
-          item_type: "product"
-        });
+        .insert(payload);
+    }
 
-      submitButton.disabled = false;
+    if (result.error) throw result.error;
 
-      if (error) {
-        showMenuMessage("Menu gagal disimpan: " + error.message, true);
-        return;
-      }
+    resetMenuForm();
+    showMenuMessage(
+      editingProductId ? "Menu berhasil diperbarui." : "Menu berhasil disimpan."
+    );
 
-      menuForm.reset();
-      showMenuMessage("Menu berhasil disimpan!");
-      await refreshMenu();
-    });
+    await refreshMenu();
+  } catch (error) {
+    console.error("KopiHub save product error:", error);
+    showMenuMessage("Menu gagal disimpan: " + error.message, true);
+  } finally {
+    saveButton.disabled = false;
+  }
+});
 
-    shopSelect.addEventListener("change", async function () {
-      renderSelectedShop();
-      await refreshMenu();
-    });
+cancelEditButton.addEventListener("click", function() {
+  resetMenuForm();
+  showMenuMessage("Edit dibatalkan.");
+});
 
-    loadShops();
-  </script>
+async function deleteProduct(productId) {
+  const shopId = shopSelect.value;
+  const product = products.find(item => item.id === productId);
+
+  if (!client || !shopId || !product || product.shop_id !== shopId) {
+    showMenuMessage("Menu tidak valid untuk kedai yang dipilih.", true);
+    return;
+  }
+
+  if (!window.confirm('Hapus menu "' + product.name + '"?')) return;
+
+  try {
+    const { error } = await client
+      .from("kh_products")
+      .delete()
+      .eq("id", productId)
+      .eq("shop_id", shopId);
+
+    if (error) throw error;
+
+    if (editingProductId === productId) resetMenuForm();
+
+    showMenuMessage("Permintaan penghapusan menu berhasil diproses.");
+    await refreshMenu();
+  } catch (error) {
+    console.error("KopiHub delete product error:", error);
+    showMenuMessage("Menu gagal dihapus: " + error.message, true);
+  }
+}
+
+shopSelect.addEventListener("change", async function() {
+  renderSelectedShop();
+  resetMenuForm();
+  await refreshMenu();
+});
+
+makeQrButton.addEventListener("click", function() {
+  const shop = selectedShop();
+
+  if (!shop) {
+    qrStatus.textContent = "Pilih kedai terlebih dahulu.";
+    return;
+  }
+
+  const url = getMenuUrl(shop.slug);
+  menuUrlText.textContent = url;
+  openMenu.href = url;
+  qrStatus.textContent = "Memuat QR menu...";
+  qrImage.hidden = false;
+  qrImage.src =
+    "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
+    encodeURIComponent(url);
+
+  qrImage.onload = function() {
+    qrStatus.textContent =
+      "QR dimuat. Pindai menggunakan kamera HP untuk mengujinya.";
+  };
+
+  qrImage.onerror = function() {
+    qrImage.hidden = true;
+    qrStatus.textContent =
+      "QR gagal dimuat. Periksa koneksi internet dan coba lagi.";
+  };
+});
+
+$("print-qr").addEventListener("click", function() {
+  if (qrImage.hidden || !qrImage.src) {
+    qrStatus.textContent = "Buat QR menu terlebih dahulu.";
+    return;
+  }
+
+  const printWindow = window.open("", "_blank");
+
+  if (!printWindow) {
+    qrStatus.textContent =
+      "Jendela cetak diblokir. Izinkan pop-up browser lalu coba lagi.";
+    return;
+  }
+
+  const title = $("qr-title").textContent;
+  const url = menuUrlText.textContent;
+
+  printWindow.document.write(
+    "<!DOCTYPE html><html lang='id'><head><meta charset='UTF-8'>" +
+    "<title>QR Menu KopiHub</title></head>" +
+    "<body style='font-family:Arial;text-align:center;padding:24px'>" +
+    "<h1 id='title'></h1><img id='qr' style='width:260px;max-width:90%'>" +
+    "<p id='url'></p></body></html>"
+  );
+
+  printWindow.document.getElementById("title").textContent = title;
+  printWindow.document.getElementById("qr").src = qrImage.src;
+  printWindow.document.getElementById("url").textContent = url;
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+});
+
+$("logout").addEventListener("click", async function() {
+  if (!client) {
+    showStatus("Supabase belum terhubung.", true);
+    return;
+  }
+
+  $("logout").disabled = true;
+
+  try {
+    const { error } = await client.auth.signOut();
+    if (error) throw error;
+    window.location.href = "akun.html";
+  } catch (error) {
+    showStatus("Gagal keluar: " + error.message, true);
+    $("logout").disabled = false;
+  }
+});
+
+loadShops();
+</script>
 </body>
 </html>

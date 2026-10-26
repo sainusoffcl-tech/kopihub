@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#123c2c">
-  <title>Checkout | Ontal Kopi - KopiHub</title>
+  <title>Checkout | Aroma Coffee - KopiHub</title>
 
   <style>
     :root {
@@ -321,7 +321,7 @@
       <a class="back" href="menu.html" aria-label="Kembali ke menu">‹</a>
       <div>
         <div class="brand">Kopi<span>Hub</span></div>
-        <div class="subtitle">CHECKOUT · ONTAL KOPI</div>
+        <div class="subtitle">CHECKOUT · AROMA COFFEE</div>
       </div>
     </div>
   </header>
@@ -437,7 +437,7 @@
               <span class="payment-title">Bayar di Kasir</span>
               <span class="payment-desc">
                 Pesan terlebih dahulu dan lakukan pembayaran langsung
-                di kasir Ontal Kopi.
+                di kasir Aroma Coffee.
               </span>
             </span>
           </span>
@@ -458,14 +458,14 @@
 
     <footer>
       KopiHub · Platform Pemesanan Coffee Shop<br>
-      Ontal Kopi
+      Aroma Coffee
     </footer>
   </main>
 
   <script>
     /*
       PENGATURAN:
-      Ubah TAX_RATE jika pajak sudah ditentukan oleh Ontal Kopi.
+      Ubah TAX_RATE jika pajak sudah ditentukan oleh Aroma Coffee.
       Nilai 0 berarti pajak belum ditambahkan.
     */
     const TAX_RATE = 0;
@@ -586,7 +586,7 @@
             "Pembayaran online belum terhubung. Kami akan mengaktifkannya setelah backend Midtrans siap.";
         } else if (input.value === "cashier" && input.checked) {
           paymentNotice.textContent =
-            "Pesanan akan dibuat dengan metode bayar di kasir. Pastikan kamu membayar kepada staf Ontal Kopi.";
+            "Pesanan akan dibuat dengan metode bayar di kasir. Pastikan kamu membayar kepada staf Aroma Coffee.";
         }
       });
     });
@@ -626,7 +626,7 @@
 
       const order = {
         orderId,
-        shop: "ontal-kopi",
+        shop: sessionStorage.getItem("kopihubShop") || "aroma-coffee",
         customerName,
         customerPhone,
         table: table.value,
@@ -669,7 +669,7 @@
           orderId +
           ". Meja " + table.value +
           ". Total " + rupiah(total) +
-          ". Pembayaran masih menunggu kasir. Catatan: pesanan belum otomatis diterima oleh staf Ontal Kopi."
+          ". Pembayaran masih menunggu kasir. Catatan: pesanan belum otomatis diterima oleh staf Aroma Coffee."
         );
       } catch (error) {
         showStatus(

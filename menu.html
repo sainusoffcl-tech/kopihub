@@ -3,9 +3,12 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#123b2c">
-  <title>Menu Aroma Coffee | KopiHub</title>
+  <title>Menu Kedai - KopiHub</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --green: #123b2c;
@@ -13,262 +16,381 @@
       --cream: #faf9f5;
       --orange: #e99a55;
       --text: #24342c;
-      --muted: #788279;
-      --white: #fff;
+      --muted: #758078;
+      --white: #ffffff;
+      --border: #e8e9e2;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
-      background: var(--cream);
       color: var(--text);
+      background: var(--cream);
     }
+
     button, input { font: inherit; }
-    button { cursor: pointer; }
+
     a { color: inherit; text-decoration: none; }
 
     header {
       background: var(--green);
       color: white;
       padding: 16px 5%;
+    }
+
+    .header-inner {
+      max-width: 1150px;
+      margin: auto;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
     }
-    .brand { font-size: 22px; font-weight: 800; }
-    .brand span { color: var(--orange); }
-    .back { font-size: 13px; opacity: .9; }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .logo span { color: var(--orange); }
+
+    .back-link { font-size: 13px; }
 
     .hero {
-      background: var(--green);
-      color: white;
-      padding: 35px 5% 48px;
-      border-radius: 0 0 28px 28px;
+      padding: 34px 5%;
+      background: #e9eee7;
     }
+
+    .hero-inner {
+      max-width: 1150px;
+      margin: auto;
+    }
+
     .eyebrow {
-      color: #f5c79e;
+      color: var(--green-light);
       font-size: 11px;
-      letter-spacing: 2px;
       font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-    h1 { font-size: clamp(30px, 7vw, 44px); margin: 12px 0; }
-    .hero p { color: #e1e9e3; margin: 0; line-height: 1.7; }
-    .temporary {
-      display: inline-block;
-      margin-top: 17px;
-      background: #ffffff18;
-      border: 1px solid #ffffff35;
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 12px;
+
+    h1 {
+      margin: 8px 0;
+      font-size: clamp(28px, 6vw, 42px);
+      color: var(--green);
+    }
+
+    .hero p {
+      margin: 0;
+      color: #58665c;
+      line-height: 1.6;
     }
 
     main {
-      width: min(1100px, 92%);
-      margin: 25px auto 50px;
+      max-width: 1150px;
+      margin: auto;
+      padding: 26px 5% 45px;
     }
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-    h2 { font-size: 22px; margin: 0; }
-    .muted { color: var(--muted); font-size: 13px; }
 
-    .filters {
+    .status {
+      padding: 14px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      background: white;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .status.error {
+      background: #fff0ed;
+      color: #a02b20;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 290px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .section-title {
+      margin: 0 0 15px;
+      font-size: 22px;
+      color: var(--green);
+    }
+
+    #filters {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 4px 0 15px;
+      padding: 2px 0 14px;
+      margin-bottom: 8px;
     }
+
     .filter {
-      border: 1px solid #dce3dc;
+      border: 1px solid var(--border);
       background: white;
-      color: var(--green);
-      border-radius: 24px;
-      padding: 10px 15px;
+      border-radius: 30px;
+      padding: 9px 14px;
       white-space: nowrap;
+      cursor: pointer;
+      color: var(--text);
     }
+
     .filter.active {
       background: var(--green);
       color: white;
       border-color: var(--green);
     }
 
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 300px;
-      gap: 24px;
-      align-items: start;
-    }
     .products {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 13px;
+      gap: 14px;
     }
+
     .product {
       background: white;
-      border: 1px solid #e9ece6;
-      border-radius: 17px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 15px;
       min-width: 0;
     }
-    .product-icon {
-      height: 75px;
+
+    .product-image {
+      height: 95px;
+      border-radius: 12px;
+      background: #e9eee7;
       display: grid;
       place-items: center;
-      background: #f2f4eb;
-      border-radius: 12px;
       font-size: 38px;
       margin-bottom: 12px;
+      overflow: hidden;
     }
-    .category {
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .category-label {
       font-size: 10px;
+      letter-spacing: 1px;
+      font-weight: 800;
+      color: var(--green-light);
+      text-transform: uppercase;
     }
-    .product h3 { font-size: 15px; margin: 7px 0; }
+
+    .product h3 {
+      font-size: 16px;
+      margin: 7px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .description {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--muted);
+      min-height: 34px;
+      margin: 0 0 12px;
+    }
+
     .product-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      margin-top: 13px;
-    }
-    .price { font-weight: 800; font-size: 14px; }
-    .add {
-      background: var(--green);
-      color: white;
-      border: 0;
-      border-radius: 10px;
-      width: 36px;
-      height: 36px;
-      font-size: 22px;
     }
 
-    .cart {
+    .price {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .add-button {
+      background: var(--orange);
+      color: #2d251c;
+      border: 0;
+      border-radius: 9px;
+      min-width: 36px;
+      min-height: 36px;
+      padding: 6px 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .add-button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .cart-box {
       background: white;
-      border: 1px solid #e6e9e3;
-      border-radius: 18px;
-      padding: 19px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
       position: sticky;
       top: 12px;
     }
-    .cart h2 { font-size: 20px; margin-bottom: 8px; }
-    #cart-items { margin: 16px 0; }
-    .cart-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      padding: 12px 0;
-      border-bottom: 1px solid #edf0eb;
-      font-size: 13px;
+
+    .cart-box h2 {
+      margin: 0 0 5px;
+      color: var(--green);
+      font-size: 21px;
     }
+
+    .cart-hint {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    .cart-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-name {
+      font-weight: 700;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .cart-item-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
     .quantity {
       display: flex;
       align-items: center;
-      gap: 9px;
-      margin-top: 8px;
+      gap: 10px;
     }
+
     .quantity button {
-      border: 1px solid #dce3dc;
-      background: white;
+      border: 1px solid var(--border);
+      background: var(--cream);
       border-radius: 7px;
-      width: 27px;
-      height: 27px;
+      width: 29px;
+      height: 29px;
+      cursor: pointer;
     }
-    .total {
-      border-top: 1px solid #e5e9e2;
-      padding-top: 15px;
+
+    .cart-total {
       display: flex;
       justify-content: space-between;
+      gap: 10px;
+      padding: 17px 0;
       font-weight: 800;
     }
-    .checkout {
+
+    .checkout-button {
       width: 100%;
+      padding: 13px;
       border: 0;
-      background: var(--orange);
-      color: #2c271f;
-      border-radius: 12px;
-      padding: 14px;
-      font-weight: 800;
-      margin-top: 15px;
+      border-radius: 10px;
+      color: white;
+      background: var(--green);
+      font-weight: 700;
+      cursor: pointer;
     }
-    .checkout:disabled { opacity: .5; cursor: not-allowed; }
-    .cart-note { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+    .checkout-button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .empty {
+      padding: 22px 12px;
+      text-align: center;
+      color: var(--muted);
+      background: white;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
 
     footer {
-      text-align: center;
-      padding: 25px 15px;
       background: var(--green);
-      color: white;
+      color: #e5ece6;
+      padding: 22px 5%;
+      text-align: center;
       font-size: 12px;
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 760px) {
       .layout { grid-template-columns: 1fr; }
-      .cart { position: static; }
-      .products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cart-box { position: static; }
     }
-    @media (max-width: 360px) {
+
+    @media (max-width: 380px) {
       .products { grid-template-columns: 1fr; }
+      .header-inner { align-items: flex-start; }
     }
   </style>
 </head>
+
 <body>
   <header>
-    <a class="brand" href="index.html">Kopi<span>Hub</span></a>
-    <a class="back" href="index.html">← Beranda</a>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Kopi<span>Hub</span></a>
+      <a class="back-link" href="index.html">← Kembali ke beranda</a>
+    </div>
   </header>
 
   <section class="hero">
-    <div class="eyebrow">MENU MITRA KOPIHUB</div>
-    <h1 id="shop-name">Aroma Coffee ☕</h1>
-    <p>Pilih minuman favoritmu dan masukkan ke keranjang.</p>
-    <div class="temporary">Menu dan harga sementara untuk uji coba</div>
+    <div class="hero-inner">
+      <div class="eyebrow">Racikan rasa, cerita kita</div>
+      <h1 id="shop-name">Memuat kedai...</h1>
+      <p id="shop-description">
+        Pilih menu favoritmu dan masukkan ke keranjang.
+      </p>
+    </div>
   </section>
 
   <main>
-    <div class="section-title">
-      <h2>Daftar Menu</h2>
-      <span class="muted" id="menu-count">27 menu</span>
-    </div>
-
-    <div class="filters" id="filters">
-      <button class="filter active" data-category="Semua">Semua</button>
-      <button class="filter" data-category="Coffee">Coffee</button>
-      <button class="filter" data-category="Non Coffee">Non Coffee</button>
-      <button class="filter" data-category="Signature">Signature</button>
-      <button class="filter" data-category="Manual Brew">Manual Brew</button>
+    <div id="status" class="status" role="status" aria-live="polite">
+      Menghubungkan ke database dan memuat menu...
     </div>
 
     <div class="layout">
       <section>
-        <div class="products" id="products"></div>
+        <h2 class="section-title">Menu Favorit</h2>
+        <div id="filters"></div>
+        <div id="menu-container" class="products">
+          <div class="empty">Sedang memuat menu...</div>
+        </div>
       </section>
 
-      <aside class="cart">
+      <aside class="cart-box">
         <h2>Keranjang 🛒</h2>
-        <p class="muted">Pesananmu di Aroma Coffee</p>
+        <div class="cart-hint">Periksa pesananmu sebelum melanjutkan.</div>
+
         <div id="cart-items">
-          <p class="muted">Keranjang masih kosong.</p>
+          <div class="empty">Keranjang masih kosong.</div>
         </div>
-        <div class="total">
+
+        <div class="cart-total">
           <span>Total</span>
           <span id="cart-total">Rp0</span>
         </div>
-        <button class="checkout" id="checkout" disabled>
-          Lanjut Checkout
+
+        <button id="checkout" class="checkout-button" disabled>
+          Lanjut ke Checkout
         </button>
-        <p class="cart-note">
-          Versi uji coba: pesanan belum dikirim ke kedai dan belum
-          disimpan ke database.
+
+        <p class="cart-hint" style="margin:12px 0 0">
+          Pesanan belum dikirim ke kedai. Checkout pada tahap ini masih
+          menggunakan penyimpanan sementara di browser.
         </p>
       </aside>
     </div>
@@ -281,170 +403,400 @@
   </footer>
 
   <script>
-    // Aroma Coffee menjadi kedai contoh pertama.
-    const shopSlug = new URLSearchParams(location.search)
-      .get("kedai") || "aroma-coffee";
+    // GANTI DUA NILAI DI BAWAH DENGAN NILAI DARI NOTES IPHONE.
+    // Gunakan project URL dan publishable/anon key publik.
+    // JANGAN gunakan service_role atau secret key.
+    const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";";
 
-    // Belum ada menu tersendiri dari Aroma Coffee.
-    // Daftar ini hanya data sementara untuk uji coba.
-    const products = [
-      { name: "Ontal Kopi", price: 25000, category: "Signature", icon: "☕" },
-      { name: "Bula City Oil", price: 25000, category: "Signature", icon: "🧋" },
-      { name: "Kurma Coffee Latte", price: 25000, category: "Coffee", icon: "☕" },
-      { name: "Ice Coffee Lemonade", price: 20000, category: "Coffee", icon: "🍋" },
-      { name: "Ice Peach Coffee", price: 20000, category: "Coffee", icon: "🍑" },
-      { name: "Eskocie", price: 20000, category: "Coffee", icon: "🧋" },
-      { name: "Strawberry Americano", price: 20000, category: "Coffee", icon: "🍓" },
-      { name: "Matcha Latte", price: 25000, category: "Non Coffee", icon: "🍵" },
-      { name: "Red Velvet Latte", price: 20000, category: "Non Coffee", icon: "🥤" },
-      { name: "Air Panas Niff", price: 20000, category: "Non Coffee", icon: "🍵" },
-      { name: "Matcha Strawberry", price: 25000, category: "Non Coffee", icon: "🍓" },
-      { name: "Taro Latte", price: 18000, category: "Non Coffee", icon: "🥤" },
-      { name: "Chocolate Latte", price: 18000, category: "Non Coffee", icon: "🍫" },
-      { name: "Coffee Pandan", price: 25000, category: "Coffee", icon: "☕" },
-      { name: "Vanilla Coffee Latte", price: 20000, category: "Coffee", icon: "☕" },
-      { name: "Hazelnut Coffee Latte", price: 20000, category: "Coffee", icon: "☕" },
-      { name: "Caramel Coffee Latte", price: 23000, category: "Coffee", icon: "🧋" },
-      { name: "Butterscotch Coffee", price: 23000, category: "Coffee", icon: "☕" },
-      { name: "Red Velvet Coffee Latte", price: 23000, category: "Coffee", icon: "🥤" },
-      { name: "Matelas Coffee", price: 20000, category: "Coffee", icon: "☕" },
-      { name: "Matcha Coffee Latte", price: 25000, category: "Coffee", icon: "🍵" },
-      { name: "Tubruk", price: 20000, category: "Coffee", icon: "☕" },
-      { name: "Espresso", price: 20000, category: "Coffee", icon: "☕" },
-      { name: "Capoccino", price: 20000, category: "Coffee", icon: "☕" },
-      { name: "Americano", price: 20000, category: "Coffee", icon: "☕" },
-      { name: "V60 Manual Brew", price: 35000, category: "Manual Brew", icon: "🫖" },
-      { name: "Japanese Coffee", price: 35000, category: "Manual Brew", icon: "🧊" }
-    ];
+    const shopName = document.getElementById("shop-name");
+    const shopDescription = document.getElementById("shop-description");
+    const statusBox = document.getElementById("status");
+    const menuContainer = document.getElementById("menu-container");
+    const filtersContainer = document.getElementById("filters");
+    const cartItemsContainer = document.getElementById("cart-items");
+    const cartTotalElement = document.getElementById("cart-total");
+    const checkoutButton = document.getElementById("checkout");
 
+    let supabaseClient;
+    let currentShop = null;
+    let products = [];
+    let categories = [];
+    let activeCategory = "all";
+
+    // Keranjang menggunakan ID produk, bukan nomor urutan produk.
     const cart = new Map();
-    let activeCategory = "Semua";
 
-    const rupiah = amount => new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      maximumFractionDigits: 0
-    }).format(amount);
+    function rupiah(value) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+      }).format(Number(value) || 0);
+    }
 
-    // Jangan tampilkan nama kedai lama dari URL.
-    document.title = "Menu Aroma Coffee | KopiHub";
-    document.getElementById("shop-name").textContent = "Aroma Coffee ☕";
+    function showStatus(message, isError = false) {
+      statusBox.textContent = message;
+      statusBox.classList.toggle("error", isError);
+      statusBox.hidden = !message;
+    }
+
+    function makeElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    }
+
+    function getStock(product) {
+      if (!product.track_stock) return Infinity;
+      return Math.max(0, Number(product.stock_quantity) || 0);
+    }
+
+    function getCategoryName(product) {
+      const category = categories.find(
+        item => item.id === product.category_id
+      );
+      return category ? category.name : "Lainnya";
+    }
+
+    function renderFilters() {
+      filtersContainer.replaceChildren();
+
+      const allButton = makeElement("button", "filter", "Semua Menu");
+      allButton.type = "button";
+      allButton.dataset.category = "all";
+      allButton.classList.toggle("active", activeCategory === "all");
+      filtersContainer.appendChild(allButton);
+
+      categories.forEach(category => {
+        if (!products.some(p => p.category_id === category.id)) return;
+
+        const button = makeElement("button", "filter", category.name);
+        button.type = "button";
+        button.dataset.category = category.id;
+        button.classList.toggle(
+          "active",
+          activeCategory === category.id
+        );
+        filtersContainer.appendChild(button);
+      });
+    }
 
     function renderProducts() {
-      const shown = products.filter(product =>
-        activeCategory === "Semua" ||
-        product.category === activeCategory
-      );
+      menuContainer.replaceChildren();
 
-      document.getElementById("menu-count").textContent =
-        shown.length + " menu";
+      const visibleProducts = products.filter(product => {
+        return activeCategory === "all" ||
+          product.category_id === activeCategory;
+      });
 
-      document.getElementById("products").innerHTML = shown.map(product => {
-        const index = products.indexOf(product);
-        return `
-          <article class="product">
-            <div class="product-icon">${product.icon}</div>
-            <div class="category">${product.category}</div>
-            <h3>${product.name}</h3>
-            <div class="product-bottom">
-              <span class="price">${rupiah(product.price)}</span>
-              <button class="add" data-add="${index}"
-                aria-label="Tambah ${product.name}">+</button>
-            </div>
-          </article>`;
-      }).join("");
+      if (visibleProducts.length === 0) {
+        menuContainer.className = "products";
+        menuContainer.appendChild(
+          makeElement(
+            "div",
+            "empty",
+            "Belum ada menu tersedia pada kategori ini."
+          )
+        );
+        return;
+      }
+
+      visibleProducts.forEach(product => {
+        const card = makeElement("article", "product");
+        const imageBox = makeElement("div", "product-image", "☕");
+
+        if (product.image_url) {
+          const image = document.createElement("img");
+          image.src = product.image_url;
+          image.alt = product.name || "Foto menu";
+          image.loading = "lazy";
+          image.onerror = () => {
+            image.remove();
+            imageBox.textContent = "☕";
+          };
+          imageBox.replaceChildren(image);
+        }
+
+        const categoryLabel = makeElement(
+          "div", "category-label", getCategoryName(product)
+        );
+        const name = makeElement("h3", "", product.name);
+        const description = makeElement(
+          "p",
+          "description",
+          product.description || "Menu pilihan dari kedai kami."
+        );
+        const bottom = makeElement("div", "product-bottom");
+        const price = makeElement("div", "price", rupiah(product.price));
+        const addButton = makeElement("button", "add-button", "+");
+        addButton.type = "button";
+        addButton.setAttribute(
+          "aria-label", "Tambah " + product.name + " ke keranjang"
+        );
+
+        const unavailable = product.is_available === false ||
+          getStock(product) <= 0;
+
+        addButton.disabled = unavailable;
+        addButton.title = unavailable ? "Menu sedang tidak tersedia" : "Tambah";
+
+        if (unavailable) addButton.textContent = "Habis";
+
+        addButton.addEventListener("click", () => addToCart(product.id));
+
+        bottom.append(price, addButton);
+        card.append(imageBox, categoryLabel, name, description, bottom);
+        menuContainer.appendChild(card);
+      });
     }
 
     function renderCart() {
-      const entries = [...cart.entries()];
-      const container = document.getElementById("cart-items");
+      cartItemsContainer.replaceChildren();
       let total = 0;
+      let count = 0;
 
-      if (!entries.length) {
-        container.innerHTML =
-          '<p class="muted">Keranjang masih kosong.</p>';
-      } else {
-        container.innerHTML = entries.map(([index, qty]) => {
-          const product = products[index];
-          const subtotal = product.price * qty;
-          total += subtotal;
-
-          return `
-            <div class="cart-row">
-              <div>
-                <strong>${product.name}</strong><br>
-                <span class="muted">${rupiah(subtotal)}</span>
-                <div class="quantity">
-                  <button data-minus="${index}" aria-label="Kurangi">−</button>
-                  <span>${qty}</span>
-                  <button data-plus="${index}" aria-label="Tambah">+</button>
-                </div>
-              </div>
-              <span>${rupiah(product.price)}</span>
-            </div>`;
-        }).join("");
+      if (cart.size === 0) {
+        cartItemsContainer.appendChild(
+          makeElement("div", "empty", "Keranjang masih kosong.")
+        );
       }
 
-      document.getElementById("cart-total").textContent = rupiah(total);
-      document.getElementById("checkout").disabled = cart.size === 0;
+      cart.forEach(item => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
+        count += item.qty;
+
+        const row = makeElement("div", "cart-item");
+        const name = makeElement("div", "cart-item-name", item.name);
+        const bottom = makeElement("div", "cart-item-bottom");
+        const price = makeElement("span", "", rupiah(subtotal));
+        const quantity = makeElement("div", "quantity");
+
+        const minus = makeElement("button", "", "−");
+        minus.type = "button";
+        minus.setAttribute("aria-label", "Kurangi " + item.name);
+        minus.addEventListener("click", () => changeQuantity(item.id, -1));
+
+        const number = makeElement("span", "", String(item.qty));
+
+        const plus = makeElement("button", "", "+");
+        plus.type = "button";
+        plus.setAttribute("aria-label", "Tambah " + item.name);
+        plus.disabled = item.qty >= getStock(item.product);
+        plus.addEventListener("click", () => changeQuantity(item.id, 1));
+
+        quantity.append(minus, number, plus);
+        bottom.append(price, quantity);
+        row.append(name, bottom);
+        cartItemsContainer.appendChild(row);
+      });
+
+      cartTotalElement.textContent = rupiah(total);
+      checkoutButton.disabled = count === 0;
+      checkoutButton.textContent = count > 0
+        ? "Lanjut ke Checkout (" + count + ")"
+        : "Lanjut ke Checkout";
     }
 
-    document.getElementById("filters").addEventListener("click", event => {
-      const button = event.target.closest("[data-category]");
+    function addToCart(productId) {
+      const product = products.find(item => item.id === productId);
+      if (!product || product.is_available === false) return;
+
+      const stock = getStock(product);
+      if (stock <= 0) {
+        showStatus("Menu ini sedang habis.", true);
+        return;
+      }
+
+      const existing = cart.get(productId);
+      const currentQty = existing ? existing.qty : 0;
+
+      if (currentQty >= stock) {
+        showStatus("Jumlah pesanan sudah mencapai stok yang tersedia.", true);
+        return;
+      }
+
+      cart.set(productId, {
+        id: product.id,
+        name: product.name,
+        price: Number(product.price),
+        qty: currentQty + 1,
+        product: product
+      });
+
+      showStatus("Menu berhasil ditambahkan ke keranjang.");
+      renderCart();
+    }
+
+    function changeQuantity(productId, change) {
+      const item = cart.get(productId);
+      if (!item) return;
+
+      const newQty = item.qty + change;
+
+      if (newQty <= 0) {
+        cart.delete(productId);
+      } else {
+        if (newQty > getStock(item.product)) {
+          showStatus("Jumlah melebihi stok yang tersedia.", true);
+          return;
+        }
+        item.qty = newQty;
+        cart.set(productId, item);
+      }
+
+      renderCart();
+    }
+
+    async function loadShopAndMenu() {
+      try {
+        if (
+          SUPABASE_URL.includes("TEMPEL_") ||
+          SUPABASE_ANON_KEY.includes("TEMPEL_")
+        ) {
+          throw new Error(
+            "Konfigurasi Supabase belum diisi. Masukkan URL dan public anon/publishable key dari Notes."
+          );
+        }
+
+        if (!window.supabase) {
+          throw new Error(
+            "Pustaka Supabase gagal dimuat. Periksa koneksi internet lalu muat ulang halaman."
+          );
+        }
+
+        supabaseClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY
+        );
+
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get("kedai") || "aroma-coffee";
+
+        const { data: shop, error: shopError } = await supabaseClient
+          .from("kh_shops")
+          .select("id,name,slug,is_active")
+          .eq("slug", slug)
+          .eq("is_active", true)
+          .maybeSingle();
+
+        if (shopError) throw shopError;
+
+        if (!shop) {
+          throw new Error(
+            "Kedai tidak ditemukan atau sedang tidak aktif. Slug yang dicari: " + slug
+          );
+        }
+
+        currentShop = shop;
+        shopName.textContent = shop.name;
+        document.title = "Menu " + shop.name + " - KopiHub";
+        shopDescription.textContent =
+          "Pilih menu favorit dari " + shop.name + " dan masukkan ke keranjang.";
+
+        const [categoryResult, productResult] = await Promise.all([
+          supabaseClient
+            .from("kh_categories")
+            .select("id,name,sort_order,is_active")
+            .eq("shop_id", shop.id)
+            .eq("is_active", true)
+            .order("sort_order", { ascending: true }),
+
+          supabaseClient
+            .from("kh_products")
+            .select(
+              "id,shop_id,category_id,name,description,image_url,item_type,price,stock_quantity,track_stock,is_available"
+            )
+            .eq("shop_id", shop.id)
+            .eq("is_available", true)
+            .order("name", { ascending: true })
+        ]);
+
+        if (categoryResult.error) throw categoryResult.error;
+        if (productResult.error) throw productResult.error;
+
+        categories = categoryResult.data || [];
+        products = (productResult.data || []).filter(product => {
+          return Number.isFinite(Number(product.price)) &&
+            Number(product.price) >= 0;
+        });
+
+        renderFilters();
+        renderProducts();
+        renderCart();
+
+        if (products.length === 0) {
+          showStatus(
+            "Kedai " + shop.name +
+            " berhasil dibaca, tetapi belum ada produk tersedia. Tambahkan produk melalui dashboard."
+          );
+        } else {
+          showStatus(
+            "Menu " + shop.name + " berhasil dimuat: " +
+            products.length + " produk."
+          );
+        }
+      } catch (error) {
+        console.error("Gagal memuat menu KopiHub:", error);
+        shopName.textContent = "Menu belum tersedia";
+        menuContainer.replaceChildren(
+          makeElement("div", "empty", error.message || "Terjadi kesalahan.")
+        );
+        filtersContainer.replaceChildren();
+        showStatus(
+          error.message ||
+          "Gagal memuat data. Periksa koneksi, konfigurasi Supabase, dan izin database.",
+          true
+        );
+      }
+    }
+
+    filtersContainer.addEventListener("click", event => {
+      const button = event.target.closest("button[data-category]");
       if (!button) return;
 
       activeCategory = button.dataset.category;
-      document.querySelectorAll(".filter").forEach(item =>
-        item.classList.toggle("active", item === button)
-      );
+      renderFilters();
       renderProducts();
     });
 
-    document.getElementById("products").addEventListener("click", event => {
-      const button = event.target.closest("[data-add]");
-      if (!button) return;
-
-      const index = Number(button.dataset.add);
-      cart.set(index, (cart.get(index) || 0) + 1);
-      renderCart();
-    });
-
-    document.getElementById("cart-items").addEventListener("click", event => {
-      const plus = event.target.closest("[data-plus]");
-      const minus = event.target.closest("[data-minus]");
-
-      if (plus) {
-        const index = Number(plus.dataset.plus);
-        cart.set(index, (cart.get(index) || 0) + 1);
+    checkoutButton.addEventListener("click", () => {
+      if (!currentShop || cart.size === 0) {
+        showStatus("Tambahkan menu ke keranjang terlebih dahulu.", true);
+        return;
       }
 
-      if (minus) {
-        const index = Number(minus.dataset.minus);
-        const qty = (cart.get(index) || 0) - 1;
-        if (qty <= 0) cart.delete(index);
-        else cart.set(index, qty);
-      }
-
-      renderCart();
-    });
-
-    document.getElementById("checkout").addEventListener("click", () => {
-      const items = [...cart.entries()].map(([index, qty]) => ({
-        name: products[index].name,
-        price: products[index].price,
-        qty
+      const items = Array.from(cart.values()).map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        qty: item.qty
       }));
 
-      // Simpan sementara untuk halaman checkout.
-      sessionStorage.setItem("kopihubShop", shopSlug);
-      sessionStorage.setItem("kopihubShopName", "Aroma Coffee");
-      sessionStorage.setItem("kopihubCheckout", JSON.stringify(items));
+      const payload = {
+        shop_id: currentShop.id,
+        shop_name: currentShop.name,
+        shop_slug: currentShop.slug,
+        items: items,
+        total: items.reduce(
+          (sum, item) => sum + item.price * item.qty, 0
+        )
+      };
 
-      location.href = "checkout.html";
+      try {
+        sessionStorage.setItem("kopihubCheckout", JSON.stringify(payload));
+        window.location.href = "checkout.html";
+      } catch (error) {
+        showStatus(
+          "Tidak dapat menyimpan keranjang sementara. Periksa pengaturan browser.",
+          true
+        );
+      }
     });
 
-    renderProducts();
-    renderCart();
+    loadShopAndMenu();
   </script>
 </body>
 </html>

@@ -595,7 +595,134 @@ await loadDashboardStats();
         shopsList.appendChild(card);
       });
     }
+async function loadApplications() {
+  applicationsMessage.textContent = "Memuat pendaftaran...";
+  applicationsList.replaceChildren();
 
+  const { data, error } = await client
+    .from("kh_shop_applications")
+    .select(
+      "id, shop_name, owner_name, phone, business_type, address, status, created_at"
+    )
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    applicationsMessage.textContent =
+      "Gagal memuat pendaftaran: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    applicationsMessage.textContent =
+      "Belum ada pendaftaran mitra yang menunggu pemeriksaan.";
+    return;
+  }
+
+  applicationsMessage.textContent =
+    "Pendaftaran menunggu pemeriksaan: " + data.length;
+
+  data.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "shop-card";
+
+    const name = document.createElement("strong");
+    name.textContent = item.shop_name;
+
+    const detail = document.createElement("div");
+    detail.className = "shop-detail";
+    detail.textContent = [
+      "Pemilik: " + item.owner_name,
+      "Telepon: " + item.phone,
+      "Jenis usaha: " + item.business_type,
+      "Alamat: " + (item.address || "Belum diisi"),
+      "Tanggal: " +
+        new Date(item.created_at).toLocaleDateString("id-ID")
+    ].join(" · ");
+
+    const status = document.createElement("div");
+    status.className = "shop-status inactive";
+    status.textContent = "Menunggu pemeriksaan";
+
+    const approve = document.createElement("button");
+    approve.type = "button";
+    approve.className = "action-button";
+    approve.textContent = "Setujui";
+
+    const reject = document.createElement("button");
+    reject.type = "button";
+    reject.className = "action-button";
+    reject.style.background = "#a52c2c";
+    reject.textContent = "Tolak";
+
+    approve.addEventListener("click", () => {
+      reviewApplication(item, "approved", approve, reject);
+    });
+
+    reject.addEventListener("click", () => {
+      reviewApplication(item, "rejected", approve, reject);
+    });
+
+    card.append(name, detail, status, approve, reject);
+    applicationsList.appendChild(card);
+  });
+}
+
+async function reviewApplication(item, decision, approve, reject) {
+  const approved = decision === "approved";
+  const action = approved ? "menyetujui" : "menolak";
+
+  if (!confirm(
+    `Yakin ingin ${action} pendaftaran ${item.shop_name}?`
+  )) {
+    return;
+  }
+
+  let reviewNote = null;
+
+  if (!approved) {
+    reviewNote = prompt("Alasan penolakan (opsional):");
+
+    if (reviewNote === null) {
+      return;
+    }
+  }
+
+  approve.disabled = true;
+  reject.disabled = true;
+
+  try {
+    const { data, error } = await client.rpc(
+      "admin_review_shop_application",
+      {
+        p_application_id: item.id,
+        p_decision: decision,
+        p_review_note: reviewNote
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || data.success !== true) {
+      throw new Error("Sistem belum mengonfirmasi hasil pemeriksaan.");
+    }
+
+    alert(
+      approved
+        ? "Pendaftaran disetujui. Kedai dan akses pemilik telah dibuat."
+        : "Pendaftaran telah ditolak."
+    );
+
+    await loadApplications();
+    await loadDashboardStats();
+  } catch (error) {
+    alert("Pemeriksaan gagal: " + error.message);
+    approve.disabled = false;
+    reject.disabled = false;
+  }
+}
     document.getElementById("nav-dashboard").addEventListener(
       "click", () => showPage("dashboard")
     );
@@ -607,7 +734,13 @@ await loadDashboardStats();
     document.getElementById("reload-shops").addEventListener(
       "click", loadPartnerShops
     );
+    document.getElementById("nav-applications").addEventListener(
+      "click", () => showPage("applications")
+    );
 
+    document.getElementById("reload-applications").addEventListener(
+      "click", loadApplications
+    );
     document.getElementById("logout").addEventListener(
       "click", async () => {
         const { error } = await client.auth.signOut();

@@ -682,7 +682,11 @@ const todaysOrders = orders.filter(order =>
       const date = document.createElement("p");
       date.className = "muted";
       date.textContent = order.created_at
-        ? new Date(order.created_at).toLocaleString("id-ID")
+        ? new Date(order.created_at).toLocaleString("id-ID", {
+  timeZone: TIME_ZONE,
+  dateStyle: "short",
+  timeStyle: "medium"
+})
         : "";
 
       card.append(

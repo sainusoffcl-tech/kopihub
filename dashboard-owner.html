@@ -283,7 +283,7 @@ async function loadShops() {
 
     const { data, error } = await client
       .from("kh_shops")
-      .select("id, name, slug, is_active")
+      .select("id, name, slug, is_active, timezone")
       .in("id", ids)
       .order("name");
     if (error) throw error;
@@ -529,17 +529,33 @@ async function loadOrders() {
   message.textContent = "Memuat pesanan...";
 
   try {
-    const { data, error } = await client
-      .from("kh_orders")
-      .select(
-        "id, order_code, order_number, customer_name, customer_phone, " +
-        "order_type, table_label, table_number, status, subtotal, " +
-        "total_amount, created_at, items, payment_method, " +
-        "payment_status, order_status"
-      )
-      .eq("shop_id", shop.id)
-      .order("created_at", { ascending: false })
-      .limit(500);
+   const PAGE_SIZE = 500;
+const orders = [];
+let from = 0;
+
+while (true) {
+  const { data, error } = await client
+    .from("kh_orders")
+    .select(
+      "id, order_code, order_number, customer_name, customer_phone, " +
+      "order_type, table_label, table_number, status, subtotal, " +
+      "total_amount, created_at, items, payment_method, " +
+      "payment_status, order_status"
+    )
+    .eq("shop_id", shop.id)
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
+    .range(from, from + PAGE_SIZE - 1);
+
+  if (error) throw error;
+
+  const page = data || [];
+  orders.push(...page);
+
+  if (page.length < PAGE_SIZE) break;
+
+  from += PAGE_SIZE;
+}
 
     if (error) throw error;
     if (shopSelect.value !== shop.id) return;

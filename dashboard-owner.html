@@ -485,11 +485,13 @@ async function deleteProduct(id) {
   }
 }
 
+
 async function loadOrders() {
   const shop = selectedShop();
   const message = $("orders-message");
   const list = $("orders-list");
   const button = $("refresh-orders");
+
   list.replaceChildren();
 
   if (!client || !shop) {
@@ -501,7 +503,8 @@ async function loadOrders() {
   message.textContent = "Memuat pesanan...";
 
   try {
-    const { data, error } = await client.from("kh_orders")
+    const { data, error } = await client
+      .from("kh_orders")
       .select("id, order_code, order_number, customer_name, customer_phone, order_type, table_label, table_number, status, subtotal, total_amount, created_at, items, payment_method, payment_status, order_status")
       .eq("shop_id", shop.id)
       .order("created_at", { ascending: false })
@@ -510,7 +513,7 @@ async function loadOrders() {
     if (error) throw error;
     if (shopSelect.value !== shop.id) return;
 
-    if (!data || !data.length) {
+    if (!data || data.length === 0) {
       message.textContent = "Belum ada pesanan untuk kedai ini.";
       $("today-orders").textContent = "0";
       $("today-sales").textContent = rupiah(0);
@@ -518,17 +521,38 @@ async function loadOrders() {
     }
 
     message.textContent = data.length + " pesanan terbaru.";
-    const today = new Date();
-    const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    const now = new Date();
+    const start = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
     const todaysOrders = data.filter(order =>
-      order.created_at && new Date(order.created_at) >= start
+      order.created_at &&
+      new Date(order.created_at) >= start
     );
 
     $("today-orders").textContent = todaysOrders.length;
     $("today-sales").textContent = rupiah(
-      todaysOrders.reduce((sum, order) =>
-        sum + Number(order.total_amount || 0), 0)
+      todaysOrders.reduce(
+        (sum, order) => sum + Number(order.total_amount || 0),
+        0
+      )
     );
+
+    const statuses = [
+      { value: "pending", label: "Pesanan Masuk" },
+      { value: "processing", label: "Sedang Diproses" },
+      { value: "ready_for_delivery", label: "Siap Diantar" },
+      { value: "completed", label: "Selesai" }
+    ];
+
+    function statusLabel(value) {
+      const found = statuses.find(item => item.value === value);
+      return found ? found.label : (value || "Belum ditentukan");
+    }
 
     data.forEach(order => {
       const card = document.createElement("article");
@@ -539,7 +563,12 @@ async function loadOrders() {
         (order.order_code || order.order_number || order.id);
 
       const customer = document.createElement("p");
-      customer.textContent = "Pelanggan: " + (order.customer_name || "-");
+      customer.textContent =
+        "Pelanggan: " + (order.customer_name || "-");
+
+      const phone = document.createElement("p");
+      phone.textContent =
+        "Telepon: " + (order.customer_phone || "-");
 
       const table = document.createElement("p");
       table.textContent = "Meja: " +
@@ -550,8 +579,9 @@ async function loadOrders() {
         rupiah(order.total_amount ?? order.subtotal ?? 0);
 
       const status = document.createElement("p");
-      status.textContent = "Status: " +
-        (order.order_status || order.status || "Belum ditentukan");
+      status.textContent =
+        "Status pesanan: " +
+        statusLabel(order.order_status || order.status);
 
       const payment = document.createElement("p");
       payment.textContent = "Pembayaran: " +
@@ -561,31 +591,139 @@ async function loadOrders() {
       const date = document.createElement("p");
       date.className = "muted";
       date.textContent = order.created_at
-        ? new Date(order.created_at).toLocaleString("id-ID") : "";
+        ? new Date(order.created_at).toLocaleString("id-ID")
+        : "";
 
-      card.append(heading, customer, table, total, status, payment, date);
+      card.append(
+        heading, customer, phone, table,
+        total, status, payment, date
+      );
 
       if (Array.isArray(order.items) && order.items.length) {
         const label = document.createElement("p");
         label.textContent = "Rincian pesanan:";
         card.appendChild(label);
+
         order.items.forEach(item => {
           const row = document.createElement("p");
           row.className = "muted";
-          row.textContent = (item.name || item.product_name || "Menu") +
+          row.textContent =
+            (item.name || item.product_name || "Menu") +
             " × " + (item.qty || item.quantity || 1);
           card.appendChild(row);
         });
       }
+
+      const statusLabelElement = document.createElement("label");
+      statusLabelElement.textContent = "Ubah status pesanan";
+
+      const select = document.createElement("select");
+      select.setAttribute(
+        "aria-label",
+        "Status pesanan " +
+        (order.order_code || order.order_number || order.id)
+      );
+
+      const currentStatus =
+        order.order_status || order.status || "pending";
+
+      statuses.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.value;
+        option.textContent = item.label;
+        select.appendChild(option);
+      });
+
+      const knownStatus = statuses.some(
+        item => item.value === currentStatus
+      );
+
+      if (knownStatus) {
+        select.value = currentStatus;
+      } else {
+        const oldOption = document.createElement("option");
+        oldOption.value = currentStatus;
+        oldOption.textContent = statusLabel(currentStatus);
+        select.insertBefore(oldOption, select.firstChild);
+        select.value = currentStatus;
+      }
+
+      const saveButton = document.createElement("button");
+      saveButton.type = "button";
+      saveButton.className = "primary";
+      saveButton.textContent = "Simpan Status";
+      saveButton.style.marginTop = "9px";
+
+      const resultMessage = document.createElement("p");
+      resultMessage.className = "muted";
+      resultMessage.setAttribute("role", "status");
+
+      saveButton.addEventListener("click", async () => {
+        const newStatus = select.value;
+
+        if (newStatus === currentStatus) {
+          resultMessage.textContent = "Status belum berubah.";
+          return;
+        }
+
+        saveButton.disabled = true;
+        select.disabled = true;
+        resultMessage.textContent = "Menyimpan status...";
+
+        try {
+          const { data: updated, error: updateError } = await client
+            .from("kh_orders")
+            .update({ order_status: newStatus })
+            .eq("id", order.id)
+            .eq("shop_id", shop.id)
+            .select("id")
+            .maybeSingle();
+
+          if (updateError) throw updateError;
+
+          if (!updated) {
+            throw new Error(
+              "Pesanan tidak berubah. Periksa izin UPDATE dan kebijakan RLS."
+            );
+          }
+
+          order.order_status = newStatus;
+          currentStatus = newStatus;
+          status.textContent =
+            "Status pesanan: " + statusLabel(newStatus);
+
+          resultMessage.textContent =
+            "Status berhasil disimpan: " + statusLabel(newStatus);
+
+          await loadOrders();
+        } catch (error) {
+          console.error("Gagal mengubah status:", error);
+          resultMessage.textContent =
+            "Gagal menyimpan status: " + error.message;
+        } finally {
+          saveButton.disabled = false;
+          select.disabled = false;
+        }
+      });
+
+      card.append(
+        statusLabelElement,
+        select,
+        saveButton,
+        resultMessage
+      );
+
       list.appendChild(card);
     });
   } catch (error) {
     console.error("Gagal memuat pesanan:", error);
-    message.textContent = "Gagal memuat pesanan: " + error.message;
+    message.textContent =
+      "Gagal memuat pesanan: " + error.message;
   } finally {
     button.disabled = false;
   }
 }
+
 
 $("refresh-orders").addEventListener("click", loadOrders);
 

@@ -11,38 +11,50 @@
       --green: #173d2e;
       --green2: #24543e;
       --cream: #f7f5ed;
-      --white: #ffffff;
+      --white: #fff;
       --text: #26372d;
       --muted: #788278;
       --line: #e5e8df;
       --orange: #e99a48;
+      --red: #a52c2c;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--cream);
       color: var(--text);
     }
+
+    button { cursor: pointer; font: inherit; }
+    button:disabled { opacity: .6; cursor: wait; }
+
     .layout { min-height: 100vh; }
+
     aside {
       background: var(--green);
       color: white;
       padding: 24px 18px;
     }
+
     .brand { font-size: 24px; font-weight: 800; }
     .brand span { color: #a9d2a6; }
+
     .tagline {
       color: #d1dfd3;
       font-size: 12px;
       margin: 7px 0 25px;
     }
+
     .nav-label {
       color: #a9c2b0;
       font-size: 11px;
       letter-spacing: 1.5px;
       margin: 22px 10px 10px;
     }
+
     .nav-item {
       display: block;
       width: 100%;
@@ -55,8 +67,12 @@
       background: transparent;
       font-size: 14px;
     }
-    .nav-item.active { background: var(--green2); }
+
+    .nav-item.active,
+    .nav-item:hover { background: var(--green2); }
+
     main { padding: 22px 16px 40px; min-width: 0; }
+
     .topbar {
       display: flex;
       align-items: center;
@@ -65,8 +81,11 @@
       flex-wrap: wrap;
       margin-bottom: 24px;
     }
+
     h1 { font-size: 25px; margin: 0 0 7px; }
+    h2 { font-size: 19px; }
     .muted { color: var(--muted); font-size: 13px; }
+
     .profile {
       background: white;
       border: 1px solid var(--line);
@@ -74,29 +93,43 @@
       border-radius: 12px;
       font-size: 13px;
     }
+
     .section-title { margin: 26px 0 14px; font-size: 17px; }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
-    .card {
+
+    .card, .panel {
       background: white;
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 17px;
       min-width: 0;
     }
-    .stat-label { color: var(--muted); font-size: 12px; }
-    .stat-value { font-size: 25px; font-weight: 750; margin: 12px 0 5px; }
-    .stat-note { color: var(--muted); font-size: 11px; }
-    .panel {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 20px;
-      line-height: 1.65;
+
+    .stat-label, .stat-note {
+      color: var(--muted);
+      font-size: 12px;
     }
+
+    .stat-value {
+      font-size: 25px;
+      font-weight: 750;
+      margin: 12px 0 5px;
+    }
+
+    .warning {
+      padding: 14px;
+      border-radius: 12px;
+      background: #fff0df;
+      color: #754719;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     .status {
       display: inline-block;
       border-radius: 20px;
@@ -106,13 +139,7 @@
       font-size: 12px;
       font-weight: 700;
     }
-    .warning {
-      padding: 14px;
-      border-radius: 12px;
-      background: #fff0df;
-      color: #754719;
-      font-size: 13px;
-    }
+
     .logout {
       margin-top: 24px;
       border: 1px solid #6e8a78;
@@ -122,7 +149,54 @@
       border-radius: 10px;
       width: 100%;
     }
-    #loading { padding: 35px; text-align: center; }
+
+    .action-button {
+      border: 0;
+      background: var(--green);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 9px;
+      margin: 4px 4px 4px 0;
+    }
+
+    .shop-card {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .shop-card:last-child { border-bottom: 0; }
+
+    .shop-detail {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .shop-status {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .shop-status.active {
+      background: #e6f3e6;
+      color: #236338;
+    }
+
+    .shop-status.inactive {
+      background: #fce8e6;
+      color: var(--red);
+    }
+
+    #loading {
+      padding: 35px;
+      text-align: center;
+    }
+
     #denied {
       display: none;
       margin: 40px auto;
@@ -131,8 +205,13 @@
       background: white;
       border-radius: 16px;
     }
+
     @media (min-width: 850px) {
-      .layout { display: grid; grid-template-columns: 245px 1fr; }
+      .layout {
+        display: grid;
+        grid-template-columns: 245px minmax(0, 1fr);
+      }
+
       aside { min-height: 100vh; }
       main { padding: 34px; }
       .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -147,7 +226,7 @@
     <p id="denied-message">
       Akun ini belum berhasil diverifikasi sebagai Admin platform.
     </p>
-    <button onclick="window.location.href='akun.html'">
+    <button class="action-button" onclick="window.location.href='akun.html'">
       Kembali ke halaman login
     </button>
   </div>
@@ -158,10 +237,12 @@
       <div class="tagline">PLATFORM MANAGEMENT</div>
 
       <div class="nav-label">MENU UTAMA</div>
-      <div class="nav-item active">▦ &nbsp; Dashboard</div>
+      <button type="button" id="nav-dashboard" class="nav-item active">
+        ▦ &nbsp; Dashboard
+      </button>
       <button type="button" id="nav-shops" class="nav-item">
-  ▤ &nbsp; Kedai Mitra
-</button>
+        ▤ &nbsp; Kedai Mitra
+      </button>
       <div class="nav-item">♙ &nbsp; Pengguna &amp; Akses</div>
 
       <div class="nav-label">KEUANGAN</div>
@@ -173,13 +254,15 @@
       <div class="nav-item">⚙ &nbsp; Pengaturan Platform</div>
       <div class="nav-item">◷ &nbsp; Audit Log</div>
 
-      <button id="logout" class="logout">Keluar dari Admin</button>
+      <button id="logout" class="logout" type="button">
+        Keluar dari Admin
+      </button>
     </aside>
 
     <main>
       <div class="topbar">
         <div>
-          <h1>Dashboard Admin</h1>
+          <h1 id="page-title">Dashboard Admin</h1>
           <div class="muted">Pusat pengelolaan layanan KopiHub</div>
         </div>
         <div class="profile">
@@ -188,64 +271,67 @@
         </div>
       </div>
 
-      <div class="warning">
-        <strong>Dashboard tahap awal.</strong>
-        Angka contoh di bawah belum diambil dari database dan tidak
-        boleh digunakan sebagai laporan transaksi nyata.
-      </div>
+      <section id="dashboard-view">
+        <div class="warning">
+          <strong>Dashboard tahap awal.</strong>
+          Angka contoh di bawah belum diambil dari database dan tidak
+          boleh digunakan sebagai laporan transaksi nyata.
+        </div>
 
-      <h2 class="section-title">Ringkasan Platform</h2>
-      <div class="stats">
-        <div class="card">
-          <div class="stat-label">Kedai Mitra</div>
-          <div class="stat-value">—</div>
-          <div class="stat-note">Menunggu integrasi data</div>
+        <h2 class="section-title">Ringkasan Platform</h2>
+        <div class="stats">
+          <div class="card">
+            <div class="stat-label">Kedai Mitra</div>
+            <div class="stat-value">—</div>
+            <div class="stat-note">Menunggu integrasi data</div>
+          </div>
+          <div class="card">
+            <div class="stat-label">Total Pesanan</div>
+            <div class="stat-value">—</div>
+            <div class="stat-note">Menunggu integrasi data</div>
+          </div>
+          <div class="card">
+            <div class="stat-label">Komisi KopiHub</div>
+            <div class="stat-value">—</div>
+            <div class="stat-note">Menunggu integrasi data</div>
+          </div>
         </div>
-        <div class="card">
-          <div class="stat-label">Total Pesanan</div>
-          <div class="stat-value">—</div>
-          <div class="stat-note">Menunggu integrasi data</div>
-        </div>
-        <div class="card">
-          <div class="stat-label">Komisi KopiHub</div>
-          <div class="stat-value">—</div>
-          <div class="stat-note">Menunggu integrasi data</div>
-        </div>
-      </div>
 
-      <h2 class="section-title">Status Admin</h2>
-      <div class="panel">
-        <div class="status">✓ Admin terverifikasi</div>
-        <p>Selamat datang di pusat pengelolaan KopiHub.</p>
+        <h2 class="section-title">Status Admin</h2>
+        <div class="panel">
+          <div class="status">✓ Admin terverifikasi</div>
+          <p>Selamat datang di pusat pengelolaan KopiHub.</p>
+          <p class="muted">
+            Kamu dapat menggunakan halaman ini setelah login dengan
+            akun yang memiliki hak Admin platform.
+          </p>
+        </div>
+      </section>
+
+      <section id="shops-section" hidden>
+        <h2 class="section-title">Kedai Mitra</h2>
         <p class="muted">
-          Kamu dapat menggunakan halaman ini setelah login dengan
-          akun yang memiliki hak Admin platform.
+          Daftar kedai yang terdaftar di platform KopiHub.
         </p>
-      </div>
+
+        <div class="panel">
+          <button type="button" id="reload-shops" class="action-button">
+            Muat Ulang Kedai
+          </button>
+          <p id="shops-message" aria-live="polite">
+            Menyiapkan daftar kedai...
+          </p>
+          <div id="shops-list"></div>
+        </div>
+      </section>
     </main>
-
-    <section id="shops-section" hidden>
-      <h2 class="section-title">Kedai Mitra</h2>
-      <p class="muted">
-        Daftar kedai yang terdaftar di platform KopiHub.
-      </p>
-
-      <div class="panel">
-        <button type="button" id="reload-shops">
-          Muat Ulang Kedai
-        </button>
-        <p id="shops-message">Menyiapkan daftar kedai...</p>
-        <div id="shops-list"></div>
-      </div>
-    </section>
   </div>
-      
-  <script>
-    const SUPABASE_URL =
-      "https://ozcliasebeydgyvgluht.supabase.co";
 
-    // Gunakan publishable key KopiHub milikmu.
-    // Jangan pernah menggunakan service_role atau secret key di sini.
+  <script>
+    const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+
+    // Publishable key boleh digunakan di frontend.
+    // Jangan pernah menaruh service_role atau secret key di sini.
     const SUPABASE_PUBLISHABLE_KEY =
       "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
@@ -254,11 +340,36 @@
       SUPABASE_PUBLISHABLE_KEY
     );
 
-    async function initAdmin() {
-      const loading = document.getElementById("loading");
-      const denied = document.getElementById("denied");
-      const app = document.getElementById("app");
+    const loading = document.getElementById("loading");
+    const denied = document.getElementById("denied");
+    const app = document.getElementById("app");
+    const dashboardView = document.getElementById("dashboard-view");
+    const shopsSection = document.getElementById("shops-section");
+    const shopsList = document.getElementById("shops-list");
+    const shopsMessage = document.getElementById("shops-message");
 
+    function showPage(page) {
+      const showShops = page === "shops";
+
+      dashboardView.hidden = showShops;
+      shopsSection.hidden = !showShops;
+
+      document.getElementById("page-title").textContent =
+        showShops ? "Kedai Mitra" : "Dashboard Admin";
+
+      document.getElementById("nav-dashboard").classList.toggle(
+        "active", !showShops
+      );
+      document.getElementById("nav-shops").classList.toggle(
+        "active", showShops
+      );
+
+      if (showShops) {
+        loadPartnerShops();
+      }
+    }
+
+    async function initAdmin() {
       try {
         const { data: authData, error: authError } =
           await client.auth.getUser();
@@ -301,27 +412,15 @@
       }
     }
 
-    document.getElementById("logout").addEventListener(
-      "click",
-      async () => {
-        await client.auth.signOut();
-        window.location.href = "akun.html";
-      }
-    );
-
-    
-
-    const shopsSection = document.getElementById("shops-section");
-    const shopsList = document.getElementById("shops-list");
-    const shopsMessage = document.getElementById("shops-message");
-
     async function loadPartnerShops() {
       shopsMessage.textContent = "Memuat data kedai...";
       shopsList.replaceChildren();
 
       const { data, error } = await client
         .from("kh_shops")
-        .select("id, name, business_type, address, phone, is_active, created_at")
+        .select(
+          "id, name, business_type, address, phone, is_active, created_at"
+        )
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -338,74 +437,98 @@
 
       shopsMessage.textContent = "Jumlah kedai: " + data.length;
 
-      
-data.forEach((shop) => {
-  const card = document.createElement("div");
-  card.style.cssText =
-    "padding:14px 0;border-bottom:1px solid #e5e8df";
+      data.forEach((shop) => {
+        const card = document.createElement("div");
+        card.className = "shop-card";
 
-  const name = document.createElement("strong");
-  name.textContent = shop.name || "Kedai tanpa nama";
+        const name = document.createElement("strong");
+        name.textContent = shop.name || "Kedai tanpa nama";
 
-  const detail = document.createElement("p");
-  detail.className = "muted";
-  detail.textContent = [
-    shop.business_type || "Jenis usaha belum diisi",
-    shop.address || "Alamat belum diisi",
-    shop.phone || "Telepon belum diisi",
-    shop.is_active ? "Status: Aktif" : "Status: Nonaktif"
-  ].join(" · ");
+        const detail = document.createElement("div");
+        detail.className = "shop-detail";
+        detail.textContent = [
+          shop.business_type || "Jenis usaha belum diisi",
+          shop.address || "Alamat belum diisi",
+          shop.phone || "Telepon belum diisi"
+        ].join(" · ");
 
-  const button = document.createElement("button");
-  button.type = "button";
-  button.textContent = shop.is_active
-    ? "Nonaktifkan Kedai"
-    : "Aktifkan Kedai";
+        const status = document.createElement("div");
+        status.className = "shop-status " +
+          (shop.is_active ? "active" : "inactive");
+        status.textContent = shop.is_active ? "Aktif" : "Nonaktif";
 
-  button.addEventListener("click", async () => {
-    const nextStatus = !shop.is_active;
-    const action = nextStatus ? "mengaktifkan" : "menonaktifkan";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "action-button";
+        button.textContent = shop.is_active
+          ? "Nonaktifkan Kedai"
+          : "Aktifkan Kedai";
 
-    if (!confirm(`Yakin ingin ${action} ${shop.name}?`)) {
-      return;
+        button.addEventListener("click", async () => {
+          const nextStatus = !shop.is_active;
+          const action = nextStatus ? "mengaktifkan" : "menonaktifkan";
+
+          if (!confirm(
+            `Yakin ingin ${action} ${shop.name || "kedai ini"}?`
+          )) {
+            return;
+          }
+
+          button.disabled = true;
+          button.textContent = "Menyimpan...";
+
+          try {
+            const { error: updateError } = await client.rpc(
+              "admin_set_shop_active",
+              {
+                p_shop_id: shop.id,
+                p_is_active: nextStatus
+              }
+            );
+
+            if (updateError) {
+              throw updateError;
+            }
+
+            alert("Status kedai berhasil diperbarui.");
+            await loadPartnerShops();
+          } catch (error) {
+            alert("Status gagal diubah: " + error.message);
+            button.disabled = false;
+            button.textContent = shop.is_active
+              ? "Nonaktifkan Kedai"
+              : "Aktifkan Kedai";
+          }
+        });
+
+        card.append(name, detail, status, button);
+        shopsList.appendChild(card);
+      });
     }
 
-    button.disabled = true;
-    button.textContent = "Menyimpan...";
+    document.getElementById("nav-dashboard").addEventListener(
+      "click", () => showPage("dashboard")
+    );
 
-    const { error } = await client.rpc("admin_set_shop_active", {
-      p_shop_id: shop.id,
-      p_is_active: nextStatus
-    });
-
-    if (error) {
-      alert("Status gagal diubah: " + error.message);
-      button.disabled = false;
-      button.textContent = shop.is_active
-        ? "Nonaktifkan Kedai"
-        : "Aktifkan Kedai";
-      return;
-    }
-
-    alert("Status kedai berhasil diperbarui.");
-    await loadPartnerShops();
-  });
-
-  card.append(name, detail, button);
-  shopsList.appendChild(card);
-});
-
-    }
-
-    document.getElementById("nav-shops").addEventListener("click", () => {
-      shopsSection.hidden = false;
-      shopsSection.scrollIntoView({ behavior: "smooth" });
-      loadPartnerShops();
-    });
+    document.getElementById("nav-shops").addEventListener(
+      "click", () => showPage("shops")
+    );
 
     document.getElementById("reload-shops").addEventListener(
-      "click",
-      loadPartnerShops
+      "click", loadPartnerShops
+    );
+
+    document.getElementById("logout").addEventListener(
+      "click", async () => {
+        const { error } = await client.auth.signOut();
+
+        if (error) {
+          alert("Gagal keluar: " + error.message);
+          return;
+        }
+
+        window.location.href = "akun.html";
+      }
     );
 
     initAdmin();

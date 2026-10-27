@@ -395,26 +395,63 @@
 
       shopsMessage.textContent = "Jumlah kedai: " + data.length;
 
-      data.forEach((shop) => {
-        const card = document.createElement("div");
-        card.style.cssText =
-          "padding:14px 0;border-bottom:1px solid #e5e8df";
+      
+data.forEach((shop) => {
+  const card = document.createElement("div");
+  card.style.cssText =
+    "padding:14px 0;border-bottom:1px solid #e5e8df";
 
-        const name = document.createElement("strong");
-        name.textContent = shop.name || "Kedai tanpa nama";
+  const name = document.createElement("strong");
+  name.textContent = shop.name || "Kedai tanpa nama";
 
-        const detail = document.createElement("p");
-        detail.className = "muted";
-        detail.textContent = [
-          shop.business_type || "Jenis usaha belum diisi",
-          shop.address || "Alamat belum diisi",
-          shop.phone || "Telepon belum diisi",
-          shop.is_active ? "Status: Aktif" : "Status: Tidak aktif"
-        ].join(" · ");
+  const detail = document.createElement("p");
+  detail.className = "muted";
+  detail.textContent = [
+    shop.business_type || "Jenis usaha belum diisi",
+    shop.address || "Alamat belum diisi",
+    shop.phone || "Telepon belum diisi",
+    shop.is_active ? "Status: Aktif" : "Status: Nonaktif"
+  ].join(" · ");
 
-        card.append(name, detail);
-        shopsList.appendChild(card);
-      });
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = shop.is_active
+    ? "Nonaktifkan Kedai"
+    : "Aktifkan Kedai";
+
+  button.addEventListener("click", async () => {
+    const nextStatus = !shop.is_active;
+    const action = nextStatus ? "mengaktifkan" : "menonaktifkan";
+
+    if (!confirm(`Yakin ingin ${action} ${shop.name}?`)) {
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Menyimpan...";
+
+    const { error } = await client.rpc("admin_set_shop_active", {
+      p_shop_id: shop.id,
+      p_is_active: nextStatus
+    });
+
+    if (error) {
+      alert("Status gagal diubah: " + error.message);
+      button.disabled = false;
+      button.textContent = shop.is_active
+        ? "Nonaktifkan Kedai"
+        : "Aktifkan Kedai";
+      return;
+    }
+
+    alert("Status kedai berhasil diperbarui.");
+    await loadPartnerShops();
+  });
+
+  card.append(name, detail, button);
+  shopsList.appendChild(card);
+});
+
     }
 
     document.getElementById("nav-shops").addEventListener("click", () => {

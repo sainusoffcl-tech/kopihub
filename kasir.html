@@ -3,9 +3,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#123b2c">
-  <title>Kasir - KopiHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Kasir - KopiHub</title>
 
   <style>
     :root {
@@ -14,98 +13,103 @@
       --cream: #faf9f5;
       --orange: #e99a55;
       --text: #24342c;
-      --muted: #718078;
-      --border: #e5e8e1;
-      --white: #fff;
-      --red: #b42318;
+      --muted: #69766f;
+      --border: #e5e8e2;
+      --white: #ffffff;
+      --red: #b83232;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       background: var(--cream);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Arial, sans-serif;
+        sans-serif;
     }
 
-    button, input, select { font: inherit; }
+    button, input, select {
+      font: inherit;
+    }
 
     button {
       cursor: pointer;
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 14px;
-      font-weight: 700;
-    }
-
-    button:disabled {
-      opacity: .55;
-      cursor: not-allowed;
     }
 
     .topbar {
       background: var(--green);
       color: white;
-      padding: 17px 20px;
+      padding: 18px 20px;
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: auto;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .brand { font-size: 22px; font-weight: 800; }
-    .brand span { color: var(--orange); }
-    .top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .btn-light { background: white; color: var(--green); }
-    .btn-orange { background: var(--orange); color: #302014; }
-    .btn-green { background: var(--green-light); color: white; }
-    .btn-muted { background: #edf0e9; color: var(--text); }
-    .btn-red { background: #fce8e6; color: var(--red); }
-
-    main {
-      width: min(1180px, 100%);
-      margin: 0 auto;
-      padding: 24px 16px 50px;
-    }
-
-    .heading {
-      display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 22px;
+      flex-wrap: wrap;
     }
 
-    h1 { font-size: 27px; margin: 0 0 7px; }
-    h2 { font-size: 18px; margin: 0 0 14px; }
-    p { line-height: 1.5; }
-    .muted { color: var(--muted); }
-    .small { font-size: 13px; }
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 400;
+      opacity: .8;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 22px 16px 40px;
+    }
+
+    .welcome {
+      margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+      margin: 0 0 6px;
+      font-size: 27px;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
 
     .notice {
-      background: #eef5ef;
-      border: 1px solid #d7e6d8;
       padding: 13px 15px;
       border-radius: 12px;
+      background: #edf5ee;
+      border: 1px solid #d4e6d7;
       margin-bottom: 18px;
+      font-size: 14px;
+      line-height: 1.5;
       overflow-wrap: anywhere;
     }
 
     .notice.error {
-      color: var(--red);
-      background: #fff0ee;
-      border-color: #f5d0cb;
-    }
-
-    .notice.warning {
-      color: #765016;
-      background: #fff7e8;
-      border-color: #f2dfb6;
+      background: #fff0ef;
+      border-color: #f1c7c4;
+      color: #8b2525;
     }
 
     .stats {
@@ -115,208 +119,384 @@
       margin-bottom: 22px;
     }
 
-    .stat, .panel, .order-card {
+    .stat {
       background: white;
       border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 3px 12px rgba(18, 59, 44, .04);
+      border-radius: 15px;
+      padding: 17px;
+      min-width: 0;
     }
 
-    .stat { padding: 17px; }
-    .stat-label { color: var(--muted); font-size: 13px; }
-    .stat-number { font-size: 25px; font-weight: 800; margin-top: 8px; }
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
 
-    .panel { padding: 17px; margin-bottom: 18px; }
+    .stat-value {
+      font-size: 27px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
 
-    .filters {
+    .toolbar {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(150px, 220px);
+      grid-template-columns: minmax(0, 1fr) 190px auto;
       gap: 10px;
+      margin-bottom: 18px;
     }
 
-    input, select {
+    .field {
       width: 100%;
-      min-height: 44px;
-      padding: 10px 12px;
+      min-width: 0;
       border: 1px solid var(--border);
-      border-radius: 10px;
       background: white;
+      border-radius: 10px;
+      padding: 12px;
       color: var(--text);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-green:hover {
+      background: var(--green-light);
+    }
+
+    .btn-orange {
+      background: var(--orange);
+      color: #2d2116;
+    }
+
+    .btn-light {
+      background: white;
+      color: var(--green);
+      border: 1px solid var(--border);
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: wait;
     }
 
     .orders {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 15px;
+      gap: 16px;
     }
 
-    .order-card { padding: 17px; min-width: 0; }
+    .order-card {
+      min-width: 0;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 3px 12px rgba(18, 59, 44, .04);
+    }
 
-    .order-top {
+    .order-head {
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .order-number {
-      font-weight: 800;
       font-size: 17px;
+      font-weight: 800;
       overflow-wrap: anywhere;
+    }
+
+    .order-time {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 5px;
     }
 
     .badge {
       display: inline-block;
       padding: 6px 9px;
-      border-radius: 999px;
+      border-radius: 20px;
       font-size: 11px;
       font-weight: 800;
-      background: #edf0e9;
-      white-space: normal;
+      white-space: nowrap;
+      background: #f0f1ef;
+      color: #4c5851;
     }
 
-    .badge.pending { background: #fff1d8; color: #805315; }
-    .badge.processing { background: #e5efff; color: #234f91; }
-    .badge.ready_for_delivery { background: #dff5e6; color: #176536; }
-    .badge.completed { background: #e9e9e9; color: #444; }
-    .badge.paid { background: #dff5e6; color: #176536; }
-    .badge.unpaid { background: #fff1d8; color: #805315; }
+    .badge.awaiting_confirmation {
+      background: #fff0d9;
+      color: #87520c;
+    }
 
-    .order-info {
-      margin: 15px 0;
+    .badge.pending {
+      background: #e7f0ff;
+      color: #2456a5;
+    }
+
+    .badge.processing {
+      background: #e9e3ff;
+      color: #5639a0;
+    }
+
+    .badge.ready_for_delivery {
+      background: #dff5e6;
+      color: #17683b;
+    }
+
+    .badge.completed {
+      background: #e8ece9;
+      color: #3d5045;
+    }
+
+    .info-grid {
       display: grid;
-      gap: 7px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 13px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
       font-size: 14px;
+      font-weight: 650;
+      overflow-wrap: anywhere;
     }
 
     .items {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 0;
-      margin: 12px 0;
+      padding: 13px 0;
     }
 
-    .item-row, .total-row {
+    .items-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .item-row {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      margin: 8px 0;
-      font-size: 14px;
+      padding: 5px 0;
+      font-size: 13px;
     }
 
-    .item-row span:first-child { overflow-wrap: anywhere; }
-    .total-row { font-weight: 800; font-size: 17px; }
+    .item-row span:first-child {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .item-row span:last-child {
+      white-space: nowrap;
+    }
+
+    .order-note {
+      background: #f7f7f2;
+      border-radius: 9px;
+      padding: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .total-label {
+      font-weight: 700;
+    }
+
+    .total-price {
+      font-size: 20px;
+      font-weight: 850;
+      color: var(--green);
+      white-space: nowrap;
+    }
+
+    .payment-line {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .payment-paid {
+      color: #17683b;
+      font-weight: 800;
+    }
+
+    .payment-unpaid {
+      color: #87520c;
+      font-weight: 800;
+    }
 
     .order-actions {
       display: flex;
-      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 14px;
+      gap: 9px;
+      margin-top: 15px;
     }
 
-    .order-actions button { flex: 1; }
+    .order-actions .btn {
+      flex: 1 1 145px;
+    }
 
     .empty {
       grid-column: 1 / -1;
+      text-align: center;
+      padding: 38px 20px;
       background: white;
-      border: 1px dashed #ccd4ca;
+      border: 1px dashed #ccd4cc;
       border-radius: 16px;
-      text-align: center;
-      padding: 35px 18px;
       color: var(--muted);
+      line-height: 1.6;
     }
 
-    .hidden { display: none !important; }
-
-    footer {
+    .footer {
       text-align: center;
       color: var(--muted);
-      padding: 18px;
       font-size: 12px;
+      padding: 25px 12px 10px;
     }
 
-    @media (max-width: 720px) {
-      main { padding: 20px 12px 35px; }
-      h1 { font-size: 24px; }
-      .stats { gap: 8px; }
-      .stat { padding: 12px 10px; }
-      .stat-number { font-size: 20px; }
-      .orders { grid-template-columns: 1fr; }
-      .filters { grid-template-columns: 1fr; }
-      .topbar { padding: 15px; }
+    @media (max-width: 760px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .stat {
+        padding: 13px 15px;
+      }
+
+      .stat-value {
+        font-size: 23px;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .orders {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome h1 {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 
 <body>
   <header class="topbar">
-    <div class="brand">Kopi<span>Hub</span></div>
-    <div class="top-actions">
-      <button id="refreshBtn" class="btn-light">Muat Ulang</button>
-      <button id="logoutBtn" class="btn-orange">Keluar</button>
+    <div class="topbar-inner">
+      <div class="brand">
+        KopiHub
+        <small>Dashboard Kasir</small>
+      </div>
+
+      <div class="top-actions">
+        <button class="btn btn-light" id="refresh-btn" type="button">
+          Muat Ulang
+        </button>
+        <button class="btn btn-orange" id="logout-btn" type="button">
+          Keluar
+        </button>
+      </div>
     </div>
   </header>
 
-  <main>
-    <section class="heading">
-      <div>
-        <h1>Dashboard Kasir</h1>
-        <div id="shopName" class="muted">Memeriksa kedai...</div>
-      </div>
-      <div id="lastUpdated" class="muted small"></div>
+  <main class="container">
+    <section class="welcome">
+      <h1>Pesanan Kedai</h1>
+      <p id="shop-name">Menghubungkan ke kedai...</p>
     </section>
 
-    <div id="notice" class="notice">Menghubungkan ke Supabase...</div>
+    <div id="notice" class="notice" role="status" aria-live="polite">
+      Menghubungkan ke Supabase...
+    </div>
 
-    <section id="dashboard" class="hidden">
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-label">Pesanan Aktif</div>
-          <div id="activeCount" class="stat-number">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Menunggu Pembayaran</div>
-          <div id="unpaidCount" class="stat-number">0</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Pesanan Selesai</div>
-          <div id="completedCount" class="stat-number">0</div>
-        </div>
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-label">Pesanan Aktif</div>
+        <div class="stat-value" id="stat-active">—</div>
       </div>
-
-      <section class="panel">
-        <h2>Daftar Pesanan</h2>
-        <div class="filters">
-          <input id="searchInput" type="search"
-            placeholder="Cari nomor pesanan atau nama pelanggan">
-          <select id="statusFilter">
-            <option value="all">Semua status</option>
-            <option value="pending">Pesanan Masuk</option>
-            <option value="processing">Sedang Diproses</option>
-            <option value="ready_for_delivery">Siap Diantar</option>
-            <option value="completed">Selesai</option>
-          </select>
-        </div>
-      </section>
-
-      <section id="orders" class="orders">
-        <div class="empty">Memuat pesanan...</div>
-      </section>
+      <div class="stat">
+        <div class="stat-label">Menunggu Pembayaran Tunai</div>
+        <div class="stat-value" id="stat-payment">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pesanan Selesai</div>
+        <div class="stat-value" id="stat-completed">—</div>
+      </div>
     </section>
 
-    <div id="loginPrompt" class="panel hidden">
-      <h2>Login diperlukan</h2>
-      <p>Silakan login terlebih dahulu untuk membuka dashboard kasir.</p>
-      <button id="loginBtn" class="btn-green">Buka Halaman Login</button>
+    <section class="toolbar">
+      <input
+        class="field"
+        id="search"
+        type="search"
+        placeholder="Cari nomor pesanan atau nama pelanggan..."
+        aria-label="Cari pesanan"
+      >
+
+      <select class="field" id="status-filter" aria-label="Filter status">
+        <option value="all">Semua Status</option>
+        <option value="awaiting_confirmation">Pesanan Baru</option>
+        <option value="pending">Diterima</option>
+        <option value="processing">Diproses</option>
+        <option value="ready_for_delivery">Siap Diantar</option>
+        <option value="completed">Selesai</option>
+      </select>
+
+      <button class="btn btn-green" id="search-btn" type="button">
+        Cari
+      </button>
+    </section>
+
+    <section class="orders" id="orders">
+      <div class="empty">Sedang memuat pesanan...</div>
+    </section>
+
+    <div class="footer">
+      KopiHub · Dashboard operasional kasir
     </div>
   </main>
 
-  <footer>KopiHub · Platform pemesanan coffee shop</footer>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
     "use strict";
 
+    /*
+      PENTING:
+      Pertahankan URL dan publishable key Supabase milikmu.
+      Jangan pernah menggunakan service_role key di browser.
+    */
     const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
     const SUPABASE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
@@ -325,36 +505,49 @@
       SUPABASE_KEY
     );
 
-    const $ = (id) => document.getElementById(id);
-
-    let currentUser = null;
-    let activeShop = null;
-    let orders = [];
-    let loading = false;
-
     const STATUS_LABELS = {
-      pending: "Pesanan Masuk",
-      processing: "Sedang Diproses",
+      awaiting_confirmation: "Pesanan Baru",
+      pending: "Diterima",
+      processing: "Diproses",
       ready_for_delivery: "Siap Diantar",
       completed: "Selesai"
     };
 
     const NEXT_STATUS = {
+      awaiting_confirmation: "pending",
       pending: "processing",
       processing: "ready_for_delivery",
       ready_for_delivery: "completed"
     };
 
+    const STATUS_BUTTON_LABELS = {
+      awaiting_confirmation: "Terima Pesanan",
+      pending: "Mulai Proses",
+      processing: "Tandai Siap Diantar",
+      ready_for_delivery: "Selesaikan"
+    };
+
+    const PAYMENT_WAITING = [
+      "awaiting_cashier",
+      "awaiting",
+      "pending"
+    ];
+
+    let currentUser = null;
+    let activeShop = null;
+    let allOrders = [];
+    let busyOrderIds = new Set();
+    let loading = false;
+
+    const el = (id) => document.getElementById(id);
+
     function escapeHTML(value) {
-      return String(value ?? "").replace(/[&<>"']/g, function (char) {
-        return {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        }[char];
-      });
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     function rupiah(value) {
@@ -365,309 +558,399 @@
       }).format(Number(value) || 0);
     }
 
-    function showNotice(message, type) {
-      const box = $("notice");
-      box.textContent = message;
-      box.className = "notice" + (type ? " " + type : "");
-      box.classList.remove("hidden");
-    }
-
-    function statusLabel(status) {
-      return STATUS_LABELS[status] || status || "Belum ditentukan";
-    }
-
-    function paymentLabel(status) {
-      const value = String(status || "").toLowerCase();
-
-      if (value === "paid" || value === "success") {
-        return "Sudah Dibayar";
-      }
-
-      if (value === "awaiting_cashier" || value === "awaiting") {
-        return "Menunggu Kasir";
-      }
-
-      if (value === "pending") return "Belum Dibayar";
-      if (value === "failed") return "Gagal";
-      if (value === "refunded") return "Dikembalikan";
-
-      return status || "Belum diketahui";
-    }
-
-    function paymentIsPending(order) {
-      const status = String(order.payment_status || "").toLowerCase();
-      const method = String(order.payment_method || "").toLowerCase();
-
-      return method === "cashier" &&
-        ["awaiting_cashier", "awaiting", "pending"].includes(status);
-    }
-
-    function orderTotal(order) {
-      if (order.total_amount != null) {
-        return Number(order.total_amount) || 0;
-      }
-
-      if (order.total != null) {
-        return Number(order.total) || 0;
-      }
-
-      return Number(order.subtotal) || 0;
-    }
-
-    function orderItems(order) {
-      let value = order.items;
-
-      if (typeof value === "string") {
-        try {
-          value = JSON.parse(value);
-        } catch (_) {
-          value = [];
-        }
-      }
-
-      return Array.isArray(value) ? value : [];
-    }
-
-    function normalizeOrder(order) {
-      const status = order.order_status || order.status || "pending";
-
-      return {
-        ...order,
-        order_status: status,
-        items: orderItems(order)
-      };
-    }
-
-    function getOrderNumber(order) {
-      return order.order_code || order.order_number || order.id;
-    }
-
-    function getTable(order) {
-      return order.table_label || order.table_number || order.order_type || "Takeaway";
-    }
-
-    function formatDate(value) {
-      if (!value) return "-";
+    function readableDate(value) {
+      if (!value) return "Waktu tidak tersedia";
 
       const date = new Date(value);
-
-      if (Number.isNaN(date.getTime())) return "-";
+      if (Number.isNaN(date.getTime())) return "Waktu tidak tersedia";
 
       return date.toLocaleString("id-ID", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
+        dateStyle: "medium",
+        timeStyle: "short"
       });
     }
 
-    async function loadShop(user) {
+    function showNotice(message, isError) {
+      const notice = el("notice");
+      notice.textContent = message;
+      notice.className = isError ? "notice error" : "notice";
+    }
+
+    function normalizeStatus(order) {
+      const orderStatus = String(order.order_status || "")
+        .trim().toLowerCase();
+
+      const legacyStatus = String(order.status || "")
+        .trim().toLowerCase();
+
+      /*
+        order_status menjadi sumber status utama setelah pembaruan.
+        Bila belum tersedia, gunakan status lama.
+      */
+      return orderStatus || legacyStatus || "pending";
+    }
+
+    function normalizeOrder(order) {
+      return {
+        ...order,
+        order_status: normalizeStatus(order),
+        items: normalizeItems(order.items)
+      };
+    }
+
+    function normalizeItems(items) {
+      if (Array.isArray(items)) return items;
+
+      if (typeof items === "string") {
+        try {
+          const parsed = JSON.parse(items);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      return [];
+    }
+
+    function itemName(item) {
+      return item.name || item.product_name || item.title || "Menu";
+    }
+
+    function itemQty(item) {
+      return Number(item.qty || item.quantity || 1);
+    }
+
+    function itemPrice(item) {
+      return Number(item.price || item.unit_price || 0);
+    }
+
+    function isCashOrder(order) {
+      const method = String(order.payment_method || "").toLowerCase();
+      return ["cashier", "cash", "tunai", "pay_at_counter"].includes(method);
+    }
+
+    function isWaitingPayment(order) {
+      const status = String(order.payment_status || "").toLowerCase();
+
+      return isCashOrder(order) &&
+        PAYMENT_WAITING.includes(status);
+    }
+
+    function paymentLabel(order) {
+      const status = String(order.payment_status || "").toLowerCase();
+
+      if (["paid", "success", "succeeded", "lunas"].includes(status)) {
+        return "Sudah Dibayar";
+      }
+
+      if (isWaitingPayment(order)) {
+        return "Menunggu Kasir";
+      }
+
+      if (status === "failed") return "Pembayaran Gagal";
+
+      if (isCashOrder(order)) return "Pembayaran Tunai";
+
+      return order.payment_status || "Status pembayaran belum tersedia";
+    }
+
+    function orderNumber(order) {
+      return order.order_code ||
+        order.order_number ||
+        String(order.id || "").slice(0, 8);
+    }
+
+    function orderTotal(order) {
+      const value = order.total_amount != null
+        ? order.total_amount
+        : order.total;
+
+      return Number(value) || 0;
+    }
+
+    function getOrderNote(order) {
+      return order.order_note || order.notes || "";
+    }
+
+    async function loadShop() {
       const { data, error } = await db
         .from("kh_shop_members")
         .select("shop_id, role, kh_shops(id, name, slug)")
-        .eq("user_id", user.id);
+        .eq("user_id", currentUser.id);
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(
+          "Tidak bisa membaca keanggotaan kedai: " + error.message
+        );
+      }
 
-      const memberships = (data || []).filter(function (member) {
-        const role = String(member.role || "").toLowerCase();
-        return ["owner", "manager", "cashier", "kasir"].includes(role)
-          && member.kh_shops;
+      const memberships = (data || []).filter(function (membership) {
+        const role = String(membership.role || "").toLowerCase();
+        return ["owner", "manager", "cashier", "kasir"].includes(role) &&
+          membership.kh_shops;
       });
 
       if (!memberships.length) {
         throw new Error(
-          "Akun ini belum memiliki kedai atau peran kasir. Periksa keanggotaan kh_shop_members."
+          "Akun ini belum terhubung ke kedai. Periksa data kh_shop_members."
         );
       }
 
+      /*
+        Jika akun memiliki beberapa kedai, versi ini menggunakan
+        kedai pertama yang ditemukan.
+      */
       activeShop = memberships[0].kh_shops;
-
-      $("shopName").textContent = activeShop.name || "Kedai KopiHub";
-      $("dashboard").classList.remove("hidden");
+      el("shop-name").textContent =
+        "Kedai aktif: " + activeShop.name;
     }
 
     async function loadOrders() {
-      if (!activeShop || loading) return;
-
+      if (loading) return;
       loading = true;
-      $("refreshBtn").disabled = true;
+
+      el("refresh-btn").disabled = true;
 
       try {
         const { data, error } = await db
           .from("kh_orders")
           .select(
-            "id, shop_id, order_code, order_number, customer_name, customer_phone, order_type, table_label, table_number, status, subtotal, total_amount, created_at, items, payment_method, payment_status, order_status, order_note, notes, tax, total"
+            "id, shop_id, order_code, order_number, customer_name, " +
+            "customer_phone, order_type, table_label, table_number, " +
+            "status, subtotal, total_amount, created_at, items, " +
+            "payment_method, payment_status, order_status, " +
+            "order_note, notes, tax, total"
           )
           .eq("shop_id", activeShop.id)
           .order("created_at", { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          throw new Error("Gagal memuat pesanan: " + error.message);
+        }
 
-        orders = (data || []).map(normalizeOrder);
-
+        allOrders = (data || []).map(normalizeOrder);
+        updateStats();
         renderOrders();
 
-        $("lastUpdated").textContent =
-          "Diperbarui " + new Date().toLocaleTimeString("id-ID", {
-            hour: "2-digit",
-            minute: "2-digit"
-          });
-
-        showNotice("Terhubung ke Supabase. " +
-          orders.length + " pesanan ditemukan.", "");
-      } catch (error) {
-        console.error("Gagal memuat pesanan:", error);
         showNotice(
-          "Pesanan gagal dimuat: " + (error.message || "Kesalahan tidak diketahui") +
-          ". Periksa izin tabel kh_orders dan kebijakan RLS Supabase.",
-          "error"
+          "Terhubung ke Supabase. " +
+          allOrders.length + " pesanan ditemukan.",
+          false
         );
-
-        $("orders").innerHTML =
-          '<div class="empty">Pesanan tidak dapat dimuat. Tekan Muat Ulang setelah memeriksa izin database.</div>';
+      } catch (error) {
+        showNotice(error.message || "Gagal memuat pesanan.", true);
+        el("orders").innerHTML =
+          '<div class="empty">Pesanan gagal dimuat. Periksa pesan di atas.</div>';
       } finally {
         loading = false;
-        $("refreshBtn").disabled = false;
+        el("refresh-btn").disabled = false;
       }
     }
 
-    function renderOrders() {
-      const activeCount = orders.filter(function (order) {
+    function updateStats() {
+      const activeCount = allOrders.filter(function (order) {
         return order.order_status !== "completed";
       }).length;
 
-      const unpaidCount = orders.filter(paymentIsPending).length;
+      const paymentCount = allOrders.filter(isWaitingPayment).length;
 
-      const completedCount = orders.filter(function (order) {
+      const completedCount = allOrders.filter(function (order) {
         return order.order_status === "completed";
       }).length;
 
-      $("activeCount").textContent = activeCount;
-      $("unpaidCount").textContent = unpaidCount;
-      $("completedCount").textContent = completedCount;
+      el("stat-active").textContent = activeCount;
+      el("stat-payment").textContent = paymentCount;
+      el("stat-completed").textContent = completedCount;
+    }
 
-      const query = $("searchInput").value.trim().toLowerCase();
-      const selectedStatus = $("statusFilter").value;
+    function renderItems(items) {
+      if (!items.length) {
+        return '<div class="item-row"><span>Rincian menu tidak tersedia</span></div>';
+      }
 
-      const visibleOrders = orders.filter(function (order) {
-        const number = String(getOrderNumber(order)).toLowerCase();
-        const customer = String(order.customer_name || "").toLowerCase();
+      return items.map(function (item) {
+        const name = escapeHTML(itemName(item));
+        const qty = itemQty(item);
+        const price = itemPrice(item);
 
-        const matchesSearch = !query ||
-          number.includes(query) ||
-          customer.includes(query);
+        return (
+          '<div class="item-row">' +
+            '<span>' + name + ' × ' + qty + '</span>' +
+            '<span>' + rupiah(price * qty) + '</span>' +
+          '</div>'
+        );
+      }).join("");
+    }
 
-        const matchesStatus = selectedStatus === "all" ||
-          order.order_status === selectedStatus;
+    function renderOrder(order) {
+      const status = order.order_status;
+      const nextStatus = NEXT_STATUS[status];
+      const statusLabel = STATUS_LABELS[status] || status;
+      const isBusy = busyOrderIds.has(String(order.id));
+      const note = getOrderNote(order);
+
+      const paymentStatus = String(
+        order.payment_status || ""
+      ).toLowerCase();
+
+      const isPaid = [
+        "paid", "success", "succeeded", "lunas"
+      ].includes(paymentStatus);
+
+      const statusButton = nextStatus
+        ? '<button class="btn btn-green" data-status="' +
+          escapeHTML(order.id) + '"' +
+          (isBusy ? " disabled" : "") + '>' +
+          escapeHTML(STATUS_BUTTON_LABELS[status] || "Ubah Status") +
+          '</button>'
+        : "";
+
+      const paymentButton = isWaitingPayment(order)
+        ? '<button class="btn btn-orange" data-payment="' +
+          escapeHTML(order.id) + '"' +
+          (isBusy ? " disabled" : "") + '>' +
+          'Konfirmasi Tunai</button>'
+        : "";
+
+      const table = order.table_label ||
+        order.table_number ||
+        "—";
+
+      const customer = order.customer_name || "Pelanggan";
+      const phone = order.customer_phone || "—";
+
+      return (
+        '<article class="order-card">' +
+          '<div class="order-head">' +
+            '<div>' +
+              '<div class="order-number">#' +
+                escapeHTML(orderNumber(order)) +
+              '</div>' +
+              '<div class="order-time">' +
+                escapeHTML(readableDate(order.created_at)) +
+              '</div>' +
+            '</div>' +
+            '<span class="badge ' + escapeHTML(status) + '">' +
+              escapeHTML(statusLabel) +
+            '</span>' +
+          '</div>' +
+
+          '<div class="info-grid">' +
+            '<div>' +
+              '<div class="info-label">Pelanggan</div>' +
+              '<div class="info-value">' + escapeHTML(customer) + '</div>' +
+            '</div>' +
+            '<div>' +
+              '<div class="info-label">Nomor telepon</div>' +
+              '<div class="info-value">' + escapeHTML(phone) + '</div>' +
+            '</div>' +
+            '<div>' +
+              '<div class="info-label">Meja</div>' +
+              '<div class="info-value">' + escapeHTML(table) + '</div>' +
+            '</div>' +
+            '<div>' +
+              '<div class="info-label">Jenis pesanan</div>' +
+              '<div class="info-value">' +
+                escapeHTML(order.order_type || "—") +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="items">' +
+            '<div class="items-title">Rincian Pesanan</div>' +
+            renderItems(order.items) +
+          '</div>' +
+
+          (note
+            ? '<div class="order-note"><strong>Catatan:</strong> ' +
+              escapeHTML(note) + '</div>'
+            : '') +
+
+          '<div class="total-row">' +
+            '<span class="total-label">Total</span>' +
+            '<span class="total-price">' +
+              rupiah(orderTotal(order)) +
+            '</span>' +
+          '</div>' +
+
+          '<div class="payment-line">' +
+            'Pembayaran: <span class="' +
+              (isPaid ? "payment-paid" : "payment-unpaid") + '">' +
+              escapeHTML(paymentLabel(order)) +
+            '</span>' +
+          '</div>' +
+
+          '<div class="order-actions">' +
+            statusButton +
+            paymentButton +
+          '</div>' +
+        '</article>'
+      );
+    }
+
+    function renderOrders() {
+      const search = el("search").value.trim().toLowerCase();
+      const filter = el("status-filter").value;
+
+      const visibleOrders = allOrders.filter(function (order) {
+        const matchesSearch = [
+          orderNumber(order),
+          order.customer_name,
+          order.customer_phone,
+          order.table_label,
+          order.table_number
+        ].some(function (value) {
+          return String(value || "").toLowerCase().includes(search);
+        });
+
+        const matchesStatus = filter === "all" ||
+          order.order_status === filter;
 
         return matchesSearch && matchesStatus;
       });
 
       if (!visibleOrders.length) {
-        $("orders").innerHTML =
-          '<div class="empty"><strong>Belum ada pesanan</strong><p>Pesanan yang cocok dengan pencarian akan muncul di sini.</p></div>';
+        el("orders").innerHTML =
+          '<div class="empty">' +
+            'Tidak ada pesanan yang cocok dengan pencarian atau filter ini.' +
+          '</div>';
         return;
       }
 
-      $("orders").innerHTML = visibleOrders.map(function (order) {
-        const status = order.order_status;
-        const items = order.items;
-        const nextStatus = NEXT_STATUS[status];
-
-        const itemHTML = items.length
-          ? items.map(function (item) {
-              const name = escapeHTML(item.name || item.product_name || "Menu");
-              const qty = Number(item.qty || item.quantity || 1);
-              const price = Number(item.price || item.unit_price || 0);
-
-              return '<div class="item-row"><span>' + name +
-                ' × ' + qty + '</span><strong>' +
-                rupiah(price * qty) + '</strong></div>';
-            }).join("")
-          : '<div class="muted small">Detail item tidak tersedia.</div>';
-
-        const note = order.order_note || order.notes || "";
-        const method = String(order.payment_method || "").toLowerCase();
-        const paymentStatus = String(order.payment_status || "").toLowerCase();
-
-        let paymentHTML =
-          '<span class="badge ' +
-          (paymentStatus === "paid" ? "paid" : "unpaid") + '">' +
-          escapeHTML(paymentLabel(order.payment_status)) +
-          '</span>';
-
-        let paymentButton = "";
-
-        if (paymentIsPending(order)) {
-          paymentButton =
-            '<button class="btn-orange" data-payment="' +
-            escapeHTML(order.id) + '">Konfirmasi Tunai</button>';
-        }
-
-        const statusButton = nextStatus
-          ? '<button class="btn-green" data-status="' +
-            escapeHTML(order.id) + '">' +
-            escapeHTML(status === "pending" ? "Mulai Proses" :
-              status === "processing" ? "Tandai Siap" : "Selesaikan") +
-            '</button>'
-          : "";
-
-        return '<article class="order-card">' +
-          '<div class="order-top"><div>' +
-          '<div class="order-number">#' +
-          escapeHTML(getOrderNumber(order)) + '</div>' +
-          '<div class="muted small">' +
-          escapeHTML(formatDate(order.created_at)) + '</div></div>' +
-          '<span class="badge ' + escapeHTML(status) + '">' +
-          escapeHTML(statusLabel(status)) + '</span></div>' +
-
-          '<div class="order-info">' +
-          '<div><strong>Pelanggan:</strong> ' +
-          escapeHTML(order.customer_name || "Pelanggan") + '</div>' +
-          (order.customer_phone
-            ? '<div><strong>Telepon:</strong> ' +
-              escapeHTML(order.customer_phone) + '</div>' : '') +
-          '<div><strong>Meja / Tipe:</strong> ' +
-          escapeHTML(getTable(order)) + '</div>' +
-          '<div><strong>Pembayaran:</strong> ' +
-          escapeHTML(method || "Belum ditentukan") + '</div>' +
-          '<div><strong>Status bayar:</strong> ' + paymentHTML + '</div>' +
-          '</div>' +
-
-          '<div class="items">' + itemHTML + '</div>' +
-          (note ? '<p class="small"><strong>Catatan:</strong> ' +
-            escapeHTML(note) + '</p>' : '') +
-          '<div class="total-row"><span>Total</span><span>' +
-          rupiah(orderTotal(order)) + '</span></div>' +
-          '<div class="order-actions">' +
-          statusButton + paymentButton + '</div>' +
-          '</article>';
-      }).join("");
+      el("orders").innerHTML = visibleOrders
+        .map(renderOrder)
+        .join("");
     }
 
-    async function updateOrderStatus(orderId) {
-      const order = orders.find(function (item) {
+    async function changeOrderStatus(orderId) {
+      const order = allOrders.find(function (item) {
         return String(item.id) === String(orderId);
       });
 
-      if (!order || !activeShop) return;
-
-      const nextStatus = NEXT_STATUS[order.order_status];
-
-      if (!nextStatus) {
-        showNotice("Pesanan sudah mencapai status akhir.", "warning");
+      if (!order) {
+        showNotice("Pesanan tidak ditemukan. Muat ulang dashboard.", true);
         return;
       }
 
-      const button = document.querySelector(
-        '[data-status="' + CSS.escape(String(orderId)) + '"]'
-      );
+      const currentStatus = order.order_status;
+      const nextStatus = NEXT_STATUS[currentStatus];
 
-      if (button) button.disabled = true;
+      if (!nextStatus) {
+        showNotice("Pesanan ini tidak memiliki status berikutnya.", true);
+        return;
+      }
+
+      if (busyOrderIds.has(String(orderId))) return;
+
+      busyOrderIds.add(String(orderId));
+      renderOrders();
 
       try {
+        /*
+          Kolom order_status diperbarui sesuai struktur yang sudah
+          digunakan dashboard. Kolom status lama tidak diubah di sini.
+        */
         const { data, error } = await db
           .from("kh_orders")
           .update({ order_status: nextStatus })
@@ -676,49 +959,65 @@
           .select("id, order_status")
           .maybeSingle();
 
-        if (error) throw error;
-
-        if (!data) {
+        if (error) {
           throw new Error(
-            "Status tidak berubah. Pastikan kebijakan UPDATE RLS mengizinkan akun ini."
+            "Status gagal diperbarui: " + error.message
           );
         }
 
-        showNotice("Status pesanan berhasil diubah menjadi " +
-          statusLabel(nextStatus) + ".", "");
+        if (!data) {
+          throw new Error(
+            "Tidak ada pesanan yang diperbarui. Periksa izin RLS Supabase " +
+            "dan pastikan akun kasir memiliki akses ke kedai ini."
+          );
+        }
+
+        showNotice(
+          "Status pesanan #" + orderNumber(order) +
+          " berhasil diubah menjadi " +
+          (STATUS_LABELS[data.order_status] || data.order_status) + ".",
+          false
+        );
 
         await loadOrders();
       } catch (error) {
-        console.error("Gagal mengubah status:", error);
-        showNotice(
-          "Gagal mengubah status pesanan: " +
-          (error.message || "Kesalahan database"),
-          "error"
-        );
-
-        if (button) button.disabled = false;
+        showNotice(error.message || "Gagal mengubah status pesanan.", true);
+      } finally {
+        busyOrderIds.delete(String(orderId));
+        renderOrders();
       }
     }
 
     async function confirmCashPayment(orderId) {
-      const order = orders.find(function (item) {
+      const order = allOrders.find(function (item) {
         return String(item.id) === String(orderId);
       });
 
-      if (!order || !activeShop || !paymentIsPending(order)) return;
+      if (!order) {
+        showNotice("Pesanan tidak ditemukan.", true);
+        return;
+      }
+
+      if (!isWaitingPayment(order)) {
+        showNotice(
+          "Pesanan ini tidak lagi menunggu konfirmasi pembayaran tunai.",
+          true
+        );
+        return;
+      }
 
       const confirmed = window.confirm(
-        "Pastikan uang tunai sebesar " + rupiah(orderTotal(order)) +
-        " sudah benar-benar diterima. Konfirmasi pembayaran?"
+        "Pastikan uang tunai benar-benar sudah diterima.\n\n" +
+        "Pesanan: #" + orderNumber(order) + "\n" +
+        "Total: " + rupiah(orderTotal(order)) + "\n\n" +
+        "Konfirmasi pembayaran sekarang?"
       );
 
       if (!confirmed) return;
+      if (busyOrderIds.has(String(orderId))) return;
 
-      const button = document.querySelector(
-        '[data-payment="' + CSS.escape(String(orderId)) + '"]'
-      );
-
-      if (button) button.disabled = true;
+      busyOrderIds.add(String(orderId));
+      renderOrders();
 
       try {
         const { data, error } = await db
@@ -726,37 +1025,43 @@
           .update({ payment_status: "paid" })
           .eq("id", order.id)
           .eq("shop_id", activeShop.id)
+          .in("payment_status", PAYMENT_WAITING)
           .select("id, payment_status")
           .maybeSingle();
 
-        if (error) throw error;
-
-        if (!data) {
+        if (error) {
           throw new Error(
-            "Pembayaran belum berubah. Kebijakan RLS atau izin UPDATE payment_status mungkin belum tersedia."
+            "Konfirmasi pembayaran gagal: " + error.message
           );
         }
 
-        showNotice("Pembayaran tunai berhasil dikonfirmasi.", "");
-        await loadOrders();
-      } catch (error) {
-        console.error("Gagal mengonfirmasi pembayaran:", error);
+        if (!data) {
+          throw new Error(
+            "Pembayaran tidak diperbarui. Periksa izin UPDATE payment_status, " +
+            "kebijakan RLS, dan status pembayaran pesanan."
+          );
+        }
+
         showNotice(
-          "Pembayaran belum dikonfirmasi: " +
-          (error.message || "Kesalahan database") +
-          ". Periksa izin payment_status di Supabase. Jangan menganggap pembayaran berhasil sebelum status berubah.",
-          "error"
+          "Pembayaran tunai pesanan #" + orderNumber(order) +
+          " berhasil dikonfirmasi.",
+          false
         );
 
-        if (button) button.disabled = false;
+        await loadOrders();
+      } catch (error) {
+        showNotice(error.message || "Gagal mengonfirmasi pembayaran.", true);
+      } finally {
+        busyOrderIds.delete(String(orderId));
+        renderOrders();
       }
     }
 
-    async function start() {
+    async function startDashboard() {
       try {
         if (!window.supabase) {
           throw new Error(
-            "Library Supabase tidak berhasil dimuat. Periksa koneksi internet."
+            "Library Supabase gagal dimuat. Periksa koneksi internet lalu muat ulang."
           );
         }
 
@@ -767,74 +1072,67 @@
         currentUser = data.session ? data.session.user : null;
 
         if (!currentUser) {
-          $("shopName").textContent = "Belum login";
-          $("dashboard").classList.add("hidden");
-          $("loginPrompt").classList.remove("hidden");
-          showNotice("Login diperlukan untuk melihat pesanan.", "warning");
+          showNotice(
+            "Kamu belum login. Tekan Keluar untuk kembali atau buka halaman login.",
+            true
+          );
+
+          el("orders").innerHTML =
+            '<div class="empty">' +
+              'Sesi login tidak ditemukan. Silakan login terlebih dahulu.' +
+              '<br><br><a href="login.html">Buka halaman login</a>' +
+            '</div>';
+
           return;
         }
 
-        await loadShop(currentUser);
+        await loadShop();
         await loadOrders();
       } catch (error) {
-        console.error("Inisialisasi kasir gagal:", error);
-
-        showNotice(
-          "Dashboard belum dapat dibuka: " +
-          (error.message || "Kesalahan tidak diketahui"),
-          "error"
-        );
-
-        $("dashboard").classList.add("hidden");
+        showNotice(error.message || "Dashboard gagal dimulai.", true);
+        el("orders").innerHTML =
+          '<div class="empty">Dashboard belum dapat digunakan. Periksa pesan di atas.</div>';
       }
     }
 
-    $("refreshBtn").addEventListener("click", loadOrders);
+    el("orders").addEventListener("click", function (event) {
+      const statusButton = event.target.closest("[data-status]");
+      const paymentButton = event.target.closest("[data-payment]");
 
-    $("logoutBtn").addEventListener("click", async function () {
-      const confirmed = window.confirm("Keluar dari akun KopiHub?");
-      if (!confirmed) return;
+      if (statusButton) {
+        changeOrderStatus(statusButton.dataset.status);
+      } else if (paymentButton) {
+        confirmCashPayment(paymentButton.dataset.payment);
+      }
+    });
 
+    el("refresh-btn").addEventListener("click", loadOrders);
+
+    el("search-btn").addEventListener("click", renderOrders);
+    el("search").addEventListener("input", renderOrders);
+    el("status-filter").addEventListener("change", renderOrders);
+
+    el("logout-btn").addEventListener("click", async function () {
       const { error } = await db.auth.signOut();
 
       if (error) {
-        showNotice("Gagal keluar: " + error.message, "error");
+        showNotice("Gagal keluar: " + error.message, true);
         return;
       }
 
       window.location.href = "login.html";
     });
 
-    $("loginBtn").addEventListener("click", function () {
-      window.location.href = "login.html";
-    });
-
-    $("searchInput").addEventListener("input", renderOrders);
-    $("statusFilter").addEventListener("change", renderOrders);
-
-    $("orders").addEventListener("click", function (event) {
-      const statusButton = event.target.closest("[data-status]");
-      const paymentButton = event.target.closest("[data-payment]");
-
-      if (statusButton) {
-        updateOrderStatus(statusButton.dataset.status);
-      } else if (paymentButton) {
-        confirmCashPayment(paymentButton.dataset.payment);
-      }
-    });
-
     db.auth.onAuthStateChange(function (event, session) {
-      if (event === "SIGNED_OUT" || !session) {
-        $("dashboard").classList.add("hidden");
-        $("loginPrompt").classList.remove("hidden");
-        $("shopName").textContent = "Belum login";
+      if (event === "SIGNED_OUT") {
+        window.location.href = "login.html";
       }
     });
 
-    start();
+    startDashboard();
 
     window.setInterval(function () {
-      if (activeShop && currentUser) {
+      if (currentUser && activeShop && !loading) {
         loadOrders();
       }
     }, 30000);

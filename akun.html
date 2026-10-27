@@ -287,19 +287,64 @@
           showMessage(
             "Pendaftaran diterima. Periksa email untuk verifikasi akun sebelum masuk."
           );
-        } else {
-          const { error } = await client.auth.signInWithPassword({
-            email,
-            password
-          });
 
-          if (error) throw error;
+} else {
+  const { data, error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
 
-          showMessage("Login berhasil. Membuka dashboard...");
-          window.location.href =
-            "/kopihub/dashboard-owner.html";
-          return;
-        }
+  if (error) throw error;
+
+  const userId = data.user?.id;
+
+  if (!userId) {
+    throw new Error("Data akun tidak ditemukan. Silakan login kembali.");
+  }
+
+  // Periksa apakah akun merupakan Admin platform
+  const { data: profile, error: profileError } = await client
+    .from("kh_profiles")
+    .select("is_platform_admin")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (profileError) {
+    throw new Error("Gagal memeriksa hak akses akun.");
+  }
+
+  if (profile?.is_platform_admin === true) {
+    window.location.href = "/kopihub/admin.html";
+    return;
+  }
+
+  // Periksa peran Owner/Mitra pada kedai
+  const { data: memberships, error: membershipError } = await client
+    .from("kh_shop_members")
+    .select("role")
+    .eq("user_id", userId);
+
+  if (membershipError) {
+    throw new Error("Gagal memeriksa akses kedai.");
+  }
+
+  if (memberships?.some(member => member.role === "owner")) {
+    window.location.href = "/kopihub/dashboard-owner.html";
+    return;
+  }
+
+  if (memberships?.some(member => member.role === "cashier")) {
+    window.location.href = "/kopihub/kasir.html";
+    return;
+  }
+
+  showMessage(
+    "Login berhasil, tetapi akun belum memiliki peran Admin, Owner, atau Kasir yang sesuai.",
+    "error"
+  );
+  return;
+}
+
       } catch (error) {
         showMessage(error.message || "Terjadi kesalahan.", "error");
       } finally {

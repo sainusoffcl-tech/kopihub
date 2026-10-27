@@ -159,7 +159,9 @@
 
       <div class="nav-label">MENU UTAMA</div>
       <div class="nav-item active">▦ &nbsp; Dashboard</div>
-      <div class="nav-item">▤ &nbsp; Kedai Mitra</div>
+      <button type="button" id="nav-shops" class="nav-item">
+  ▤ &nbsp; Kedai Mitra
+</button>
       <div class="nav-item">♙ &nbsp; Pengguna &amp; Akses</div>
 
       <div class="nav-label">KEUANGAN</div>
@@ -221,8 +223,23 @@
         </p>
       </div>
     </main>
-  </div>
 
+    <section id="shops-section" hidden>
+      <h2 class="section-title">Kedai Mitra</h2>
+      <p class="muted">
+        Daftar kedai yang terdaftar di platform KopiHub.
+      </p>
+
+      <div class="panel">
+        <button type="button" id="reload-shops">
+          Muat Ulang Kedai
+        </button>
+        <p id="shops-message">Menyiapkan daftar kedai...</p>
+        <div id="shops-list"></div>
+      </div>
+    </section>
+  </div>
+      
   <script>
     const SUPABASE_URL =
       "https://ozcliasebeydgyvgluht.supabase.co";
@@ -290,6 +307,65 @@
         await client.auth.signOut();
         window.location.href = "akun.html";
       }
+    );
+
+    const shopsSection = document.getElementById("shops-section");
+    const shopsList = document.getElementById("shops-list");
+    const shopsMessage = document.getElementById("shops-message");
+
+    async function loadPartnerShops() {
+      shopsMessage.textContent = "Memuat data kedai...";
+      shopsList.replaceChildren();
+
+      const { data, error } = await client
+        .from("kh_shops")
+        .select("id, name, business_type, address, phone, is_active, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        shopsMessage.textContent =
+          "Data kedai gagal dimuat: " + error.message;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        shopsMessage.textContent = "Belum ada kedai yang dapat ditampilkan.";
+        return;
+      }
+
+      shopsMessage.textContent = "Jumlah kedai: " + data.length;
+
+      data.forEach((shop) => {
+        const card = document.createElement("div");
+        card.style.cssText =
+          "padding:14px 0;border-bottom:1px solid #e5e8df";
+
+        const name = document.createElement("strong");
+        name.textContent = shop.name || "Kedai tanpa nama";
+
+        const detail = document.createElement("p");
+        detail.className = "muted";
+        detail.textContent = [
+          shop.business_type || "Jenis usaha belum diisi",
+          shop.address || "Alamat belum diisi",
+          shop.phone || "Telepon belum diisi",
+          shop.is_active ? "Status: Aktif" : "Status: Tidak aktif"
+        ].join(" · ");
+
+        card.append(name, detail);
+        shopsList.appendChild(card);
+      });
+    }
+
+    document.getElementById("nav-shops").addEventListener("click", () => {
+      shopsSection.hidden = false;
+      shopsSection.scrollIntoView({ behavior: "smooth" });
+      loadPartnerShops();
+    });
+
+    document.getElementById("reload-shops").addEventListener(
+      "click",
+      loadPartnerShops
     );
 
     initAdmin();

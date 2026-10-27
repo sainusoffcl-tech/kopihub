@@ -386,17 +386,62 @@
       }
     });
 
-    async function checkExistingSession() {
-      const { data, error } = await client.auth.getSession();
+    
+async function checkExistingSession() {
+  const { data, error } = await client.auth.getSession();
 
-      if (!error && data.session) {
-        window.location.replace(
-          "/kopihub/dashboard-owner.html"
-        );
-      }
-    }
+  if (error || !data.session) {
+    return;
+  }
 
-    checkExistingSession();
+  const userId = data.session.user.id;
+
+  // Periksa apakah akun ini Admin KopiHub
+  const { data: profile, error: profileError } = await client
+    .from("kh_profiles")
+    .select("is_platform_admin")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (profileError) {
+    showMessage("Gagal memeriksa hak akses akun.", "error");
+    return;
+  }
+
+  if (profile?.is_platform_admin === true) {
+    window.location.replace("/kopihub/admin.html");
+    return;
+  }
+
+  // Periksa peran pengguna pada kedai
+  const { data: memberships, error: membershipError } = await client
+    .from("kh_shop_members")
+    .select("role")
+    .eq("user_id", userId);
+
+  if (membershipError) {
+    showMessage("Gagal memeriksa akses kedai.", "error");
+    return;
+  }
+
+  if (memberships?.some(member => member.role === "owner")) {
+    window.location.replace("/kopihub/dashboard-owner.html");
+    return;
+  }
+
+  if (memberships?.some(member => member.role === "cashier")) {
+    window.location.replace("/kopihub/kasir.html");
+    return;
+  }
+
+  showMessage(
+    "Akun sudah login, tetapi belum memiliki peran yang sesuai.",
+    "error"
+  );
+}
+
+checkExistingSession();
+
   </script>
 </body>
 </html>

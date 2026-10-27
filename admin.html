@@ -368,6 +368,66 @@
       loadPartnerShops
     );
 
+    const shopsSection = document.getElementById("shops-section");
+    const shopsList = document.getElementById("shops-list");
+    const shopsMessage = document.getElementById("shops-message");
+
+    async function loadPartnerShops() {
+      shopsMessage.textContent = "Memuat data kedai...";
+      shopsList.replaceChildren();
+
+      const { data, error } = await client
+        .from("kh_shops")
+        .select("id, name, business_type, address, phone, is_active, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        shopsMessage.textContent =
+          "Data kedai gagal dimuat: " + error.message;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        shopsMessage.textContent =
+          "Belum ada kedai yang dapat ditampilkan.";
+        return;
+      }
+
+      shopsMessage.textContent = "Jumlah kedai: " + data.length;
+
+      data.forEach((shop) => {
+        const card = document.createElement("div");
+        card.style.cssText =
+          "padding:14px 0;border-bottom:1px solid #e5e8df";
+
+        const name = document.createElement("strong");
+        name.textContent = shop.name || "Kedai tanpa nama";
+
+        const detail = document.createElement("p");
+        detail.className = "muted";
+        detail.textContent = [
+          shop.business_type || "Jenis usaha belum diisi",
+          shop.address || "Alamat belum diisi",
+          shop.phone || "Telepon belum diisi",
+          shop.is_active ? "Status: Aktif" : "Status: Tidak aktif"
+        ].join(" · ");
+
+        card.append(name, detail);
+        shopsList.appendChild(card);
+      });
+    }
+
+    document.getElementById("nav-shops").addEventListener("click", () => {
+      shopsSection.hidden = false;
+      shopsSection.scrollIntoView({ behavior: "smooth" });
+      loadPartnerShops();
+    });
+
+    document.getElementById("reload-shops").addEventListener(
+      "click",
+      loadPartnerShops
+    );
+
     initAdmin();
   </script>
 </body>

@@ -243,6 +243,9 @@
       <button type="button" id="nav-shops" class="nav-item">
         ▤ &nbsp; Kedai Mitra
       </button>
+      <button type="button" id="nav-applications" class="nav-item">
+      ♧ &nbsp; Pendaftaran Mitra
+      </button>
       <div class="nav-item">♙ &nbsp; Pengguna &amp; Akses</div>
 
       <div class="nav-label">KEUANGAN</div>
@@ -335,6 +338,25 @@
           <div id="shops-list"></div>
         </div>
       </section>
+          <section id="applications-section" hidden>
+        <h2 class="section-title">Pendaftaran Mitra</h2>
+        <p class="muted">
+          Periksa pendaftaran kedai sebelum memberikan akses kepada pemilik.
+        </p>
+
+        <div class="panel">
+          <button type="button" id="reload-applications"
+            class="action-button">
+            Muat Ulang Pendaftaran
+          </button>
+
+          <p id="applications-message" aria-live="polite">
+            Menyiapkan daftar pendaftaran...
+          </p>
+
+          <div id="applications-list"></div>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -358,28 +380,46 @@
     const shopsSection = document.getElementById("shops-section");
     const shopsList = document.getElementById("shops-list");
     const shopsMessage = document.getElementById("shops-message");
+const applicationsSection =
+  document.getElementById("applications-section");
 
+const applicationsList =
+  document.getElementById("applications-list");
+
+const applicationsMessage =
+  document.getElementById("applications-message");
     function showPage(page) {
-      const showShops = page === "shops";
+  dashboardView.hidden = page !== "dashboard";
+  shopsSection.hidden = page !== "shops";
+  applicationsSection.hidden = page !== "applications";
 
-      dashboardView.hidden = showShops;
-      shopsSection.hidden = !showShops;
+  document.getElementById("page-title").textContent =
+    page === "shops"
+      ? "Kedai Mitra"
+      : page === "applications"
+        ? "Pendaftaran Mitra"
+        : "Dashboard Admin";
 
-      document.getElementById("page-title").textContent =
-        showShops ? "Kedai Mitra" : "Dashboard Admin";
+  document.getElementById("nav-dashboard").classList.toggle(
+    "active", page === "dashboard"
+  );
 
-      document.getElementById("nav-dashboard").classList.toggle(
-        "active", !showShops
-      );
-      document.getElementById("nav-shops").classList.toggle(
-        "active", showShops
-      );
+  document.getElementById("nav-shops").classList.toggle(
+    "active", page === "shops"
+  );
 
-      if (showShops) {
-        loadPartnerShops();
-      }
-    }
+  document.getElementById("nav-applications").classList.toggle(
+    "active", page === "applications"
+  );
 
+  if (page === "shops") {
+    loadPartnerShops();
+  }
+
+  if (page === "applications") {
+    loadApplications();
+  }
+}
 async function loadDashboardStats() {
   const shopsValue = document.getElementById("stat-shops");
   const shopsNote = document.getElementById("stat-shops-note");

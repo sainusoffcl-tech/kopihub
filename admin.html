@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin KopiHub</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --green: #173d2e;
+      --green2: #24543e;
+      --cream: #f7f5ed;
+      --white: #ffffff;
+      --text: #26372d;
+      --muted: #788278;
+      --line: #e5e8df;
+      --orange: #e99a48;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--cream);
+      color: var(--text);
+    }
+    .layout { min-height: 100vh; }
+    aside {
+      background: var(--green);
+      color: white;
+      padding: 24px 18px;
+    }
+    .brand { font-size: 24px; font-weight: 800; }
+    .brand span { color: #a9d2a6; }
+    .tagline {
+      color: #d1dfd3;
+      font-size: 12px;
+      margin: 7px 0 25px;
+    }
+    .nav-label {
+      color: #a9c2b0;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      margin: 22px 10px 10px;
+    }
+    .nav-item {
+      display: block;
+      width: 100%;
+      border: 0;
+      text-align: left;
+      padding: 12px;
+      margin: 4px 0;
+      border-radius: 10px;
+      color: #edf4ee;
+      background: transparent;
+      font-size: 14px;
+    }
+    .nav-item.active { background: var(--green2); }
+    main { padding: 22px 16px 40px; min-width: 0; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    h1 { font-size: 25px; margin: 0 0 7px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .profile {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+    .section-title { margin: 26px 0 14px; font-size: 17px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 17px;
+      min-width: 0;
+    }
+    .stat-label { color: var(--muted); font-size: 12px; }
+    .stat-value { font-size: 25px; font-weight: 750; margin: 12px 0 5px; }
+    .stat-note { color: var(--muted); font-size: 11px; }
+    .panel {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      line-height: 1.65;
+    }
+    .status {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 5px 10px;
+      background: #e6f3e6;
+      color: #236338;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .warning {
+      padding: 14px;
+      border-radius: 12px;
+      background: #fff0df;
+      color: #754719;
+      font-size: 13px;
+    }
+    .logout {
+      margin-top: 24px;
+      border: 1px solid #6e8a78;
+      background: transparent;
+      color: white;
+      padding: 11px 13px;
+      border-radius: 10px;
+      width: 100%;
+    }
+    #loading { padding: 35px; text-align: center; }
+    #denied {
+      display: none;
+      margin: 40px auto;
+      max-width: 520px;
+      padding: 24px;
+      background: white;
+      border-radius: 16px;
+    }
+    @media (min-width: 850px) {
+      .layout { display: grid; grid-template-columns: 245px 1fr; }
+      aside { min-height: 100vh; }
+      main { padding: 34px; }
+      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">Memeriksa akun Admin KopiHub...</div>
+
+  <div id="denied">
+    <h2>Akses Admin tidak tersedia</h2>
+    <p id="denied-message">
+      Akun ini belum berhasil diverifikasi sebagai Admin platform.
+    </p>
+    <button onclick="window.location.href='akun.html'">
+      Kembali ke halaman login
+    </button>
+  </div>
+
+  <div id="app" class="layout" style="display:none">
+    <aside>
+      <div class="brand">Kopi<span>Hub</span></div>
+      <div class="tagline">PLATFORM MANAGEMENT</div>
+
+      <div class="nav-label">MENU UTAMA</div>
+      <div class="nav-item active">▦ &nbsp; Dashboard</div>
+      <div class="nav-item">▤ &nbsp; Kedai Mitra</div>
+      <div class="nav-item">♙ &nbsp; Pengguna &amp; Akses</div>
+
+      <div class="nav-label">KEUANGAN</div>
+      <div class="nav-item">▣ &nbsp; Transaksi Platform</div>
+      <div class="nav-item">◈ &nbsp; Komisi &amp; Pendapatan</div>
+      <div class="nav-item">▥ &nbsp; Laporan</div>
+
+      <div class="nav-label">SISTEM</div>
+      <div class="nav-item">⚙ &nbsp; Pengaturan Platform</div>
+      <div class="nav-item">◷ &nbsp; Audit Log</div>
+
+      <button id="logout" class="logout">Keluar dari Admin</button>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div>
+          <h1>Dashboard Admin</h1>
+          <div class="muted">Pusat pengelolaan layanan KopiHub</div>
+        </div>
+        <div class="profile">
+          <strong>Admin KopiHub</strong>
+          <div id="admin-email" class="muted">Memuat akun...</div>
+        </div>
+      </div>
+
+      <div class="warning">
+        <strong>Dashboard tahap awal.</strong>
+        Angka contoh di bawah belum diambil dari database dan tidak
+        boleh digunakan sebagai laporan transaksi nyata.
+      </div>
+
+      <h2 class="section-title">Ringkasan Platform</h2>
+      <div class="stats">
+        <div class="card">
+          <div class="stat-label">Kedai Mitra</div>
+          <div class="stat-value">—</div>
+          <div class="stat-note">Menunggu integrasi data</div>
+        </div>
+        <div class="card">
+          <div class="stat-label">Total Pesanan</div>
+          <div class="stat-value">—</div>
+          <div class="stat-note">Menunggu integrasi data</div>
+        </div>
+        <div class="card">
+          <div class="stat-label">Komisi KopiHub</div>
+          <div class="stat-value">—</div>
+          <div class="stat-note">Menunggu integrasi data</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Status Admin</h2>
+      <div class="panel">
+        <div class="status">✓ Admin terverifikasi</div>
+        <p>Selamat datang di pusat pengelolaan KopiHub.</p>
+        <p class="muted">
+          Kamu dapat menggunakan halaman ini setelah login dengan
+          akun yang memiliki hak Admin platform.
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL =
+      "https://ozcliasebeydgyvgluht.supabase.co";
+
+    // Gunakan publishable key KopiHub milikmu.
+    // Jangan pernah menggunakan service_role atau secret key di sini.
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    async function initAdmin() {
+      const loading = document.getElementById("loading");
+      const denied = document.getElementById("denied");
+      const app = document.getElementById("app");
+
+      try {
+        const { data: authData, error: authError } =
+          await client.auth.getUser();
+
+        if (authError || !authData.user) {
+          throw new Error("Silakan login terlebih dahulu.");
+        }
+
+        const user = authData.user;
+
+        const { data: profile, error: profileError } =
+          await client
+            .from("kh_profiles")
+            .select("id, full_name, is_platform_admin")
+            .eq("id", user.id)
+            .maybeSingle();
+
+        if (profileError) {
+          throw new Error(
+            "Profil tidak dapat diverifikasi. Periksa izin baca kh_profiles."
+          );
+        }
+
+        if (!profile || profile.is_platform_admin !== true) {
+          throw new Error(
+            "Akun ini tidak memiliki izin Admin platform."
+          );
+        }
+
+        document.getElementById("admin-email").textContent =
+          user.email || "Akun terverifikasi";
+
+        loading.style.display = "none";
+        app.style.display = "grid";
+      } catch (error) {
+        loading.style.display = "none";
+        denied.style.display = "block";
+        document.getElementById("denied-message").textContent =
+          error.message || "Verifikasi akun gagal.";
+      }
+    }
+
+    document.getElementById("logout").addEventListener(
+      "click",
+      async () => {
+        await client.auth.signOut();
+        window.location.href = "akun.html";
+      }
+    );
+
+    initAdmin();
+  </script>
+</body>
+</html>

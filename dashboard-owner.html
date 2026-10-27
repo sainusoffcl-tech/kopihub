@@ -864,7 +864,86 @@ shopSelect.addEventListener("change", async function() {
   resetMenuForm();
   await refreshMenu();
 });
+async function loadOrders() {
+const shop = selectedShop();
+const message = $(“orders-message”);
+const list = $(“orders-list”);
+const button = $(“refresh-orders”);
 
+if (!shop) {
+message.textContent = “Pilih kedai terlebih dahulu.”;
+list.replaceChildren();
+return;
+}
+
+message.textContent = “Memuat pesanan…”;
+list.replaceChildren();
+button.disabled = true;
+
+try {
+const { data, error } = await client
+.from(“kh_orders”)
+.select(“id, order_code, order_number, customer_name, customer_phone, order_type, table_label, table_number, status, subtotal, total_amount, created_at, items, payment_method, payment_status, order_status”)
+.eq(“shop_id”, shop.id)
+.order(“created_at”, { ascending: false })
+.limit(30);
+
+if (error) throw error;
+if (!data || data.length === 0) {
+  message.textContent = "Belum ada pesanan untuk kedai ini.";
+  return;
+}
+message.textContent = data.length + " pesanan terbaru.";
+data.forEach(function(order) {
+  const card = document.createElement("article");
+  card.className = "menu-item";
+  const title = document.createElement("h3");
+  title.textContent = "Pesanan " +
+    (order.order_code || order.order_number || order.id);
+  const customer = document.createElement("p");
+  customer.textContent = "Pelanggan: " +
+    (order.customer_name || "Tidak dicantumkan");
+  const table = document.createElement("p");
+  table.textContent = "Meja: " +
+    (order.table_label || order.table_number || "-");
+  const total = document.createElement("p");
+  total.textContent = "Total: " +
+    rupiah(order.total_amount ?? order.subtotal ?? 0);
+  const status = document.createElement("p");
+  status.textContent = "Status: " +
+    (order.order_status || order.status || "Belum ditentukan");
+  const payment = document.createElement("p");
+  payment.textContent = "Pembayaran: " +
+    (order.payment_status || "Belum diketahui");
+  const date = document.createElement("p");
+  date.className = "muted";
+  date.textContent = order.created_at
+    ? new Date(order.created_at).toLocaleString("id-ID")
+    : "";
+  card.append(title, customer, table, total, status, payment, date);
+  if (Array.isArray(order.items) && order.items.length) {
+    const itemsTitle = document.createElement("p");
+    itemsTitle.textContent = "Rincian pesanan:";
+    card.appendChild(itemsTitle);
+    order.items.forEach(function(item) {
+      const row = document.createElement("p");
+      row.textContent =
+        (item.name || item.product_name || "Menu") +
+        " × " + (item.qty || item.quantity || 1);
+      card.appendChild(row);
+    });
+  }
+  list.appendChild(card);
+});
+
+} catch (error) {
+message.textContent = “Gagal memuat pesanan: “ + error.message;
+} finally {
+button.disabled = false;
+}
+}
+
+$(“refresh-orders”).addEventListener(“click”, loadOrders);
 makeQrButton.addEventListener("click", function() {
   const shop = selectedShop();
 

@@ -280,22 +280,33 @@
 
         <h2 class="section-title">Ringkasan Platform</h2>
         <div class="stats">
-          <div class="card">
-            <div class="stat-label">Kedai Mitra</div>
-            <div class="stat-value">—</div>
-            <div class="stat-note">Menunggu integrasi data</div>
-          </div>
-          <div class="card">
-            <div class="stat-label">Total Pesanan</div>
-            <div class="stat-value">—</div>
-            <div class="stat-note">Menunggu integrasi data</div>
-          </div>
-          <div class="card">
-            <div class="stat-label">Komisi KopiHub</div>
-            <div class="stat-value">—</div>
-            <div class="stat-note">Menunggu integrasi data</div>
-          </div>
-        </div>
+
+
+<div class="stats">
+  <div class="card">
+    <div class="stat-label">Kedai Mitra</div>
+    <div class="stat-value" id="stat-shops">—</div>
+    <div class="stat-note" id="stat-shops-note">
+      Memuat data kedai...
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">Total Pesanan</div>
+    <div class="stat-value" id="stat-orders">—</div>
+    <div class="stat-note" id="stat-orders-note">
+      Memuat data pesanan...
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">Komisi KopiHub</div>
+    <div class="stat-value" id="stat-commission">—</div>
+    <div class="stat-note" id="stat-commission-note">
+      Menunggu integrasi perhitungan komisi
+    </div>
+  </div>
+</div>
 
         <h2 class="section-title">Status Admin</h2>
         <div class="panel">
@@ -369,6 +380,43 @@
       }
     }
 
+async function loadDashboardStats() {
+  const shopsValue = document.getElementById("stat-shops");
+  const shopsNote = document.getElementById("stat-shops-note");
+  const ordersValue = document.getElementById("stat-orders");
+  const ordersNote = document.getElementById("stat-orders-note");
+
+  // Hitung kedai dari database
+  const { count: shopCount, error: shopsError } = await client
+    .from("kh_shops")
+    .select("id", { count: "exact", head: true });
+
+  if (shopsError) {
+    shopsValue.textContent = "!";
+    shopsNote.textContent = "Gagal memuat data kedai";
+    console.error("Gagal menghitung kedai:", shopsError.message);
+  } else {
+    shopsValue.textContent = Number(shopCount ?? 0)
+      .toLocaleString("id-ID");
+    shopsNote.textContent = "Total kedai terdaftar";
+  }
+
+  // Hitung seluruh pesanan yang tersimpan
+  const { count: orderCount, error: ordersError } = await client
+    .from("kh_orders")
+    .select("id", { count: "exact", head: true });
+
+  if (ordersError) {
+    ordersValue.textContent = "!";
+    ordersNote.textContent = "Gagal memuat data pesanan";
+    console.error("Gagal menghitung pesanan:", ordersError.message);
+  } else {
+    ordersValue.textContent = Number(orderCount ?? 0)
+      .toLocaleString("id-ID");
+    ordersNote.textContent = "Total pesanan tercatat";
+  }
+}
+
     async function initAdmin() {
       try {
         const { data: authData, error: authError } =
@@ -402,8 +450,10 @@
         document.getElementById("admin-email").textContent =
           user.email || "Akun terverifikasi";
 
-        loading.style.display = "none";
-        app.style.display = "grid";
+loading.style.display = "none";
+app.style.display = "grid";
+
+await loadDashboardStats();
       } catch (error) {
         loading.style.display = "none";
         denied.style.display = "block";

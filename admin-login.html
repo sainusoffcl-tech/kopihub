@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Admin - KopiHub</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --green: #173d2e;
+      --green2: #24543e;
+      --cream: #f7f5ed;
+      --text: #26372d;
+      --muted: #788278;
+      --line: #e5e8df;
+      --red: #a52c2c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--cream);
+      color: var(--text);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 14px 45px rgba(23, 61, 46, .08);
+    }
+
+    .brand {
+      color: var(--green);
+      font-size: 29px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .brand span { color: #5b9469; }
+
+    .label {
+      color: #718276;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    h1 { font-size: 24px; margin: 24px 0 8px; }
+
+    .intro {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 16px 0 7px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font: inherit;
+      font-size: 15px;
+      background: white;
+    }
+
+    input:focus {
+      outline: 2px solid #b6d6bd;
+      border-color: var(--green2);
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 13px;
+      margin-top: 22px;
+      background: var(--green);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .65; }
+
+    #message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    #message.error {
+      display: block;
+      color: var(--red);
+      background: #fce8e6;
+    }
+
+    #message.success {
+      display: block;
+      color: #236338;
+      background: #e6f3e6;
+    }
+
+    .footer {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    a { color: var(--green2); }
+
+    .security-note {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <main class="login-card">
+    <div class="brand">Kopi<span>Hub</span></div>
+    <div class="label">PLATFORM MANAGEMENT</div>
+
+    <h1>Login Admin</h1>
+    <p class="intro">
+      Masuk ke pusat pengelolaan platform KopiHub.
+      Halaman ini hanya untuk akun Admin yang telah terverifikasi.
+    </p>
+
+    <form id="login-form">
+      <label for="email">Email Admin</label>
+      <input
+        id="email"
+        type="email"
+        autocomplete="username"
+        placeholder="Email akun Admin"
+        required
+      >
+
+      <label for="password">Kata sandi</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Masukkan kata sandi"
+        required
+      >
+
+      <button id="login-button" type="submit">
+        Masuk ke Dashboard Admin
+      </button>
+    </form>
+
+    <div id="message" role="status" aria-live="polite"></div>
+
+    <div class="security-note">
+      Akses Admin diperiksa melalui profil Supabase.
+      Membuka halaman ini tidak otomatis memberikan hak Admin.
+    </div>
+
+    <div class="footer">
+      Bukan halaman Admin?
+      <a href="akun.html">Login atau daftar sebagai mitra</a>
+    </div>
+  </main>
+
+  <script>
+    const SUPABASE_URL =
+      "https://ozcliasebeydgyvgluht.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const form = document.getElementById("login-form");
+    const button = document.getElementById("login-button");
+    const message = document.getElementById("message");
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = type;
+    }
+
+    async function verifyAdmin(user) {
+      const { data: profile, error } = await client
+        .from("kh_profiles")
+        .select("is_platform_admin")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        throw new Error(
+          "Profil tidak dapat diperiksa. Silakan coba lagi."
+        );
+      }
+
+      if (profile?.is_platform_admin !== true) {
+        throw new Error(
+          "Akses ditolak. Akun ini bukan Admin KopiHub."
+        );
+      }
+
+      return true;
+    }
+
+    // Jika sudah login, hanya sesi Admin yang boleh melanjutkan.
+    async function checkExistingSession() {
+      const { data, error } = await client.auth.getSession();
+
+      if (error || !data.session) return;
+
+      try {
+        await verifyAdmin(data.session.user);
+        window.location.replace("admin.html");
+      } catch (error) {
+        showMessage(
+          "Sesi yang aktif bukan sesi Admin. Silakan login dengan akun Admin KopiHub.",
+          "error"
+        );
+      }
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      button.disabled = true;
+      button.textContent = "Memeriksa akun...";
+      message.className = "";
+      message.textContent = "";
+
+      try {
+        const { data, error } = await client.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          throw new Error("Email atau kata sandi tidak sesuai.");
+        }
+
+        if (!data.user) {
+          throw new Error("Akun tidak ditemukan. Silakan coba lagi.");
+        }
+
+        await verifyAdmin(data.user);
+
+        showMessage("Admin terverifikasi. Membuka dashboard...", "success");
+        window.location.replace("admin.html");
+      } catch (error) {
+        showMessage(
+          error.message || "Login gagal. Silakan coba lagi.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Masuk ke Dashboard Admin";
+      }
+    });
+
+    checkExistingSession();
+  </script>
+</body>
+</html>

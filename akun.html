@@ -407,8 +407,10 @@ async function checkExistingSession() {
     showMessage("Gagal memeriksa hak akses akun.", "error");
     return;
   }
-  console.log("ID pengguna login:", userId);
-  console.log("Profil Admin:", profile);
+  showMessage(
+  "Status Admin: " + String(profile?.is_platform_admin),
+  "error"
+);
   if (profile?.is_platform_admin === true) {
     window.location.replace("/kopihub/admin.html");
     return;

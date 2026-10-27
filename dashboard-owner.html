@@ -486,11 +486,12 @@ async function deleteProduct(id) {
 }
 
 
+
 async function loadOrders() {
   const shop = selectedShop();
   const message = $("orders-message");
   const list = $("orders-list");
-  const button = $("refresh-orders");
+  const refreshButton = $("refresh-orders");
 
   list.replaceChildren();
 
@@ -499,13 +500,15 @@ async function loadOrders() {
     return;
   }
 
-  button.disabled = true;
+  refreshButton.disabled = true;
   message.textContent = "Memuat pesanan...";
 
   try {
     const { data, error } = await client
       .from("kh_orders")
-      .select("id, order_code, order_number, customer_name, customer_phone, order_type, table_label, table_number, status, subtotal, total_amount, created_at, items, payment_method, payment_status, order_status")
+      .select(
+        "id, order_code, order_number, customer_name, customer_phone, order_type, table_label, table_number, status, subtotal, total_amount, created_at, items, payment_method, payment_status, order_status"
+      )
       .eq("shop_id", shop.id)
       .order("created_at", { ascending: false })
       .limit(30);
@@ -513,31 +516,34 @@ async function loadOrders() {
     if (error) throw error;
     if (shopSelect.value !== shop.id) return;
 
-    if (!data || data.length === 0) {
+    const orders = data || [];
+
+    if (orders.length === 0) {
       message.textContent = "Belum ada pesanan untuk kedai ini.";
       $("today-orders").textContent = "0";
       $("today-sales").textContent = rupiah(0);
       return;
     }
 
-    message.textContent = data.length + " pesanan terbaru.";
+    message.textContent = orders.length + " pesanan terbaru.";
 
     const now = new Date();
-    const start = new Date(
+    const startOfDay = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate()
     );
 
-    const todaysOrders = data.filter(order =>
+    const todaysOrders = orders.filter(order =>
       order.created_at &&
-      new Date(order.created_at) >= start
+      new Date(order.created_at) >= startOfDay
     );
 
     $("today-orders").textContent = todaysOrders.length;
     $("today-sales").textContent = rupiah(
       todaysOrders.reduce(
-        (sum, order) => sum + Number(order.total_amount || 0),
+        (sum, order) =>
+          sum + Number(order.total_amount ?? order.subtotal ?? 0),
         0
       )
     );
@@ -549,17 +555,18 @@ async function loadOrders() {
       { value: "completed", label: "Selesai" }
     ];
 
-    function statusLabel(value) {
-      const found = statuses.find(item => item.value === value);
-      return found ? found.label : (value || "Belum ditentukan");
+    function getStatusLabel(value) {
+      const match = statuses.find(item => item.value === value);
+      return match ? match.label : (value || "Belum ditentukan");
     }
 
-    data.forEach(order => {
+    orders.forEach(order => {
       const card = document.createElement("article");
       card.className = "menu-item";
 
       const heading = document.createElement("h3");
-      heading.textContent = "Pesanan " +
+      heading.textContent =
+        "Pesanan " +
         (order.order_code || order.order_number || order.id);
 
       const customer = document.createElement("p");
@@ -571,20 +578,24 @@ async function loadOrders() {
         "Telepon: " + (order.customer_phone || "-");
 
       const table = document.createElement("p");
-      table.textContent = "Meja: " +
-        (order.table_label || order.table_number || "-");
+      table.textContent =
+        "Meja: " + (order.table_label || order.table_number || "-");
 
       const total = document.createElement("p");
-      total.textContent = "Total: " +
+      total.textContent =
+        "Total: " +
         rupiah(order.total_amount ?? order.subtotal ?? 0);
 
-      const status = document.createElement("p");
-      status.textContent =
-        "Status pesanan: " +
-        statusLabel(order.order_status || order.status);
+      const savedStatus =
+        order.order_status || order.status || "pending";
+
+      const statusText = document.createElement("p");
+      statusText.textContent =
+        "Status pesanan: " + getStatusLabel(savedStatus);
 
       const payment = document.createElement("p");
-      payment.textContent = "Pembayaran: " +
+      payment.textContent =
+        "Pembayaran: " +
         (order.payment_status || "Belum diketahui") +
         (order.payment_method ? " · " + order.payment_method : "");
 
@@ -596,13 +607,13 @@ async function loadOrders() {
 
       card.append(
         heading, customer, phone, table,
-        total, status, payment, date
+        total, statusText, payment, date
       );
 
-      if (Array.isArray(order.items) && order.items.length) {
-        const label = document.createElement("p");
-        label.textContent = "Rincian pesanan:";
-        card.appendChild(label);
+      if (Array.isArray(order.items) && order.items.length > 0) {
+        const itemsHeading = document.createElement("p");
+        itemsHeading.textContent = "Rincian pesanan:";
+        card.appendChild(itemsHeading);
 
         order.items.forEach(item => {
           const row = document.createElement("p");
@@ -614,8 +625,8 @@ async function loadOrders() {
         });
       }
 
-      const statusLabelElement = document.createElement("label");
-      statusLabelElement.textContent = "Ubah status pesanan";
+      const statusLabel = document.createElement("label");
+      statusLabel.textContent = "Ubah status pesanan";
 
       const select = document.createElement("select");
       select.setAttribute(
@@ -624,9 +635,6 @@ async function loadOrders() {
         (order.order_code || order.order_number || order.id)
       );
 
-      const currentStatus =
-        order.order_status || order.status || "pending";
-
       statuses.forEach(item => {
         const option = document.createElement("option");
         option.value = item.value;
@@ -634,25 +642,20 @@ async function loadOrders() {
         select.appendChild(option);
       });
 
-      const knownStatus = statuses.some(
-        item => item.value === currentStatus
-      );
-
-      if (knownStatus) {
-        select.value = currentStatus;
-      } else {
-        const oldOption = document.createElement("option");
-        oldOption.value = currentStatus;
-        oldOption.textContent = statusLabel(currentStatus);
-        select.insertBefore(oldOption, select.firstChild);
-        select.value = currentStatus;
+      if (!statuses.some(item => item.value === savedStatus)) {
+        const legacyOption = document.createElement("option");
+        legacyOption.value = savedStatus;
+        legacyOption.textContent = getStatusLabel(savedStatus);
+        select.insertBefore(legacyOption, select.firstChild);
       }
+
+      select.value = savedStatus;
 
       const saveButton = document.createElement("button");
       saveButton.type = "button";
       saveButton.className = "primary";
-      saveButton.textContent = "Simpan Status";
       saveButton.style.marginTop = "9px";
+      saveButton.textContent = "Simpan Status";
 
       const resultMessage = document.createElement("p");
       resultMessage.className = "muted";
@@ -661,7 +664,7 @@ async function loadOrders() {
       saveButton.addEventListener("click", async () => {
         const newStatus = select.value;
 
-        if (newStatus === currentStatus) {
+        if (newStatus === savedStatus) {
           resultMessage.textContent = "Status belum berubah.";
           return;
         }
@@ -676,26 +679,33 @@ async function loadOrders() {
             .update({ order_status: newStatus })
             .eq("id", order.id)
             .eq("shop_id", shop.id)
-            .select("id")
+            .select("id, order_status")
             .maybeSingle();
 
           if (updateError) throw updateError;
 
           if (!updated) {
             throw new Error(
-              "Pesanan tidak berubah. Periksa izin UPDATE dan kebijakan RLS."
+              "Tidak ada pesanan yang diperbarui. Periksa kebijakan RLS dan izin UPDATE."
             );
           }
 
-          order.order_status = newStatus;
-  
-          status.textContent =
-            "Status pesanan: " + statusLabel(newStatus);
+          statusText.textContent =
+            "Status pesanan: " + getStatusLabel(updated.order_status);
 
           resultMessage.textContent =
-            "Status berhasil disimpan: " + statusLabel(newStatus);
+            "Status berhasil disimpan: " +
+            getStatusLabel(updated.order_status);
 
-          await loadOrders();
+          select.value = updated.order_status;
+
+          // Muat ulang setelah pesan sukses ditampilkan.
+          // Jika pemuatan ulang gagal, pesan sukses tetap terlihat.
+          try {
+            await loadOrders();
+          } catch (reloadError) {
+            console.error("Gagal memuat ulang pesanan:", reloadError);
+          }
         } catch (error) {
           console.error("Gagal mengubah status:", error);
           resultMessage.textContent =
@@ -706,13 +716,7 @@ async function loadOrders() {
         }
       });
 
-      card.append(
-        statusLabelElement,
-        select,
-        saveButton,
-        resultMessage
-      );
-
+      card.append(statusLabel, select, saveButton, resultMessage);
       list.appendChild(card);
     });
   } catch (error) {
@@ -720,7 +724,7 @@ async function loadOrders() {
     message.textContent =
       "Gagal memuat pesanan: " + error.message;
   } finally {
-    button.disabled = false;
+    refreshButton.disabled = false;
   }
 }
 

@@ -612,7 +612,7 @@ async function loadOrders() {
       failed: "Pembayaran Gagal"
     };
 
-    todaysOrders.forEach(order => {
+    orders.forEach(order => {
       const card = document.createElement("article");
       card.className = "menu-item";
 

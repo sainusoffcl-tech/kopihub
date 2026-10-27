@@ -104,7 +104,7 @@
     <div class="stat"><div class="stat-label">Jumlah Menu</div><div class="stat-number" id="menu-count">—</div></div>
     <div class="stat"><div class="stat-label">Menu Tersedia</div><div class="stat-number" id="available-count">—</div></div>
     <div class="stat"><div class="stat-label">Pesanan Hari Ini</div><div class="stat-number" id="today-orders">—</div></div>
-    <div class="stat"><div class="stat-label">Penjualan Hari Ini</div><div class="stat-number" id="today-sales">—</div></div>
+    <div class="stat"><div class="stat-label">Penjualan Hari Ini (Sudah Dibayar)</div><div class="stat-number" id="today-sales">—</div></div>
   </section>
 
   <section class="panel" id="kelola-menu">
@@ -151,9 +151,35 @@
   </section>
 
   <section class="panel">
-    <h2>Laporan Penjualan</h2>
-    <p class="muted">Ringkasan di atas menggunakan pesanan yang terbaca dari database. Pastikan status transaksi sudah sesuai sebelum menjadikan angka sebagai laporan resmi.</p>
-  </section>
+  <h2>Laporan Penjualan Hari Ini</h2>
+  <p class="muted">
+    Penjualan terbayar dihitung dari pesanan yang sudah dikonfirmasi lunas.
+    Pesanan yang belum dibayar ditampilkan secara terpisah.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Nilai Pesanan</div>
+      <div class="stat-number" id="report-order-value">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Sudah Dibayar</div>
+      <div class="stat-number" id="report-paid-sales">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Belum Dibayar</div>
+      <div class="stat-number" id="report-unpaid-sales">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Transaksi Lunas</div>
+      <div class="stat-number" id="report-paid-count">—</div>
+    </div>
+  </div>
+
+  <p class="muted" id="report-message">
+    Laporan akan diperbarui saat pesanan dimuat.
+  </p>
+</section>
 
   <button class="secondary" id="logout" type="button">Keluar dari Akun</button>
 </main>
@@ -486,12 +512,11 @@ async function deleteProduct(id) {
 }
 
 
-
 async function loadOrders() {
   const shop = selectedShop();
   const message = $("orders-message");
   const list = $("orders-list");
-  const refreshButton = $("refresh-orders");
+  const button = $("refresh-orders");
 
   list.replaceChildren();
 
@@ -500,33 +525,26 @@ async function loadOrders() {
     return;
   }
 
-  refreshButton.disabled = true;
+  button.disabled = true;
   message.textContent = "Memuat pesanan...";
 
   try {
     const { data, error } = await client
       .from("kh_orders")
       .select(
-        "id, order_code, order_number, customer_name, customer_phone, order_type, table_label, table_number, status, subtotal, total_amount, created_at, items, payment_method, payment_status, order_status"
+        "id, order_code, order_number, customer_name, customer_phone, " +
+        "order_type, table_label, table_number, status, subtotal, " +
+        "total_amount, created_at, items, payment_method, " +
+        "payment_status, order_status"
       )
       .eq("shop_id", shop.id)
       .order("created_at", { ascending: false })
-      .limit(30);
+      .limit(500);
 
     if (error) throw error;
     if (shopSelect.value !== shop.id) return;
 
     const orders = data || [];
-
-    if (orders.length === 0) {
-      message.textContent = "Belum ada pesanan untuk kedai ini.";
-      $("today-orders").textContent = "0";
-      $("today-sales").textContent = rupiah(0);
-      return;
-    }
-
-    message.textContent = orders.length + " pesanan terbaru.";
-
     const now = new Date();
     const startOfDay = new Date(
       now.getFullYear(),
@@ -536,37 +554,70 @@ async function loadOrders() {
 
     const todaysOrders = orders.filter(order =>
       order.created_at &&
-      new Date(order.created_at) >= startOfDay
+      new Date(order.created_at) >= startOfDay &&
+      new Date(order.created_at) <= now
+    );
+
+    const getTotal = order =>
+      Number(order.total_amount ?? order.subtotal ?? 0);
+
+    const isPaid = order =>
+      String(order.payment_status || "").toLowerCase() === "paid";
+
+    const paidOrders = todaysOrders.filter(isPaid);
+    const unpaidOrders = todaysOrders.filter(order => !isPaid(order));
+
+    const totalValue = todaysOrders.reduce(
+      (sum, order) => sum + getTotal(order), 0
+    );
+
+    const paidValue = paidOrders.reduce(
+      (sum, order) => sum + getTotal(order), 0
+    );
+
+    const unpaidValue = unpaidOrders.reduce(
+      (sum, order) => sum + getTotal(order), 0
     );
 
     $("today-orders").textContent = todaysOrders.length;
-    $("today-sales").textContent = rupiah(
-      todaysOrders.reduce(
-        (sum, order) =>
-          sum + Number(order.total_amount ?? order.subtotal ?? 0),
-        0
-      )
-    );
+    $("today-sales").textContent = rupiah(paidValue);
 
-    const statuses = [
-      { value: "pending", label: "Pesanan Masuk" },
-      { value: "processing", label: "Sedang Diproses" },
-      { value: "ready_for_delivery", label: "Siap Diantar" },
-      { value: "completed", label: "Selesai" }
-    ];
+    $("report-order-value").textContent = rupiah(totalValue);
+    $("report-paid-sales").textContent = rupiah(paidValue);
+    $("report-unpaid-sales").textContent = rupiah(unpaidValue);
+    $("report-paid-count").textContent = paidOrders.length;
 
-    function getStatusLabel(value) {
-      const match = statuses.find(item => item.value === value);
-      return match ? match.label : (value || "Belum ditentukan");
-    }
+    $("report-message").textContent =
+      "Berdasarkan pesanan yang dibuat hari ini dan terbaca dalam " +
+      "maksimal 500 pesanan terbaru. " +
+      "Pesanan belum dibayar: " + unpaidOrders.length + ".";
 
-    orders.forEach(order => {
+    message.textContent = orders.length
+      ? orders.length + " pesanan terbaru. Tampilan ini hanya untuk melihat."
+      : "Belum ada pesanan untuk kedai ini.";
+
+    const statusLabels = {
+      awaiting_confirmation: "Pesanan Baru",
+      pending: "Diterima",
+      processing: "Diproses",
+      ready_for_delivery: "Siap Diantar",
+      completed: "Selesai"
+    };
+
+    const paymentLabels = {
+      paid: "Sudah Dibayar",
+      awaiting_cashier: "Menunggu Kasir",
+      awaiting: "Menunggu Pembayaran",
+      pending: "Menunggu Pembayaran",
+      failed: "Pembayaran Gagal"
+    };
+
+    todaysOrders.forEach(order => {
       const card = document.createElement("article");
       card.className = "menu-item";
 
       const heading = document.createElement("h3");
-      heading.textContent =
-        "Pesanan " +
+      heading.textContent = "Pesanan " +
         (order.order_code || order.order_number || order.id);
 
       const customer = document.createElement("p");
@@ -578,26 +629,36 @@ async function loadOrders() {
         "Telepon: " + (order.customer_phone || "-");
 
       const table = document.createElement("p");
-      table.textContent =
-        "Meja: " + (order.table_label || order.table_number || "-");
+      table.textContent = "Meja: " +
+        (order.table_label || order.table_number || "-");
+
+      const type = document.createElement("p");
+      type.textContent = "Jenis pesanan: " +
+        (order.order_type || "-");
 
       const total = document.createElement("p");
-      total.textContent =
-        "Total: " +
-        rupiah(order.total_amount ?? order.subtotal ?? 0);
+      total.textContent = "Total: " + rupiah(getTotal(order));
 
-      const savedStatus =
-        order.order_status || order.status || "pending";
+      const rawStatus = String(
+        order.order_status || order.status || ""
+      ).toLowerCase();
 
-      const statusText = document.createElement("p");
-      statusText.textContent =
-        "Status pesanan: " + getStatusLabel(savedStatus);
+      const status = document.createElement("p");
+      status.textContent = "Status pesanan: " +
+        (statusLabels[rawStatus] || rawStatus || "Belum ditentukan");
+
+      const rawPayment = String(
+        order.payment_status || ""
+      ).toLowerCase();
 
       const payment = document.createElement("p");
-      payment.textContent =
-        "Pembayaran: " +
-        (order.payment_status || "Belum diketahui") +
-        (order.payment_method ? " · " + order.payment_method : "");
+      payment.textContent = "Pembayaran: " +
+        (paymentLabels[rawPayment] ||
+          order.payment_status ||
+          "Belum diketahui") +
+        (order.payment_method
+          ? " · " + order.payment_method
+          : "");
 
       const date = document.createElement("p");
       date.className = "muted";
@@ -606,11 +667,11 @@ async function loadOrders() {
         : "";
 
       card.append(
-        heading, customer, phone, table,
-        total, statusText, payment, date
+        heading, customer, phone, table, type,
+        total, status, payment, date
       );
 
-      if (Array.isArray(order.items) && order.items.length > 0) {
+      if (Array.isArray(order.items) && order.items.length) {
         const itemsHeading = document.createElement("p");
         itemsHeading.textContent = "Rincian pesanan:";
         card.appendChild(itemsHeading);
@@ -625,108 +686,21 @@ async function loadOrders() {
         });
       }
 
-      const statusLabel = document.createElement("label");
-      statusLabel.textContent = "Ubah status pesanan";
-
-      const select = document.createElement("select");
-      select.setAttribute(
-        "aria-label",
-        "Status pesanan " +
-        (order.order_code || order.order_number || order.id)
-      );
-
-      statuses.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.value;
-        option.textContent = item.label;
-        select.appendChild(option);
-      });
-
-      if (!statuses.some(item => item.value === savedStatus)) {
-        const legacyOption = document.createElement("option");
-        legacyOption.value = savedStatus;
-        legacyOption.textContent = getStatusLabel(savedStatus);
-        select.insertBefore(legacyOption, select.firstChild);
-      }
-
-      select.value = savedStatus;
-
-      const saveButton = document.createElement("button");
-      saveButton.type = "button";
-      saveButton.className = "primary";
-      saveButton.style.marginTop = "9px";
-      saveButton.textContent = "Simpan Status";
-
-      const resultMessage = document.createElement("p");
-      resultMessage.className = "muted";
-      resultMessage.setAttribute("role", "status");
-
-      saveButton.addEventListener("click", async () => {
-        const newStatus = select.value;
-
-        if (newStatus === savedStatus) {
-          resultMessage.textContent = "Status belum berubah.";
-          return;
-        }
-
-        saveButton.disabled = true;
-        select.disabled = true;
-        resultMessage.textContent = "Menyimpan status...";
-
-        try {
-          const { data: updated, error: updateError } = await client
-            .from("kh_orders")
-            .update({ order_status: newStatus })
-            .eq("id", order.id)
-            .eq("shop_id", shop.id)
-            .select("id, order_status")
-            .maybeSingle();
-
-          if (updateError) throw updateError;
-
-          if (!updated) {
-            throw new Error(
-              "Tidak ada pesanan yang diperbarui. Periksa kebijakan RLS dan izin UPDATE."
-            );
-          }
-
-          statusText.textContent =
-            "Status pesanan: " + getStatusLabel(updated.order_status);
-
-          resultMessage.textContent =
-            "Status berhasil disimpan: " +
-            getStatusLabel(updated.order_status);
-
-          select.value = updated.order_status;
-
-          // Muat ulang setelah pesan sukses ditampilkan.
-          // Jika pemuatan ulang gagal, pesan sukses tetap terlihat.
-          try {
-            await loadOrders();
-          } catch (reloadError) {
-            console.error("Gagal memuat ulang pesanan:", reloadError);
-          }
-        } catch (error) {
-          console.error("Gagal mengubah status:", error);
-          resultMessage.textContent =
-            "Gagal menyimpan status: " + error.message;
-        } finally {
-          saveButton.disabled = false;
-          select.disabled = false;
-        }
-      });
-
-      card.append(statusLabel, select, saveButton, resultMessage);
+      // Tidak ada tombol untuk mengubah status pesanan di dashboard owner.
       list.appendChild(card);
     });
   } catch (error) {
     console.error("Gagal memuat pesanan:", error);
     message.textContent =
       "Gagal memuat pesanan: " + error.message;
+    $("report-message").textContent =
+      "Laporan belum dapat diperbarui.";
   } finally {
-    refreshButton.disabled = false;
+    button.disabled = false;
   }
 }
+
+
 
 
 

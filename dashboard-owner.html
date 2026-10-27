@@ -320,13 +320,24 @@
     </div>
   </section>
 
-  <section class="panel">
-    <h2>Pesanan</h2>
-    <p class="muted">
-      Pengelolaan pesanan akan diaktifkan setelah alur pemesanan dan
-      penyimpanan transaksi selesai dibuat.
-    </p>
-  </section>
+<section class="panel" id="pesanan">
+  <h2>Pesanan Masuk</h2>
+  <p class="muted">
+    Daftar pesanan untuk kedai yang sedang dipilih.
+  </p>
+
+  <button class="primary" id="refresh-orders" type="button">
+    Muat Ulang Pesanan
+  </button>
+
+  <p id="orders-message" class="muted" role="status">
+    Menyiapkan daftar pesanan...
+  </p>
+
+  <div id="orders-list">
+    Pesanan akan ditampilkan di sini.
+  </div>
+</section>
 
   <section class="panel">
     <h2>Laporan Penjualan</h2>

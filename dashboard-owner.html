@@ -527,74 +527,70 @@ async function loadOrders() {
 
   button.disabled = true;
   message.textContent = "Memuat pesanan...";
+  $("report-message").textContent = "Menghitung laporan berdasarkan WIT...";
 
   try {
-   const PAGE_SIZE = 500;
-const orders = [];
-let from = 0;
+    // Ambil seluruh pesanan secara bertahap, bukan hanya 500.
+    const PAGE_SIZE = 500;
+    const orders = [];
+    let from = 0;
 
-while (true) {
-  const { data, error } = await client
-    .from("kh_orders")
-    .select(
-      "id, order_code, order_number, customer_name, customer_phone, " +
-      "order_type, table_label, table_number, status, subtotal, " +
-      "total_amount, created_at, items, payment_method, " +
-      "payment_status, order_status"
-    )
-    .eq("shop_id", shop.id)
-    .order("created_at", { ascending: false })
-    .order("id", { ascending: false })
-    .range(from, from + PAGE_SIZE - 1);
+    while (true) {
+      const { data, error } = await client
+        .from("kh_orders")
+        .select(
+          "id, order_code, order_number, customer_name, customer_phone, " +
+          "order_type, table_label, table_number, status, subtotal, " +
+          "total_amount, created_at, items, payment_method, " +
+          "payment_status, order_status"
+        )
+        .eq("shop_id", shop.id)
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .range(from, from + PAGE_SIZE - 1);
 
-  if (error) throw error;
+      if (error) throw error;
 
-  const page = data || [];
-  orders.push(...page);
+      const page = data || [];
+      orders.push(...page);
 
-  if (page.length < PAGE_SIZE) break;
+      if (page.length < PAGE_SIZE) break;
 
-  from += PAGE_SIZE;
-}
+      from += PAGE_SIZE;
+    }
 
-    if (error) throw error;
-    if (shopSelect.value !== shop.id) return;
+    // Jika pengguna berpindah kedai saat data dimuat,
+    // jangan tampilkan data kedai sebelumnya.
+    if (String(shopSelect.value) !== String(shop.id)) return;
 
-    const orders = data || [];
+    // Semua tanggal laporan mengikuti WIT.
+    const TIME_ZONE = shop.timezone || "Asia/Jayapura";
 
-const TIME_ZONE = shop.timezone || "Asia/Jayapura";
+    const dateFormatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: TIME_ZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
 
-const dateParts = new Intl.DateTimeFormat("en-CA", {
-  timeZone: TIME_ZONE,
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit"
-}).formatToParts(new Date());
+    function getDateKey(value) {
+      if (!value) return "";
 
-const datePart = type =>
-  dateParts.find(part => part.type === type)?.value;
+      const parts = dateFormatter.formatToParts(new Date(value));
+      const part = type =>
+        parts.find(item => item.type === type)?.value || "";
 
-const todayKey =
-  `${datePart("year")}-${datePart("month")}-${datePart("day")}`;
+      return `${part("year")}-${part("month")}-${part("day")}`;
+    }
 
-const todaysOrders = orders.filter(order =>
-  order.created_at &&
-  new Intl.DateTimeFormat("en-CA", {
-    timeZone: TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(new Date(order.created_at)) === todayKey
-);
+    const todayKey = getDateKey(new Date());
 
     const todaysOrders = orders.filter(order =>
-      order.created_at &&
-      new Date(order.created_at) >= startOfDay &&
-      new Date(order.created_at) <= now
+      order.created_at && getDateKey(order.created_at) === todayKey
     );
 
     const getTotal = order =>
-      Number(order.total_amount ?? order.subtotal ?? 0);
+      Number(order.total_amount ?? order.subtotal ?? order.total ?? 0);
 
     const isPaid = order =>
       String(order.payment_status || "").toLowerCase() === "paid";
@@ -614,21 +610,26 @@ const todaysOrders = orders.filter(order =>
       (sum, order) => sum + getTotal(order), 0
     );
 
+    // Perbarui ringkasan laporan hari ini.
     $("today-orders").textContent = todaysOrders.length;
     $("today-sales").textContent = rupiah(paidValue);
-
     $("report-order-value").textContent = rupiah(totalValue);
     $("report-paid-sales").textContent = rupiah(paidValue);
     $("report-unpaid-sales").textContent = rupiah(unpaidValue);
     $("report-paid-count").textContent = paidOrders.length;
 
     $("report-message").textContent =
-      "Berdasarkan pesanan yang dibuat hari ini dan terbaca dalam " +
-      "maksimal 500 pesanan terbaru. " +
-      "Pesanan belum dibayar: " + unpaidOrders.length + ".";
+      `Laporan hari ini menggunakan zona waktu ${TIME_ZONE}. ` +
+      `Total ${todaysOrders.length} pesanan; ` +
+      `${unpaidOrders.length} belum berstatus dibayar.`;
+
+    // Batasi tampilan kartu agar halaman tetap ringan.
+    // Perhitungan laporan di atas tetap memakai seluruh pesanan.
+    const visibleOrders = orders.slice(0, 30);
 
     message.textContent = orders.length
-      ? orders.length + " pesanan terbaru. Tampilan ini hanya untuk melihat."
+      ? `Menampilkan ${visibleOrders.length} pesanan terbaru dari ` +
+        `${orders.length} pesanan. Tampilan ini hanya untuk melihat.`
       : "Belum ada pesanan untuk kedai ini.";
 
     const statusLabels = {
@@ -647,7 +648,7 @@ const todaysOrders = orders.filter(order =>
       failed: "Pembayaran Gagal"
     };
 
-    orders.forEach(order => {
+    visibleOrders.forEach(order => {
       const card = document.createElement("article");
       card.className = "menu-item";
 
@@ -691,18 +692,16 @@ const todaysOrders = orders.filter(order =>
         (paymentLabels[rawPayment] ||
           order.payment_status ||
           "Belum diketahui") +
-        (order.payment_method
-          ? " · " + order.payment_method
-          : "");
+        (order.payment_method ? " · " + order.payment_method : "");
 
       const date = document.createElement("p");
       date.className = "muted";
       date.textContent = order.created_at
         ? new Date(order.created_at).toLocaleString("id-ID", {
-  timeZone: TIME_ZONE,
-  dateStyle: "short",
-  timeStyle: "medium"
-})
+            timeZone: TIME_ZONE,
+            dateStyle: "short",
+            timeStyle: "medium"
+          })
         : "";
 
       card.append(
@@ -725,7 +724,7 @@ const todaysOrders = orders.filter(order =>
         });
       }
 
-      // Tidak ada tombol untuk mengubah status pesanan di dashboard owner.
+      // Dashboard owner hanya menampilkan pesanan, tanpa mengubah status.
       list.appendChild(card);
     });
   } catch (error) {
@@ -738,9 +737,6 @@ const todaysOrders = orders.filter(order =>
     button.disabled = false;
   }
 }
-
-
-
 
 
 

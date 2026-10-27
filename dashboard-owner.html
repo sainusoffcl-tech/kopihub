@@ -862,7 +862,7 @@ async function deleteProduct(productId) {
 shopSelect.addEventListener("change", async function() {
   renderSelectedShop();
   resetMenuForm();
-  await refreshMenu();
+  await loadOrders();
 });
 async function loadOrders() {
 const shop = selectedShop();

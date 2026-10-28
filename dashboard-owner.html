@@ -424,6 +424,10 @@ async function loadShops() {
   member => String(member.role).toLowerCase() === "owner"
 );
 
+const ownerMembers = (members || []).filter(
+  member => String(member.role).toLowerCase() === "owner"
+);
+
 const ids = [
   ...new Set(ownerMembers.map(member => member.shop_id).filter(Boolean))
 ];

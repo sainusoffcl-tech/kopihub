@@ -1080,7 +1080,7 @@
           el("orders").innerHTML =
             '<div class="empty">' +
               'Sesi login tidak ditemukan. Silakan login terlebih dahulu.' +
-              '<br><br><a href="login.html">Buka halaman login</a>' +
+              '<br><br><a href="akun.html">Buka halaman login</a>' +
             '</div>';
 
           return;
@@ -1120,12 +1120,12 @@
         return;
       }
 
-      window.location.href = "login.html";
+      window.location.href = "akun.html";
     });
 
     db.auth.onAuthStateChange(function (event, session) {
       if (event === "SIGNED_OUT") {
-        window.location.href = "login.html";
+        window.location.href = "akun.html";
       }
     });
 

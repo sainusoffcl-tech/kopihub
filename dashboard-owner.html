@@ -255,51 +255,106 @@ th {
 </div>
   </section>
 
-  <section class="panel" id="kelola-menu">
-    <h2>Kelola Menu</h2>
+  
+<section class="panel" id="kelola-menu">
+  <h2>Kelola Menu</h2>
+
+  <div class="button-stack two">
+    <button class="primary" id="show-add-menu" type="button">
+      + Tambahkan Menu
+    </button>
+    <button class="secondary" id="show-delete-menu" type="button">
+      Hapus Menu
+    </button>
+  </div>
+
+  <div id="menu-form-panel" hidden>
+    <h3 id="menu-form-title">Tambah Menu Baru</h3>
+
     <form id="menu-form">
-      <div class="field"><label for="menu-name">Nama menu</label><input id="menu-name" maxlength="120" required placeholder="Contoh: Kopi Susu"></div>
-      <div class="field"><label for="menu-category">Kategori</label><select id="menu-category" required disabled><option value="">Memuat kategori...</option></select></div>
-      <div class="field"><label for="menu-price">Harga (Rupiah)</label><input id="menu-price" type="number" min="1" step="1" max="100000000" required placeholder="20000"></div>
-      <div class="field"><label for="menu-description">Deskripsi</label><textarea id="menu-description" rows="2" maxlength="1000"></textarea></div>
-      <div class="field"><label for="menu-available">Ketersediaan</label><select id="menu-available"><option value="true">Tersedia</option><option value="false">Habis</option></select></div>
+      <div class="field">
+        <label for="menu-name">Nama</label>
+        <input id="menu-name" maxlength="120" required
+          placeholder="Contoh: Kopi Susu">
+      </div>
+
+      <div class="field">
+        <label for="menu-category">Kategori</label>
+        <select id="menu-category" required disabled>
+          <option value="">Memuat kategori...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="menu-price">Harga (Rupiah)</label>
+        <input id="menu-price" type="number" min="1"
+          step="1" max="100000000" required placeholder="20000">
+      </div>
+
+      <div class="field">
+        <label for="menu-description">Deskripsi</label>
+        <textarea id="menu-description" rows="2"
+          maxlength="1000"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="menu-available">Ketersediaan</label>
+        <select id="menu-available">
+          <option value="true">Tersedia</option>
+          <option value="false">Habis</option>
+        </select>
+      </div>
+
       <div class="button-stack two">
-        <button class="primary" id="save-menu" type="submit">Simpan Menu</button>
-        <button class="secondary" id="cancel-edit" type="button" hidden>Batal Edit</button>
+        <button class="primary" id="save-menu" type="submit">
+          Simpan Menu
+        </button>
+        <button class="secondary" id="cancel-edit" type="button">
+          Batal
+        </button>
       </div>
     </form>
-    <p id="menu-message" class="muted" role="status"></p>
-    <hr style="border:0;border-top:1px solid #e1e8e2;margin:22px 0">
-    <h3>Daftar Menu</h3>
-    <div id="menu-list" class="muted">Menunggu data kedai...</div>
-  </section>
+  </div>
 
-  <section class="panel">
-    <h2>QR Menu Kedai</h2>
-    <p class="muted">QR ini membuka halaman menu pelanggan, bukan QRIS pembayaran.</p>
-    <button class="primary" id="make-qr" type="button" disabled>Buat QR Menu</button>
-    <div class="qr-box">
-      <strong id="qr-title">QR Menu KopiHub</strong>
-      <img id="qr-image" alt="QR menu kedai" hidden>
-      <p class="url-text" id="menu-url"></p>
-      <p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p>
-    </div>
-    <div class="button-stack two">
-      
-<a
-  class="action-link primary"
-  id="open-menu"
-  href="menu.html"
-  style="display:flex; align-items:center; justify-content:center; min-height:44px; cursor:pointer; touch-action:manipulation;"
->Buka Menu Pelanggan</a>
+  <p id="menu-message" class="muted" role="status"></p>
 
-      <button class="primary" id="share-qr" type="button">
-  Bagikan QR
-</button>
-    </div>
-  </section>
+  <hr style="border:0;border-top:1px solid #e1e8e2;margin:22px 0">
 
+  <h3>Daftar Menu</h3>
+  <div id="menu-list" class="muted">Menunggu data kedai...</div>
+</section>
 
+    
+<section class="panel">
+  <h2>QR Menu Kedai</h2>
+  <p class="muted">
+    QR ini membuka halaman menu pelanggan, bukan QRIS pembayaran.
+  </p>
+
+  <button class="primary" id="make-qr" type="button" disabled>
+    Buat QR Menu
+  </button>
+
+  <div class="qr-box">
+    <strong id="qr-title">QR Menu KopiHub</strong>
+    <img id="qr-image" alt="QR menu kedai" hidden>
+    <p class="url-text" id="menu-url"></p>
+    <p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p>
+  </div>
+
+  <div class="button-stack two">
+    <a
+      class="action-link primary"
+      id="open-menu"
+      href="menu.html"
+      style="display:flex;align-items:center;justify-content:center;min-height:44px;cursor:pointer;touch-action:manipulation;"
+    >Buka Menu Pelanggan</a>
+
+    <button class="primary" id="share-qr" type="button">
+      Bagikan QR
+    </button>
+  </div>
+</section>
 
   <section class="panel">
   <h2>Laporan Penjualan Hari Ini</h2>
@@ -573,12 +628,34 @@ function renderProducts() {
   });
 }
 
+$("show-add-menu").addEventListener("click", () => {
+  resetMenuForm();
+  $("menu-form-title").textContent = "Tambah Menu Baru";
+  $("menu-form-panel").hidden = false;
+  $("menu-name").focus();
+});
+
+$("show-delete-menu").addEventListener("click", () => {
+  if (!products.length) {
+    showMenuMessage("Belum ada menu untuk dihapus.");
+    return;
+  }
+
+  $("menu-form-panel").hidden = true;
+  $("menu-list").scrollIntoView({ behavior: "smooth" });
+  showMenuMessage("Pilih tombol Hapus di samping menu yang ingin dihapus.");
+});
+
+
 function resetMenuForm() {
   editingProductId = null;
   $("menu-form").reset();
   $("save-menu").textContent = "Simpan Menu";
-  $("cancel-edit").hidden = true;
+  $("menu-form-title").textContent = "Tambah Menu Baru";
+  $("cancel-edit").textContent = "Batal";
+  $("cancel-edit").hidden = false;
 }
+
 
 function startEdit(id) {
   const p = products.find(item => item.id === id);
@@ -595,6 +672,8 @@ function startEdit(id) {
   $("menu-available").value = String(Boolean(p.is_available));
   $("save-menu").textContent = "Simpan Perubahan";
   $("cancel-edit").hidden = false;
+  $("menu-form-panel").hidden = false;
+  $("menu-form-title").textContent = "Edit Menu";
   $("kelola-menu").scrollIntoView({ behavior: "smooth" });
 }
 
@@ -646,10 +725,13 @@ $("menu-form").addEventListener("submit", async event => {
   }
 });
 
+
 $("cancel-edit").addEventListener("click", () => {
   resetMenuForm();
-  showMenuMessage("Edit dibatalkan.");
+  $("menu-form-panel").hidden = true;
+  showMenuMessage("Formulir ditutup.");
 });
+
 
 async function deleteProduct(id) {
   const shop = selectedShop();

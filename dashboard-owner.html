@@ -75,6 +75,150 @@
       .stats { grid-template-columns: repeat(4,1fr); }
       .button-stack.two { grid-template-columns: 1fr 1fr; }
     }
+  
+/* ===== KopiHub Owner Dashboard Refresh ===== */
+
+:root {
+  --kh-green: #123b2c;
+  --kh-green-light: #1c5940;
+  --kh-cream: #faf9f5;
+  --kh-orange: #e99a48;
+  --kh-text: #24342c;
+  --kh-muted: #748078;
+  --kh-border: #e7e9e3;
+  --kh-white: #ffffff;
+}
+
+body {
+  background: var(--kh-cream);
+  color: var(--kh-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
+}
+
+header,
+.topbar,
+.sidebar {
+  background: var(--kh-green);
+  color: var(--kh-white);
+}
+
+main,
+.main-content,
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+section,
+.panel,
+.card,
+.stat-card,
+.stat {
+  border-radius: 16px;
+}
+
+.panel,
+.card,
+.stat-card,
+.stat {
+  background: var(--kh-white);
+  border: 1px solid var(--kh-border);
+  box-shadow: 0 5px 18px rgba(18, 59, 44, 0.05);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--kh-green);
+  line-height: 1.3;
+}
+
+button,
+.btn,
+input[type="submit"] {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button,
+.btn {
+  background: var(--kh-green);
+  color: var(--kh-white);
+}
+
+button:hover,
+.btn:hover {
+  background: var(--kh-green-light);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--kh-border);
+  border-radius: 10px;
+  padding: 11px 12px;
+  background: var(--kh-white);
+  color: var(--kh-text);
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--kh-border);
+  text-align: left;
+}
+
+th {
+  color: var(--kh-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  main,
+  .main-content,
+  .container {
+    width: auto;
+    padding: 14px;
+  }
+
+  .panel,
+  .card,
+  .stat-card,
+  .stat {
+    padding: 14px;
+    border-radius: 13px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  button,
+  .btn {
+    min-height: 42px;
+  }
+}
+
   </style>
 </head>
 <body>

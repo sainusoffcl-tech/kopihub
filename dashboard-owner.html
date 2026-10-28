@@ -320,8 +320,18 @@ th {
 
   <hr style="border:0;border-top:1px solid #e1e8e2;margin:22px 0">
 
+  <div class="button-stack">
+  <button class="secondary" id="toggle-menu-list" type="button">
+    Daftar Menu
+  </button>
+</div>
+
+<div id="menu-list-panel" hidden>
   <h3>Daftar Menu</h3>
-  <div id="menu-list" class="muted">Menunggu data kedai...</div>
+  <div id="menu-list" class="muted">
+    Menunggu data kedai...
+  </div>
+</div>
 </section>
 
     
@@ -634,7 +644,14 @@ $("show-add-menu").addEventListener("click", () => {
   $("menu-form-panel").hidden = false;
   $("menu-name").focus();
 });
+$("toggle-menu-list").addEventListener("click", () => {
+  const panel = $("menu-list-panel");
+  panel.hidden = !panel.hidden;
 
+  $("toggle-menu-list").textContent = panel.hidden
+    ? "Daftar Menu"
+    : "Tutup Daftar Menu";
+});
 $("show-delete-menu").addEventListener("click", () => {
   if (!products.length) {
     showMenuMessage("Belum ada menu untuk dihapus.");
@@ -642,7 +659,10 @@ $("show-delete-menu").addEventListener("click", () => {
   }
 
   $("menu-form-panel").hidden = true;
-  $("menu-list").scrollIntoView({ behavior: "smooth" });
+  $("menu-list-panel").hidden = false;
+  $("toggle-menu-list").textContent = "Tutup Daftar Menu";
+  $("menu-list-panel").scrollIntoView({ behavior: "smooth" });
+  
   showMenuMessage("Pilih tombol Hapus di samping menu yang ingin dihapus.");
 });
 

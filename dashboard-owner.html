@@ -290,13 +290,7 @@ th {
     </div>
   </section>
 
-  <section class="panel" id="pesanan">
-    <h2>Pesanan Masuk</h2>
-    <p class="muted">Pesanan terbaru dari kedai yang sedang dipilih.</p>
-    <button class="primary" id="refresh-orders" type="button">Muat Ulang Pesanan</button>
-    <p class="muted" id="orders-message" role="status">Menyiapkan daftar pesanan...</p>
-    <div id="orders-list"></div>
-  </section>
+
 
   <section class="panel">
   <h2>Laporan Penjualan Hari Ini</h2>
@@ -670,62 +664,37 @@ async function deleteProduct(id) {
 }
 
 
+
 async function loadOrders() {
   const shop = selectedShop();
-  const message = $("orders-message");
-  const list = $("orders-list");
-  const button = $("refresh-orders");
-
-  list.replaceChildren();
 
   if (!client || !shop) {
-    message.textContent = "Pilih kedai terlebih dahulu.";
+    $("report-message").textContent =
+      "Pilih kedai terlebih dahulu.";
     return;
   }
 
-  button.disabled = true;
-  message.textContent = "Memuat pesanan...";
-  $("report-message").textContent = "Menghitung laporan berdasarkan WIT...";
+  $("report-message").textContent =
+    "Memuat laporan penjualan...";
 
   try {
-    // Ambil seluruh pesanan secara bertahap, bukan hanya 500.
-    const PAGE_SIZE = 500;
-    const orders = [];
-    let from = 0;
+    const { data: orders, error } = await client
+      .from("kh_orders")
+      .select(
+        "id, status, order_status, subtotal, total_amount, " +
+        "created_at, payment_status"
+      )
+      .eq("shop_id", shop.id)
+      .order("created_at", { ascending: false });
 
-    while (true) {
-      const { data, error } = await client
-        .from("kh_orders")
-        .select(
-          "id, order_code, order_number, customer_name, customer_phone, " +
-          "order_type, table_label, table_number, status, subtotal, " +
-          "total_amount, created_at, items, payment_method, " +
-          "payment_status, order_status"
-        )
-        .eq("shop_id", shop.id)
-        .order("created_at", { ascending: false })
-        .order("id", { ascending: false })
-        .range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
 
-      if (error) throw error;
-
-      const page = data || [];
-      orders.push(...page);
-
-      if (page.length < PAGE_SIZE) break;
-
-      from += PAGE_SIZE;
-    }
-
-    // Jika pengguna berpindah kedai saat data dimuat,
-    // jangan tampilkan data kedai sebelumnya.
     if (String(shopSelect.value) !== String(shop.id)) return;
 
-    // Semua tanggal laporan mengikuti WIT.
-    const TIME_ZONE = shop.timezone || "Asia/Jayapura";
+    const timezone = shop.timezone || "Asia/Jayapura";
 
     const dateFormatter = new Intl.DateTimeFormat("en-CA", {
-      timeZone: TIME_ZONE,
+      timeZone: timezone,
       year: "numeric",
       month: "2-digit",
       day: "2-digit"
@@ -743,36 +712,13 @@ async function loadOrders() {
 
     const todayKey = getDateKey(new Date());
 
-    const todaysOrders = orders.filter(order =>
-      order.created_at && getDateKey(order.created_at) === todayKey
+    const todaysOrders = (orders || []).filter(order =>
+      order.created_at &&
+      getDateKey(order.created_at) === todayKey
     );
-// Estimasi biaya layanan KopiHub: Rp3.000 per pesanan.
-const SERVICE_FEE_PER_ORDER = 3000;
 
-const eligibleOrders = todaysOrders.filter(order => {
-  const status = String(
-    order.order_status || order.status || ""
-  ).trim().toLowerCase();
-
-  return ![
-    "cancelled",
-    "canceled",
-    "dibatalkan",
-    "refunded",
-    "refund"
-  ].includes(status);
-});
-
-const estimatedServiceFee =
-  eligibleOrders.length * SERVICE_FEE_PER_ORDER;
-
-const serviceFeeElement = $("today-service-fee");
-
-if (serviceFeeElement) {
-  serviceFeeElement.textContent = rupiah(estimatedServiceFee);
-}
     const getTotal = order =>
-      Number(order.total_amount ?? order.subtotal ?? order.total ?? 0);
+      Number(order.total_amount ?? order.subtotal ?? 0);
 
     const isPaid = order =>
       String(order.payment_status || "").toLowerCase() === "paid";
@@ -792,137 +738,39 @@ if (serviceFeeElement) {
       (sum, order) => sum + getTotal(order), 0
     );
 
-    // Perbarui ringkasan laporan hari ini.
+    const SERVICE_FEE_PER_ORDER = 3000;
+
+    const eligibleOrders = todaysOrders.filter(order => {
+      const status = String(
+        order.order_status || order.status || ""
+      ).trim().toLowerCase();
+
+      return ![
+        "cancelled", "canceled", "dibatalkan",
+        "refunded", "refund"
+      ].includes(status);
+    });
+
     $("today-orders").textContent = todaysOrders.length;
     $("today-sales").textContent = rupiah(paidValue);
+    $("today-service-fee").textContent =
+      rupiah(eligibleOrders.length * SERVICE_FEE_PER_ORDER);
+
     $("report-order-value").textContent = rupiah(totalValue);
     $("report-paid-sales").textContent = rupiah(paidValue);
     $("report-unpaid-sales").textContent = rupiah(unpaidValue);
     $("report-paid-count").textContent = paidOrders.length;
 
     $("report-message").textContent =
-      `Laporan hari ini menggunakan zona waktu ${TIME_ZONE}. ` +
-      `Total ${todaysOrders.length} pesanan; ` +
-      `${unpaidOrders.length} belum berstatus dibayar.`;
-
-    // Batasi tampilan kartu agar halaman tetap ringan.
-    // Perhitungan laporan di atas tetap memakai seluruh pesanan.
-    const visibleOrders = orders.slice(0, 30);
-
-    message.textContent = orders.length
-      ? `Menampilkan ${visibleOrders.length} pesanan terbaru dari ` +
-        `${orders.length} pesanan. Tampilan ini hanya untuk melihat.`
-      : "Belum ada pesanan untuk kedai ini.";
-
-    const statusLabels = {
-      awaiting_confirmation: "Pesanan Baru",
-      pending: "Diterima",
-      processing: "Diproses",
-      ready_for_delivery: "Siap Diantar",
-      completed: "Selesai"
-    };
-
-    const paymentLabels = {
-      paid: "Sudah Dibayar",
-      awaiting_cashier: "Menunggu Kasir",
-      awaiting: "Menunggu Pembayaran",
-      pending: "Menunggu Pembayaran",
-      failed: "Pembayaran Gagal"
-    };
-
-    visibleOrders.forEach(order => {
-      const card = document.createElement("article");
-      card.className = "menu-item";
-
-      const heading = document.createElement("h3");
-      heading.textContent = "Pesanan " +
-        (order.order_code || order.order_number || order.id);
-
-      const customer = document.createElement("p");
-      customer.textContent =
-        "Pelanggan: " + (order.customer_name || "-");
-
-      const phone = document.createElement("p");
-      phone.textContent =
-        "Telepon: " + (order.customer_phone || "-");
-
-      const table = document.createElement("p");
-      table.textContent = "Meja: " +
-        (order.table_label || order.table_number || "-");
-
-      const type = document.createElement("p");
-      type.textContent = "Jenis pesanan: " +
-        (order.order_type || "-");
-
-      const total = document.createElement("p");
-      total.textContent = "Total: " + rupiah(getTotal(order));
-
-      const rawStatus = String(
-        order.order_status || order.status || ""
-      ).toLowerCase();
-
-      const status = document.createElement("p");
-      status.textContent = "Status pesanan: " +
-        (statusLabels[rawStatus] || rawStatus || "Belum ditentukan");
-
-      const rawPayment = String(
-        order.payment_status || ""
-      ).toLowerCase();
-
-      const payment = document.createElement("p");
-      payment.textContent = "Pembayaran: " +
-        (paymentLabels[rawPayment] ||
-          order.payment_status ||
-          "Belum diketahui") +
-        (order.payment_method ? " · " + order.payment_method : "");
-
-      const date = document.createElement("p");
-      date.className = "muted";
-      date.textContent = order.created_at
-        ? new Date(order.created_at).toLocaleString("id-ID", {
-            timeZone: TIME_ZONE,
-            dateStyle: "short",
-            timeStyle: "medium"
-          })
-        : "";
-
-      card.append(
-        heading, customer, phone, table, type,
-        total, status, payment, date
-      );
-
-      if (Array.isArray(order.items) && order.items.length) {
-        const itemsHeading = document.createElement("p");
-        itemsHeading.textContent = "Rincian pesanan:";
-        card.appendChild(itemsHeading);
-
-        order.items.forEach(item => {
-          const row = document.createElement("p");
-          row.className = "muted";
-          row.textContent =
-            (item.name || item.product_name || "Menu") +
-            " × " + (item.qty || item.quantity || 1);
-          card.appendChild(row);
-        });
-      }
-
-      // Dashboard owner hanya menampilkan pesanan, tanpa mengubah status.
-      list.appendChild(card);
-    });
+      `Laporan hari ini menggunakan zona waktu ${timezone}. ` +
+      `${todaysOrders.length} pesanan tercatat; ` +
+      `${unpaidOrders.length} belum dibayar.`;
   } catch (error) {
-    console.error("Gagal memuat pesanan:", error);
-    message.textContent =
-      "Gagal memuat pesanan: " + error.message;
+    console.error("Gagal memuat laporan:", error);
     $("report-message").textContent =
-      "Laporan belum dapat diperbarui.";
-  } finally {
-    button.disabled = false;
+      "Gagal memuat laporan: " + error.message;
   }
 }
-
-
-
-$("refresh-orders").addEventListener("click", loadOrders);
 
 shopSelect.addEventListener("change", async () => {
   renderSelectedShop();

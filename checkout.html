@@ -123,6 +123,7 @@ const FUNCTION_URL = "https://ozcliasebeydgyvgluht.supabase.co/functions/v1/crea
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
 const TAX_RATE = 0;
+const SERVCE_FEE = 3000;
 const form = document.getElementById("checkoutForm");
 const submitBtn = document.getElementById("submitBtn");
 const statusBox = document.getElementById("statusBox");
@@ -205,15 +206,18 @@ function renderOrder() {
     orderItemsEl.innerHTML =
       '<p class="intro">Keranjang kosong. Kembali ke menu, pilih minuman, lalu tekan checkout.</p>';
     submitBtn.disabled = true;
-    document.getElementById("subtotal").textContent = rupiah(0);
-    document.getElementById("tax").textContent = rupiah(0);
-    document.getElementById("grandTotal").textContent = rupiah(0);
-    return;
-  }
+    document.getElementById("subtotal").textContent = rupiah(subtotal);
+document.getElementById("tax").textContent = rupiah(tax);
+document.getElementById("grandTotal").textContent = rupiah(grandTotal);
+
+const serviceFeeEl = document.getElementById("serviceFee");
+if (serviceFeeEl) {
+  serviceFeeEl.textContent = rupiah(SERVICE_FEE);
+}
 
   subtotal = items.reduce((sum,item)=>sum+item.price*item.qty,0);
   const tax = Math.round(subtotal*TAX_RATE);
-
+  const grandTotal = subtotal + SERVICE_FEE + tax;
   orderItemsEl.innerHTML = items.map(item=>`
     <div class="order-item">
       <div>

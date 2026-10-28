@@ -1030,6 +1030,111 @@ $("logout").addEventListener("click", async () => {
   }
 });
 
+$("shop-profile-form").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const shop = selectedShop();
+  if (!client || !shop) {
+    $("profile-message").textContent =
+      "Pilih kedai terlebih dahulu.";
+    return;
+  }
+
+  const name = $("profile-shop-name").value.trim();
+  const description =
+    $("profile-shop-description").value.trim();
+  const file = $("profile-shop-logo").files[0];
+  const saveButton = $("save-shop-profile");
+
+  if (!name) {
+    $("profile-message").textContent =
+      "Nama kedai wajib diisi.";
+    return;
+  }
+
+  if (file) {
+    const allowedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/webp"
+    ];
+
+    if (
+      !allowedTypes.includes(file.type) ||
+      file.size > 2 * 1024 * 1024
+    ) {
+      $("profile-message").textContent =
+        "Pilih gambar PNG, JPG, atau WebP maksimal 2 MB.";
+      return;
+    }
+  }
+
+  saveButton.disabled = true;
+  $("profile-message").textContent =
+    "Menyimpan profil kedai...";
+
+  try {
+    let logoUrl = shop.logo_url || null;
+
+    if (file) {
+      const safeName = file.name.replace(
+        /[^a-zA-Z0-9._-]/g, "-"
+      );
+
+      const filePath =
+        shop.id + "/" + Date.now() + "-" + safeName;
+
+      const { error: uploadError } = await client.storage
+        .from("shop-logos")
+        .upload(filePath, file, {
+          contentType: file.type,
+          cacheControl: "3600",
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = client.storage
+        .from("shop-logos")
+        .getPublicUrl(filePath);
+
+      logoUrl = publicData.publicUrl;
+    }
+
+    const { error: updateError } = await client
+      .from("kh_shops")
+      .update({
+        name: name,
+        description: description || null,
+        logo_url: logoUrl
+      })
+      .eq("id", shop.id);
+
+    if (updateError) throw updateError;
+
+    shop.name = name;
+    shop.description = description || null;
+    shop.logo_url = logoUrl;
+
+    const option = shopSelect.selectedOptions[0];
+    if (option) {
+      option.textContent = shop.name + " (" + shop.slug + ")";
+    }
+
+    renderSelectedShop();
+
+    $("profile-message").textContent =
+      "Profil kedai berhasil disimpan.";
+
+  } catch (error) {
+    console.error("Gagal menyimpan profil:", error);
+    $("profile-message").textContent =
+      "Gagal menyimpan profil: " + error.message;
+  } finally {
+    saveButton.disabled = !selectedShop();
+  }
+});
+
 loadShops();
 </script>
 </body>

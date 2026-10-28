@@ -420,7 +420,13 @@ async function loadShops() {
       .eq("user_id", sessionData.session.user.id);
     if (memberError) throw memberError;
 
-    const ids = [...new Set((members || []).map(m => m.shop_id).filter(Boolean))];
+    const ownerMembers = (members || []).filter(
+  member => String(member.role).toLowerCase() === "owner"
+);
+
+const ids = [
+  ...new Set(ownerMembers.map(member => member.shop_id).filter(Boolean))
+];
     if (!ids.length) {
       shops = [];
       shopSelect.innerHTML = '<option value="">Belum ada kedai</option>';

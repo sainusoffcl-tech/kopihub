@@ -736,7 +736,31 @@ async function loadOrders() {
     const todaysOrders = orders.filter(order =>
       order.created_at && getDateKey(order.created_at) === todayKey
     );
+// Estimasi biaya layanan KopiHub: Rp3.000 per pesanan.
+const SERVICE_FEE_PER_ORDER = 3000;
 
+const eligibleOrders = todaysOrders.filter(order => {
+  const status = String(
+    order.order_status || order.status || ""
+  ).trim().toLowerCase();
+
+  return ![
+    "cancelled",
+    "canceled",
+    "dibatalkan",
+    "refunded",
+    "refund"
+  ].includes(status);
+});
+
+const estimatedServiceFee =
+  eligibleOrders.length * SERVICE_FEE_PER_ORDER;
+
+const serviceFeeElement = $("today-service-fee");
+
+if (serviceFeeElement) {
+  serviceFeeElement.textContent = rupiah(estimatedServiceFee);
+}
     const getTotal = order =>
       Number(order.total_amount ?? order.subtotal ?? order.total ?? 0);
 

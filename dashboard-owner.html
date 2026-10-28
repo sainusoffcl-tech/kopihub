@@ -259,12 +259,9 @@ th {
 <section class="panel" id="kelola-menu">
   <h2>Kelola Menu</h2>
 
-  <div class="button-stack two">
+  <div class="button-stack">
     <button class="primary" id="show-add-menu" type="button">
       + Tambahkan Menu
-    </button>
-    <button class="secondary" id="show-delete-menu" type="button">
-      Hapus Menu
     </button>
   </div>
 
@@ -652,20 +649,6 @@ $("toggle-menu-list").addEventListener("click", () => {
     ? "Daftar Menu"
     : "Tutup Daftar Menu";
 });
-$("show-delete-menu").addEventListener("click", () => {
-  if (!products.length) {
-    showMenuMessage("Belum ada menu untuk dihapus.");
-    return;
-  }
-
-  $("menu-form-panel").hidden = true;
-  $("menu-list-panel").hidden = false;
-  $("toggle-menu-list").textContent = "Tutup Daftar Menu";
-  $("menu-list-panel").scrollIntoView({ behavior: "smooth" });
-  
-  showMenuMessage("Pilih tombol Hapus di samping menu yang ingin dihapus.");
-});
-
 
 function resetMenuForm() {
   editingProductId = null;

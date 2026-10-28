@@ -123,7 +123,7 @@ const FUNCTION_URL = "https://ozcliasebeydgyvgluht.supabase.co/functions/v1/crea
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
 const TAX_RATE = 0;
-const SERVCE_FEE = 3000;
+const SERVICE_FEE = 3000;
 const form = document.getElementById("checkoutForm");
 const submitBtn = document.getElementById("submitBtn");
 const statusBox = document.getElementById("statusBox");
@@ -201,36 +201,51 @@ document.getElementById("tableGrid").innerHTML =
     </div>`;
   }).join("");
 
+
 function renderOrder() {
   if (!items.length) {
     orderItemsEl.innerHTML =
       '<p class="intro">Keranjang kosong. Kembali ke menu, pilih minuman, lalu tekan checkout.</p>';
+
     submitBtn.disabled = true;
-    document.getElementById("subtotal").textContent = rupiah(subtotal);
-document.getElementById("tax").textContent = rupiah(tax);
-document.getElementById("grandTotal").textContent = rupiah(grandTotal);
+    document.getElementById("subtotal").textContent = rupiah(0);
+    document.getElementById("tax").textContent = rupiah(0);
+    document.getElementById("grandTotal").textContent = rupiah(0);
 
-const serviceFeeEl = document.getElementById("serviceFee");
-if (serviceFeeEl) {
-  serviceFeeEl.textContent = rupiah(SERVICE_FEE);
-}
+    const serviceFeeEl = document.getElementById("serviceFee");
+    if (serviceFeeEl) {
+      serviceFeeEl.textContent = rupiah(0);
+    }
 
-  subtotal = items.reduce((sum,item)=>sum+item.price*item.qty,0);
-  const tax = Math.round(subtotal*TAX_RATE);
+    return;
+  }
+
+  subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
+
+  const tax = Math.round(subtotal * TAX_RATE);
   const grandTotal = subtotal + SERVICE_FEE + tax;
-  orderItemsEl.innerHTML = items.map(item=>`
+
+  orderItemsEl.innerHTML = items.map(item => `
     <div class="order-item">
       <div>
         <div class="item-name">${escapeHTML(item.name)}</div>
         <div class="item-sub">${item.qty} × ${rupiah(item.price)}</div>
       </div>
-      <div class="item-price">${rupiah(item.price*item.qty)}</div>
+      <div class="item-price">${rupiah(item.price * item.qty)}</div>
     </div>
   `).join("");
 
-  document.getElementById("subtotal").textContent=rupiah(subtotal);
-  document.getElementById("tax").textContent=rupiah(tax);
-  document.getElementById("grandTotal").textContent=rupiah(subtotal+tax);
+  document.getElementById("subtotal").textContent = rupiah(subtotal);
+  document.getElementById("tax").textContent = rupiah(tax);
+  document.getElementById("grandTotal").textContent = rupiah(grandTotal);
+
+  const serviceFeeEl = document.getElementById("serviceFee");
+  if (serviceFeeEl) {
+    serviceFeeEl.textContent = rupiah(SERVICE_FEE);
+  }
 }
 renderOrder();
 

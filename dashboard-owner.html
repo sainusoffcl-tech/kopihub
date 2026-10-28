@@ -244,6 +244,68 @@ th {
     <a class="action-link secondary" href="profil-kedai.html">Tambah Kedai</a>
   </section>
 
+  <section class="panel" id="profil-kedai">
+    <h2>Profil Kedai</h2>
+    <p class="muted">
+      Atur identitas kedai yang akan dilihat pelanggan.
+    </p>
+
+    <form id="shop-profile-form">
+      <div class="field">
+        <label for="profile-shop-name">Nama Kedai</label>
+        <input
+          id="profile-shop-name"
+          type="text"
+          maxlength="120"
+          required
+          placeholder="Contoh: Ontal Kopi"
+        >
+      </div>
+
+      <div class="field">
+        <label for="profile-shop-description">Deskripsi Kedai</label>
+        <textarea
+          id="profile-shop-description"
+          rows="3"
+          maxlength="1000"
+          placeholder="Ceritakan sedikit tentang kedai Anda"
+        ></textarea>
+      </div>
+
+      <div class="field">
+        <label for="profile-shop-logo">Logo Kedai</label>
+        <input
+          id="profile-shop-logo"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+        >
+        <p class="muted">
+          Format PNG, JPG, atau WebP. Maksimal 2 MB.
+        </p>
+      </div>
+
+      <div id="profile-logo-preview" hidden>
+        <img
+          id="profile-logo-image"
+          alt="Pratinjau logo kedai"
+          style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"
+        >
+      </div>
+
+      <div class="button-stack">
+        <button
+          class="primary"
+          id="save-shop-profile"
+          type="submit"
+        >
+          Simpan Profil Kedai
+        </button>
+      </div>
+
+      <p id="profile-message" class="muted" role="status"></p>
+    </form>
+  </section>
+
   <section class="stats">
     <div class="stat"><div class="stat-label">Jumlah Menu</div><div class="stat-number" id="menu-count">—</div></div>
     <div class="stat"><div class="stat-label">Menu Tersedia</div><div class="stat-number" id="available-count">—</div></div>
@@ -450,15 +512,40 @@ function clearQr(message) {
   $("open-menu").href = "menu.html";
 }
 
+
 function renderSelectedShop() {
   const shop = selectedShop();
+
   $("shop-details").textContent = shop
     ? "Kedai: " + shop.name + " · Slug: " + shop.slug
     : "Belum ada kedai yang dipilih.";
+
   $("make-qr").disabled = !shop;
-  $("qr-title").textContent = shop ? "QR Menu " + shop.name : "QR Menu KopiHub";
+  $("qr-title").textContent = shop
+    ? "QR Menu " + shop.name
+    : "QR Menu KopiHub";
+
   clearQr(shop ? "Tekan Buat QR Menu." : "Pilih kedai terlebih dahulu.");
+
+  $("profile-shop-name").value = shop?.name || "";
+  $("profile-shop-description").value = shop?.description || "";
+  $("profile-shop-logo").value = "";
+  $("profile-message").textContent = "";
+
+  const preview = $("profile-logo-preview");
+  const image = $("profile-logo-image");
+
+  if (shop?.logo_url) {
+    image.src = shop.logo_url;
+    preview.hidden = false;
+  } else {
+    image.removeAttribute("src");
+    preview.hidden = true;
+  }
+
+  $("save-shop-profile").disabled = !shop;
 }
+
 
 async function loadShops() {
   if (!SUPABASE_URL.startsWith("https://") ||
@@ -502,7 +589,7 @@ const ids = [
 
     const { data, error } = await client
       .from("kh_shops")
-      .select("id, name, slug, is_active, timezone")
+      .select("id, name, slug, is_active, timezone, logo_url, description")
       .in("id", ids)
       .order("name");
     if (error) throw error;

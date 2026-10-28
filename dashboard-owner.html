@@ -285,8 +285,17 @@ th {
       <p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p>
     </div>
     <div class="button-stack two">
-      <a class="action-link secondary" id="open-menu" href="menu.html" target="_blank" rel="noopener">Buka Menu Pelanggan</a>
-      <button class="secondary" id="print-qr" type="button">Cetak QR</button>
+      <a
+  class="action-link primary"
+  id="open-menu"
+  href="menu.html"
+  target="_blank"
+  rel="noopener"
+  style="display:flex; align-items:center; justify-content:center; min-height:44px; cursor:pointer; touch-action:manipulation;"
+>Buka Menu Pelanggan</a>
+      <button class="secondary" id="share-qr" type="button">
+  Bagikan QR
+</button>
     </div>
   </section>
 
@@ -798,23 +807,42 @@ $("make-qr").addEventListener("click", () => {
   };
 });
 
-$("print-qr").addEventListener("click", () => {
-  if ($("qr-image").hidden || !$("qr-image").src) {
+
+$("share-qr").addEventListener("click", async () => {
+  const url = $("menu-url").textContent.trim();
+
+  if ($("qr-image").hidden || !url) {
     $("qr-status").textContent = "Buat QR menu terlebih dahulu.";
     return;
   }
-  const win = window.open("", "_blank");
-  if (!win) {
-    $("qr-status").textContent = "Pop-up diblokir browser.";
-    return;
+
+  const title = $("qr-title").textContent;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: title,
+        text: "Silakan buka menu kedai melalui tautan berikut:",
+        url: url
+      });
+
+      $("qr-status").textContent = "Menu siap dibagikan.";
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        $("qr-status").textContent =
+          "Gagal membagikan menu. Silakan salin tautannya.";
+      }
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(url);
+      $("qr-status").textContent =
+        "Tautan menu berhasil disalin. Bagikan melalui WhatsApp.";
+    } catch (error) {
+      $("qr-status").textContent =
+        "Salin tautan menu ini secara manual: " + url;
+    }
   }
-  win.document.write("<!DOCTYPE html><html lang='id'><meta charset='UTF-8'><title>QR Menu</title><body style='font-family:Arial;text-align:center;padding:24px'><h1 id='t'></h1><img id='q' style='width:260px;max-width:90%'><p id='u'></p></body></html>");
-  win.document.getElementById("t").textContent = $("qr-title").textContent;
-  win.document.getElementById("q").src = $("qr-image").src;
-  win.document.getElementById("u").textContent = $("menu-url").textContent;
-  win.document.close();
-  win.focus();
-  win.print();
 });
 
 $("logout").addEventListener("click", async () => {

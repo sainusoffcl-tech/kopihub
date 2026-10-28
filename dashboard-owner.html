@@ -580,7 +580,8 @@ function clearQr(message) {
 
 function renderSelectedShop() {
   const shop = selectedShop();
-
+  $("header-shop-name").textContent =
+    shop ? shop.name : "Dashboard Owner";
   $("shop-details").textContent = shop
     ? "Kedai: " + shop.name + " · Slug: " + shop.slug
     : "Belum ada kedai yang dipilih.";

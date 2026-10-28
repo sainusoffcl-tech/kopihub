@@ -42,7 +42,7 @@ const kopihubSupabaseClient = window.supabase.createClient(
   KOPIHUB_SUPABASE_KEY
 );
 
-console.log("KopiHub: klien Supabase berhasil
+console.log("KopiHub: klien Supabase berhasil dibuat");
  
 /* ===== TES KONEKSI KOPIHUB ===== */
 async function tesKoneksiKopiHub() {

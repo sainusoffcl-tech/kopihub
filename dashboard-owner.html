@@ -76,6 +76,13 @@
 </header>
 <main>
 
+<select id="shop-select" hidden aria-hidden="true"></select>
+<div id="connection-status" hidden></div>
+<div id="shop-details" hidden></div>
+<img id="header-shop-logo" hidden alt="Logo kedai">
+<span id="header-profile-fallback" hidden></span>
+<button id="close-shop-profile" type="button" hidden></button>
+
   <section class="panel" id="profil-kedai" hidden>
     <h2>Profil Kedai</h2><p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
     <form id="shop-profile-form">
@@ -216,8 +223,8 @@ if (shop && shop.logo_url) {
 
 async function loadShops() {
   if (
-    !SUPABASE_URL.startsWith("https://ozcliasebeydgyvgluht.supabase.co") ||
-    SUPABASE_PUBLISHABLE_KEY === "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN" ||
+    !SUPABASE_URL.startsWith("https://") ||
+    SUPABASE_PUBLISHABLE_KEY === "sensor" ||
     SUPABASE_PUBLISHABLE_KEY.includes("TEMPEL_")
   ) {
     showStatus("Isi kredensial Supabase terlebih dahulu.", true);

@@ -116,7 +116,14 @@
       <div class="field"><label for="profile-shop-name">Nama Kedai</label><input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi"></div>
       <div class="field"><label for="profile-shop-description">Deskripsi Kedai</label><textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea></div>
       <div class="field"><label for="profile-shop-logo">Logo Kedai</label><input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp"><p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p></div>
-      <div id="profile-logo-preview" hidden><img id="profile-logo-image" alt="Pratinjau logo kedai" style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"></div>
+      <div id="profile-logo-preview" hidden><img <button
+  type="button"
+  id="remove-shop-logo"
+  class="danger"
+  style="margin-top:10px"
+>
+  Hapus Logo
+</button> id="profile-logo-image" alt="Pratinjau logo kedai" style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"></div>
       <div class="button-stack"><button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button></div>
       <p id="profile-message" class="muted" role="status"></p>
     </form>
@@ -606,7 +613,20 @@ if (logoutButton) {
     }
   });
 }
-$("shop-profile-form").addEventListener("submit", async event => {
+$("remove-shop-logo").addEventListener("click", () => {
+  const fileInput = $("profile-shop-logo");
+  const preview = $("profile-logo-preview");
+  const image = $("profile-logo-image");
+  const message = $("profile-message");
+
+  fileInput.value = "";
+  image.removeAttribute("src");
+  preview.hidden = true;
+
+  message.textContent =
+    "Logo ditandai untuk dihapus. Klik Simpan Profil Kedai untuk menerapkan perubahan.";
+});
+  $("shop-profile-form").addEventListener("submit", async event => {
   event.preventDefault();
   const shop = selectedShop();
   if (!client || !shop) { $("profile-message").textContent = "Pilih kedai terlebih dahulu."; return; }
@@ -620,7 +640,11 @@ $("shop-profile-form").addEventListener("submit", async event => {
   }
   saveButton.disabled = true; $("profile-message").textContent = "Menyimpan profil kedai...";
   try {
-    let logoUrl = shop.logo_url || null;
+    const removeLogo =
+  $("profile-logo-preview").hidden &&
+  ! $("profile-shop-logo").files[0];
+
+let logoUrl = removeLogo ? null : (shop.logo_url || null);
     if (file) {
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
       const filePath = shop.id + "/" + Date.now() + "-" + safeName;

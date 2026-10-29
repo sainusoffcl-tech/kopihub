@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#174c38">
   <title>Akun KopiHub</title>
+
   <style>
     :root {
       --green: #174c38;
@@ -29,7 +31,7 @@
 
     .container {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       background: white;
       border-radius: 18px;
       padding: 26px 22px;
@@ -80,18 +82,41 @@
       margin: 14px 0 7px;
     }
 
-    input {
+    input, select, textarea {
       width: 100%;
       padding: 13px;
       border: 1px solid #dce4de;
       border-radius: 9px;
       font-size: 16px;
+      font-family: Arial, sans-serif;
       background: white;
+      color: var(--text);
     }
 
-    input:focus {
+    textarea { resize: vertical; }
+
+    input:focus, select:focus, textarea:focus {
       outline: 2px solid #9bc7ab;
       border-color: var(--green);
+    }
+
+    .password-wrapper { position: relative; }
+
+    .password-wrapper input { padding-right: 54px; }
+
+    .password-toggle {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      min-height: 42px;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 20px;
     }
 
     .main-button {
@@ -105,6 +130,11 @@
       font-size: 15px;
       font-weight: bold;
       cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
     }
 
     .link-button {
@@ -132,8 +162,7 @@
     .message.show { display: block; }
     .message.error { background: #fff0ef; color: #a32d25; }
     .message.success { background: var(--light); color: var(--green); }
-
-    .hidden { display: none; }
+    .hidden { display: none !important; }
 
     .small {
       text-align: center;
@@ -142,51 +171,9 @@
       line-height: 1.5;
       margin-top: 20px;
     }
-  
-.password-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.password-wrapper input {
-  width: 100%;
-  padding-right: 52px;
-  box-sizing: border-box;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  min-height: 40px;
-  padding: 8px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  cursor: pointer;
-  font-size: 20px;
-}
-
-select,
-textarea {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #dce4de;
-  border-radius: 9px;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
-  background: white;
-  color: var(--text);
-}
-
-textarea {
-  resize: vertical;
-}
-
   </style>
 </head>
+
 <body>
   <main class="container">
     <div class="brand">☕ KopiHub</div>
@@ -197,59 +184,53 @@ textarea {
         Masuk
       </button>
       <button class="tab" id="signupTab" type="button">
-        Daftar
+        Daftar Mitra
       </button>
     </div>
 
     <form id="accountForm">
+      <div id="nameField" class="hidden">
+        <label for="fullName">Nama lengkap pemilik</label>
+        <input id="fullName" type="text" autocomplete="name"
+          placeholder="Nama lengkap pemilik">
+      </div>
 
-<div id="nameField" class="hidden">
-  <label for="fullName">Nama lengkap pemilik</label>
-  <input id="fullName" type="text" autocomplete="name"
-    placeholder="Nama lengkap pemilik">
-</div>
+      <div id="shopFields" class="hidden">
+        <label for="shopName">Nama kedai</label>
+        <input id="shopName" type="text"
+          placeholder="Contoh: Aroma Coffee">
 
-<div id="shopFields" class="hidden">
-  <label for="shopName">Nama kedai</label>
-  <input id="shopName" type="text"
-    placeholder="Contoh: Aroma Coffee">
+        <label for="phone">Nomor telepon / WhatsApp</label>
+        <input id="phone" type="tel" autocomplete="tel"
+          placeholder="Nomor WhatsApp aktif">
 
-  <label for="phone">Nomor telepon</label>
-  <input id="phone" type="tel" autocomplete="tel"
-    placeholder="Nomor WhatsApp aktif">
+        <label for="businessType">Jenis usaha</label>
+        <select id="businessType">
+          <option value="">Pilih jenis usaha</option>
+          <option value="coffee_shop">Coffee shop</option>
+          <option value="cafe">Kafe</option>
+          <option value="other">Lainnya</option>
+        </select>
 
-  <label for="businessType">Jenis usaha</label>
-  <select id="businessType">
-    <option value="">Pilih jenis usaha</option>
-    <option value="coffee_shop">Coffee shop</option>
-    <option value="cafe">Kafe</option>
-    <option value="other">Lainnya</option>
-  </select>
-
-  <label for="address">Alamat kedai</label>
-  <textarea id="address" rows="3"
-    placeholder="Alamat lengkap kedai"></textarea>
-</div>
-
+        <label for="address">Alamat kedai</label>
+        <textarea id="address" rows="3"
+          placeholder="Alamat lengkap kedai"></textarea>
+      </div>
 
       <label for="email">Email</label>
       <input id="email" type="email" autocomplete="email"
         placeholder="nama@email.com" required>
 
+      <label for="password">Kata sandi</label>
+      <div class="password-wrapper">
+        <input id="password" type="password"
+          autocomplete="current-password" minlength="6"
+          placeholder="Minimal 6 karakter" required>
 
-<label for="password">Kata sandi</label>
-<div class="password-wrapper">
-  <input id="password" type="password"
-    autocomplete="current-password" minlength="6"
-    placeholder="Minimal 6 karakter" required>
-
-  <button id="toggle-password" class="password-toggle"
-    type="button" aria-label="Tampilkan kata sandi"
-    aria-pressed="false">
-    👁
-  </button>
-</div>
-
+        <button id="toggle-password" class="password-toggle"
+          type="button" aria-label="Tampilkan kata sandi"
+          aria-pressed="false">👁</button>
+      </div>
 
       <button id="submitButton" class="main-button" type="submit">
         Masuk ke KopiHub
@@ -264,213 +245,378 @@ textarea {
       aria-live="polite"></div>
 
     <div class="small">
-      Dengan menggunakan KopiHub, jaga kerahasiaan kata sandi akunmu.
+      Jaga kerahasiaan kata sandi akunmu.
+      Pendaftaran mitra akan melalui proses pemeriksaan KopiHub.
     </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Ganti dengan konfigurasi proyek Supabase milikmu.
-    const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
-
-    const { createClient } = supabase;
-    const client = createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+    // Ganti dengan URL dan publishable key proyek Supabase KopiHub.
+    const SUPABASE_URL = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+    const SUPABASE_PUBLISHABLE_KEY = https://ozcliasebeydgyvgluht.supabase.co
+      "GANTI_DENGAN_PUBLISHABLE_KEY_SUPABASE";
 
     const form = document.getElementById("accountForm");
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
     const nameInput = document.getElementById("fullName");
     const nameField = document.getElementById("nameField");
-    
-const shopFields = document.getElementById("shopFields");
-const shopNameInput = document.getElementById("shopName");
-const phoneInput = document.getElementById("phone");
-const businessTypeInput = document.getElementById("businessType");
-const addressInput = document.getElementById("address");
-
+    const shopFields = document.getElementById("shopFields");
+    const shopNameInput = document.getElementById("shopName");
+    const phoneInput = document.getElementById("phone");
+    const businessTypeInput = document.getElementById("businessType");
+    const addressInput = document.getElementById("address");
     const submitButton = document.getElementById("submitButton");
     const loginTab = document.getElementById("loginTab");
     const signupTab = document.getElementById("signupTab");
     const forgotButton = document.getElementById("forgotButton");
     const messageBox = document.getElementById("message");
+    const togglePassword = document.getElementById("toggle-password");
 
     let mode = "login";
-
-const togglePassword = document.getElementById("toggle-password");
-
-if (passwordInput && togglePassword) {
-  togglePassword.addEventListener("click", () => {
-    const isHidden = passwordInput.type === "password";
-
-    passwordInput.type = isHidden ? "text" : "password";
-    togglePassword.textContent = isHidden ? "🙈" : "👁";
-
-    togglePassword.setAttribute(
-      "aria-label",
-      isHidden ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
-    );
-
-    togglePassword.setAttribute("aria-pressed", String(isHidden));
-  });
-}
+    let client = null;
+    let busy = false;
 
     function showMessage(text, type = "success") {
       messageBox.textContent = text;
       messageBox.className = "message show " + type;
     }
 
+    function clearMessage() {
+      messageBox.textContent = "";
+      messageBox.className = "message";
+    }
+
+    function setBusy(value) {
+      busy = value;
+      submitButton.disabled = value;
+      loginTab.disabled = value;
+      signupTab.disabled = value;
+      forgotButton.disabled = value;
+      submitButton.textContent = value
+        ? "Mohon tunggu..."
+        : mode === "signup" ? "Buat Akun" : "Masuk ke KopiHub";
+    }
+
     function setMode(nextMode) {
+      if (busy) return;
+
       mode = nextMode;
       const isSignup = mode === "signup";
 
       loginTab.classList.toggle("active", !isSignup);
       signupTab.classList.toggle("active", isSignup);
-      
-nameField.classList.toggle("hidden", !isSignup);
-shopFields.classList.toggle("hidden", !isSignup);
+      nameField.classList.toggle("hidden", !isSignup);
+      shopFields.classList.toggle("hidden", !isSignup);
 
-nameInput.required = isSignup;
-shopNameInput.required = isSignup;
-phoneInput.required = isSignup;
-businessTypeInput.required = isSignup;
-addressInput.required = isSignup;
+      nameInput.required = isSignup;
+      shopNameInput.required = isSignup;
+      phoneInput.required = isSignup;
+      businessTypeInput.required = isSignup;
+      addressInput.required = isSignup;
 
-      passwordInput.autocomplete =
-        isSignup ? "new-password" : "current-password";
-      submitButton.textContent =
-        isSignup ? "Buat Akun" : "Masuk ke KopiHub";
+      passwordInput.autocomplete = isSignup
+        ? "new-password" : "current-password";
+
+      submitButton.textContent = isSignup
+        ? "Buat Akun" : "Masuk ke KopiHub";
+
       forgotButton.classList.toggle("hidden", isSignup);
-      messageBox.className = "message";
+      clearMessage();
     }
 
     loginTab.addEventListener("click", () => setMode("login"));
     signupTab.addEventListener("click", () => setMode("signup"));
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    togglePassword.addEventListener("click", () => {
+      const reveal = passwordInput.type === "password";
+      passwordInput.type = reveal ? "text" : "password";
+      togglePassword.textContent = reveal ? "🙈" : "👁";
+      togglePassword.setAttribute(
+        "aria-label",
+        reveal ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
+      );
+      togglePassword.setAttribute("aria-pressed", String(reveal));
+    });
 
-      if (SUPABASE_URL.includes("GANTI_DENGAN") ||
-          SUPABASE_PUBLISHABLE_KEY.includes("GANTI_DENGAN")) {
+    function getRedirectUrl(file) {
+      // Website KopiHub memakai GitHub Pages di /kopihub/.
+      return new URL("/kopihub/" + file, window.location.origin).href;
+    }
+
+    function getShopMetadata(user) {
+      const metadata = user.user_metadata || {};
+
+      return {
+        full_name: String(metadata.full_name || "").trim(),
+        shop_name: String(metadata.shop_name || "").trim(),
+        phone: String(metadata.phone || "").trim(),
+        business_type: String(metadata.business_type || "").trim(),
+        address: String(metadata.address || "").trim()
+      };
+    }
+
+    function hasShopDetails(details) {
+      return Boolean(
+        details.full_name &&
+        details.shop_name &&
+        details.phone &&
+        details.business_type &&
+        details.address
+      );
+    }
+
+    async function ensureProfile(user, details) {
+      // Periksa dahulu agar nilai hak Admin tidak tertimpa.
+      const { data: existing, error: readError } = await client
+        .from("kh_profiles")
+        .select("id, is_platform_admin")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (readError) {
+        throw new Error(
+          "Tidak dapat membaca profil. Periksa izin SELECT kh_profiles."
+        );
+      }
+
+      if (existing) return existing;
+
+      const { data: created, error: insertError } = await client
+        .from("kh_profiles")
+        .insert({
+          id: user.id,
+          full_name: details.full_name ||
+            String(user.email || "").split("@")[0],
+          phone: details.phone || null,
+          is_platform_admin: false
+        })
+        .select("id, is_platform_admin")
+        .single();
+
+      if (insertError) {
+        throw new Error(
+          "Profil belum dapat dibuat. Periksa izin INSERT kh_profiles."
+        );
+      }
+
+      return created;
+    }
+
+    async function ensureApplication(user, details) {
+      if (!hasShopDetails(details)) {
         showMessage(
-          "Konfigurasi Supabase belum diisi. Masukkan URL proyek dan publishable key.",
+          "Akun berhasil masuk, tetapi data kedai belum lengkap. " +
+          "Hubungi Admin KopiHub untuk melengkapi pengajuan.",
           "error"
         );
         return;
       }
 
-      submitButton.disabled = true;
-      submitButton.textContent = "Mohon tunggu...";
+      const { data: existing, error: readError } = await client
+        .from("kh_shop_applications")
+        .select("id, status")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
+      if (readError) {
+        throw new Error(
+          "Gagal memeriksa pengajuan. Periksa tabel dan izin SELECT " +
+          "kh_shop_applications."
+        );
+      }
+
+      if (existing) {
+        if (existing.status === "pending") {
+          showMessage(
+            "Pengajuan kedai sudah diterima dan sedang menunggu " +
+            "persetujuan Admin KopiHub."
+          );
+        } else if (existing.status === "rejected") {
+          showMessage(
+            "Pengajuan kedai sebelumnya ditolak. Silakan hubungi " +
+            "Admin KopiHub untuk mengetahui langkah selanjutnya.",
+            "error"
+          );
+        } else if (existing.status === "approved") {
+          showMessage(
+            "Pengajuan telah disetujui, tetapi akses kedai belum " +
+            "ditemukan. Hubungi Admin KopiHub.",
+            "error"
+          );
+        } else {
+          showMessage(
+            "Pengajuan kedai sudah tercatat. Silakan hubungi Admin " +
+            "KopiHub untuk memeriksa statusnya."
+          );
+        }
+        return;
+      }
+
+      const { error: insertError } = await client
+        .from("kh_shop_applications")
+        .insert({
+          user_id: user.id,
+          owner_name: details.full_name,
+          shop_name: details.shop_name,
+          phone: details.phone,
+          business_type: details.business_type,
+          address: details.address,
+          status: "pending"
+        });
+
+      if (insertError) {
+        throw new Error(
+          "Profil akun tersedia, tetapi pengajuan kedai belum tersimpan. " +
+          "Periksa izin INSERT kh_shop_applications. " +
+          "Silakan login kembali setelah masalah diperbaiki."
+        );
+      }
+
+      showMessage(
+        "Pengajuan mitra berhasil dikirim. Tunggu pemeriksaan dan " +
+        "persetujuan Admin sebelum mengakses dashboard kedai."
+      );
+    }
+
+    async function routeUser(user) {
+      const details = getShopMetadata(user);
+      const profile = await ensureProfile(user, details);
+
+      if (profile.is_platform_admin === true) {
+        window.location.replace(getRedirectUrl("admin.html"));
+        return;
+      }
+
+      const { data: memberships, error: membershipError } = await client
+        .from("kh_shop_members")
+        .select("role")
+        .eq("user_id", user.id);
+
+      if (membershipError) {
+        throw new Error(
+          "Gagal memeriksa keanggotaan kedai. Periksa izin SELECT " +
+          "kh_shop_members."
+        );
+      }
+
+      const roles = (memberships || []).map(item => item.role);
+
+      if (roles.includes("owner") || roles.includes("manager")) {
+        window.location.replace(getRedirectUrl("dashboard-owner.html"));
+        return;
+      }
+
+      if (roles.includes("cashier")) {
+        window.location.replace(getRedirectUrl("kasir.html"));
+        return;
+      }
+
+      if (roles.includes("kitchen") || roles.includes("staff")) {
+        showMessage(
+          "Login berhasil, tetapi peran akun ini belum memiliki " +
+          "dashboard yang dikonfigurasi pada halaman akun.",
+          "error"
+        );
+        return;
+      }
+
+      // Pengguna baru tanpa keanggotaan hanya bisa mengajukan kedai.
+      await ensureApplication(user, details);
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (busy) return;
+
+      if (
+        !SUPABASE_URL.startsWith("https://") ||
+        SUPABASE_URL.includes("GANTI_DENGAN") ||
+        !SUPABASE_PUBLISHABLE_KEY ||
+        SUPABASE_PUBLISHABLE_KEY.includes("GANTI_DENGAN")
+      ) {
+        showMessage(
+          "Konfigurasi Supabase belum diisi. Masukkan URL proyek dan " +
+          "publishable key yang benar.",
+          "error"
+        );
+        return;
+      }
+
+      if (!client) {
+        showMessage("Koneksi Supabase belum siap. Muat ulang halaman.", "error");
+        return;
+      }
+
+      setBusy(true);
 
       try {
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passwordInput.value;
+
         if (mode === "signup") {
+          const details = {
+            full_name: nameInput.value.trim(),
+            shop_name: shopNameInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            business_type: businessTypeInput.value,
+            address: addressInput.value.trim()
+          };
+
+          if (!hasShopDetails(details)) {
+            throw new Error("Lengkapi semua data pemilik dan kedai.");
+          }
+
           const { data, error } = await client.auth.signUp({
             email,
             password,
-            
-data: {
-  full_name: nameInput.value.trim(),
-  shop_name: shopNameInput.value.trim(),
-  phone: phoneInput.value.trim(),
-  business_type: businessTypeInput.value,
-  address: addressInput.value.trim()
-},
-
-              emailRedirectTo: window.location.origin +
-                "/kopihub/akun.html"
+            options: {
+              data: details,
+              emailRedirectTo: getRedirectUrl("akun.html")
             }
           });
 
           if (error) throw error;
 
-          if (data.session) {
-            showMessage(
-              "Pendaftaran berhasil. Mengarahkan ke dashboard..."
-            );
-            window.location.href =
-              "/kopihub/dashboard-owner.html";
+          if (data.session && data.user) {
+            showMessage("Akun dibuat. Menyiapkan profil dan pengajuan kedai...");
+            await routeUser(data.user);
             return;
           }
 
           showMessage(
-            "Pendaftaran diterima. Periksa email untuk verifikasi akun sebelum masuk."
+            "Pendaftaran akun berhasil diterima. Periksa email untuk " +
+            "verifikasi, lalu kembali ke halaman ini dan login. " +
+            "Pengajuan kedai akan diproses setelah login."
           );
+        } else {
+          const { data, error } = await client.auth.signInWithPassword({
+            email,
+            password
+          });
 
-} else {
-  const { data, error } = await client.auth.signInWithPassword({
-    email,
-    password
-  });
+          if (error) throw error;
 
-  if (error) throw error;
+          if (!data.user) {
+            throw new Error("Data akun tidak ditemukan. Silakan login kembali.");
+          }
 
-  const userId = data.user?.id;
-
-  if (!userId) {
-    throw new Error("Data akun tidak ditemukan. Silakan login kembali.");
-  }
-
-  // Periksa apakah akun merupakan Admin platform
-  const { data: profile, error: profileError } = await client
-    .from("kh_profiles")
-    .select("is_platform_admin")
-    .eq("id", userId)
-    .maybeSingle();
-
-  if (profileError) {
-    throw new Error("Gagal memeriksa hak akses akun.");
-  }
-
-  if (profile?.is_platform_admin === true) {
-    window.location.href = "/kopihub/admin.html";
-    return;
-  }
-
-  // Periksa peran Owner/Mitra pada kedai
-  const { data: memberships, error: membershipError } = await client
-    .from("kh_shop_members")
-    .select("role")
-    .eq("user_id", userId);
-
-  if (membershipError) {
-    throw new Error("Gagal memeriksa akses kedai.");
-  }
-
-  if (memberships?.some(member => member.role === "owner")) {
-    window.location.href = "/kopihub/dashboard-owner.html";
-    return;
-  }
-
-  if (memberships?.some(member => member.role === "cashier")) {
-    window.location.href = "/kopihub/kasir.html";
-    return;
-  }
-
-  showMessage(
-    "Login berhasil, tetapi akun belum memiliki peran Admin, Owner, atau Kasir yang sesuai.",
-    "error"
-  );
-  return;
-}
-
+          await routeUser(data.user);
+        }
       } catch (error) {
+        console.error("Kesalahan akun KopiHub:", error);
         showMessage(error.message || "Terjadi kesalahan.", "error");
       } finally {
-        submitButton.disabled = false;
-        submitButton.textContent =
-          mode === "signup" ? "Buat Akun" : "Masuk ke KopiHub";
+        setBusy(false);
       }
     });
 
     forgotButton.addEventListener("click", async () => {
-      const email = emailInput.value.trim();
+      if (busy) return;
+
+      const email = emailInput.value.trim().toLowerCase();
 
       if (!email) {
         showMessage(
@@ -481,85 +627,73 @@ data: {
         return;
       }
 
+      if (!client) {
+        showMessage("Koneksi Supabase belum siap.", "error");
+        return;
+      }
+
       forgotButton.disabled = true;
 
       try {
         const { error } = await client.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin +
-            "/kopihub/reset-password.html"
+          redirectTo: getRedirectUrl("reset-password.html")
         });
 
         if (error) throw error;
 
         showMessage(
-          "Jika email terdaftar, instruksi pemulihan kata sandi akan dikirim. Periksa kotak masuk dan folder spam."
+          "Jika email terdaftar, instruksi pemulihan kata sandi akan " +
+          "dikirim. Periksa kotak masuk dan folder spam."
         );
       } catch (error) {
-        showMessage(error.message || "Gagal mengirim instruksi.", "error");
+        console.error("Kesalahan pemulihan akun:", error);
+        showMessage(
+          error.message || "Gagal mengirim instruksi pemulihan.",
+          "error"
+        );
       } finally {
         forgotButton.disabled = false;
       }
     });
 
-    
-async function checkExistingSession() {
-  const { data, error } = await client.auth.getSession();
+    async function checkExistingSession() {
+      if (!client) return;
 
-  if (error || !data.session) {
-    return;
-  }
+      try {
+        const { data, error } = await client.auth.getSession();
 
-  const userId = data.session.user.id;
+        if (error) throw error;
+        if (!data.session) return;
 
-  // Periksa apakah akun ini Admin KopiHub
-  const { data: profile, error: profileError } = await client
-    .from("kh_profiles")
-    .select("is_platform_admin")
-    .eq("id", userId)
-    .maybeSingle();
+        await routeUser(data.session.user);
+      } catch (error) {
+        console.error("Pemeriksaan sesi gagal:", error);
+        showMessage(
+          error.message || "Gagal memeriksa sesi akun.",
+          "error"
+        );
+      }
+    }
 
-  if (profileError) {
-    showMessage("Gagal memeriksa hak akses akun.", "error");
-    return;
-  }
-  showMessage(
-  "Status Admin: " + String(profile?.is_platform_admin),
-  "error"
-);
-  if (profile?.is_platform_admin === true) {
-    window.location.replace("/kopihub/admin.html");
-    return;
-  }
+    try {
+      if (
+        window.supabase &&
+        SUPABASE_URL.startsWith("https://") &&
+        !SUPABASE_URL.includes("GANTI_DENGAN") &&
+        SUPABASE_PUBLISHABLE_KEY &&
+        !SUPABASE_PUBLISHABLE_KEY.includes("GANTI_DENGAN")
+      ) {
+        client = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_PUBLISHABLE_KEY
+        );
 
-  // Periksa peran pengguna pada kedai
-  const { data: memberships, error: membershipError } = await client
-    .from("kh_shop_members")
-    .select("role")
-    .eq("user_id", userId);
-
-  if (membershipError) {
-    showMessage("Gagal memeriksa akses kedai.", "error");
-    return;
-  }
-
-  if (memberships?.some(member => member.role === "owner")) {
-    window.location.replace("/kopihub/dashboard-owner.html");
-    return;
-  }
-
-  if (memberships?.some(member => member.role === "cashier")) {
-    window.location.replace("/kopihub/kasir.html");
-    return;
-  }
-
-  showMessage(
-    "Akun sudah login, tetapi belum memiliki peran yang sesuai.",
-    "error"
-  );
-}
-
-checkExistingSession();
-
+        checkExistingSession();
+      }
+    } catch (error) {
+      console.error("Inisialisasi Supabase gagal:", error);
+      showMessage("Gagal menginisialisasi Supabase.", "error");
+    }
   </script>
 </body>
 </html>

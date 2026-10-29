@@ -142,6 +142,33 @@
       line-height: 1.5;
       margin-top: 20px;
     }
+  
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 52px;
+  box-sizing: border-box;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  min-height: 40px;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+}
+
   </style>
 </head>
 <body>
@@ -169,10 +196,20 @@
       <input id="email" type="email" autocomplete="email"
         placeholder="nama@email.com" required>
 
-      <label for="password">Kata sandi</label>
-      <input id="password" type="password"
-        autocomplete="current-password" minlength="6"
-        placeholder="Minimal 6 karakter" required>
+
+<label for="password">Kata sandi</label>
+<div class="password-wrapper">
+  <input id="password" type="password"
+    autocomplete="current-password" minlength="6"
+    placeholder="Minimal 6 karakter" required>
+
+  <button id="toggle-password" class="password-toggle"
+    type="button" aria-label="Tampilkan kata sandi"
+    aria-pressed="false">
+    👁
+  </button>
+</div>
+
 
       <button id="submitButton" class="main-button" type="submit">
         Masuk ke KopiHub
@@ -216,6 +253,24 @@
     const messageBox = document.getElementById("message");
 
     let mode = "login";
+
+const togglePassword = document.getElementById("toggle-password");
+
+if (passwordInput && togglePassword) {
+  togglePassword.addEventListener("click", () => {
+    const isHidden = passwordInput.type === "password";
+
+    passwordInput.type = isHidden ? "text" : "password";
+    togglePassword.textContent = isHidden ? "🙈" : "👁";
+
+    togglePassword.setAttribute(
+      "aria-label",
+      isHidden ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
+    );
+
+    togglePassword.setAttribute("aria-pressed", String(isHidden));
+  });
+}
 
     function showMessage(text, type = "success") {
       messageBox.textContent = text;

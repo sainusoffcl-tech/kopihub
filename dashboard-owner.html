@@ -541,12 +541,37 @@ $("share-qr").addEventListener("click", async () => {
     catch (error) { $("qr-status").textContent = "Salin tautan menu ini secara manual: " + url; }
   }
 });
-$("logout").addEventListener("click", async () => {
-  if (!client) return showStatus("Supabase belum terhubung.", true);
-  $("logout").disabled = true;
-  try { const {error} = await client.auth.signOut(); if (error) throw error; location.href = "akun.html"; }
-  catch (error) { showStatus("Gagal keluar: " + error.message, true); $("logout").disabled = false; }
-});
+
+const logoutButton = document.getElementById("logout");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", async function () {
+    const originalText = logoutButton.textContent;
+
+    logoutButton.disabled = true;
+    logoutButton.textContent = "Sedang keluar...";
+
+    try {
+      const { error } = await client.auth.signOut();
+
+      if (error) {
+        throw error;
+      }
+
+      window.location.replace("akun.html");
+    } catch (error) {
+      console.error("Gagal keluar dari akun:", error);
+
+      alert(
+        "Belum berhasil keluar dari akun. Periksa koneksi internet, lalu coba lagi."
+      );
+
+      logoutButton.disabled = false;
+      logoutButton.textContent = originalText;
+    }
+  });
+}
+
 $("shop-profile-form").addEventListener("submit", async event => {
   event.preventDefault();
   const shop = selectedShop();

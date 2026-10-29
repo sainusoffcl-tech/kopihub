@@ -267,6 +267,73 @@ th {
   stroke-linejoin: round;
 }
 
+/* Ringkasan bisnis KopiHub */
+.welcome-panel {
+  background: #123b2c;
+  color: #ffffff;
+  padding: 22px 18px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+}
+
+.welcome-panel h1 {
+  color: #ffffff;
+  font-size: 25px;
+  margin: 0 0 6px;
+}
+
+.welcome-panel > p {
+  color: #d5e5da;
+  margin: 0 0 16px;
+}
+
+.welcome-panel .notice {
+  margin-bottom: 0;
+}
+
+.business-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background: #ffffff;
+  border: 1px solid #e7e9e3;
+  border-radius: 16px;
+  padding: 16px 14px;
+  box-shadow: 0 5px 18px rgba(18, 59, 44, 0.05);
+}
+
+.summary-card .stat-label {
+  line-height: 1.5;
+}
+
+.summary-card .stat-number {
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.summary-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 360px) {
+  .business-summary {
+    gap: 8px;
+  }
+
+  .summary-card {
+    padding: 12px 10px;
+  }
+
+  .summary-card .stat-number {
+    font-size: 17px;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -292,10 +359,16 @@ th {
   </div>
 </header>
 
+
 <main>
-  <h1>Dashboard Owner</h1>
-  <p class="muted">Kelola kedai, menu, QR, dan pesanan pelanggan.</p>
-  <div class="notice" id="connection-status" role="status">Menghubungkan ke Supabase...</div>
+  <section class="welcome-panel">
+    <h1>Halo, Owner!</h1>
+    <p>Ringkasan bisnismu hari ini</p>
+    <div class="notice" id="connection-status" role="status">
+      Menghubungkan ke Supabase...
+    </div>
+  </section>
+
 
   <section class="panel">
     <h2>Kedai Saya</h2>
@@ -370,6 +443,22 @@ th {
       <p id="profile-message" class="muted" role="status"></p>
     </form>
   </section>
+
+<section class="business-summary">
+  <div class="summary-card">
+    <div class="summary-icon">💰</div>
+    <div class="stat-label">Total Pendapatan</div>
+    <div class="stat-number" id="summary-income">Rp0</div>
+    <p class="muted">Pesanan lunas hari ini</p>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-icon">📈</div>
+    <div class="stat-label">Total Penjualan</div>
+    <div class="stat-number" id="summary-sales">Rp0</div>
+    <p class="muted">Semua pesanan hari ini</p>
+  </div>
+</section>
 
   <section class="stats">
     <div class="stat"><div class="stat-label">Jumlah Menu</div><div class="stat-number" id="menu-count">—</div></div>
@@ -998,7 +1087,8 @@ async function loadOrders() {
     $("today-sales").textContent = rupiah(paidValue);
     $("today-service-fee").textContent =
       rupiah(eligibleOrders.length * SERVICE_FEE_PER_ORDER);
-
+    $("summary-income").textContent = rupiah(paidValue);
+    $("summary-sales").textContent = rupiah(totalValue);
     $("report-order-value").textContent = rupiah(totalValue);
     $("report-paid-sales").textContent = rupiah(paidValue);
     $("report-unpaid-sales").textContent = rupiah(unpaidValue);

@@ -169,6 +169,22 @@
   font-size: 20px;
 }
 
+select,
+textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #dce4de;
+  border-radius: 9px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  background: white;
+  color: var(--text);
+}
+
+textarea {
+  resize: vertical;
+}
+
   </style>
 </head>
 <body>
@@ -270,6 +286,13 @@
     const passwordInput = document.getElementById("password");
     const nameInput = document.getElementById("fullName");
     const nameField = document.getElementById("nameField");
+    
+const shopFields = document.getElementById("shopFields");
+const shopNameInput = document.getElementById("shopName");
+const phoneInput = document.getElementById("phone");
+const businessTypeInput = document.getElementById("businessType");
+const addressInput = document.getElementById("address");
+
     const submitButton = document.getElementById("submitButton");
     const loginTab = document.getElementById("loginTab");
     const signupTab = document.getElementById("signupTab");
@@ -307,8 +330,16 @@ if (passwordInput && togglePassword) {
 
       loginTab.classList.toggle("active", !isSignup);
       signupTab.classList.toggle("active", isSignup);
-      nameField.classList.toggle("hidden", !isSignup);
-      nameInput.required = isSignup;
+      
+nameField.classList.toggle("hidden", !isSignup);
+shopFields.classList.toggle("hidden", !isSignup);
+
+nameInput.required = isSignup;
+shopNameInput.required = isSignup;
+phoneInput.required = isSignup;
+businessTypeInput.required = isSignup;
+addressInput.required = isSignup;
+
       passwordInput.autocomplete =
         isSignup ? "new-password" : "current-password";
       submitButton.textContent =
@@ -343,10 +374,15 @@ if (passwordInput && togglePassword) {
           const { data, error } = await client.auth.signUp({
             email,
             password,
-            options: {
-              data: {
-                full_name: nameInput.value.trim()
-              },
+            
+data: {
+  full_name: nameInput.value.trim(),
+  shop_name: shopNameInput.value.trim(),
+  phone: phoneInput.value.trim(),
+  business_type: businessTypeInput.value,
+  address: addressInput.value.trim()
+},
+
               emailRedirectTo: window.location.origin +
                 "/kopihub/akun.html"
             }

@@ -215,46 +215,138 @@ if (shop && shop.logo_url) {
 }
 
 async function loadShops() {
-  if (!SUPABASE_URL.startsWith("https://") || SUPABASE_PUBLISHABLE_KEY === "sensor" || SUPABASE_PUBLISHABLE_KEY.includes("TEMPEL_")) {
-    showStatus('Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY dengan nilai asli dari Supabase.', true);
-    shopSelect.innerHTML = '<option value="">Konfigurasi Supabase diperlukan</option>';
-    $("shop-details").textContent = "Dashboard belum terhubung ke Supabase.";
-    $("sales-chart").innerHTML = '<p class="muted">Grafik menunggu koneksi Supabase.</p>';
-    $("chart-message").textContent = "Tambahkan kredensial Supabase asli untuk memuat data.";
+  if (
+    !SUPABASE_URL.startsWith("https://ozcliasebeydgyvgluht.supabase.co") ||
+    SUPABASE_PUBLISHABLE_KEY === "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN" ||
+    SUPABASE_PUBLISHABLE_KEY.includes("TEMPEL_")
+  ) {
+    showStatus("Isi kredensial Supabase terlebih dahulu.", true);
+    shopSelect.innerHTML =
+      '<option value="">Supabase belum dikonfigurasi</option>';
+    $("shop-details").textContent =
+      "Dashboard belum terhubung ke Supabase.";
+    $("sales-chart").innerHTML =
+      '<p class="muted">Grafik menunggu koneksi Supabase.</p>';
+    $("chart-message").textContent =
+      "Tambahkan kredensial Supabase untuk memuat data.";
     return;
   }
+
   try {
-    if (!window.supabase) throw new Error("Library Supabase tidak termuat.");
-    client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    const { data: sessionData, error: sessionError } = await client.auth.getSession();
+    if (!window.supabase) {
+      throw new Error("Library Supabase tidak termuat.");
+    }
+
+    client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const { data: sessionData, error: sessionError } =
+      await client.auth.getSession();
+
     if (sessionError) throw sessionError;
+
     if (!sessionData.session) {
-      showStatus("Sesi login tidak ditemukan. Silakan login kembali.", true);
-      shopSelect.innerHTML = '<option value="">Silakan login</option>'; return;
+      showStatus("Silakan login terlebih dahulu.", true);
+      shopSelect.innerHTML =
+        '<option value="">Silakan login</option>';
+      return;
     }
-    const { data: members, error: memberError } = await client.from("kh_shop_members").select("shop_id, role").eq("user_id", sessionData.session.user.id);
+
+    const userId = sessionData.session.user.id;
+
+    const { data: memberships, error: memberError } =
+      await client
+        .from("kh_shop_members")
+        .select("shop_id, role")
+        .eq("user_id", userId);
+
     if (memberError) throw memberError;
-    const ids = [...new Set((members || []).filter(m => String(m.role).toLowerCase() === "owner").map(m => m.shop_id).filter(Boolean))];
-    if (!ids.length) {
-      shops = []; shopSelect.innerHTML = '<option value="">Belum ada kedai</option>'; shopSelect.disabled = true;
-      showStatus("Login berhasil, tetapi akun ini belum terhubung dengan kedai."); return;
+
+    const ownerMemberships = (memberships || []).filter(
+      member =>
+        String(member.role || "").toLowerCase() === "owner"
+    );
+
+    const uniqueShopIds = [
+      ...new Set(
+        ownerMemberships
+          .map(member => member.shop_id)
+          .filter(Boolean)
+      )
+    ];
+
+    if (uniqueShopIds.length !== 1) {
+      shops = [];
+      shopSelect.innerHTML =
+        '<option value="">Akun belum terhubung ke satu kedai</option>';
+      shopSelect.disabled = true;
+
+      $("shop-details").textContent =
+        uniqueShopIds.length === 0
+          ? "Akun ini belum memiliki kedai. Hubungi administrator KopiHub."
+          : "Akun ini terhubung ke lebih dari satu kedai. Administrator perlu memperbaiki hubungan akun dan kedai.";
+
+      $("header-shop-name").textContent = "Dashboard Owner";
+      clearQr("Akun belum terhubung ke satu kedai.");
+      $("menu-list").textContent = "Kedai belum dapat dimuat.";
+      $("sales-chart").innerHTML =
+        '<p class="muted">Grafik belum tersedia.</p>';
+
+      showStatus(
+        "Akses dashboard memerlukan tepat satu kedai untuk akun owner.",
+        true
+      );
+      return;
     }
-    const { data, error } = await client.from("kh_shops").select("id, name, slug, is_active, timezone, logo_url, description").in("id", ids).order("name");
-    if (error) throw error;
-    shops = data || [];
-    if (!shops.length) throw new Error("Kedai tidak ditemukan.");
+
+    const shopId = uniqueShopIds[0];
+
+    const { data: shop, error: shopError } =
+      await client
+        .from("kh_shops")
+        .select(
+          "id, name, slug, is_active, timezone, logo_url, description"
+        )
+        .eq("id", shopId)
+        .maybeSingle();
+
+    if (shopError) throw shopError;
+
+    if (!shop) {
+      throw new Error("Data kedai untuk akun ini tidak ditemukan.");
+    }
+
+    shops = [shop];
+
+    // Pemilih kedai tetap digunakan secara internal oleh fitur lama.
     shopSelect.replaceChildren();
-    shops.forEach(shop => { const option = document.createElement("option"); option.value = shop.id; option.textContent = shop.name + " (" + shop.slug + ")"; shopSelect.appendChild(option); });
-    const preferred = shops.find(s => s.slug === "aroma-coffee");
-    shopSelect.value = preferred ? preferred.id : shops[0].id;
-    shopSelect.disabled = false; renderSelectedShop(); showStatus("Terhubung ke Supabase. " + shops.length + " kedai ditemukan.");
-    await refreshMenu(); await loadOrders();
+
+    const option = document.createElement("option");
+    option.value = shop.id;
+    option.textContent = shop.name;
+    shopSelect.appendChild(option);
+
+    shopSelect.value = shop.id;
+    shopSelect.disabled = true;
+
+    renderSelectedShop();
+
+    showStatus("Dashboard terhubung ke kedai milik akun ini.");
+
+    await refreshMenu();
+    await loadOrders();
+
   } catch (error) {
-    console.error(error); showStatus("Gagal memuat kedai: " + error.message, true);
-    shopSelect.innerHTML = '<option value="">Gagal memuat kedai</option>';
+    console.error("Gagal memuat dashboard:", error);
+
+    showStatus(
+      "Gagal memuat kedai: " + error.message,
+      true
+    );
   }
 }
-
 async function refreshMenu() {
   const shop = selectedShop(), version = ++requestVersion;
   if (!client || !shop) return;

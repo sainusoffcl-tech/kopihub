@@ -299,32 +299,44 @@
         : mode === "signup" ? "Buat Akun" : "Masuk ke KopiHub";
     }
 
-    function setMode(nextMode) {
-      if (busy) return;
+    
+function setMode(nextMode) {
+  if (busy) return;
 
-      mode = nextMode;
-      const isSignup = mode === "signup";
+  mode = nextMode;
 
-      loginTab.classList.toggle("active", !isSignup);
-      signupTab.classList.toggle("active", isSignup);
-      nameField.classList.toggle("hidden", !isSignup);
-      shopFields.classList.toggle("hidden", !isSignup);
+  const isSignup = mode === "signup";
+  const isComplete = mode === "complete";
+  const showShopFields = isSignup || isComplete;
 
-      nameInput.required = isSignup;
-      shopNameInput.required = isSignup;
-      phoneInput.required = isSignup;
-      businessTypeInput.required = isSignup;
-      addressInput.required = isSignup;
+  loginTab.classList.toggle("active", mode === "login");
+  signupTab.classList.toggle("active", isSignup);
 
-      passwordInput.autocomplete = isSignup
-        ? "new-password" : "current-password";
+  nameField.classList.toggle("hidden", !showShopFields);
+  shopFields.classList.toggle("hidden", !showShopFields);
 
-      submitButton.textContent = isSignup
-        ? "Buat Akun" : "Masuk ke KopiHub";
+  nameInput.required = showShopFields;
+  shopNameInput.required = showShopFields;
+  phoneInput.required = showShopFields;
+  businessTypeInput.required = showShopFields;
+  addressInput.required = showShopFields;
 
-      forgotButton.classList.toggle("hidden", isSignup);
-      clearMessage();
-    }
+  passwordInput.autocomplete = isSignup
+    ? "new-password" : "current-password";
+
+  if (isComplete) {
+    submitButton.textContent = "Kirim Pengajuan Mitra";
+    forgotButton.classList.add("hidden");
+  } else {
+    submitButton.textContent = isSignup
+      ? "Buat Akun" : "Masuk ke KopiHub";
+
+    forgotButton.classList.toggle("hidden", showShopFields);
+  }
+
+  clearMessage();
+}
+
 
     loginTab.addEventListener("click", () => setMode("login"));
     signupTab.addEventListener("click", () => setMode("signup"));
@@ -522,9 +534,24 @@
         return;
       }
 
-      // Pengguna baru tanpa keanggotaan hanya bisa mengajukan kedai.
+
+      // Pengguna tanpa keanggotaan perlu memiliki data kedai.
+      if (!hasShopDetails(details)) {
+        nameInput.value = details.full_name || profile.full_name || "";
+        shopNameInput.value = details.shop_name || "";
+        phoneInput.value = details.phone || "";
+        businessTypeInput.value = details.business_type || "";
+        addressInput.value = details.address || "";
+
+        setMode("complete");
+        showMessage(
+          "Lengkapi data Aroma Coffee dan kirim pengajuan mitra kamu."
+        );
+        return;
+      }
+
       await ensureApplication(user, details);
-    }
+
 
     form.addEventListener("submit", async event => {
       event.preventDefault();
@@ -555,6 +582,75 @@
       try {
         const email = emailInput.value.trim().toLowerCase();
         const password = passwordInput.value;
+
+        
+        if (mode === "complete") {
+          const { data: userData, error: userError } =
+            await client.auth.getUser();
+
+          if (userError) throw userError;
+
+          const user = userData.user;
+
+          if (!user) {
+            throw new Error("Sesi login berakhir. Silakan login kembali.");
+          }
+
+          const details = {
+            full_name: nameInput.value.trim(),
+            shop_name: shopNameInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            business_type: businessTypeInput.value,
+            address: addressInput.value.trim()
+          };
+
+          if (!hasShopDetails(details)) {
+            throw new Error("Lengkapi semua data pemilik dan kedai.");
+          }
+
+          const { data: existing, error: existingError } = await client
+            .from("kh_shop_applications")
+            .select("id,status")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+          if (existingError) throw existingError;
+
+          if (existing) {
+            showMessage(
+              existing.status === "pending"
+                ? "Pengajuan mitra kamu sudah menunggu persetujuan Admin."
+                : "Akun ini sudah memiliki pengajuan. Hubungi Admin untuk tindak lanjut."
+            );
+            return;
+          }
+
+          const { error: updateError } = await client.auth.updateUser({
+            data: details
+          });
+
+          if (updateError) throw updateError;
+
+          const { error: applicationError } = await client
+            .from("kh_shop_applications")
+            .insert({
+              user_id: user.id,
+              owner_name: details.full_name,
+              shop_name: details.shop_name,
+              phone: details.phone,
+              business_type: details.business_type,
+              address: details.address,
+              status: "pending"
+            });
+
+          if (applicationError) throw applicationError;
+
+          showMessage(
+            "Pengajuan Aroma Coffee berhasil dikirim dan menunggu persetujuan Admin."
+          );
+
+          return;
+        }
 
         if (mode === "signup") {
           const details = {

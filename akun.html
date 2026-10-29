@@ -186,11 +186,35 @@
     </div>
 
     <form id="accountForm">
-      <div id="nameField" class="hidden">
-        <label for="fullName">Nama lengkap</label>
-        <input id="fullName" type="text" autocomplete="name"
-          placeholder="Nama kamu">
-      </div>
+
+<div id="nameField" class="hidden">
+  <label for="fullName">Nama lengkap pemilik</label>
+  <input id="fullName" type="text" autocomplete="name"
+    placeholder="Nama lengkap pemilik">
+</div>
+
+<div id="shopFields" class="hidden">
+  <label for="shopName">Nama kedai</label>
+  <input id="shopName" type="text"
+    placeholder="Contoh: Aroma Coffee">
+
+  <label for="phone">Nomor telepon</label>
+  <input id="phone" type="tel" autocomplete="tel"
+    placeholder="Nomor WhatsApp aktif">
+
+  <label for="businessType">Jenis usaha</label>
+  <select id="businessType">
+    <option value="">Pilih jenis usaha</option>
+    <option value="coffee_shop">Coffee shop</option>
+    <option value="cafe">Kafe</option>
+    <option value="other">Lainnya</option>
+  </select>
+
+  <label for="address">Alamat kedai</label>
+  <textarea id="address" rows="3"
+    placeholder="Alamat lengkap kedai"></textarea>
+</div>
+
 
       <label for="email">Email</label>
       <input id="email" type="email" autocomplete="email"

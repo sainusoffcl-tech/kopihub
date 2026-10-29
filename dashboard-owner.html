@@ -555,30 +555,30 @@ if (logoutButton) {
   logoutButton.addEventListener("click", async function () {
     const originalText = logoutButton.textContent;
 
+    if (!client) {
+      alert("Koneksi Supabase belum siap. Muat ulang halaman, lalu coba lagi.");
+      return;
+    }
+
     logoutButton.disabled = true;
     logoutButton.textContent = "Sedang keluar...";
 
     try {
       const { error } = await client.auth.signOut();
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       window.location.replace("akun.html");
     } catch (error) {
       console.error("Gagal keluar dari akun:", error);
 
-      alert(
-        "Belum berhasil keluar dari akun. Periksa koneksi internet, lalu coba lagi."
-      );
+      alert("Gagal keluar dari akun. Periksa koneksi internet, lalu coba lagi.");
 
       logoutButton.disabled = false;
       logoutButton.textContent = originalText;
     }
   });
 }
-
 $("shop-profile-form").addEventListener("submit", async event => {
   event.preventDefault();
   const shop = selectedShop();

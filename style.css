@@ -263,3 +263,21 @@ footer p {
     padding: 25px 20px;
   }
 }
+
+/* Perbaikan ukuran foto profil toko */
+#profile-logo-preview {
+  width: 100%;
+  max-width: 160px;
+  margin: 12px auto;
+  overflow: hidden;
+}
+
+#profile-logo-image {
+  display: block;
+  width: 120px;
+  height: 120px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  margin: 0 auto;
+}

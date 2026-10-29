@@ -5,6 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#174c38">
   <title>Dashboard Dashboard | KopiHub</title>
+  
+/* Grafik penjualan 7 hari */
+.chart-panel {
+  background: #ffffff;
+  border: 1px solid #e7e9e3;
+  border-radius: 20px;
+  padding: 20px 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 18px rgba(18, 59, 44, 0.05);
+}
+
+.chart-panel h2 {
+  color: #123b2c;
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+.chart-panel > p {
+  margin: 0 0 20px;
+}
+
+.sales-chart {
+  min-height: 180px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+}
+
   <style>
     :root {
       --green: #174c38;

@@ -4,644 +4,150 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#174c38">
-  <title>Dashboard Dashboard | KopiHub</title>
-  
-/* Grafik penjualan 7 hari */
-.chart-panel {
-  background: #ffffff;
-  border: 1px solid #e7e9e3;
-  border-radius: 20px;
-  padding: 20px 16px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 18px rgba(18, 59, 44, 0.05);
-}
-
-.chart-panel h2 {
-  color: #123b2c;
-  font-size: 20px;
-  margin: 0 0 6px;
-}
-
-.chart-panel > p {
-  margin: 0 0 20px;
-}
-
-.sales-chart {
-  min-height: 180px;
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
-  align-items: end;
-}
-
+  <title>Dashboard Owner | KopiHub</title>
   <style>
     :root {
-      --green: #174c38;
-      --light: #e8f2ec;
-      --bg: #f5f7f5;
-      --text: #26352d;
-      --muted: #748078;
-      --border: #e1e8e2;
-      --danger: #a72d2d;
+      --green:#174c38; --green-dark:#123b2c; --light:#e8f2ec;
+      --bg:#faf9f5; --text:#26352d; --muted:#748078;
+      --border:#e1e8e2; --orange:#e99a48; --danger:#a72d2d;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-    header {
-      padding: 22px 18px;
-      color: white;
-      background: var(--green);
-    }
-    .brand { font-size: 24px; font-weight: bold; }
-    header p { color: #d7e9de; margin-bottom: 0; }
-    main { max-width: 1000px; margin: auto; padding: 20px 16px 40px; }
-    h1 { font-size: 24px; }
-    h2 { font-size: 19px; margin-top: 0; }
-    h3 { font-size: 17px; }
-    .panel, .stat, .notice {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 17px;
-      margin-bottom: 16px;
-    }
-    .notice { background: var(--light); line-height: 1.6; }
-    .muted { color: var(--muted); font-size: 14px; line-height: 1.6; }
-    .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 20px; }
-    .stat-label { color: var(--muted); font-size: 13px; }
-    .stat-number { margin-top: 10px; color: var(--green); font-size: 20px; font-weight: bold; overflow-wrap: anywhere; }
-    .field { margin: 13px 0; }
-    label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: bold; }
-    input, select, textarea {
-      width: 100%; padding: 12px; border: 1px solid var(--border);
-      border-radius: 9px; background: white; color: var(--text); font: inherit;
-    }
-    button, .action-link {
-      display: inline-block; width: 100%; padding: 13px; border: 0;
-      border-radius: 10px; font: bold 14px Arial, sans-serif;
-      text-align: center; text-decoration: none; cursor: pointer;
-    }
-    button:disabled { opacity: .55; cursor: not-allowed; }
-    .primary { background: var(--green); color: white; }
-    .secondary { background: var(--light); color: var(--green); }
-    .danger { background: #fff0ef; color: var(--danger); }
-    .button-stack { display: grid; gap: 9px; margin-top: 12px; }
-    .two { grid-template-columns: 1fr 1fr; }
-    .menu-item { padding: 14px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
-    .menu-item:last-child { border-bottom: 0; }
-    .menu-item strong { display: block; font-size: 16px; }
-    .menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-    .menu-actions button { padding: 10px 6px; }
-    .qr-box { padding: 16px; text-align: center; background: #f8faf8; border: 1px dashed #aabbb0; border-radius: 12px; margin-top: 14px; }
-    #qr-image { display: block; width: 220px; max-width: 100%; height: auto; margin: 14px auto; }
-    .url-text { overflow-wrap: anywhere; font-size: 13px; color: var(--muted); }
-    footer { padding: 22px; color: var(--muted); font-size: 12px; text-align: center; }
-    @media (min-width: 650px) {
-      .stats { grid-template-columns: repeat(4,1fr); }
-      .button-stack.two { grid-template-columns: 1fr 1fr; }
-    }
-  
-/* ===== KopiHub Owner Dashboard Refresh ===== */
-
-:root {
-  --kh-green: #123b2c;
-  --kh-green-light: #1c5940;
-  --kh-cream: #faf9f5;
-  --kh-orange: #e99a48;
-  --kh-text: #24342c;
-  --kh-muted: #748078;
-  --kh-border: #e7e9e3;
-  --kh-white: #ffffff;
-}
-
-body {
-  background: var(--kh-cream);
-  color: var(--kh-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  line-height: 1.5;
-}
-
-header,
-.topbar,
-.sidebar {
-  background: var(--kh-green);
-  color: var(--kh-white);
-}
-
-main,
-.main-content,
-.container {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-section,
-.panel,
-.card,
-.stat-card,
-.stat {
-  border-radius: 16px;
-}
-
-.panel,
-.card,
-.stat-card,
-.stat {
-  background: var(--kh-white);
-  border: 1px solid var(--kh-border);
-  box-shadow: 0 5px 18px rgba(18, 59, 44, 0.05);
-  padding: 18px;
-  margin-bottom: 16px;
-}
-
-h1,
-h2,
-h3 {
-  color: var(--kh-green);
-  line-height: 1.3;
-}
-
-button,
-.btn,
-input[type="submit"] {
-  border: 0;
-  border-radius: 10px;
-  padding: 11px 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button,
-.btn {
-  background: var(--kh-green);
-  color: var(--kh-white);
-}
-
-button:hover,
-.btn:hover {
-  background: var(--kh-green-light);
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  border: 1px solid var(--kh-border);
-  border-radius: 10px;
-  padding: 11px 12px;
-  background: var(--kh-white);
-  color: var(--kh-text);
-  margin-top: 5px;
-  margin-bottom: 12px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 12px 10px;
-  border-bottom: 1px solid var(--kh-border);
-  text-align: left;
-}
-
-th {
-  color: var(--kh-muted);
-  font-size: 13px;
-}
-
-@media (max-width: 700px) {
-  main,
-  .main-content,
-  .container {
-    width: auto;
-    padding: 14px;
-  }
-
-  .panel,
-  .card,
-  .stat-card,
-  .stat {
-    padding: 14px;
-    border-radius: 13px;
-  }
-
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  button,
-  .btn {
-    min-height: 42px;
-  }
-}
-
-/* Header mobile KopiHub */
-.owner-header {
-  padding: 22px 20px;
-  background: #123b2c;
-  color: #fff;
-  border-radius: 0 0 24px 24px;
-}
-
-.owner-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.owner-header .brand {
-  color: #fff;
-  font-size: 26px;
-  font-weight: 800;
-}
-
-.owner-header p {
-  margin: 5px 0 0;
-  color: #d5e5da;
-  font-size: 15px;
-}
-
-.profile-icon-button {
-  flex: 0 0 48px;
-  width: 48px;
-  height: 48px;
-  min-height: 48px;
-  padding: 11px;
-  border-radius: 50%;
-  background: #f8c9a8;
-  color: #123b2c;
-}
-
-.profile-icon-button svg {
-  width: 100%;
-  height: 100%;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Ringkasan bisnis KopiHub */
-.welcome-panel {
-  background: #123b2c;
-  color: #ffffff;
-  padding: 22px 18px;
-  margin-bottom: 20px;
-  border-radius: 20px;
-}
-
-.welcome-panel h1 {
-  color: #ffffff;
-  font-size: 25px;
-  margin: 0 0 6px;
-}
-
-.welcome-panel > p {
-  color: #d5e5da;
-  margin: 0 0 16px;
-}
-
-.welcome-panel .notice {
-  margin-bottom: 0;
-}
-
-.business-summary {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.summary-card {
-  background: #ffffff;
-  border: 1px solid #e7e9e3;
-  border-radius: 16px;
-  padding: 16px 14px;
-  box-shadow: 0 5px 18px rgba(18, 59, 44, 0.05);
-}
-
-.summary-card .stat-label {
-  line-height: 1.5;
-}
-
-.summary-card .stat-number {
-  font-size: 20px;
-  overflow-wrap: anywhere;
-}
-
-.summary-icon {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-@media (max-width: 360px) {
-  .business-summary {
-    gap: 8px;
-  }
-
-  .summary-card {
-    padding: 12px 10px;
-  }
-
-  .summary-card .stat-number {
-    font-size: 17px;
-  }
-}
-
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; color:var(--text); background:var(--bg); line-height:1.5; }
+    header { padding:22px 18px; color:#fff; background:var(--green-dark); }
+    .owner-header { border-radius:0 0 24px 24px; }
+    .owner-header-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .brand { font-size:26px; font-weight:800; }
+    header p { color:#d7e9de; margin:5px 0 0; }
+    .profile-icon-button { flex:0 0 48px; width:48px; height:48px; min-height:48px; padding:11px; border-radius:50%; background:#f8c9a8; color:var(--green-dark); }
+    .profile-icon-button svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    main { max-width:1000px; margin:auto; padding:20px 16px 40px; }
+    h1,h2,h3 { color:var(--green-dark); line-height:1.3; }
+    h1 { font-size:24px; } h2 { font-size:20px; margin-top:0; } h3 { font-size:17px; }
+    .panel,.stat,.summary-card,.chart-panel { background:#fff; border:1px solid var(--border); border-radius:16px; padding:17px; margin-bottom:16px; box-shadow:0 5px 18px rgba(18,59,44,.05); }
+    .muted { color:var(--muted); font-size:14px; line-height:1.6; }
+    .field { margin:13px 0; }
+    label { display:block; margin-bottom:7px; font-size:14px; font-weight:700; }
+    input,select,textarea { width:100%; max-width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:#fff; color:var(--text); font:inherit; margin-top:5px; margin-bottom:12px; }
+    button,.action-link { display:inline-block; width:100%; padding:13px; border:0; border-radius:10px; font:600 14px Arial,sans-serif; text-align:center; text-decoration:none; cursor:pointer; }
+    button:disabled { opacity:.55; cursor:not-allowed; }
+    .primary,button { background:var(--green-dark); color:#fff; }
+    .secondary { background:var(--light); color:var(--green-dark); }
+    .danger { background:#fff0ef; color:var(--danger); }
+    .button-stack { display:grid; gap:9px; margin-top:12px; }
+    .button-stack.two { grid-template-columns:1fr 1fr; }
+    .stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-bottom:20px; }
+    .stat { margin-bottom:0; padding:14px; }
+    .stat-label { color:var(--muted); font-size:13px; }
+    .stat-number { margin-top:8px; color:var(--green-dark); font-size:20px; font-weight:750; overflow-wrap:anywhere; }
+    .business-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:20px; }
+    .summary-card { padding:16px 14px; margin-bottom:0; }
+    .summary-icon { font-size:24px; margin-bottom:10px; }
+    .chart-panel { padding:20px 16px; margin-bottom:20px; }
+    .chart-panel h2 { margin:0 0 6px; font-size:20px; }
+    .chart-panel>p { margin:0 0 20px; }
+    .sales-chart { min-height:190px; display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:8px; align-items:stretch; }
+    .chart-day { min-width:0; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:7px; text-align:center; }
+    .chart-value { font-size:10px; color:var(--muted); overflow-wrap:anywhere; min-height:15px; }
+    .chart-track { height:125px; width:100%; display:flex; align-items:flex-end; justify-content:center; background:#f3f6f2; border-radius:8px 8px 4px 4px; overflow:hidden; }
+    .chart-bar { width:70%; min-height:3px; background:linear-gradient(180deg,var(--orange),var(--green)); border-radius:7px 7px 0 0; }
+    .chart-label { font-size:11px; color:var(--text); }
+    .menu-item { padding:14px 0; border-bottom:1px solid var(--border); overflow-wrap:anywhere; }
+    .menu-item:last-child { border-bottom:0; }
+    .menu-item strong { display:block; font-size:16px; }
+    .menu-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+    .menu-actions button { padding:10px 6px; }
+    .qr-box { padding:16px; text-align:center; background:#f8faf8; border:1px dashed #aabbb0; border-radius:12px; margin-top:14px; }
+    #qr-image { display:block; width:220px; max-width:100%; height:auto; margin:14px auto; }
+    .url-text { overflow-wrap:anywhere; font-size:13px; color:var(--muted); }
+    footer { padding:22px; color:var(--muted); font-size:12px; text-align:center; }
+    [hidden] { display:none !important; }
+    @media(min-width:650px) { .stats { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+    @media(max-width:380px) { .business-summary { gap:8px; } .summary-card { padding:12px 10px; } .summary-card .stat-number { font-size:17px; } .sales-chart { gap:4px; } .chart-value { font-size:8px; } .chart-label { font-size:10px; } .chart-track { height:110px; } }
   </style>
 </head>
 <body>
-
 <header class="owner-header">
   <div class="owner-header-top">
-    <div>
-      <div class="brand">☕ KopiHub</div>
-      <p id="header-shop-name">Dashboard Owner</p>
-    </div>
-
-    <button
-      class="profile-icon-button"
-      id="header-profile-button"
-      type="button"
-      aria-label="Buka profil kedai"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="8" r="4"></circle>
-        <path d="M4 21a8 8 0 0 1 16 0"></path>
-      </svg>
+    <div><div class="brand">☕ KopiHub</div><p id="header-shop-name">Dashboard Owner</p></div>
+    <button class="profile-icon-button" id="header-profile-button" type="button" aria-label="Buka profil kedai">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
     </button>
   </div>
 </header>
-
-
 <main>
-  
-
-
   <section class="panel">
     <h2>Kedai Saya</h2>
-    <div class="field">
-      <label for="shop-select">Pilih kedai</label>
-      <select id="shop-select" disabled>
-        <option value="">Memuat kedai...</option>
-      </select>
-    </div>
+    <div class="field"><label for="shop-select">Pilih kedai</label><select id="shop-select" disabled><option value="">Memuat kedai...</option></select></div>
     <p id="shop-details" class="muted">Memuat informasi kedai...</p>
     <a class="action-link secondary" href="profil-kedai.html">Tambah Kedai</a>
   </section>
 
   <section class="panel" id="profil-kedai">
-    <h2>Profil Kedai</h2>
-    <p class="muted">
-      Atur identitas kedai yang akan dilihat pelanggan.
-    </p>
-
+    <h2>Profil Kedai</h2><p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
     <form id="shop-profile-form">
-      <div class="field">
-        <label for="profile-shop-name">Nama Kedai</label>
-        <input
-          id="profile-shop-name"
-          type="text"
-          maxlength="120"
-          required
-          placeholder="Contoh: Ontal Kopi"
-        >
-      </div>
-
-      <div class="field">
-        <label for="profile-shop-description">Deskripsi Kedai</label>
-        <textarea
-          id="profile-shop-description"
-          rows="3"
-          maxlength="1000"
-          placeholder="Ceritakan sedikit tentang kedai Anda"
-        ></textarea>
-      </div>
-
-      <div class="field">
-        <label for="profile-shop-logo">Logo Kedai</label>
-        <input
-          id="profile-shop-logo"
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-        >
-        <p class="muted">
-          Format PNG, JPG, atau WebP. Maksimal 2 MB.
-        </p>
-      </div>
-
-      <div id="profile-logo-preview" hidden>
-        <img
-          id="profile-logo-image"
-          alt="Pratinjau logo kedai"
-          style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"
-        >
-      </div>
-
-      <div class="button-stack">
-        <button
-          class="primary"
-          id="save-shop-profile"
-          type="submit"
-        >
-          Simpan Profil Kedai
-        </button>
-      </div>
-
+      <div class="field"><label for="profile-shop-name">Nama Kedai</label><input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi"></div>
+      <div class="field"><label for="profile-shop-description">Deskripsi Kedai</label><textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea></div>
+      <div class="field"><label for="profile-shop-logo">Logo Kedai</label><input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp"><p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p></div>
+      <div id="profile-logo-preview" hidden><img id="profile-logo-image" alt="Pratinjau logo kedai" style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"></div>
+      <div class="button-stack"><button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button></div>
       <p id="profile-message" class="muted" role="status"></p>
     </form>
   </section>
 
-<section class="business-summary">
-  <div class="summary-card">
-    <div class="summary-icon">💰</div>
-    <div class="stat-label">Total Pendapatan</div>
-    <div class="stat-number" id="summary-income">Rp0</div>
-    <p class="muted">Pesanan lunas hari ini</p>
-  </div>
+  <section class="business-summary">
+    <div class="summary-card"><div class="summary-icon">💰</div><div class="stat-label">Total Pendapatan</div><div class="stat-number" id="summary-income">Rp0</div><p class="muted">Pesanan lunas hari ini</p></div>
+    <div class="summary-card"><div class="summary-icon">📈</div><div class="stat-label">Total Penjualan</div><div class="stat-number" id="summary-sales">Rp0</div><p class="muted">Semua pesanan hari ini</p></div>
+  </section>
 
-  <div class="summary-card">
-    <div class="summary-icon">📈</div>
-    <div class="stat-label">Total Penjualan</div>
-    <div class="stat-number" id="summary-sales">Rp0</div>
-    <p class="muted">Semua pesanan hari ini</p>
-  </div>
-</section>
-
-<section class="chart-panel">
-  <h2>Grafik Penjualan</h2>
-  <p class="muted">Performa penjualan 7 hari terakhir</p>
-
-  <div id="sales-chart" class="sales-chart">
-    <p class="muted">Memuat grafik penjualan...</p>
-  </div>
-</section>
+  <section class="chart-panel">
+    <h2>Grafik Penjualan</h2><p class="muted">Penjualan lunas selama 7 hari terakhir</p>
+    <div id="sales-chart" class="sales-chart"><p class="muted">Memuat grafik penjualan...</p></div>
+    <p id="chart-message" class="muted" role="status"></p>
+  </section>
 
   <section class="stats">
     <div class="stat"><div class="stat-label">Jumlah Menu</div><div class="stat-number" id="menu-count">—</div></div>
     <div class="stat"><div class="stat-label">Menu Tersedia</div><div class="stat-number" id="available-count">—</div></div>
     <div class="stat"><div class="stat-label">Pesanan Hari Ini</div><div class="stat-number" id="today-orders">—</div></div>
     <div class="stat"><div class="stat-label">Penjualan Hari Ini (Sudah Dibayar)</div><div class="stat-number" id="today-sales">—</div></div>
-    <div class="stat">
-    <div class="stat-label">Estimasi Biaya Layanan Hari Ini</div>
-    <div class="stat-number" id="today-service-fee">—</div>
-</div>
+    <div class="stat"><div class="stat-label">Estimasi Biaya Layanan Hari Ini</div><div class="stat-number" id="today-service-fee">—</div></div>
   </section>
 
-  
-<section class="panel" id="kelola-menu">
-  <h2>Kelola Menu</h2>
-
-  <div class="button-stack">
-    <button class="primary" id="show-add-menu" type="button">
-      + Tambahkan Menu
-    </button>
-  </div>
-
-  <div id="menu-form-panel" hidden>
-    <h3 id="menu-form-title">Tambah Menu Baru</h3>
-
-    <form id="menu-form">
-      <div class="field">
-        <label for="menu-name">Nama</label>
-        <input id="menu-name" maxlength="120" required
-          placeholder="Contoh: Kopi Susu">
-      </div>
-
-      <div class="field">
-        <label for="menu-category">Kategori</label>
-        <select id="menu-category" required disabled>
-          <option value="">Memuat kategori...</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="menu-price">Harga (Rupiah)</label>
-        <input id="menu-price" type="number" min="1"
-          step="1" max="100000000" required placeholder="20000">
-      </div>
-
-      <div class="field">
-        <label for="menu-description">Deskripsi</label>
-        <textarea id="menu-description" rows="2"
-          maxlength="1000"></textarea>
-      </div>
-
-      <div class="field">
-        <label for="menu-available">Ketersediaan</label>
-        <select id="menu-available">
-          <option value="true">Tersedia</option>
-          <option value="false">Habis</option>
-        </select>
-      </div>
-
-      <div class="button-stack two">
-        <button class="primary" id="save-menu" type="submit">
-          Simpan Menu
-        </button>
-        <button class="secondary" id="cancel-edit" type="button">
-          Batal
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <p id="menu-message" class="muted" role="status"></p>
-
-  <hr style="border:0;border-top:1px solid #e1e8e2;margin:22px 0">
-
-  <div class="button-stack">
-  <button class="primary" id="toggle-menu-list" type="button">
-    Daftar Menu
-  </button>
-</div>
-
-<div id="menu-list-panel" hidden>
-  <h3>Daftar Menu</h3>
-  <div id="menu-list" class="muted">
-    Menunggu data kedai...
-  </div>
-</div>
-</section>
-
-    
-<section class="panel">
-  <h2>QR Menu Kedai</h2>
-  <p class="muted">
-    QR ini membuka halaman piliham menu, bukan QRIS pembayaran.
-  </p>
-
-  <button class="primary" id="make-qr" type="button" disabled>
-    Buat QR Menu
-  </button>
-
-  <div class="qr-box">
-    <strong id="qr-title">QR Menu KopiHub</strong>
-    <img id="qr-image" alt="QR menu kedai" hidden>
-    <p class="url-text" id="menu-url"></p>
-    <p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p>
-  </div>
-
-  <div class="button-stack two">
-    <a
-      class="action-link primary"
-      id="open-menu"
-      href="menu.html"
-      style="display:flex;align-items:center;justify-content:center;min-height:44px;cursor:pointer;touch-action:manipulation;"
-    >Buka Menu</a>
-
-    <button class="primary" id="share-qr" type="button">
-      Bagikan QR
-    </button>
-  </div>
-</section>
+  <section class="panel" id="kelola-menu">
+    <h2>Kelola Menu</h2><div class="button-stack"><button class="primary" id="show-add-menu" type="button">+ Tambahkan Menu</button></div>
+    <div id="menu-form-panel" hidden>
+      <h3 id="menu-form-title">Tambah Menu Baru</h3>
+      <form id="menu-form">
+        <div class="field"><label for="menu-name">Nama</label><input id="menu-name" maxlength="120" required placeholder="Contoh: Kopi Susu"></div>
+        <div class="field"><label for="menu-category">Kategori</label><select id="menu-category" required disabled><option value="">Memuat kategori...</option></select></div>
+        <div class="field"><label for="menu-price">Harga (Rupiah)</label><input id="menu-price" type="number" min="1" step="1" max="100000000" required placeholder="20000"></div>
+        <div class="field"><label for="menu-description">Deskripsi</label><textarea id="menu-description" rows="2" maxlength="1000"></textarea></div>
+        <div class="field"><label for="menu-available">Ketersediaan</label><select id="menu-available"><option value="true">Tersedia</option><option value="false">Habis</option></select></div>
+        <div class="button-stack two"><button class="primary" id="save-menu" type="submit">Simpan Menu</button><button class="secondary" id="cancel-edit" type="button">Batal</button></div>
+      </form>
+    </div>
+    <p id="menu-message" class="muted" role="status"></p><hr style="border:0;border-top:1px solid #e1e8e2;margin:22px 0">
+    <div class="button-stack"><button class="primary" id="toggle-menu-list" type="button">Daftar Menu</button></div>
+    <div id="menu-list-panel" hidden><h3>Daftar Menu</h3><div id="menu-list" class="muted">Menunggu data kedai...</div></div>
+  </section>
 
   <section class="panel">
-  <h2>Laporan Penjualan Hari Ini</h2>
-  <p class="muted">
-    Penjualan terbayar dihitung dari pesanan yang sudah dikonfirmasi lunas.
-    Pesanan yang belum dibayar ditampilkan secara terpisah.
-  </p>
+    <h2>QR Menu Kedai</h2><p class="muted">QR ini membuka halaman pilihan menu, bukan QRIS pembayaran.</p>
+    <button class="primary" id="make-qr" type="button" disabled>Buat QR Menu</button>
+    <div class="qr-box"><strong id="qr-title">QR Menu KopiHub</strong><img id="qr-image" alt="QR menu kedai" hidden><p class="url-text" id="menu-url"></p><p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p></div>
+    <div class="button-stack two"><a class="action-link primary" id="open-menu" href="menu.html" style="display:flex;align-items:center;justify-content:center;min-height:44px">Buka Menu</a><button class="primary" id="share-qr" type="button">Bagikan QR</button></div>
+  </section>
 
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-label">Nilai Pesanan</div>
-      <div class="stat-number" id="report-order-value">—</div>
+  <section class="panel">
+    <h2>Laporan Penjualan Hari Ini</h2><p class="muted">Penjualan terbayar dihitung dari pesanan yang sudah dikonfirmasi lunas. Pesanan yang belum dibayar ditampilkan secara terpisah.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Nilai Pesanan</div><div class="stat-number" id="report-order-value">—</div></div>
+      <div class="stat"><div class="stat-label">Sudah Dibayar</div><div class="stat-number" id="report-paid-sales">—</div></div>
+      <div class="stat"><div class="stat-label">Belum Dibayar</div><div class="stat-number" id="report-unpaid-sales">—</div></div>
+      <div class="stat"><div class="stat-label">Transaksi Lunas</div><div class="stat-number" id="report-paid-count">—</div></div>
     </div>
-    <div class="stat">
-      <div class="stat-label">Sudah Dibayar</div>
-      <div class="stat-number" id="report-paid-sales">—</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Belum Dibayar</div>
-      <div class="stat-number" id="report-unpaid-sales">—</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Transaksi Lunas</div>
-      <div class="stat-number" id="report-paid-count">—</div>
-    </div>
-  </div>
-
-  <p class="muted" id="report-message">
-    Laporan akan diperbarui saat pesanan dimuat.
-  </p>
-</section>
-
+    <p class="muted" id="report-message">Laporan akan diperbarui saat pesanan dimuat.</p>
+  </section>
   <button class="secondary" id="logout" type="button">Keluar dari Akun</button>
 </main>
 <footer>KopiHub © 2026 · Dashboard Owner Coffee Shop</footer>
@@ -650,683 +156,327 @@ th {
 <script>
 "use strict";
 
-/* Gunakan URL dan publishable key dari dashboard lama.
-   Jangan pernah menaruh service_role key di browser. */
-const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+/* Ganti "sensor" dengan URL dan publishable key asli dari Supabase.
+   Jangan pernah memakai service_role key di browser. */
+const SUPABASE_URL = "sensor";
+const SUPABASE_PUBLISHABLE_KEY = "sensor";
 
 const $ = id => document.getElementById(id);
-let client = null;
-let shops = [];
-let categories = [];
-let products = [];
-let editingProductId = null;
-let requestVersion = 0;
-
+let client = null, shops = [], categories = [], products = [];
+let editingProductId = null, requestVersion = 0;
 const shopSelect = $("shop-select");
 
 function rupiah(value) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency", currency: "IDR", maximumFractionDigits: 0
-  }).format(Number(value) || 0);
+  return new Intl.NumberFormat("id-ID", { style:"currency", currency:"IDR", maximumFractionDigits:0 }).format(Number(value) || 0);
 }
-
 function showStatus(message, error = false) {
-  $("connection-status").textContent = message;
-  $("connection-status").style.background = error ? "#fff0ef" : "#e8f2ec";
-  $("connection-status").style.color = error ? "#9b2525" : "#174c38";
+  const status = $("connection-status");
+  if (!status) { console[error ? "error" : "log"](message); return; }
+  status.textContent = message;
+  status.style.background = error ? "#fff0ef" : "#e8f2ec";
+  status.style.color = error ? "#9b2525" : "#174c38";
 }
-
 function showMenuMessage(message, error = false) {
   $("menu-message").textContent = message;
   $("menu-message").style.color = error ? "#b42318" : "";
 }
-
-function selectedShop() {
-  return shops.find(shop => shop.id === shopSelect.value) || null;
-}
-
-function getMenuUrl(slug) {
-  return new URL("menu.html?kedai=" + encodeURIComponent(slug), location.href).href;
-}
-
+function selectedShop() { return shops.find(shop => shop.id === shopSelect.value) || null; }
+function getMenuUrl(slug) { return new URL("menu.html?kedai=" + encodeURIComponent(slug), location.href).href; }
 function clearQr(message) {
-  $("qr-image").hidden = true;
-  $("qr-image").removeAttribute("src");
-  $("menu-url").textContent = "";
-  $("qr-status").textContent = message;
-  $("open-menu").href = "menu.html";
+  $("qr-image").hidden = true; $("qr-image").removeAttribute("src");
+  $("menu-url").textContent = ""; $("qr-status").textContent = message; $("open-menu").href = "menu.html";
 }
-
-
 function renderSelectedShop() {
   const shop = selectedShop();
-  $("header-shop-name").textContent =
-    shop ? shop.name : "Dashboard Owner";
-  $("shop-details").textContent = shop
-    ? "Kedai: " + shop.name + " · Slug: " + shop.slug
-    : "Belum ada kedai yang dipilih.";
-
+  $("header-shop-name").textContent = shop ? shop.name : "Dashboard Owner";
+  $("shop-details").textContent = shop ? "Kedai: " + shop.name + " · Slug: " + shop.slug : "Belum ada kedai yang dipilih.";
   $("make-qr").disabled = !shop;
-  $("qr-title").textContent = shop
-    ? "QR Menu " + shop.name
-    : "QR Menu KopiHub";
-
+  $("qr-title").textContent = shop ? "QR Menu " + shop.name : "QR Menu KopiHub";
   clearQr(shop ? "Tekan Buat QR Menu." : "Pilih kedai terlebih dahulu.");
-
   $("profile-shop-name").value = shop?.name || "";
   $("profile-shop-description").value = shop?.description || "";
   $("profile-shop-logo").value = "";
   $("profile-message").textContent = "";
-
-  const preview = $("profile-logo-preview");
-  const image = $("profile-logo-image");
-
-  if (shop?.logo_url) {
-    image.src = shop.logo_url;
-    preview.hidden = false;
-  } else {
-    image.removeAttribute("src");
-    preview.hidden = true;
-  }
-
+  if (shop?.logo_url) { $("profile-logo-image").src = shop.logo_url; $("profile-logo-preview").hidden = false; }
+  else { $("profile-logo-image").removeAttribute("src"); $("profile-logo-preview").hidden = true; }
   $("save-shop-profile").disabled = !shop;
 }
 
-
 async function loadShops() {
-  if (!SUPABASE_URL.startsWith("https://") ||
-      SUPABASE_PUBLISHABLE_KEY.includes("TEMPEL_")) {
-    showStatus("Isi URL dan publishable key Supabase terlebih dahulu.", true);
+  if (!SUPABASE_URL.startsWith("https://") || SUPABASE_PUBLISHABLE_KEY === "sensor" || SUPABASE_PUBLISHABLE_KEY.includes("TEMPEL_")) {
+    showStatus('Isi SUPABASE_URL dan SUPABASE_PUBLISHABLE_KEY dengan nilai asli dari Supabase.', true);
+    shopSelect.innerHTML = '<option value="">Konfigurasi Supabase diperlukan</option>';
+    $("shop-details").textContent = "Dashboard belum terhubung ke Supabase.";
+    $("sales-chart").innerHTML = '<p class="muted">Grafik menunggu koneksi Supabase.</p>';
+    $("chart-message").textContent = "Tambahkan kredensial Supabase asli untuk memuat data.";
     return;
   }
-
   try {
     if (!window.supabase) throw new Error("Library Supabase tidak termuat.");
     client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
     const { data: sessionData, error: sessionError } = await client.auth.getSession();
     if (sessionError) throw sessionError;
     if (!sessionData.session) {
       showStatus("Sesi login tidak ditemukan. Silakan login kembali.", true);
-      shopSelect.innerHTML = '<option value="">Silakan login</option>';
-      return;
+      shopSelect.innerHTML = '<option value="">Silakan login</option>'; return;
     }
-
-    const { data: members, error: memberError } = await client
-      .from("kh_shop_members")
-      .select("shop_id, role")
-      .eq("user_id", sessionData.session.user.id);
+    const { data: members, error: memberError } = await client.from("kh_shop_members").select("shop_id, role").eq("user_id", sessionData.session.user.id);
     if (memberError) throw memberError;
-
-    const ownerMembers = (members || []).filter(
-  member => String(member.role).toLowerCase() === "owner"
-);
-
-const ids = [
-  ...new Set(ownerMembers.map(member => member.shop_id).filter(Boolean))
-];
+    const ids = [...new Set((members || []).filter(m => String(m.role).toLowerCase() === "owner").map(m => m.shop_id).filter(Boolean))];
     if (!ids.length) {
-      shops = [];
-      shopSelect.innerHTML = '<option value="">Belum ada kedai</option>';
-      shopSelect.disabled = true;
-      showStatus("Login berhasil, tetapi akun ini belum terhubung dengan kedai.");
-      return;
+      shops = []; shopSelect.innerHTML = '<option value="">Belum ada kedai</option>'; shopSelect.disabled = true;
+      showStatus("Login berhasil, tetapi akun ini belum terhubung dengan kedai."); return;
     }
-
-    const { data, error } = await client
-      .from("kh_shops")
-      .select("id, name, slug, is_active, timezone, logo_url, description")
-      .in("id", ids)
-      .order("name");
+    const { data, error } = await client.from("kh_shops").select("id, name, slug, is_active, timezone, logo_url, description").in("id", ids).order("name");
     if (error) throw error;
-
     shops = data || [];
     if (!shops.length) throw new Error("Kedai tidak ditemukan.");
-
     shopSelect.replaceChildren();
-    shops.forEach(shop => {
-      const option = document.createElement("option");
-      option.value = shop.id;
-      option.textContent = shop.name + " (" + shop.slug + ")";
-      shopSelect.appendChild(option);
-    });
-
-    const aroma = shops.find(s => s.slug === "aroma-coffee");
-    shopSelect.value = aroma ? aroma.id : shops[0].id;
-    shopSelect.disabled = false;
-    renderSelectedShop();
-    showStatus("Terhubung ke Supabase. " + shops.length + " kedai ditemukan.");
-    await refreshMenu();
-    await loadOrders();
+    shops.forEach(shop => { const option = document.createElement("option"); option.value = shop.id; option.textContent = shop.name + " (" + shop.slug + ")"; shopSelect.appendChild(option); });
+    const preferred = shops.find(s => s.slug === "aroma-coffee");
+    shopSelect.value = preferred ? preferred.id : shops[0].id;
+    shopSelect.disabled = false; renderSelectedShop(); showStatus("Terhubung ke Supabase. " + shops.length + " kedai ditemukan.");
+    await refreshMenu(); await loadOrders();
   } catch (error) {
-    console.error(error);
-    showStatus("Gagal memuat kedai: " + error.message, true);
+    console.error(error); showStatus("Gagal memuat kedai: " + error.message, true);
+    shopSelect.innerHTML = '<option value="">Gagal memuat kedai</option>';
   }
 }
 
 async function refreshMenu() {
-  const shop = selectedShop();
-  const version = ++requestVersion;
+  const shop = selectedShop(), version = ++requestVersion;
   if (!client || !shop) return;
-
-  $("menu-list").textContent = "Memuat menu...";
-  $("menu-category").disabled = true;
-
-  const [catResult, productResult] = await Promise.all([
-    client.from("kh_categories")
-      .select("id, name, sort_order")
-      .eq("shop_id", shop.id)
-      .eq("is_active", true)
-      .order("sort_order"),
-    client.from("kh_products")
-      .select("id, shop_id, category_id, name, description, price, is_available, created_at")
-      .eq("shop_id", shop.id)
-      .order("created_at", { ascending: false })
-  ]);
-
-  if (version !== requestVersion || shopSelect.value !== shop.id) return;
-  if (catResult.error) {
-    showMenuMessage("Gagal memuat kategori: " + catResult.error.message, true);
-    categories = [];
-  } else {
+  $("menu-list").textContent = "Memuat menu..."; $("menu-category").disabled = true;
+  try {
+    const [catResult, productResult] = await Promise.all([
+      client.from("kh_categories").select("id, name, sort_order").eq("shop_id", shop.id).eq("is_active", true).order("sort_order"),
+      client.from("kh_products").select("id, shop_id, category_id, name, description, price, is_available, created_at").eq("shop_id", shop.id).order("created_at", {ascending:false})
+    ]);
+    if (version !== requestVersion || shopSelect.value !== shop.id) return;
+    if (catResult.error) throw catResult.error;
     categories = catResult.data || [];
+    if (productResult.error) throw productResult.error;
+    products = productResult.data || [];
+    const categorySelect = $("menu-category"); categorySelect.replaceChildren();
+    const placeholder = document.createElement("option"); placeholder.value = ""; placeholder.textContent = categories.length ? "Pilih kategori" : "Belum ada kategori aktif"; categorySelect.appendChild(placeholder);
+    categories.forEach(c => { const option = document.createElement("option"); option.value = c.id; option.textContent = c.name; categorySelect.appendChild(option); });
+    categorySelect.disabled = !categories.length;
+    $("menu-count").textContent = products.length;
+    $("available-count").textContent = products.filter(p => p.is_available).length;
+    renderProducts();
+  } catch (error) {
+    $("menu-list").textContent = "Gagal memuat menu: " + error.message;
+    showMenuMessage("Gagal memuat kategori atau menu: " + error.message, true);
   }
-
-  if (productResult.error) {
-    $("menu-list").textContent = "Gagal memuat menu: " + productResult.error.message;
-    showMenuMessage("Periksa izin akses tabel kh_products.", true);
-    return;
-  }
-
-  products = productResult.data || [];
-  const categorySelect = $("menu-category");
-  categorySelect.replaceChildren();
-  const placeholder = document.createElement("option");
-  placeholder.value = "";
-  placeholder.textContent = categories.length ? "Pilih kategori" : "Belum ada kategori aktif";
-  categorySelect.appendChild(placeholder);
-
-  categories.forEach(category => {
-    const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
-    categorySelect.appendChild(option);
-  });
-  categorySelect.disabled = !categories.length;
-
-  $("menu-count").textContent = products.length;
-  $("available-count").textContent = products.filter(p => p.is_available).length;
-  renderProducts();
 }
-
 function renderProducts() {
-  const list = $("menu-list");
-  list.replaceChildren();
-
-  if (!products.length) {
-    list.textContent = "Belum ada menu untuk kedai ini.";
-    return;
-  }
-
+  const list = $("menu-list"); list.replaceChildren();
+  if (!products.length) { list.textContent = "Belum ada menu untuk kedai ini."; return; }
   products.forEach(product => {
-    const card = document.createElement("article");
-    card.className = "menu-item";
-    const name = document.createElement("strong");
-    name.textContent = product.name;
-    const details = document.createElement("p");
-    details.className = "muted";
+    const card = document.createElement("article"); card.className = "menu-item";
+    const name = document.createElement("strong"); name.textContent = product.name;
+    const details = document.createElement("p"); details.className = "muted";
     const category = categories.find(c => c.id === product.category_id);
-    details.textContent = (category ? category.name : "Kategori tidak tersedia") +
-      " · " + rupiah(product.price) + " · " +
-      (product.is_available ? "Tersedia" : "Habis");
+    details.textContent = (category ? category.name : "Kategori tidak tersedia") + " · " + rupiah(product.price) + " · " + (product.is_available ? "Tersedia" : "Habis");
     card.append(name, details);
-
-    if (product.description) {
-      const desc = document.createElement("p");
-      desc.className = "muted";
-      desc.textContent = product.description;
-      card.appendChild(desc);
-    }
-
-    const actions = document.createElement("div");
-    actions.className = "menu-actions";
-    const edit = document.createElement("button");
-    edit.type = "button";
-    edit.className = "secondary";
-    edit.textContent = "Edit";
-    edit.addEventListener("click", () => startEdit(product.id));
-
-    const remove = document.createElement("button");
-    remove.type = "button";
-    remove.className = "danger";
-    remove.textContent = "Hapus";
-    remove.addEventListener("click", () => deleteProduct(product.id));
-
-    actions.append(edit, remove);
-    card.appendChild(actions);
-    list.appendChild(card);
+    if (product.description) { const desc = document.createElement("p"); desc.className = "muted"; desc.textContent = product.description; card.appendChild(desc); }
+    const actions = document.createElement("div"); actions.className = "menu-actions";
+    const edit = document.createElement("button"); edit.type = "button"; edit.className = "secondary"; edit.textContent = "Edit"; edit.addEventListener("click", () => startEdit(product.id));
+    const remove = document.createElement("button"); remove.type = "button"; remove.className = "danger"; remove.textContent = "Hapus"; remove.addEventListener("click", () => deleteProduct(product.id));
+    actions.append(edit, remove); card.appendChild(actions); list.appendChild(card);
   });
 }
-
-$("show-add-menu").addEventListener("click", () => {
-  resetMenuForm();
-  $("menu-form-title").textContent = "Tambah Menu Baru";
-  $("menu-form-panel").hidden = false;
-  $("menu-name").focus();
-});
+$("show-add-menu").addEventListener("click", () => { resetMenuForm(); $("menu-form-panel").hidden = false; $("menu-name").focus(); });
 $("toggle-menu-list").addEventListener("click", () => {
-  const panel = $("menu-list-panel");
-  panel.hidden = !panel.hidden;
-
-  $("toggle-menu-list").textContent = panel.hidden
-    ? "Daftar Menu"
-    : "Tutup Daftar Menu";
+  const panel = $("menu-list-panel"); panel.hidden = !panel.hidden;
+  $("toggle-menu-list").textContent = panel.hidden ? "Daftar Menu" : "Tutup Daftar Menu";
 });
-
 function resetMenuForm() {
-  editingProductId = null;
-  $("menu-form").reset();
-  $("save-menu").textContent = "Simpan Menu";
-  $("menu-form-title").textContent = "Tambah Menu Baru";
-  $("cancel-edit").textContent = "Batal";
-  $("cancel-edit").hidden = false;
+  editingProductId = null; $("menu-form").reset(); $("save-menu").textContent = "Simpan Menu";
+  $("menu-form-title").textContent = "Tambah Menu Baru"; $("cancel-edit").textContent = "Batal"; $("cancel-edit").hidden = false;
 }
-
-
 function startEdit(id) {
-  const p = products.find(item => item.id === id);
-  if (!p) return;
-  if (!categories.some(c => c.id === p.category_id)) {
-    showMenuMessage("Kategori menu tidak aktif atau tidak ditemukan.", true);
-    return;
-  }
-  editingProductId = p.id;
-  $("menu-name").value = p.name || "";
-  $("menu-category").value = p.category_id;
-  $("menu-price").value = p.price;
-  $("menu-description").value = p.description || "";
-  $("menu-available").value = String(Boolean(p.is_available));
-  $("save-menu").textContent = "Simpan Perubahan";
-  $("cancel-edit").hidden = false;
-  $("menu-form-panel").hidden = false;
-  $("menu-form-title").textContent = "Edit Menu";
-  $("kelola-menu").scrollIntoView({ behavior: "smooth" });
+  const p = products.find(item => item.id === id); if (!p) return;
+  if (!categories.some(c => c.id === p.category_id)) { showMenuMessage("Kategori menu tidak aktif atau tidak ditemukan.", true); return; }
+  editingProductId = p.id; $("menu-name").value = p.name || ""; $("menu-category").value = p.category_id;
+  $("menu-price").value = p.price; $("menu-description").value = p.description || "";
+  $("menu-available").value = String(Boolean(p.is_available)); $("save-menu").textContent = "Simpan Perubahan";
+  $("cancel-edit").hidden = false; $("menu-form-panel").hidden = false; $("menu-form-title").textContent = "Edit Menu";
+  $("kelola-menu").scrollIntoView({behavior:"smooth"});
 }
-
 $("menu-form").addEventListener("submit", async event => {
   event.preventDefault();
-  const shop = selectedShop();
-  const name = $("menu-name").value.trim();
-  const categoryId = $("menu-category").value;
-  const price = Number($("menu-price").value);
-
+  const shop = selectedShop(), name = $("menu-name").value.trim(), categoryId = $("menu-category").value, price = Number($("menu-price").value);
   if (!shop || !client) return showMenuMessage("Pilih kedai terlebih dahulu.", true);
-  if (!categories.some(c => c.id === categoryId))
-    return showMenuMessage("Pilih kategori yang valid.", true);
-  if (!name || !Number.isSafeInteger(price) || price <= 0)
-    return showMenuMessage("Nama menu dan harga wajib valid.", true);
-
-  const wasEditing = Boolean(editingProductId);
-  const save = $("save-menu");
-  save.disabled = true;
-  showMenuMessage("Menyimpan menu...");
-
+  if (!categories.some(c => c.id === categoryId)) return showMenuMessage("Pilih kategori yang valid.", true);
+  if (!name || !Number.isSafeInteger(price) || price <= 0) return showMenuMessage("Nama menu dan harga wajib valid.", true);
+  const wasEditing = Boolean(editingProductId), save = $("save-menu"); save.disabled = true; showMenuMessage("Menyimpan menu...");
   try {
-    const payload = {
-      shop_id: shop.id,
-      category_id: categoryId,
-      name,
-      price,
-      description: $("menu-description").value.trim() || null,
-      is_available: $("menu-available").value === "true",
-      item_type: "drink"
-    };
-
-    let result;
-    if (editingProductId) {
-      result = await client.from("kh_products").update(payload)
-        .eq("id", editingProductId).eq("shop_id", shop.id);
-    } else {
-      result = await client.from("kh_products").insert(payload);
-    }
+    const payload = {shop_id:shop.id, category_id:categoryId, name, price, description:$("menu-description").value.trim() || null, is_available:$("menu-available").value === "true", item_type:"drink"};
+    const result = editingProductId
+      ? await client.from("kh_products").update(payload).eq("id", editingProductId).eq("shop_id", shop.id)
+      : await client.from("kh_products").insert(payload);
     if (result.error) throw result.error;
-
-    resetMenuForm();
-    showMenuMessage(wasEditing ? "Menu berhasil diperbarui." : "Menu berhasil disimpan.");
-    await refreshMenu();
-  } catch (error) {
-    showMenuMessage("Gagal menyimpan menu: " + error.message, true);
-  } finally {
-    save.disabled = false;
-  }
+    resetMenuForm(); showMenuMessage(wasEditing ? "Menu berhasil diperbarui." : "Menu berhasil disimpan."); await refreshMenu();
+  } catch (error) { showMenuMessage("Gagal menyimpan menu: " + error.message, true); }
+  finally { save.disabled = false; }
 });
-
-
-$("cancel-edit").addEventListener("click", () => {
-  resetMenuForm();
-  $("menu-form-panel").hidden = true;
-  showMenuMessage("Formulir ditutup.");
-});
-
-
+$("cancel-edit").addEventListener("click", () => { resetMenuForm(); $("menu-form-panel").hidden = true; showMenuMessage("Formulir ditutup."); });
 async function deleteProduct(id) {
-  const shop = selectedShop();
-  const p = products.find(item => item.id === id);
+  const shop = selectedShop(), p = products.find(item => item.id === id);
   if (!shop || !p || p.shop_id !== shop.id) return;
   if (!confirm('Hapus menu "' + p.name + '"?')) return;
-
   try {
-    const { error } = await client.from("kh_products").delete()
-      .eq("id", id).eq("shop_id", shop.id);
+    const {error} = await client.from("kh_products").delete().eq("id", id).eq("shop_id", shop.id);
     if (error) throw error;
-    showMenuMessage("Permintaan penghapusan selesai.");
-    await refreshMenu();
-  } catch (error) {
-    showMenuMessage("Gagal menghapus menu: " + error.message, true);
-  }
+    showMenuMessage("Menu berhasil dihapus."); await refreshMenu();
+  } catch (error) { showMenuMessage("Gagal menghapus menu: " + error.message, true); }
 }
 
-
+function renderSalesChart(orders, getDateKey, today) {
+  const chart = $("sales-chart"); chart.replaceChildren();
+  const dayKeys = [];
+  const date = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(date); d.setDate(date.getDate() - i);
+    dayKeys.push(getDateKey(d));
+  }
+  const totals = dayKeys.map(key => (orders || []).filter(o =>
+    o.created_at && getDateKey(o.created_at) === key &&
+    String(o.payment_status || "").toLowerCase() === "paid"
+  ).reduce((sum, o) => sum + Number(o.total_amount ?? o.subtotal ?? 0), 0));
+  const max = Math.max(...totals, 1);
+  const weekdays = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
+  dayKeys.forEach((key, i) => {
+    const [year, month, day] = key.split("-").map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    const col = document.createElement("div"); col.className = "chart-day";
+    const value = document.createElement("div"); value.className = "chart-value"; value.textContent = totals[i] ? compactRupiah(totals[i]) : "Rp0";
+    const track = document.createElement("div"); track.className = "chart-track";
+    const bar = document.createElement("div"); bar.className = "chart-bar";
+    bar.style.height = (totals[i] > 0 ? Math.max(5, totals[i] / max * 100) : 0) + "%";
+    bar.title = rupiah(totals[i]); track.appendChild(bar);
+    const label = document.createElement("div"); label.className = "chart-label"; label.textContent = weekdays[dateObj.getDay()];
+    const dayNumber = document.createElement("div"); dayNumber.className = "chart-label"; dayNumber.textContent = String(day);
+    col.append(value, track, label, dayNumber); chart.appendChild(col);
+  });
+  $("chart-message").textContent = "Grafik menampilkan pesanan berstatus paid berdasarkan zona waktu kedai. Hari ini: " + rupiah(totals[6]) + ".";
+}
+function compactRupiah(value) {
+  if (value >= 1000000) return "Rp" + (value / 1000000).toLocaleString("id-ID",{maximumFractionDigits:1}) + "jt";
+  if (value >= 1000) return "Rp" + (value / 1000).toLocaleString("id-ID",{maximumFractionDigits:0}) + "rb";
+  return "Rp" + value;
+}
 
 async function loadOrders() {
   const shop = selectedShop();
-
-  if (!client || !shop) {
-    $("report-message").textContent =
-      "Pilih kedai terlebih dahulu.";
-    return;
-  }
-
-  $("report-message").textContent =
-    "Memuat laporan penjualan...";
-
+  if (!client || !shop) { $("report-message").textContent = "Pilih kedai terlebih dahulu."; return; }
+  $("report-message").textContent = "Memuat laporan penjualan...";
+  $("sales-chart").innerHTML = '<p class="muted">Memuat grafik penjualan...</p>';
   try {
-    const { data: orders, error } = await client
-      .from("kh_orders")
-      .select(
-        "id, status, order_status, subtotal, total_amount, " +
-        "created_at, payment_status"
-      )
-      .eq("shop_id", shop.id)
-      .order("created_at", { ascending: false });
-
+    const {data:orders, error} = await client.from("kh_orders")
+      .select("id, status, order_status, subtotal, total_amount, created_at, payment_status")
+      .eq("shop_id", shop.id).order("created_at", {ascending:false});
     if (error) throw error;
-
     if (String(shopSelect.value) !== String(shop.id)) return;
-
     const timezone = shop.timezone || "Asia/Jayapura";
-
-    const dateFormatter = new Intl.DateTimeFormat("en-CA", {
-      timeZone: timezone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
-
+    const dateFormatter = new Intl.DateTimeFormat("en-CA", {timeZone:timezone, year:"numeric", month:"2-digit", day:"2-digit"});
     function getDateKey(value) {
       if (!value) return "";
-
       const parts = dateFormatter.formatToParts(new Date(value));
-      const part = type =>
-        parts.find(item => item.type === type)?.value || "";
-
+      const part = type => parts.find(item => item.type === type)?.value || "";
       return `${part("year")}-${part("month")}-${part("day")}`;
     }
-
     const todayKey = getDateKey(new Date());
-
-    const todaysOrders = (orders || []).filter(order =>
-      order.created_at &&
-      getDateKey(order.created_at) === todayKey
-    );
-
-    const getTotal = order =>
-      Number(order.total_amount ?? order.subtotal ?? 0);
-
-    const isPaid = order =>
-      String(order.payment_status || "").toLowerCase() === "paid";
-
-    const paidOrders = todaysOrders.filter(isPaid);
-    const unpaidOrders = todaysOrders.filter(order => !isPaid(order));
-
-    const totalValue = todaysOrders.reduce(
-      (sum, order) => sum + getTotal(order), 0
-    );
-
-    const paidValue = paidOrders.reduce(
-      (sum, order) => sum + getTotal(order), 0
-    );
-
-    const unpaidValue = unpaidOrders.reduce(
-      (sum, order) => sum + getTotal(order), 0
-    );
-
+    const todaysOrders = (orders || []).filter(o => o.created_at && getDateKey(o.created_at) === todayKey);
+    const getTotal = order => Number(order.total_amount ?? order.subtotal ?? 0);
+    const isPaid = order => String(order.payment_status || "").toLowerCase() === "paid";
+    const paidOrders = todaysOrders.filter(isPaid), unpaidOrders = todaysOrders.filter(o => !isPaid(o));
+    const totalValue = todaysOrders.reduce((sum,o) => sum + getTotal(o),0);
+    const paidValue = paidOrders.reduce((sum,o) => sum + getTotal(o),0);
+    const unpaidValue = unpaidOrders.reduce((sum,o) => sum + getTotal(o),0);
     const SERVICE_FEE_PER_ORDER = 3000;
-
-    const eligibleOrders = todaysOrders.filter(order => {
-      const status = String(
-        order.order_status || order.status || ""
-      ).trim().toLowerCase();
-
-      return ![
-        "cancelled", "canceled", "dibatalkan",
-        "refunded", "refund"
-      ].includes(status);
-    });
-
+    const eligibleOrders = todaysOrders.filter(order => !["cancelled","canceled","dibatalkan","refunded","refund"].includes(String(order.order_status || order.status || "").trim().toLowerCase()));
     $("today-orders").textContent = todaysOrders.length;
     $("today-sales").textContent = rupiah(paidValue);
-    $("today-service-fee").textContent =
-      rupiah(eligibleOrders.length * SERVICE_FEE_PER_ORDER);
+    $("today-service-fee").textContent = rupiah(eligibleOrders.length * SERVICE_FEE_PER_ORDER);
     $("summary-income").textContent = rupiah(paidValue);
     $("summary-sales").textContent = rupiah(totalValue);
     $("report-order-value").textContent = rupiah(totalValue);
     $("report-paid-sales").textContent = rupiah(paidValue);
     $("report-unpaid-sales").textContent = rupiah(unpaidValue);
     $("report-paid-count").textContent = paidOrders.length;
-
-    $("report-message").textContent =
-      `Laporan hari ini menggunakan zona waktu ${timezone}. ` +
-      `${todaysOrders.length} pesanan tercatat; ` +
-      `${unpaidOrders.length} belum dibayar.`;
+    $("report-message").textContent = `Laporan hari ini menggunakan zona waktu ${timezone}. ${todaysOrders.length} pesanan tercatat; ${unpaidOrders.length} belum dibayar.`;
+    renderSalesChart(orders || [], getDateKey, todayKey);
   } catch (error) {
     console.error("Gagal memuat laporan:", error);
-    $("report-message").textContent =
-      "Gagal memuat laporan: " + error.message;
+    $("report-message").textContent = "Gagal memuat laporan: " + error.message;
+    $("sales-chart").innerHTML = '<p class="muted">Grafik gagal dimuat. Periksa koneksi dan izin akses kh_orders.</p>';
+    $("chart-message").textContent = "";
   }
 }
 
-shopSelect.addEventListener("change", async () => {
-  renderSelectedShop();
-  resetMenuForm();
-  await refreshMenu();
-  await loadOrders();
-});
-
+shopSelect.addEventListener("change", async () => { renderSelectedShop(); resetMenuForm(); await refreshMenu(); await loadOrders(); });
 $("make-qr").addEventListener("click", () => {
   const shop = selectedShop();
-  if (!shop) {
-    $("qr-status").textContent = "Pilih kedai terlebih dahulu.";
-    return;
-  }
-  const url = getMenuUrl(shop.slug);
-  $("menu-url").textContent = url;
-  $("open-menu").href = url;
-  $("qr-status").textContent = "Memuat QR menu...";
-  $("qr-image").hidden = false;
-  $("qr-image").src =
-    "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
-    encodeURIComponent(url);
-  $("qr-image").onload = () => {
-    $("qr-status").textContent = "QR berhasil dimuat. Coba pindai dengan kamera HP.";
-  };
-  $("qr-image").onerror = () => {
-    $("qr-image").hidden = true;
-    $("qr-status").textContent = "QR gagal dimuat. Periksa koneksi internet.";
-  };
+  if (!shop) { $("qr-status").textContent = "Pilih kedai terlebih dahulu."; return; }
+  const url = getMenuUrl(shop.slug); $("menu-url").textContent = url; $("open-menu").href = url;
+  $("qr-status").textContent = "Memuat QR menu..."; $("qr-image").hidden = false;
+  $("qr-image").src = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(url);
+  $("qr-image").onload = () => $("qr-status").textContent = "QR berhasil dimuat. Coba pindai dengan kamera HP.";
+  $("qr-image").onerror = () => { $("qr-image").hidden = true; $("qr-status").textContent = "QR gagal dimuat. Periksa koneksi internet."; };
 });
-
-
 $("share-qr").addEventListener("click", async () => {
   const url = $("menu-url").textContent.trim();
-
-  if ($("qr-image").hidden || !url) {
-    $("qr-status").textContent = "Buat QR menu terlebih dahulu.";
-    return;
-  }
-
-  const title = $("qr-title").textContent;
-
+  if ($("qr-image").hidden || !url) { $("qr-status").textContent = "Buat QR menu terlebih dahulu."; return; }
   if (navigator.share) {
-    try {
-      await navigator.share({
-        title: title,
-        text: "Silakan buka menu kedai melalui tautan berikut:",
-        url: url
-      });
-
-      $("qr-status").textContent = "Menu siap dibagikan.";
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        $("qr-status").textContent =
-          "Gagal membagikan menu. Silakan salin tautannya.";
-      }
-    }
+    try { await navigator.share({title:$("qr-title").textContent, text:"Silakan buka menu kedai melalui tautan berikut:", url}); $("qr-status").textContent = "Menu siap dibagikan."; }
+    catch (error) { if (error.name !== "AbortError") $("qr-status").textContent = "Gagal membagikan menu. Silakan salin tautannya."; }
   } else {
-    try {
-      await navigator.clipboard.writeText(url);
-      $("qr-status").textContent =
-        "Tautan menu berhasil disalin. Bagikan melalui WhatsApp.";
-    } catch (error) {
-      $("qr-status").textContent =
-        "Salin tautan menu ini secara manual: " + url;
-    }
+    try { await navigator.clipboard.writeText(url); $("qr-status").textContent = "Tautan menu berhasil disalin. Bagikan melalui WhatsApp."; }
+    catch (error) { $("qr-status").textContent = "Salin tautan menu ini secara manual: " + url; }
   }
 });
-
 $("logout").addEventListener("click", async () => {
   if (!client) return showStatus("Supabase belum terhubung.", true);
   $("logout").disabled = true;
-  try {
-    const { error } = await client.auth.signOut();
-    if (error) throw error;
-    location.href = "akun.html";
-  } catch (error) {
-    showStatus("Gagal keluar: " + error.message, true);
-    $("logout").disabled = false;
-  }
+  try { const {error} = await client.auth.signOut(); if (error) throw error; location.href = "akun.html"; }
+  catch (error) { showStatus("Gagal keluar: " + error.message, true); $("logout").disabled = false; }
 });
-
 $("shop-profile-form").addEventListener("submit", async event => {
   event.preventDefault();
-
   const shop = selectedShop();
-  if (!client || !shop) {
-    $("profile-message").textContent =
-      "Pilih kedai terlebih dahulu.";
-    return;
-  }
-
+  if (!client || !shop) { $("profile-message").textContent = "Pilih kedai terlebih dahulu."; return; }
   const name = $("profile-shop-name").value.trim();
-  const description =
-    $("profile-shop-description").value.trim();
+  const description = $("profile-shop-description").value.trim();
   const file = $("profile-shop-logo").files[0];
   const saveButton = $("save-shop-profile");
-
-  if (!name) {
-    $("profile-message").textContent =
-      "Nama kedai wajib diisi.";
-    return;
+  if (!name) { $("profile-message").textContent = "Nama kedai wajib diisi."; return; }
+  if (file && (!["image/png","image/jpeg","image/webp"].includes(file.type) || file.size > 2 * 1024 * 1024)) {
+    $("profile-message").textContent = "Pilih gambar PNG, JPG, atau WebP maksimal 2 MB."; return;
   }
-
-  if (file) {
-    const allowedTypes = [
-      "image/png",
-      "image/jpeg",
-      "image/webp"
-    ];
-
-    if (
-      !allowedTypes.includes(file.type) ||
-      file.size > 2 * 1024 * 1024
-    ) {
-      $("profile-message").textContent =
-        "Pilih gambar PNG, JPG, atau WebP maksimal 2 MB.";
-      return;
-    }
-  }
-
-  saveButton.disabled = true;
-  $("profile-message").textContent =
-    "Menyimpan profil kedai...";
-
+  saveButton.disabled = true; $("profile-message").textContent = "Menyimpan profil kedai...";
   try {
     let logoUrl = shop.logo_url || null;
-
     if (file) {
-      const safeName = file.name.replace(
-        /[^a-zA-Z0-9._-]/g, "-"
-      );
-
-      const filePath =
-        shop.id + "/" + Date.now() + "-" + safeName;
-
-      const { error: uploadError } = await client.storage
-        .from("shop-logos")
-        .upload(filePath, file, {
-          contentType: file.type,
-          cacheControl: "3600",
-          upsert: false
-        });
-
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+      const filePath = shop.id + "/" + Date.now() + "-" + safeName;
+      const {error:uploadError} = await client.storage.from("shop-logos").upload(filePath, file, {contentType:file.type, cacheControl:"3600", upsert:false});
       if (uploadError) throw uploadError;
-
-      const { data: publicData } = client.storage
-        .from("shop-logos")
-        .getPublicUrl(filePath);
-
+      const {data:publicData} = client.storage.from("shop-logos").getPublicUrl(filePath);
       logoUrl = publicData.publicUrl;
     }
-
-    const { error: updateError } = await client
-      .from("kh_shops")
-      .update({
-        name: name,
-        description: description || null,
-        logo_url: logoUrl
-      })
-      .eq("id", shop.id);
-
+    const {error:updateError} = await client.from("kh_shops").update({name, description:description || null, logo_url:logoUrl}).eq("id", shop.id);
     if (updateError) throw updateError;
-
-    shop.name = name;
-    shop.description = description || null;
-    shop.logo_url = logoUrl;
-
-    const option = shopSelect.selectedOptions[0];
-    if (option) {
-      option.textContent = shop.name + " (" + shop.slug + ")";
-    }
-
-    renderSelectedShop();
-
-    $("profile-message").textContent =
-      "Profil kedai berhasil disimpan.";
-
+    shop.name = name; shop.description = description || null; shop.logo_url = logoUrl;
+    const option = shopSelect.selectedOptions[0]; if (option) option.textContent = shop.name + " (" + shop.slug + ")";
+    renderSelectedShop(); $("profile-message").textContent = "Profil kedai berhasil disimpan.";
   } catch (error) {
     console.error("Gagal menyimpan profil:", error);
-    $("profile-message").textContent =
-      "Gagal menyimpan profil: " + error.message;
-  } finally {
-    saveButton.disabled = !selectedShop();
-  }
+    $("profile-message").textContent = "Gagal menyimpan profil: " + error.message;
+  } finally { saveButton.disabled = !selectedShop(); }
 });
-$("header-profile-button").addEventListener("click", () => {
-  $("profil-kedai").scrollIntoView({
-    behavior: "smooth"
-  });
-});
+$("header-profile-button").addEventListener("click", () => $("profil-kedai").scrollIntoView({behavior:"smooth"}));
 loadShops();
 </script>
 </body>

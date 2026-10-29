@@ -1200,7 +1200,11 @@ $("shop-profile-form").addEventListener("submit", async event => {
     saveButton.disabled = !selectedShop();
   }
 });
-
+$("header-profile-button").addEventListener("click", () => {
+  $("profil-kedai").scrollIntoView({
+    behavior: "smooth"
+  });
+});
 loadShops();
 </script>
 </body>

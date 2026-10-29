@@ -45,8 +45,7 @@ const kopihubSupabaseClient = window.supabase.createClient(
 console.log("KopiHub: klien Supabase berhasil dibuat");
  
 /* ===== TES KONEKSI KOPIHUB ===== */
-async function tesKoneksiKopiHub() {
-  const status = document.createElement("div");
+ const status = document.createElement("div");
 
   status.style.cssText =
     "position:fixed;bottom:12px;left:12px;right:12px;" +

@@ -189,6 +189,24 @@ function clearQr(message) {
 function renderSelectedShop() {
   const shop = selectedShop();
   $("header-shop-name").textContent = shop ? shop.name : "Dashboard Owner";
+ // Tampilkan logo kedai pada tombol profil di header
+const headerLogo = $("header-shop-logo");
+const headerFallback = $("header-profile-fallback");
+
+if (shop && shop.logo_url) {
+  headerLogo.src = shop.logo_url;
+  headerLogo.hidden = false;
+  headerFallback.hidden = true;
+
+  headerLogo.onerror = () => {
+    headerLogo.hidden = true;
+    headerFallback.hidden = false;
+  };
+} else {
+  headerLogo.removeAttribute("src");
+  headerLogo.hidden = true;
+  headerFallback.hidden = false;
+}
   $("shop-details").textContent = shop ? "Kedai: " + shop.name + " · Slug: " + shop.slug : "Belum ada kedai yang dipilih.";
   $("make-qr").disabled = !shop;
   $("qr-title").textContent = shop ? "QR Menu " + shop.name : "QR Menu KopiHub";

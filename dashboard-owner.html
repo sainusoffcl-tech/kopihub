@@ -116,14 +116,24 @@
       <div class="field"><label for="profile-shop-name">Nama Kedai</label><input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi"></div>
       <div class="field"><label for="profile-shop-description">Deskripsi Kedai</label><textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea></div>
       <div class="field"><label for="profile-shop-logo">Logo Kedai</label><input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp"><p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p></div>
-      <div id="profile-logo-preview" hidden><img <button
-  type="button"
-  id="remove-shop-logo"
-  class="danger"
-  style="margin-top:10px"
->
-  Hapus Logo
-</button> id="profile-logo-image" alt="Pratinjau logo kedai" style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"></div>
+      
+<div id="profile-logo-preview" hidden>
+  <img
+    id="profile-logo-image"
+    alt="Pratinjau logo kedai"
+    style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"
+  >
+
+  <button
+    type="button"
+    id="remove-shop-logo"
+    class="danger"
+    style="margin-top:10px"
+  >
+    Hapus Logo
+  </button>
+</div>
+
       <div class="button-stack"><button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button></div>
       <p id="profile-message" class="muted" role="status"></p>
     </form>

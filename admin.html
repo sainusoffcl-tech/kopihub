@@ -592,6 +592,47 @@
   background: #fff7f5;
   border-color: #f0d8d3;
 }    
+ 
+/* ===== KUNCI HORIZONTAL DASHBOARD ADMIN ===== */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#app,
+#app.layout,
+#app main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 849px) {
+  #app.layout {
+    overflow-x: hidden;
+  }
+
+  #app main {
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    width: auto;
+    max-width: none;
+  }
+
+  .stats,
+  .panel,
+  .card {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
   </style>
 </head>
 <body>

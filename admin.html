@@ -750,6 +750,64 @@ body {
     touch-action: pan-y;
   }
 }
+ 
+/* ===== FIX SCROLL DASHBOARD ADMIN IPHONE ===== */
+
+@media (max-width: 849px) {
+
+  html,
+  body {
+    width: 100%;
+    height: auto !important;
+    min-height: 100%;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  #app.layout {
+    display: block !important;
+    width: 100%;
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible !important;
+  }
+
+  #app main {
+    display: block !important;
+    width: 100%;
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 800;
+  }
+
+  .admin-content-scroll {
+    display: block;
+    width: 100%;
+    height: auto !important;
+    min-height: 0;
+    overflow: visible !important;
+    padding: 0 15px 130px;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+  }
+
+}
+
   </style>
 </head>
 <body>

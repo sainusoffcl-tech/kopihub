@@ -672,6 +672,52 @@ body {
     z-index: 900;
   }
 }
+  /* ===== HEADER DAN NAVIGASI TETAP ===== */
+
+@media (max-width: 849px) {
+  #app.layout {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    display: block !important;
+  }
+
+  #app main {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #app .topbar {
+    flex: 0 0 auto;
+    position: relative;
+    margin: 0;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .admin-content-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding: 0 15px 110px;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+  }
+}
   </style>
 </head>
 <body>
@@ -849,7 +895,8 @@ body {
           <div id="applications-list"></div>
         </div>
       </section>
-    </main>
+      </div>
+      </main>
 
     <!-- NAVIGASI BAWAH KHUSUS HANDPHONE -->
     <nav class="mobile-bottom-nav">

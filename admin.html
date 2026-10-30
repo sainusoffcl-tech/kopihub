@@ -279,13 +279,34 @@
     display: none;
   }
 
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
 
-  .stat-value {
-    font-size: 21px;
-  }
+.stats .card {
+  min-width: 0;
+  padding: 20px 16px;
+  border-radius: 20px;
+}
+
+  /* Kartu komisi memenuhi lebar dashboard */
+.stats .card:nth-child(3) {
+  grid-column: 1 / -1;
+}
+.stats .stat-label {
+  font-size: 14px;
+}
+
+.stats .stat-value {
+  font-size: 21px;
+}
+
+.stats .stat-note {
+  font-size: 12px;
+  line-height: 1.5;
+}
 
   .mobile-bottom-nav {
     display: grid;

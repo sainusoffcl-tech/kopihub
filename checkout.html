@@ -310,13 +310,13 @@ form.addEventListener("submit",async event=>{
       throw new Error(result.error || "Server belum berhasil menyimpan pesanan.");
     }
 
-    sessionStorage.removeItem("kopihubCheckout");
-    form.style.display="none";
-    showStatus(
-      "Pesanan berhasil disimpan. Nomor pesanan: "+result.orderCode+
-      ". Meja "+table.value+". Total "+rupiah(subtotal)+
-      ". Silakan bayar di kasir."
-    );
+sessionStorage.removeItem("kopihubCheckout");
+form.style.display="none";
+showStatus(
+  "Pesanan berhasil disimpan. Nomor pesanan: "+result.orderCode+
+  ". Meja "+table.value+". Total "+rupiah(subtotal + SERVICE_FEE)+
+  ". Silakan bayar di kasir."
+);
   } catch (error) {
     console.error("Checkout error:",error);
     showStatus("Pesanan belum berhasil dikonfirmasi oleh server. "+(error.message||"Periksa koneksi lalu coba lagi."));

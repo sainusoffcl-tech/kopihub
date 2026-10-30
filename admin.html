@@ -207,7 +207,33 @@
     }
 /* ===== HEADER ADMIN KOPIHUB ===== */
 
-.topbar {
+.topbar-content {
+  min-width: 0;
+}
+
+.topbar-label {
+  color: #b9d5bd;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 9px;
+}
+
+.topbar h1 {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.profile-button {
+  width: 54px;
+  height: 54px;
+  border: 2px solid #c5d9c9;
+  background: rgba(255,255,255,.08);
+}
+
+
+    .topbar {
   position: sticky;
   top: 0;
   z-index: 800;
@@ -612,11 +638,13 @@
       </button>
     </aside>
    
+
 <div class="topbar">
-  <div>
+  <div class="topbar-content">
+    <div class="topbar-label">KOPIHUB PLATFORM</div>
     <h1 id="page-title">Dashboard Admin</h1>
     <div class="muted">Pusat pengelolaan layanan KopiHub</div>
-  <div id="admin-email" hidden></div>
+    <div id="admin-email" hidden></div>
   </div>
 
   <button
@@ -638,7 +666,6 @@
     </svg>
   </button>
 </div>
- 
 
       <section id="dashboard-view">
         <div class="warning">

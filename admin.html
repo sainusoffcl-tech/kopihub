@@ -1324,7 +1324,8 @@ document.getElementById("mobile-nav-shops")
 
 document.getElementById("mobile-nav-orders")
   .addEventListener("click", () => {
-    alert("Halaman Pesanan Admin akan kita buat pada tahap berikutnya.");
+    showPage("orders");
+    setMobileActive("mobile-nav-orders");
   });
 
 document.getElementById("mobile-nav-commission")

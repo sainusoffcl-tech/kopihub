@@ -702,7 +702,28 @@
           <div id="shops-list"></div>
         </div>
       </section>
-          <section id="applications-section" hidden>
+          
+      <section id="orders-section" hidden>
+        <h2 class="section-title">Pesanan Platform</h2>
+        <p class="muted">
+          Daftar pesanan yang masuk dari seluruh kedai mitra KopiHub.
+        </p>
+
+        <div class="panel">
+          <button type="button" id="reload-orders"
+            class="action-button">
+            Muat Ulang Pesanan
+          </button>
+
+          <p id="orders-message" aria-live="polite">
+            Menyiapkan daftar pesanan...
+          </p>
+
+          <div id="orders-list"></div>
+        </div>
+      </section>
+
+    <section id="applications-section" hidden>
         <h2 class="section-title">Pendaftaran Mitra</h2>
         <p class="muted">
           Periksa pendaftaran kedai sebelum memberikan akses kepada pemilik.
@@ -864,6 +885,7 @@
     const denied = document.getElementById("denied");
     const app = document.getElementById("app");
     const dashboardView = document.getElementById("dashboard-view");
+    const ordersSection = document.getElementById("orders-section");
     const shopsSection = document.getElementById("shops-section");
     const shopsList = document.getElementById("shops-list");
     const shopsMessage = document.getElementById("shops-message");

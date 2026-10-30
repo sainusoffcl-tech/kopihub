@@ -205,7 +205,195 @@
       background: white;
       border-radius: 16px;
     }
+/* ===== NAVIGASI MOBILE KOPIHUB ===== */
 
+.mobile-bottom-nav {
+  display: none;
+}
+
+.mobile-menu-overlay {
+  display: none;
+}
+
+.mobile-menu-overlay.show {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+  z-index: 1000;
+}
+
+.mobile-menu-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  background: var(--cream);
+  border-radius: 22px 22px 0 0;
+  padding: 12px 18px 30px;
+  transform: translateY(110%);
+  transition: transform .28s ease;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.mobile-menu-sheet.show {
+  transform: translateY(0);
+}
+
+.menu-handle {
+  width: 42px;
+  height: 5px;
+  border-radius: 10px;
+  background: #c9cec5;
+  margin: 0 auto 18px;
+}
+
+.menu-sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.menu-sheet-header h2 {
+  margin: 0;
+  color: var(--green);
+}
+
+.menu-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #e9ece5;
+  color: var(--green);
+  font-size: 22px;
+}
+
+.mobile-menu-list {
+  display: grid;
+  gap: 8px;
+}
+
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: white;
+  color: var(--text);
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mobile-menu-item:active {
+  background: #e9eee8;
+}
+
+.mobile-menu-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: #edf3ed;
+  color: var(--green);
+  border-radius: 10px;
+  font-size: 17px;
+}
+
+.mobile-menu-item.logout-item {
+  color: var(--red);
+  margin-top: 8px;
+}
+
+.mobile-menu-item.logout-item .mobile-menu-icon {
+  background: #fce8e6;
+  color: var(--red);
+}
+
+@media (max-width: 849px) {
+  #app.layout {
+    display: block !important;
+    min-height: 100vh;
+  }
+
+  #app aside {
+    display: none;
+  }
+
+  #app main {
+    padding: 22px 15px 105px;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar h1 {
+    font-size: 23px;
+  }
+
+  .profile {
+    max-width: 160px;
+    overflow-wrap: anywhere;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat-value {
+    font-size: 21px;
+  }
+
+  .mobile-bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    background: white;
+    border-top: 1px solid var(--line);
+    padding: 9px 5px calc(9px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, .06);
+  }
+
+  .bottom-nav-item {
+    border: 0;
+    background: transparent;
+    color: #788278;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 5px 1px;
+  }
+
+  .bottom-nav-item .nav-icon {
+    font-size: 21px;
+    line-height: 1.2;
+  }
+
+  .bottom-nav-item.active {
+    color: var(--green);
+    font-weight: 800;
+  }
+
+  .bottom-nav-item.menu-button {
+    color: var(--green);
+    font-weight: 800;
+  }
+}
     @media (min-width: 850px) {
       .layout {
         display: grid;
@@ -358,6 +546,130 @@
         </div>
       </section>
     </main>
+      </main>
+
+    <!-- NAVIGASI BAWAH KHUSUS HANDPHONE -->
+    <nav class="mobile-bottom-nav">
+
+      <button type="button"
+        class="bottom-nav-item active"
+        id="mobile-nav-dashboard">
+        <span class="nav-icon">▦</span>
+        <span>Beranda</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-shops">
+        <span class="nav-icon">▤</span>
+        <span>Kedai</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-orders">
+        <span class="nav-icon">▣</span>
+        <span>Pesanan</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-commission">
+        <span class="nav-icon">◈</span>
+        <span>Komisi</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item menu-button"
+        id="mobile-menu-open">
+        <span class="nav-icon">☰</span>
+        <span>Menu</span>
+      </button>
+
+    </nav>
+
+    <!-- LATAR BELAKANG PANEL MENU -->
+    <div class="mobile-menu-overlay"
+      id="mobile-menu-overlay"></div>
+
+    <!-- PANEL MENU HAMBURGER -->
+    <div class="mobile-menu-sheet"
+      id="mobile-menu-sheet">
+
+      <div class="menu-handle"></div>
+
+      <div class="menu-sheet-header">
+        <h2>Menu Admin</h2>
+
+        <button type="button"
+          class="menu-close"
+          id="mobile-menu-close"
+          aria-label="Tutup menu">
+          ×
+        </button>
+      </div>
+
+      <div class="mobile-menu-list">
+
+        <button type="button"
+          class="mobile-menu-item"
+          id="mobile-menu-applications">
+          <span class="mobile-menu-icon">♧</span>
+          <span>Pendaftaran Mitra</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Pengguna & Akses">
+          <span class="mobile-menu-icon">♙</span>
+          <span>Pengguna &amp; Akses</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Transaksi Platform">
+          <span class="mobile-menu-icon">▣</span>
+          <span>Transaksi Platform</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Komisi & Pendapatan">
+          <span class="mobile-menu-icon">◈</span>
+          <span>Komisi &amp; Pendapatan</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Laporan">
+          <span class="mobile-menu-icon">▥</span>
+          <span>Laporan</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Pengaturan Platform">
+          <span class="mobile-menu-icon">⚙</span>
+          <span>Pengaturan Platform</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Audit Log">
+          <span class="mobile-menu-icon">◷</span>
+          <span>Audit Log</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item logout-item"
+          id="mobile-menu-logout">
+          <span class="mobile-menu-icon">↪</span>
+          <span>Keluar dari Admin</span>
+        </button>
+
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -753,7 +1065,101 @@ async function reviewApplication(item, decision, approve, reject) {
         window.location.href = "admin-login.html";
       }
     );
+/* ===== MENU HAMBURGER MOBILE ===== */
 
+const mobileMenuOpen =
+  document.getElementById("mobile-menu-open");
+
+const mobileMenuClose =
+  document.getElementById("mobile-menu-close");
+
+const mobileMenuSheet =
+  document.getElementById("mobile-menu-sheet");
+
+const mobileMenuOverlay =
+  document.getElementById("mobile-menu-overlay");
+
+function openMobileMenu() {
+  mobileMenuOverlay.classList.add("show");
+  mobileMenuSheet.classList.add("show");
+}
+
+function closeMobileMenu() {
+  mobileMenuOverlay.classList.remove("show");
+  mobileMenuSheet.classList.remove("show");
+}
+
+mobileMenuOpen.addEventListener("click", openMobileMenu);
+
+mobileMenuClose.addEventListener("click", closeMobileMenu);
+
+mobileMenuOverlay.addEventListener("click", closeMobileMenu);
+
+
+/* Navigasi bawah */
+
+function setMobileActive(id) {
+  document.querySelectorAll(".bottom-nav-item")
+    .forEach((button) => {
+      button.classList.remove("active");
+    });
+
+  document.getElementById(id).classList.add("active");
+}
+
+document.getElementById("mobile-nav-dashboard")
+  .addEventListener("click", () => {
+    showPage("dashboard");
+    setMobileActive("mobile-nav-dashboard");
+  });
+
+document.getElementById("mobile-nav-shops")
+  .addEventListener("click", () => {
+    showPage("shops");
+    setMobileActive("mobile-nav-shops");
+  });
+
+document.getElementById("mobile-nav-orders")
+  .addEventListener("click", () => {
+    alert("Halaman Pesanan Admin akan kita buat pada tahap berikutnya.");
+  });
+
+document.getElementById("mobile-nav-commission")
+  .addEventListener("click", () => {
+    alert("Halaman Komisi Admin akan kita buat pada tahap berikutnya.");
+  });
+
+
+/* Menu Pendaftaran Mitra */
+
+document.getElementById("mobile-menu-applications")
+  .addEventListener("click", () => {
+    closeMobileMenu();
+    showPage("applications");
+    setMobileActive("mobile-nav-dashboard");
+  });
+
+
+/* Menu yang belum tersedia */
+
+document.querySelectorAll("[data-coming-soon]")
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      const name = button.dataset.comingSoon;
+
+      alert("Fitur " + name +
+        " akan kita bangun pada tahap berikutnya.");
+    });
+  });
+
+
+/* Keluar dari Admin */
+
+document.getElementById("mobile-menu-logout")
+  .addEventListener("click", () => {
+    closeMobileMenu();
+    document.getElementById("logout").click();
+  });
     initAdmin();
   </script>
 </body>

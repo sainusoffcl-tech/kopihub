@@ -721,34 +721,45 @@ body {
       </button>
     </aside>
    
-  <main>
+
 <div class="topbar">
+
   <div class="topbar-content">
-    <div class="topbar-label">KOPIHUB PLATFORM</div>
-    <h1 id="page-title">Dashboard Admin</h1>
-    <div class="muted">Pusat pengelolaan layanan KopiHub</div>
+
+    <div class="topbar-brand" aria-label="KopiHub">
+      <span class="brand-kopi">Kop</span><span class="brand-i">i<span class="coffee-bean"></span></span><span class="brand-hub">Hub</span>
+    </div>
+
+    <div class="topbar-heading">
+      <h1 id="page-title">Dashboard Admin</h1>
+      <div class="topbar-description">
+        Pusat Pengelolaan Coffee Shop
+      </div>
+    </div>
+
     <div id="admin-email" hidden></div>
+
   </div>
 
   <button
     type="button"
     class="profile-button"
     id="admin-profile-button"
-    aria-label="Profil Admin"
-  >
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <circle cx="12" cy="8" r="4"></circle>
-      <path d="M4 21a8 8 0 0 1 16 0"></path>
-    </svg>
+    aria-label="Profil Admin">
+    <i data-lucide="user-round"></i>
   </button>
+
+  <div class="topbar-footer">
+    <span>PLATFORM MANAGEMENT</span>
+
+    <span class="admin-panel-label">
+      <span class="admin-dot"></span>
+      ADMIN PANEL
+    </span>
+  </div>
+
 </div>
+
       <div class="admin-content-scroll">
       <section id="dashboard-view">
         <div class="warning">

@@ -632,47 +632,7 @@ body {
     max-width: 100%;
   }
 }
-/* ===== HEADER DAN NAVIGASI TETAP, ISI BISA SCROLL ===== */
-@media (max-width: 849px) {
-  html,
-  body {
-    height: 100%;
-    overflow: hidden;
-  }
 
-  #app.layout {
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  #app main {
-    height: 100vh;
-    height: 100dvh;
-    max-height: 100dvh;
-    min-height: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
-  }
-
-  .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 800;
-  }
-
-  .mobile-bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 900;
-  }
-}
   </style>
 </head>
 <body>

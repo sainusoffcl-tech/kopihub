@@ -1,204 +1,1074 @@
+Cadangan.
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin KopiHub</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --green: #173d2e; --green2: #24543e; --cream: #f7f5ed;
-      --white: #fff; --text: #26372d; --muted: #788278;
-      --line: #e5e8df; --orange: #e99a48; --red: #a52c2c;
-    }
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0; padding: 0; width: 100%; max-width: 100%; height: 100%;
-      overflow: hidden; background: var(--cream);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      overscroll-behavior-x: none;
+      --green: #173d2e;
+      --green2: #24543e;
+      --cream: #f7f5ed;
+      --white: #fff;
+      --text: #26372d;
+      --muted: #788278;
+      --line: #e5e8df;
+      --orange: #e99a48;
+      --red: #a52c2c;
     }
 
-    /* LAYOUT BARU - KUNCI ATAS BAWAH */
-    #app.layout {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      height: 100dvh;
-      width: 100%;
-      overflow: hidden;
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--cream);
+      color: var(--text);
     }
-    
-    /* HEADER KUNCI */
-    .topbar {
-      flex: 0 0 auto;
+
+    button { cursor: pointer; font: inherit; }
+    button:disabled { opacity: .6; cursor: wait; }
+
+    .layout { min-height: 100vh; }
+
+    aside {
       background: var(--green);
       color: white;
+      padding: 24px 18px;
+    }
+
+    .brand { font-size: 24px; font-weight: 800; }
+    .brand span { color: #a9d2a6; }
+
+    .tagline {
+      color: #d1dfd3;
+      font-size: 12px;
+      margin: 7px 0 25px;
+    }
+
+    .nav-label {
+      color: #a9c2b0;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      margin: 22px 10px 10px;
+    }
+
+    .nav-item {
+      display: block;
+      width: 100%;
+      border: 0;
+      text-align: left;
+      padding: 12px;
+      margin: 4px 0;
+      border-radius: 10px;
+      color: #edf4ee;
+      background: transparent;
+      font-size: 14px;
+    }
+
+    .nav-item.active,
+    .nav-item:hover { background: var(--green2); }
+
+    main { padding: 22px 16px 40px; min-width: 0; }
+
+    .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 16px 18px;
-      padding-top: max(16px, env(safe-area-inset-top));
-      border-radius: 0 0 20px 20px;
-      z-index: 800;
-    }
-    .topbar-content { min-width: 0; }
-    .topbar-label { color: #b9d5bd; font-size: 10px; font-weight: 800; letter-spacing: 2px; margin-bottom: 6px; }
-    .topbar h1 { color: white; font-size: 22px; margin: 0 0 4px; }
-    .topbar .muted { color: #d1dfd3; font-size: 12px; }
-    .profile-button { width: 46px; height: 46px; flex-shrink: 0; display: grid; place-items: center; border: 2px solid #d1dfd3; border-radius: 50%; background: #24543e; color: white; }
-
-    /* ISI YANG BISA SCROLL */
-    .admin-content-scroll {
-      flex: 1 1 auto;
-      min-height: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: contain; /* BOLEH tarik dikit buat refresh */
-      touch-action: pan-y;
-      padding: 16px 15px 20px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
     }
 
-    /* BOTTOM NAV KUNCI */
-    .mobile-bottom-nav {
-      flex: 0 0 auto;
+    h1 { font-size: 25px; margin: 0 0 7px; }
+    h2 { font-size: 19px; }
+    .muted { color: var(--muted); font-size: 13px; }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .section-title { margin: 26px 0 14px; font-size: 17px; }
+
+    .stats {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card, .panel {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 17px;
+      min-width: 0;
+    }
+
+    .stat-label, .stat-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-value {
+      font-size: 25px;
+      font-weight: 750;
+      margin: 12px 0 5px;
+    }
+
+    .warning {
+      padding: 14px;
+      border-radius: 12px;
+      background: #fff0df;
+      color: #754719;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .status {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 5px 10px;
+      background: #e6f3e6;
+      color: #236338;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .logout {
+      margin-top: 24px;
+      border: 1px solid #6e8a78;
+      background: transparent;
+      color: white;
+      padding: 11px 13px;
+      border-radius: 10px;
+      width: 100%;
+    }
+
+    .action-button {
+      border: 0;
       background: var(--green);
-      padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
-      border-top: 1px solid #1e4a36;
-      z-index: 900;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 9px;
+      margin: 4px 4px 4px 0;
     }
-    .bottom-nav-item { border: 0; background: transparent; color: #cbd9ce; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 10px; padding: 5px 1px; }
-    .bottom-nav-item .nav-icon { font-size: 21px; }
-    .bottom-nav-item.active { color: white; font-weight: 800; }
-    .bottom-nav-item.menu-button { color: #f2c18d; font-weight: 800; }
 
-    /* KOMPONEN */
-    .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .card, .panel { background: white; border: 1px solid var(--line); border-radius: 16px; padding: 17px; min-width: 0; }
-    .stats .card:nth-child(3) { grid-column: 1 / -1; }
-    .stat-label, .stat-note { color: var(--muted); font-size: 12px; }
-    .stat-value { font-size: 24px; font-weight: 800; margin: 10px 0 5px; }
-    .warning { padding: 14px; border-radius: 12px; background: #fff0df; color: #754719; font-size: 13px; line-height: 1.5; }
-    .section-title { margin: 22px 0 12px; font-size: 17px; }
-    .status { display: inline-block; border-radius: 20px; padding: 5px 10px; background: #e6f3e6; color: #236338; font-size: 12px; font-weight: 700; }
-    .action-button { border: 0; background: var(--green); color: white; padding: 10px 14px; border-radius: 9px; margin: 4px 4px 4px 0; }
-    .shop-card { padding: 16px 0; border-bottom: 1px solid var(--line); }
-    .shop-detail { color: var(--muted); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
-    .shop-status { display: inline-block; padding: 4px 9px; border-radius: 20px; font-size: 12px; font-weight: 700; margin: 8px 0; }
-    .shop-status.active { background: #e6f3e6; color: #236338; }
-    .shop-status.inactive { background: #fce8e6; color: var(--red); }
-
-    /* DESKTOP */
-    aside { display: none; }
-    @media (min-width: 850px) {
-      #app.layout { flex-direction: row; }
-      aside { display: block !important; width: 260px; background: var(--green); color: white; padding: 24px 18px; overflow-y: auto; }
-      .brand { font-size: 24px; font-weight: 800; } .brand span { color: #a9d2a6; }
-      .tagline { color: #d1dfd3; font-size: 12px; margin: 7px 0 25px; }
-      .nav-label { color: #a9c2b0; font-size: 11px; letter-spacing: 1.5px; margin: 22px 10px 10px; }
-      .nav-item { display: block; width: 100%; border: 0; text-align: left; padding: 12px; margin: 4px 0; border-radius: 10px; color: #edf4ee; background: transparent; font-size: 14px; }
-      .nav-item.active, .nav-item:hover { background: var(--green2); }
-      .logout { margin-top: 24px; border: 1px solid #6e8a78; background: transparent; color: white; padding: 11px 13px; border-radius: 10px; width: 100%; }
-      .mobile-bottom-nav { display: none !important; }
-      #app main { display: flex !important; flex-direction: column; flex: 1; min-width: 0; overflow: hidden; }
-      .topbar { border-radius: 0; }
+    .shop-card {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
     }
+
+    .shop-card:last-child { border-bottom: 0; }
+
+    .shop-detail {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .shop-status {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .shop-status.active {
+      background: #e6f3e6;
+      color: #236338;
+    }
+
+    .shop-status.inactive {
+      background: #fce8e6;
+      color: var(--red);
+    }
+
+    #loading {
+      padding: 35px;
+      text-align: center;
+    }
+
+    #denied {
+      display: none;
+      margin: 40px auto;
+      max-width: 520px;
+      padding: 24px;
+      background: white;
+      border-radius: 16px;
+    }
+/* ===== HEADER ADMIN KOPIHUB ===== */
+
+.topbar-content {
+  min-width: 0;
+}
+
+.topbar-label {
+  color: #b9d5bd;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 9px;
+}
+
+.topbar h1 {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.profile-button {
+  width: 54px;
+  height: 54px;
+  border: 2px solid #c5d9c9;
+  background: rgba(255,255,255,.08);
+}
+
+
+    .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 800;
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -22px -15px 24px;
+  padding: 22px 18px;
+  background: var(--green);
+  color: white;
+  border-radius: 0 0 20px 20px;
+}
+
+.topbar h1 {
+  color: white;
+  font-size: 22px;
+  margin: 0 0 5px;
+}
+
+.topbar .muted {
+  color: #d1dfd3;
+}
+
+.profile-button {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid #d1dfd3;
+  border-radius: 50%;
+  background: #24543e;
+  color: white;
+}
+
+.profile-button svg {
+  width: 23px;
+  height: 23px;
+}
+
+/* ===== BOTTOM NAVIGATION ===== */
+
+.mobile-bottom-nav {
+  display: none;
+}
+
 @media (max-width: 849px) {
+#app.layout {
+  display: block !important;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+#app main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+  #app aside {
+    display: none;
+  }
+
   #app main {
+    padding: 0 15px 110px;
+  }
+
+  .topbar {
+    margin: 0 -15px 24px;
+    padding: 22px 18px;
+  }
+
+  .profile {
+    display: none;
+  }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.stats .card {
+  min-width: 0;
+  padding: 20px 16px;
+  border-radius: 20px;
+}
+
+  /* Kartu komisi memenuhi lebar dashboard */
+.stats .card:nth-child(3) {
+  grid-column: 1 / -1;
+}
+.stats .stat-label {
+  font-size: 14px;
+}
+
+.stats .stat-value {
+  font-size: 21px;
+}
+
+.stats .stat-note {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+  .mobile-bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    background: var(--green);
+    padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, .12);
+  }
+
+  .bottom-nav-item {
+    border: 0;
+    background: transparent;
+    color: #cbd9ce;
     display: flex;
     flex-direction: column;
-    flex: 1 1 auto;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 10px;
+    padding: 5px 1px;
+  }
+
+  .bottom-nav-item .nav-icon {
+    font-size: 21px;
+    line-height: 1.2;
+  }
+
+  .bottom-nav-item.active {
+    color: white;
+    font-weight: 800;
+  }
+
+  .bottom-nav-item.menu-button {
+    color: #f2c18d;
+    font-weight: 800;
   }
 }
-    /* MENU SHEET */
-    .mobile-menu-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(15,30,22,.48); }
-    .mobile-menu-overlay.show { display: block; }
-    .mobile-menu-sheet { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1001; background: var(--cream); padding: 12px 20px calc(25px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; max-height: 82vh; overflow-y: auto; }
-    .mobile-menu-sheet.show { display: block; }
-    .menu-handle { width: 42px; height: 5px; border-radius: 10px; background: #c8cec5; margin: 0 auto 18px; }
-    .menu-sheet-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
-    .menu-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: #e9e8df; font-size: 25px; }
-    .mobile-menu-list { display: grid; gap: 9px; }
-    .mobile-menu-item { width: 100%; display: flex; align-items: center; gap: 13px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 13px; background: white; text-align: left; font-size: 14px; font-weight: 600; }
-    .mobile-menu-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; background: #edf2e9; color: var(--green); font-size: 19px; }
-    .mobile-menu-item.logout-item { color: var(--red); background: #fff5f3; border-color: #f0d9d5; }
 
-    #loading, #denied { padding: 35px; text-align: center; }
-    #denied { display: none; margin: 40px auto; max-width: 520px; background: white; border-radius: 16px; }
+
+/* ===== PANEL MENU ADMIN ===== */
+
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 30, 22, 0.48);
+}
+
+.mobile-menu-overlay.show {
+  display: block;
+}
+
+.mobile-menu-sheet {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  background: var(--cream);
+  color: var(--text);
+  padding: 12px 20px calc(25px + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+  max-height: 82vh;
+  overflow-y: auto;
+}
+
+.mobile-menu-sheet.show {
+  display: block;
+}
+
+.menu-handle {
+  width: 42px;
+  height: 5px;
+  border-radius: 10px;
+  background: #c8cec5;
+  margin: 0 auto 18px;
+}
+
+.menu-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.menu-sheet-header h2 {
+  margin: 0;
+  font-size: 19px;
+  color: var(--green);
+}
+
+.menu-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #e9e8df;
+  color: var(--green);
+  font-size: 25px;
+}
+
+.mobile-menu-list {
+  display: grid;
+  gap: 9px;
+}
+
+.mobile-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: white;
+  color: var(--text);
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mobile-menu-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #edf2e9;
+  color: var(--green);
+  font-size: 19px;
+}
+
+.mobile-menu-item.logout-item {
+  color: var(--red);
+  background: #fff5f3;
+  border-color: #f0d9d5;
+}
+
+.mobile-menu-item.logout-item .mobile-menu-icon {
+  color: var(--red);
+  background: #fce8e6;
+}
+
+/* ===== PANEL HAMBURGER MOBILE ===== */
+
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 30, 22, 0.48);
+}
+
+.mobile-menu-overlay.show {
+  display: block;
+}
+
+.mobile-menu-sheet {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  background: var(--cream);
+  color: var(--text);
+  padding: 12px 20px calc(25px + env(safe-area-inset-bottom));
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+  max-height: 82vh;
+  overflow-y: auto;
+}
+
+.mobile-menu-sheet.show {
+  display: block;
+}
+
+.menu-handle {
+  width: 42px;
+  height: 5px;
+  border-radius: 10px;
+  background: #c9cec4;
+  margin: 0 auto 18px;
+}
+
+.menu-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.menu-close {
+  border: none;
+  background: #e9e8df;
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.mobile-menu-list {
+  display: grid;
+  gap: 10px;
+}
+
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: white;
+  color: var(--text);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mobile-menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #edf1e9;
+  color: var(--green);
+}
+
+.mobile-menu-item.logout-item {
+  color: var(--red);
+  background: #fff7f5;
+  border-color: #f0d8d3;
+}    
+ 
+/* ===== KUNCI HORIZONTAL DASHBOARD ADMIN ===== */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#app,
+#app.layout,
+#app main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 849px) {
+  #app.layout {
+    overflow-x: hidden;
+  }
+
+  #app main {
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    width: auto;
+    max-width: none;
+  }
+
+  .stats,
+  .panel,
+  .card {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+/* ===== SCROLL KHUSUS ISI DASHBOARD MOBILE ===== */
+
+@media (max-width: 849px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #app.layout {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    display: block !important;
+  }
+
+  #app main {
+    height: 100dvh;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 110px;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 800;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+  }
+}
+  /* ===== HEADER DAN NAVIGASI TETAP ===== */
+
+@media (max-width: 849px) {
+  #app.layout {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    display: block !important;
+  }
+
+  #app main {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #app .topbar {
+    flex: 0 0 auto;
+    position: relative;
+    margin: 0;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .admin-content-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding: 0 15px 110px;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+  }
+}
+ /* KUNCI GESER HORIZONTAL DASHBOARD ADMIN */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+#app,
+#app.layout,
+#app main,
+.admin-content-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 849px) {
+  #app.layout {
+    overflow-x: hidden !important;
+  }
+
+  #app main {
+    overflow-x: hidden !important;
+  }
+
+  .admin-content-scroll {
+    overflow-x: hidden !important;
+    touch-action: pan-y;
+  }
+}
   </style>
 </head>
 <body>
   <div id="loading">Memeriksa akun Admin KopiHub...</div>
-  <div id="denied"><h2>Akses Admin tidak tersedia</h2><p id="denied-message"></p><button class="action-button" onclick="window.location.href='admin-login.html'">Kembali ke login</button></div>
+
+  <div id="denied">
+    <h2>Akses Admin tidak tersedia</h2>
+    <p id="denied-message">
+      Akun ini belum berhasil diverifikasi sebagai Admin platform.
+    </p>
+    <button class="action-button" onclick="window.location.href='admin-login.html'">
+  Kembali ke halaman login
+</button>
+  </div>
 
   <div id="app" class="layout" style="display:none">
     <aside>
-      <div class="brand">Kopi<span>Hub</span></div><div class="tagline">PLATFORM MANAGEMENT</div>
+      <div class="brand">Kopi<span>Hub</span></div>
+      <div class="tagline">PLATFORM MANAGEMENT</div>
+
       <div class="nav-label">MENU UTAMA</div>
-      <button type="button" id="nav-dashboard" class="nav-item active">▦ Dashboard</button>
-      <button type="button" id="nav-shops" class="nav-item">▤ Kedai Mitra</button>
-      <button type="button" id="nav-applications" class="nav-item">♧ Pendaftaran Mitra</button>
-      <button id="logout" class="logout" type="button">Keluar dari Admin</button>
+      <button type="button" id="nav-dashboard" class="nav-item active">
+        ▦ &nbsp; Dashboard
+      </button>
+      <button type="button" id="nav-shops" class="nav-item">
+        ▤ &nbsp; Kedai Mitra
+      </button>
+      <button type="button" id="nav-applications" class="nav-item">
+      ♧ &nbsp; Pendaftaran Mitra
+      </button>
+      <div class="nav-item">♙ &nbsp; Pengguna &amp; Akses</div>
+
+      <div class="nav-label">KEUANGAN</div>
+      <div class="nav-item">▣ &nbsp; Transaksi Platform</div>
+      <div class="nav-item">◈ &nbsp; Komisi &amp; Pendapatan</div>
+      <div class="nav-item">▥ &nbsp; Laporan</div>
+
+      <div class="nav-label">SISTEM</div>
+      <div class="nav-item">⚙ &nbsp; Pengaturan Platform</div>
+      <div class="nav-item">◷ &nbsp; Audit Log</div>
+
+      <button id="logout" class="logout" type="button">
+        Keluar dari Admin
+      </button>
     </aside>
+   
+  </main>
+<div class="topbar">
+  <div class="topbar-content">
+    <div class="topbar-label">KOPIHUB PLATFORM</div>
+    <h1 id="page-title">Dashboard Admin</h1>
+    <div class="muted">Pusat pengelolaan layanan KopiHub</div>
+    <div id="admin-email" hidden></div>
+  </div>
 
-    <main>
-      <div class="topbar">
-        <div class="topbar-content"><div class="topbar-label">KOPIHUB PLATFORM</div><h1 id="page-title">Dashboard Admin</h1><div class="muted">Pusat pengelolaan layanan KopiHub</div></div>
-        <button type="button" class="profile-button" id="admin-profile-button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg></button>
-      </div>
-
+  <button
+    type="button"
+    class="profile-button"
+    id="admin-profile-button"
+    aria-label="Profil Admin"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="8" r="4"></circle>
+      <path d="M4 21a8 8 0 0 1 16 0"></path>
+    </svg>
+  </button>
+</div>
       <div class="admin-content-scroll">
-        <section id="dashboard-view">
-          <div class="warning"><strong>Dashboard tahap awal.</strong> Angka contoh di bawah belum diambil dari database.</div>
-          <h2 class="section-title">Ringkasan Platform</h2>
-          <div class="stats">
-            <div class="card"><div class="stat-label">Kedai Mitra</div><div class="stat-value" id="stat-shops">—</div><div class="stat-note" id="stat-shops-note">Memuat data kedai...</div></div>
-            <div class="card"><div class="stat-label">Total Pesanan</div><div class="stat-value" id="stat-orders">—</div><div class="stat-note" id="stat-orders-note">Memuat data pesanan...</div></div>
-            <div class="card"><div class="stat-label">Komisi KopiHub</div><div class="stat-value" id="stat-commission">—</div><div class="stat-note" id="stat-commission-note">Menunggu integrasi</div></div>
-          </div>
-          <h2 class="section-title">Status Admin</h2>
-          <div class="panel"><div class="status">✓ Admin terverifikasi</div><p>Selamat datang di pusat pengelolaan KopiHub.</p><p class="muted">Kamu dapat menggunakan halaman ini setelah login dengan akun yang memiliki hak Admin platform.</p></div>
-        </section>
-        <section id="shops-section" hidden><h2 class="section-title">Kedai Mitra</h2><div class="panel"><button type="button" id="reload-shops" class="action-button">Muat Ulang Kedai</button><p id="shops-message">Menyiapkan daftar kedai...</p><div id="shops-list"></div></div></section>
-        <section id="orders-section" hidden><h2 class="section-title">Pesanan Platform</h2><div class="panel"><button type="button" id="reload-orders" class="action-button">Muat Ulang Pesanan</button><p id="orders-message">Menyiapkan daftar pesanan...</p><div id="orders-list"></div></div></section>
-        <section id="applications-section" hidden><h2 class="section-title">Pendaftaran Mitra</h2><div class="panel"><button type="button" id="reload-applications" class="action-button">Muat Ulang Pendaftaran</button><p id="applications-message">Menyiapkan daftar pendaftaran...</p><div id="applications-list"></div></div></section>
+      <section id="dashboard-view">
+        <div class="warning">
+          <strong>Dashboard tahap awal.</strong>
+          Angka contoh di bawah belum diambil dari database dan tidak
+          boleh digunakan sebagai laporan transaksi nyata.
+        </div>
+
+        <h2 class="section-title">Ringkasan Platform</h2>
+
+<div class="stats">
+  <div class="card">
+    <div class="stat-label">Kedai Mitra</div>
+    <div class="stat-value" id="stat-shops">—</div>
+    <div class="stat-note" id="stat-shops-note">
+      Memuat data kedai...
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">Total Pesanan</div>
+    <div class="stat-value" id="stat-orders">—</div>
+    <div class="stat-note" id="stat-orders-note">
+      Memuat data pesanan...
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">Komisi KopiHub</div>
+    <div class="stat-value" id="stat-commission">—</div>
+    <div class="stat-note" id="stat-commission-note">
+      Menunggu integrasi perhitungan komisi
+    </div>
+  </div>
+</div>
+
+        <h2 class="section-title">Status Admin</h2>
+        <div class="panel">
+          <div class="status">✓ Admin terverifikasi</div>
+          <p>Selamat datang di pusat pengelolaan KopiHub.</p>
+          <p class="muted">
+            Kamu dapat menggunakan halaman ini setelah login dengan
+            akun yang memiliki hak Admin platform.
+          </p>
+        </div>
+      </section>
+
+      <section id="shops-section" hidden>
+        <h2 class="section-title">Kedai Mitra</h2>
+        <p class="muted">
+          Daftar kedai yang terdaftar di platform KopiHub.
+        </p>
+
+        <div class="panel">
+          <button type="button" id="reload-shops" class="action-button">
+            Muat Ulang Kedai
+          </button>
+          <p id="shops-message" aria-live="polite">
+            Menyiapkan daftar kedai...
+          </p>
+          <div id="shops-list"></div>
+        </div>
+      </section>
+          
+      <section id="orders-section" hidden>
+        <h2 class="section-title">Pesanan Platform</h2>
+        <p class="muted">
+          Daftar pesanan yang masuk dari seluruh kedai mitra KopiHub.
+        </p>
+
+        <div class="panel">
+          <button type="button" id="reload-orders"
+            class="action-button">
+            Muat Ulang Pesanan
+          </button>
+
+          <p id="orders-message" aria-live="polite">
+            Menyiapkan daftar pesanan...
+          </p>
+
+          <div id="orders-list"></div>
+        </div>
+      </section>
+
+    <section id="applications-section" hidden>
+        <h2 class="section-title">Pendaftaran Mitra</h2>
+        <p class="muted">
+          Periksa pendaftaran kedai sebelum memberikan akses kepada pemilik.
+        </p>
+
+        <div class="panel">
+          <button type="button" id="reload-applications"
+            class="action-button">
+            Muat Ulang Pendaftaran
+          </button>
+
+          <p id="applications-message" aria-live="polite">
+            Menyiapkan daftar pendaftaran...
+          </p>
+
+          <div id="applications-list"></div>
+        </div>
+      </section>
+      </div>
+      </main>
+
+    <!-- NAVIGASI BAWAH KHUSUS HANDPHONE -->
+    <nav class="mobile-bottom-nav">
+
+      <button type="button"
+        class="bottom-nav-item active"
+        id="mobile-nav-dashboard">
+        <span class="nav-icon">▦</span>
+        <span>Beranda</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-shops">
+        <span class="nav-icon">▤</span>
+        <span>Kedai</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-orders">
+        <span class="nav-icon">▣</span>
+        <span>Pesanan</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-commission">
+        <span class="nav-icon">◈</span>
+        <span>Komisi</span>
+      </button>
+
+      <button type="button"
+        class="bottom-nav-item menu-button"
+        id="mobile-menu-open">
+        <span class="nav-icon">☰</span>
+        <span>Menu</span>
+      </button>
+
+    </nav>
+
+    <!-- LATAR BELAKANG PANEL MENU -->
+    <div class="mobile-menu-overlay"
+      id="mobile-menu-overlay"></div>
+
+    <!-- PANEL MENU HAMBURGER -->
+    <div class="mobile-menu-sheet"
+      id="mobile-menu-sheet">
+
+      <div class="menu-handle"></div>
+
+      <div class="menu-sheet-header">
+        <h2>Menu Admin</h2>
+
+        <button type="button"
+          class="menu-close"
+          id="mobile-menu-close"u
+          aria-label="Tutup menu">
+          ×
+        </button>
       </div>
 
-      <nav class="mobile-bottom-nav">
-        <button type="button" class="bottom-nav-item active" id="mobile-nav-dashboard"><span class="nav-icon">▦</span><span>Beranda</span></button>
-        <button type="button" class="bottom-nav-item" id="mobile-nav-shops"><span class="nav-icon">▤</span><span>Kedai</span></button>
-        <button type="button" class="bottom-nav-item" id="mobile-nav-orders"><span class="nav-icon">▣</span><span>Pesanan</span></button>
-        <button type="button" class="bottom-nav-item" id="mobile-nav-commission"><span class="nav-icon">◈</span><span>Komisi</span></button>
-        <button type="button" class="bottom-nav-item menu-button" id="mobile-menu-open"><span class="nav-icon">☰</span><span>Menu</span></button>
-      </nav>
-    </main>
-
-    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
-    <div class="mobile-menu-sheet" id="mobile-menu-sheet">
-      <div class="menu-handle"></div>
-      <div class="menu-sheet-header"><h2>Menu Admin</h2><button type="button" class="menu-close" id="mobile-menu-close">×</button></div>
       <div class="mobile-menu-list">
-        <button type="button" class="mobile-menu-item" id="mobile-menu-applications"><span class="mobile-menu-icon">♧</span><span>Pendaftaran Mitra</span></button>
-        <button type="button" class="mobile-menu-item" data-coming-soon="Pengguna & Akses"><span class="mobile-menu-icon">♙</span><span>Pengguna & Akses</span></button>
-        <button type="button" class="mobile-menu-item" data-coming-soon="Transaksi Platform"><span class="mobile-menu-icon">▣</span><span>Transaksi Platform</span></button>
-        <button type="button" class="mobile-menu-item" data-coming-soon="Komisi & Pendapatan"><span class="mobile-menu-icon">◈</span><span>Komisi & Pendapatan</span></button>
-        <button type="button" class="mobile-menu-item logout-item" id="mobile-menu-logout"><span class="mobile-menu-icon">↪</span><span>Keluar dari Admin</span></button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          id="mobile-menu-applications">
+          <span class="mobile-menu-icon">♧</span>
+          <span>Pendaftaran Mitra</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Pengguna & Akses">
+          <span class="mobile-menu-icon">♙</span>
+          <span>Pengguna &amp; Akses</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Transaksi Platform">
+          <span class="mobile-menu-icon">▣</span>
+          <span>Transaksi Platform</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Komisi & Pendapatan">
+          <span class="mobile-menu-icon">◈</span>
+          <span>Komisi &amp; Pendapatan</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Laporan">
+          <span class="mobile-menu-icon">▥</span>
+          <span>Laporan</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Pengaturan Platform">
+          <span class="mobile-menu-icon">⚙</span>
+          <span>Pengaturan Platform</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item"
+          data-coming-soon="Audit Log">
+          <span class="mobile-menu-icon">◷</span>
+          <span>Audit Log</span>
+        </button>
+
+        <button type="button"
+          class="mobile-menu-item logout-item"
+          id="mobile-menu-logout">
+          <span class="mobile-menu-icon">↪</span>
+          <span>Keluar dari Admin</span>
+        </button>
+
       </div>
     </div>
+
   </div>
 
   <script>
     const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    // Publishable key boleh digunakan di frontend.
+    // Jangan pernah menaruh service_role atau secret key di sini.
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
     const loading = document.getElementById("loading");
     const denied = document.getElementById("denied");
     const app = document.getElementById("app");
@@ -207,14 +1077,482 @@
     const shopsSection = document.getElementById("shops-section");
     const shopsList = document.getElementById("shops-list");
     const shopsMessage = document.getElementById("shops-message");
-    const applicationsSection = document.getElementById("applications-section");
-    const applicationsList = document.getElementById("applications-list");
-    const applicationsMessage = document.getElementById("applications-message");
+const applicationsSection =
+  document.getElementById("applications-section");
 
-    function showPage(page) {
-      dashboardView.hidden = page !== "dashboard";
-      shopsSection.hidden = page !== "shops";
-      ordersSection.hidden = page !== "orders";
-      applicationsSection.hidden = page !== "applications";
-      document.getElementById("page-title").textContent = page === "shops" ? "Kedai Mitra" : page === "orders" ? "Pesanan Platform" : page === "applications" ? "Pendaftaran Mitra" : "Dashboard Admin";
-      document.getElementById("nav-dashboard").classList.toggle("active", page === "
+const applicationsList =
+  document.getElementById("applications-list");
+
+const applicationsMessage =
+  document.getElementById("applications-message");
+
+
+function showPage(page) {
+  dashboardView.hidden = page !== "dashboard";
+  shopsSection.hidden = page !== "shops";
+  ordersSection.hidden = page !== "orders";
+  applicationsSection.hidden = page !== "applications";
+
+  document.getElementById("page-title").textContent =
+    page === "shops"
+      ? "Kedai Mitra"
+      : page === "orders"
+        ? "Pesanan Platform"
+        : page === "applications"
+          ? "Pendaftaran Mitra"
+          : "Dashboard Admin";
+
+  document.getElementById("nav-dashboard").classList.toggle(
+    "active", page === "dashboard"
+  );
+
+  document.getElementById("nav-shops").classList.toggle(
+    "active", page === "shops"
+  );
+
+  document.getElementById("nav-applications").classList.toggle(
+    "active", page === "applications"
+  );
+
+  if (page === "shops") {
+    loadPartnerShops();
+  }
+
+  if (page === "applications") {
+    loadApplications();
+  }
+}
+
+async function loadDashboardStats() {
+  const shopsValue = document.getElementById("stat-shops");
+  const shopsNote = document.getElementById("stat-shops-note");
+  const ordersValue = document.getElementById("stat-orders");
+  const ordersNote = document.getElementById("stat-orders-note");
+
+  // Hitung kedai dari database
+  const { count: shopCount, error: shopsError } = await client
+    .from("kh_shops")
+    .select("id", { count: "exact", head: true });
+
+  if (shopsError) {
+    shopsValue.textContent = "!";
+    shopsNote.textContent = "Gagal memuat data kedai";
+    console.error("Gagal menghitung kedai:", shopsError.message);
+  } else {
+    shopsValue.textContent = Number(shopCount ?? 0)
+      .toLocaleString("id-ID");
+    shopsNote.textContent = "Total kedai terdaftar";
+  }
+
+  // Hitung seluruh pesanan yang tersimpan
+  const { count: orderCount, error: ordersError } = await client
+    .from("kh_orders")
+    .select("id", { count: "exact", head: true });
+
+  if (ordersError) {
+    ordersValue.textContent = "!";
+    ordersNote.textContent = "Gagal memuat data pesanan";
+    console.error("Gagal menghitung pesanan:", ordersError.message);
+  } else {
+    ordersValue.textContent = Number(orderCount ?? 0)
+      .toLocaleString("id-ID");
+    ordersNote.textContent = "Total pesanan tercatat";
+  }
+}
+
+    async function initAdmin() {
+      try {
+        const { data: authData, error: authError } =
+          await client.auth.getUser();
+
+        if (authError || !authData.user) {
+          throw new Error("Silakan login terlebih dahulu.");
+        }
+
+        const user = authData.user;
+
+        const { data: profile, error: profileError } =
+          await client
+            .from("kh_profiles")
+            .select("id, full_name, is_platform_admin")
+            .eq("id", user.id)
+            .maybeSingle();
+
+        if (profileError) {
+          throw new Error(
+            "Profil tidak dapat diverifikasi. Periksa izin baca kh_profiles."
+          );
+        }
+
+        if (!profile || profile.is_platform_admin !== true) {
+          throw new Error(
+            "Akun ini tidak memiliki izin Admin platform."
+          );
+        }
+
+        document.getElementById("admin-email").textContent =
+          user.email || "Akun terverifikasi";
+
+loading.style.display = "none";
+app.style.display = "grid";
+
+await loadDashboardStats();
+      } catch (error) {
+        loading.style.display = "none";
+        denied.style.display = "block";
+        document.getElementById("denied-message").textContent =
+          error.message || "Verifikasi akun gagal.";
+      }
+    }
+
+    async function loadPartnerShops() {
+      shopsMessage.textContent = "Memuat data kedai...";
+      shopsList.replaceChildren();
+
+      const { data, error } = await client
+        .from("kh_shops")
+        .select(
+          "id, name, business_type, address, phone, is_active, created_at"
+        )
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        shopsMessage.textContent =
+          "Data kedai gagal dimuat: " + error.message;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        shopsMessage.textContent =
+          "Belum ada kedai yang dapat ditampilkan.";
+        return;
+      }
+
+      shopsMessage.textContent = "Jumlah kedai: " + data.length;
+
+      data.forEach((shop) => {
+        const card = document.createElement("div");
+        card.className = "shop-card";
+
+        const name = document.createElement("strong");
+        name.textContent = shop.name || "Kedai tanpa nama";
+
+        const detail = document.createElement("div");
+        detail.className = "shop-detail";
+        detail.textContent = [
+          shop.business_type || "Jenis usaha belum diisi",
+          shop.address || "Alamat belum diisi",
+          shop.phone || "Telepon belum diisi"
+        ].join(" · ");
+
+        const status = document.createElement("div");
+        status.className = "shop-status " +
+          (shop.is_active ? "active" : "inactive");
+        status.textContent = shop.is_active ? "Aktif" : "Nonaktif";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "action-button";
+        button.textContent = shop.is_active
+          ? "Nonaktifkan Kedai"
+          : "Aktifkan Kedai";
+
+        button.addEventListener("click", async () => {
+          const nextStatus = !shop.is_active;
+          const action = nextStatus ? "mengaktifkan" : "menonaktifkan";
+
+          if (!confirm(
+            `Yakin ingin ${action} ${shop.name || "kedai ini"}?`
+          )) {
+            return;
+          }
+
+          button.disabled = true;
+          button.textContent = "Menyimpan...";
+
+          try {
+            const { error: updateError } = await client.rpc(
+              "admin_set_shop_active",
+              {
+                p_shop_id: shop.id,
+                p_is_active: nextStatus
+              }
+            );
+
+            if (updateError) {
+              throw updateError;
+            }
+
+            alert("Status kedai berhasil diperbarui.");
+            await loadPartnerShops();
+          } catch (error) {
+            alert("Status gagal diubah: " + error.message);
+            button.disabled = false;
+            button.textContent = shop.is_active
+              ? "Nonaktifkan Kedai"
+              : "Aktifkan Kedai";
+          }
+        });
+
+        card.append(name, detail, status, button);
+        shopsList.appendChild(card);
+      });
+    }
+async function loadApplications() {
+  applicationsMessage.textContent = "Memuat pendaftaran...";
+  applicationsList.replaceChildren();
+
+  const { data, error } = await client
+    .from("kh_shop_applications")
+    .select(
+      "id, shop_name, owner_name, phone, business_type, address, status, created_at"
+    )
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    applicationsMessage.textContent =
+      "Gagal memuat pendaftaran: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    applicationsMessage.textContent =
+      "Belum ada pendaftaran mitra yang menunggu pemeriksaan.";
+    return;
+  }
+
+  applicationsMessage.textContent =
+    "Pendaftaran menunggu pemeriksaan: " + data.length;
+
+  data.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "shop-card";
+
+    const name = document.createElement("strong");
+    name.textContent = item.shop_name;
+
+    const detail = document.createElement("div");
+    detail.className = "shop-detail";
+    detail.textContent = [
+      "Pemilik: " + item.owner_name,
+      "Telepon: " + item.phone,
+      "Jenis usaha: " + item.business_type,
+      "Alamat: " + (item.address || "Belum diisi"),
+      "Tanggal: " +
+        new Date(item.created_at).toLocaleDateString("id-ID")
+    ].join(" · ");
+
+    const status = document.createElement("div");
+    status.className = "shop-status inactive";
+    status.textContent = "Menunggu pemeriksaan";
+
+    const approve = document.createElement("button");
+    approve.type = "button";
+    approve.className = "action-button";
+    approve.textContent = "Setujui";
+
+    const reject = document.createElement("button");
+    reject.type = "button";
+    reject.className = "action-button";
+    reject.style.background = "#a52c2c";
+    reject.textContent = "Tolak";
+
+    approve.addEventListener("click", () => {
+      reviewApplication(item, "approved", approve, reject);
+    });
+
+    reject.addEventListener("click", () => {
+      reviewApplication(item, "rejected", approve, reject);
+    });
+
+    card.append(name, detail, status, approve, reject);
+    applicationsList.appendChild(card);
+  });
+}
+
+async function reviewApplication(item, decision, approve, reject) {
+  const approved = decision === "approved";
+  const action = approved ? "menyetujui" : "menolak";
+
+  if (!confirm(
+    `Yakin ingin ${action} pendaftaran ${item.shop_name}?`
+  )) {
+    return;
+  }
+
+  let reviewNote = null;
+
+  if (!approved) {
+    reviewNote = prompt("Alasan penolakan (opsional):");
+
+    if (reviewNote === null) {
+      return;
+    }
+  }
+
+  approve.disabled = true;
+  reject.disabled = true;
+
+  try {
+    const { data, error } = await client.rpc(
+      "admin_review_shop_application",
+      {
+        p_application_id: item.id,
+        p_decision: decision,
+        p_review_note: reviewNote
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || data.success !== true) {
+      throw new Error("Sistem belum mengonfirmasi hasil pemeriksaan.");
+    }
+
+    alert(
+      approved
+        ? "Pendaftaran disetujui. Kedai dan akses pemilik telah dibuat."
+        : "Pendaftaran telah ditolak."
+    );
+
+    await loadApplications();
+    await loadDashboardStats();
+  } catch (error) {
+    alert("Pemeriksaan gagal: " + error.message);
+    approve.disabled = false;
+    reject.disabled = false;
+  }
+}
+    document.getElementById("nav-dashboard").addEventListener(
+      "click", () => showPage("dashboard")
+    );
+
+    document.getElementById("nav-shops").addEventListener(
+      "click", () => showPage("shops")
+    );
+
+    document.getElementById("reload-shops").addEventListener(
+      "click", loadPartnerShops
+    );
+    document.getElementById("nav-applications").addEventListener(
+      "click", () => showPage("applications")
+    );
+
+    document.getElementById("reload-applications").addEventListener(
+      "click", loadApplications
+    );
+    document.getElementById("logout").addEventListener(
+      "click", async () => {
+        const { error } = await client.auth.signOut();
+
+        if (error) {
+          alert("Gagal keluar: " + error.message);
+          return;
+        }
+
+        window.location.href = "admin-login.html";
+      }
+    );
+/* ===== MENU HAMBURGER MOBILE ===== */
+
+const mobileMenuOpen =
+  document.getElementById("mobile-menu-open");
+
+const mobileMenuClose =
+  document.getElementById("mobile-menu-close");
+
+const mobileMenuSheet =
+  document.getElementById("mobile-menu-sheet");
+
+const mobileMenuOverlay =
+  document.getElementById("mobile-menu-overlay");
+
+function openMobileMenu() {
+  mobileMenuOverlay.classList.add("show");
+  mobileMenuSheet.classList.add("show");
+}
+
+function closeMobileMenu() {
+  mobileMenuOverlay.classList.remove("show");
+  mobileMenuSheet.classList.remove("show");
+}
+
+mobileMenuOpen.addEventListener("click", openMobileMenu);
+
+mobileMenuClose.addEventListener("click", closeMobileMenu);
+
+mobileMenuOverlay.addEventListener("click", closeMobileMenu);
+
+
+/* Navigasi bawah */
+
+function setMobileActive(id) {
+  document.querySelectorAll(".bottom-nav-item")
+    .forEach((button) => {
+      button.classList.remove("active");
+    });
+
+  document.getElementById(id).classList.add("active");
+}
+
+document.getElementById("mobile-nav-dashboard")
+  .addEventListener("click", () => {
+    showPage("dashboard");
+    setMobileActive("mobile-nav-dashboard");
+  });
+
+document.getElementById("mobile-nav-shops")
+  .addEventListener("click", () => {
+    showPage("shops");
+    setMobileActive("mobile-nav-shops");
+  });
+
+document.getElementById("mobile-nav-orders")
+  .addEventListener("click", () => {
+    showPage("orders");
+    setMobileActive("mobile-nav-orders");
+  });
+
+document.getElementById("mobile-nav-commission")
+  .addEventListener("click", () => {
+    alert("Halaman Komisi Admin akan kita buat pada tahap berikutnya.");
+  });
+
+
+/* Menu Pendaftaran Mitra */
+
+document.getElementById("mobile-menu-applications")
+  .addEventListener("click", () => {
+    closeMobileMenu();
+    showPage("applications");
+    setMobileActive("mobile-nav-dashboard");
+  });
+
+
+/* Menu yang belum tersedia */
+
+document.querySelectorAll("[data-coming-soon]")
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      const name = button.dataset.comingSoon;
+
+      alert("Fitur " + name +
+        " akan kita bangun pada tahap berikutnya.");
+    });
+  });
+
+
+/* Keluar dari Admin */
+
+document.getElementById("mobile-menu-logout")
+  .addEventListener("click", () => {
+    closeMobileMenu();
+    document.getElementById("logout").click();
+  });
+    initAdmin();
+  </script>
+</body>
+</html>

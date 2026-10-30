@@ -897,17 +897,22 @@ const applicationsList =
 
 const applicationsMessage =
   document.getElementById("applications-message");
-    function showPage(page) {
+
+
+function showPage(page) {
   dashboardView.hidden = page !== "dashboard";
   shopsSection.hidden = page !== "shops";
+  ordersSection.hidden = page !== "orders";
   applicationsSection.hidden = page !== "applications";
 
   document.getElementById("page-title").textContent =
     page === "shops"
       ? "Kedai Mitra"
-      : page === "applications"
-        ? "Pendaftaran Mitra"
-        : "Dashboard Admin";
+      : page === "orders"
+        ? "Pesanan Platform"
+        : page === "applications"
+          ? "Pendaftaran Mitra"
+          : "Dashboard Admin";
 
   document.getElementById("nav-dashboard").classList.toggle(
     "active", page === "dashboard"
@@ -929,6 +934,7 @@ const applicationsMessage =
     loadApplications();
   }
 }
+
 async function loadDashboardStats() {
   const shopsValue = document.getElementById("stat-shops");
   const shopsNote = document.getElementById("stat-shops-note");

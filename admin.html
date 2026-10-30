@@ -257,11 +257,22 @@
 }
 
 @media (max-width: 849px) {
-  #app.layout {
-    display: block !important;
-    min-height: 100vh;
-  }
+#app.layout {
+  display: block !important;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: clip;
+  box-sizing: border-box;
+}
 
+#app main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
   #app aside {
     display: none;
   }

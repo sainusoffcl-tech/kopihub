@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin KopiHub</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
       --green: #173d2e;
@@ -854,45 +855,46 @@ body {
       </div>
       </main>
 
-    <!-- NAVIGASI BAWAH KHUSUS HANDPHONE -->
-    <nav class="mobile-bottom-nav">
 
-      <button type="button"
-        class="bottom-nav-item active"
-        id="mobile-nav-dashboard">
-        <span class="nav-icon">▦</span>
-        <span>Beranda</span>
-      </button>
+<!-- NAVIGASI BAWAH KHUSUS HANDPHONE -->
+<nav class="mobile-bottom-nav">
 
-      <button type="button"
-        class="bottom-nav-item"
-        id="mobile-nav-shops">
-        <span class="nav-icon">▤</span>
-        <span>Kedai</span>
-      </button>
+  <button type="button"
+    class="bottom-nav-item active"
+    id="mobile-nav-dashboard">
+    <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+    <span>Beranda</span>
+  </button>
 
-      <button type="button"
-        class="bottom-nav-item"
-        id="mobile-nav-orders">
-        <span class="nav-icon">▣</span>
-        <span>Pesanan</span>
-      </button>
+  <button type="button"
+    class="bottom-nav-item"
+    id="mobile-nav-shops">
+    <span class="nav-icon"><i data-lucide="store"></i></span>
+    <span>Kedai</span>
+  </button>
 
-      <button type="button"
-        class="bottom-nav-item"
-        id="mobile-nav-commission">
-        <span class="nav-icon">◈</span>
-        <span>Komisi</span>
-      </button>
+  <button type="button"
+    class="bottom-nav-item"
+    id="mobile-nav-orders">
+    <span class="nav-icon"><i data-lucide="receipt-text"></i></span>
+    <span>Pesanan</span>
+  </button>
 
-      <button type="button"
-        class="bottom-nav-item menu-button"
-        id="mobile-menu-open">
-        <span class="nav-icon">☰</span>
-        <span>Menu</span>
-      </button>
+  <button type="button"
+    class="bottom-nav-item"
+    id="mobile-nav-commission">
+    <span class="nav-icon"><i data-lucide="wallet"></i></span>
+    <span>Komisi</span>
+  </button>
 
-    </nav>
+  <button type="button"
+    class="bottom-nav-item menu-button"
+    id="mobile-menu-open">
+    <span class="nav-icon"><i data-lucide="utensils"></i></span>
+    <span>Menu</span>
+  </button>
+
+</nav>
 
     <!-- LATAR BELAKANG PANEL MENU -->
     <div class="mobile-menu-overlay"
@@ -1475,6 +1477,12 @@ document.getElementById("mobile-menu-logout")
     document.getElementById("logout").click();
   });
     initAdmin();
+
+    // Tampilkan ikon navigasi Lucide
+    lucide.createIcons();
+  </script>
+</body>
+</html>
   </script>
 </body>
 </html>

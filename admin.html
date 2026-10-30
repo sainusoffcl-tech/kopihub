@@ -205,116 +205,51 @@
       background: white;
       border-radius: 16px;
     }
-/* ===== NAVIGASI MOBILE KOPIHUB ===== */
+/* ===== HEADER ADMIN KOPIHUB ===== */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -22px -15px 24px;
+  padding: 22px 18px;
+  background: var(--green);
+  color: white;
+  border-radius: 0 0 20px 20px;
+}
+
+.topbar h1 {
+  color: white;
+  font-size: 22px;
+  margin: 0 0 5px;
+}
+
+.topbar .muted {
+  color: #d1dfd3;
+}
+
+.profile-button {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid #d1dfd3;
+  border-radius: 50%;
+  background: #24543e;
+  color: white;
+}
+
+.profile-button svg {
+  width: 23px;
+  height: 23px;
+}
+
+/* ===== BOTTOM NAVIGATION ===== */
 
 .mobile-bottom-nav {
   display: none;
-}
-
-.mobile-menu-overlay {
-  display: none;
-}
-
-.mobile-menu-overlay.show {
-  display: block;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, .45);
-  z-index: 1000;
-}
-
-.mobile-menu-sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1001;
-  background: var(--cream);
-  border-radius: 22px 22px 0 0;
-  padding: 12px 18px 30px;
-  transform: translateY(110%);
-  transition: transform .28s ease;
-  max-height: 85vh;
-  overflow-y: auto;
-}
-
-.mobile-menu-sheet.show {
-  transform: translateY(0);
-}
-
-.menu-handle {
-  width: 42px;
-  height: 5px;
-  border-radius: 10px;
-  background: #c9cec5;
-  margin: 0 auto 18px;
-}
-
-.menu-sheet-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.menu-sheet-header h2 {
-  margin: 0;
-  color: var(--green);
-}
-
-.menu-close {
-  width: 36px;
-  height: 36px;
-  border: 0;
-  border-radius: 50%;
-  background: #e9ece5;
-  color: var(--green);
-  font-size: 22px;
-}
-
-.mobile-menu-list {
-  display: grid;
-  gap: 8px;
-}
-
-.mobile-menu-item {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  width: 100%;
-  padding: 15px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: white;
-  color: var(--text);
-  text-align: left;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.mobile-menu-item:active {
-  background: #e9eee8;
-}
-
-.mobile-menu-icon {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  background: #edf3ed;
-  color: var(--green);
-  border-radius: 10px;
-  font-size: 17px;
-}
-
-.mobile-menu-item.logout-item {
-  color: var(--red);
-  margin-top: 8px;
-}
-
-.mobile-menu-item.logout-item .mobile-menu-icon {
-  background: #fce8e6;
-  color: var(--red);
 }
 
 @media (max-width: 849px) {
@@ -328,20 +263,16 @@
   }
 
   #app main {
-    padding: 22px 15px 105px;
+    padding: 0 15px 110px;
   }
 
   .topbar {
-    align-items: flex-start;
-  }
-
-  .topbar h1 {
-    font-size: 23px;
+    margin: 0 -15px 24px;
+    padding: 22px 18px;
   }
 
   .profile {
-    max-width: 160px;
-    overflow-wrap: anywhere;
+    display: none;
   }
 
   .stats {
@@ -360,21 +291,20 @@
     left: 0;
     right: 0;
     z-index: 900;
-    background: white;
-    border-top: 1px solid var(--line);
-    padding: 9px 5px calc(9px + env(safe-area-inset-bottom));
-    box-shadow: 0 -4px 18px rgba(0, 0, 0, .06);
+    background: var(--green);
+    padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, .12);
   }
 
   .bottom-nav-item {
     border: 0;
     background: transparent;
-    color: #788278;
+    color: #cbd9ce;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 5px;
     font-size: 10px;
     padding: 5px 1px;
   }
@@ -385,25 +315,15 @@
   }
 
   .bottom-nav-item.active {
-    color: var(--green);
+    color: white;
     font-weight: 800;
   }
 
   .bottom-nav-item.menu-button {
-    color: var(--green);
+    color: #f2c18d;
     font-weight: 800;
   }
 }
-    @media (min-width: 850px) {
-      .layout {
-        display: grid;
-        grid-template-columns: 245px minmax(0, 1fr);
-      }
-
-      aside { min-height: 100vh; }
-      main { padding: 34px; }
-      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    }
   </style>
 </head>
 <body>
@@ -449,18 +369,33 @@
         Keluar dari Admin
       </button>
     </aside>
+   
+<div class="topbar">
+  <div>
+    <h1 id="page-title">Dashboard Admin</h1>
+    <div class="muted">Pusat pengelolaan layanan KopiHub</div>
+  </div>
 
-    <main>
-      <div class="topbar">
-        <div>
-          <h1 id="page-title">Dashboard Admin</h1>
-          <div class="muted">Pusat pengelolaan layanan KopiHub</div>
-        </div>
-        <div class="profile">
-          <strong>Admin KopiHub</strong>
-          <div id="admin-email" class="muted">Memuat akun...</div>
-        </div>
-      </div>
+  <button
+    type="button"
+    class="profile-button"
+    id="admin-profile-button"
+    aria-label="Profil Admin"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="8" r="4"></circle>
+      <path d="M4 21a8 8 0 0 1 16 0"></path>
+    </svg>
+  </button>
+</div>
+ 
 
       <section id="dashboard-view">
         <div class="warning">
@@ -546,7 +481,6 @@
         </div>
       </section>
     </main>
-      </main>
 
     <!-- NAVIGASI BAWAH KHUSUS HANDPHONE -->
     <nav class="mobile-bottom-nav">

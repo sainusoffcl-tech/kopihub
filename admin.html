@@ -839,15 +839,13 @@
         display: none !important;
       }
     }
-  /* PENGUNCI LAYAR MOBILE - KOPIHUB */
+  /* ===== PERBAIKAN LAYOUT MOBILE KOPIHUB ===== */
 @media (max-width: 849px) {
 
   html,
   body {
     width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    max-width: 100%;
     overflow: hidden !important;
     overscroll-behavior: none;
   }
@@ -860,43 +858,75 @@
   #app.layout {
     position: fixed !important;
     inset: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
     width: 100% !important;
+    max-width: 100% !important;
     height: 100vh !important;
     height: 100dvh !important;
     overflow: hidden !important;
-    overscroll-behavior: none;
   }
 
-  /* HEADER TIDAK BISA DITARIK */
+  #app main {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* HEADER TETAP, LOGO TIDAK TERTUTUP */
   .topbar {
-    flex-shrink: 0;
-    touch-action: pan-x;
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: calc(12px + env(safe-area-inset-top)) 18px 12px;
+    touch-action: none;
     overscroll-behavior: none;
   }
 
-  /* HANYA BAGIAN TENGAH YANG BISA SCROLL */
+  .topbar-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* HANYA BAGIAN TENGAH YANG SCROLL */
   .admin-content-scroll {
     flex: 1 1 auto;
+    min-width: 0;
     min-height: 0;
-    overflow-y: auto !important;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden !important;
+    overflow-y: auto !important;
     touch-action: pan-y;
-    overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: none;
   }
 
-  /* NAVIGASI BAWAH TIDAK BERGESER */
+  /* MENCEGAH KONTEN MELEBIHI LAYAR */
+  .stats,
+  .card,
+  .panel,
+  #dashboard-view {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* NAVIGASI TETAP SEPERTI DESAIN SEKARANG */
   .mobile-bottom-nav {
     position: fixed !important;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    touch-action: pan-x;
+    max-width: 100%;
+    touch-action: none;
     overscroll-behavior: none;
   }
 }
-  
   </style>
 </head>
 

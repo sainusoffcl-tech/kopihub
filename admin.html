@@ -1365,62 +1365,62 @@
       <!-- HANYA BAGIAN INI YANG BOLEH SCROLL -->
       <div class="admin-content-scroll" id="admin-content-scroll">
 
-        <!-- DASHBOARD -->
-        <section id="dashboard-view">
+<!-- DASHBOARD / RINGKASAN KEDAI -->
+<section id="dashboard-view">
 
-          <div class="warning">
-            <strong>Dashboard tahap awal.</strong>
-            Statistik kedai dan pesanan dihitung dari database.
-            Perhitungan komisi masih menunggu integrasi.
-          </div>
+  <!-- TAMPILAN DAFTAR KEDAI -->
+  <div id="dashboard-shop-list-view">
 
-          <h2 class="section-title">Ringkasan Platform</h2>
+    <h2 class="section-title" style="margin-top:8px">
+      Ringkasan Platform
+    </h2>
 
-          <div class="stats">
+    <div class="panel dashboard-shop-panel">
 
-            <div class="card">
-              <div class="stat-label">Kedai Mitra</div>
-              <div class="stat-value" id="stat-shops">—</div>
-              <div class="stat-note" id="stat-shops-note">
-                Memuat data kedai...
-              </div>
-            </div>
+      <div class="dashboard-shop-heading">
+        <div>
+          <div class="stat-label">Total Coffee Shop</div>
+          <div class="dashboard-shop-count" id="summary-shop-count">—</div>
+        </div>
 
-            <div class="card">
-              <div class="stat-label">Total Pesanan</div>
-              <div class="stat-value" id="stat-orders">—</div>
-              <div class="stat-note" id="stat-orders-note">
-                Memuat data pesanan...
-              </div>
-            </div>
+        <div class="dashboard-shop-icon">
+          <i data-lucide="store"></i>
+        </div>
+      </div>
 
-            <div class="card">
-              <div class="stat-label">Komisi KopiHub</div>
-              <div class="stat-value" id="stat-commission">—</div>
-              <div class="stat-note" id="stat-commission-note">
-                Menunggu integrasi perhitungan komisi
-              </div>
-            </div>
+      <label class="dashboard-search">
+        <i data-lucide="search"></i>
+        <input
+          type="search"
+          id="dashboard-shop-search"
+          placeholder="Cari nama Coffee Shop..."
+          autocomplete="off"
+        >
+      </label>
 
-          </div>
+      <p id="dashboard-shops-message" class="muted" aria-live="polite">
+        Memuat daftar kedai...
+      </p>
 
-          <h2 class="section-title">Status Admin</h2>
+      <div id="dashboard-shops-list"></div>
 
-          <div class="panel">
-            <div class="status">
-              <i data-lucide="shield-check"></i>
-              Admin terverifikasi
-            </div>
+    </div>
+  </div>
 
-            <p>Selamat datang di pusat pengelolaan KopiHub.</p>
+  <!-- TAMPILAN DETAIL KEDAI -->
+  <div id="dashboard-shop-detail-view" hidden>
 
-            <p class="muted">
-              Gunakan halaman ini untuk memantau platform,
-              mengelola kedai mitra, dan memeriksa pendaftaran.
-            </p>
-          </div>
+    <button type="button" class="action-button"
+      id="back-to-dashboard-shops">
+      <i data-lucide="arrow-left"></i>
+      Kembali ke Daftar Kedai
+    </button>
 
-        </section>
+    <div id="dashboard-shop-detail"></div>
+
+  </div>
+
+</section>
 
         <!-- KEDAI MITRA -->
         <section id="shops-section" hidden>

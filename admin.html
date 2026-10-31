@@ -963,18 +963,20 @@
     overflow: hidden !important;
   }
 
-  /* HEADER DESAIN NOMOR 4 - RINGKAS */
-  .topbar {
-    position: relative;
-    z-index: 20;
-    flex: 0 0 auto;
-    width: 100%;
-    min-height: 0;
-    padding: calc(5px + env(safe-area-inset-top, 0px)) 16px 7px;
-    gap: 9px;
-    border-radius: 0 0 16px 16px;
-    touch-action: pan-x;
-  }
+ /* HEADER DESAIN NOMOR 4 - MENTOK KE ATAS */
+.topbar {
+  position: relative;
+  z-index: 20;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px 12px;
+  gap: 9px;
+  border-radius: 0;
+  touch-action: none;
+  overscroll-behavior: none;
+}
 
   .topbar-brand {
     font-size: 23px;

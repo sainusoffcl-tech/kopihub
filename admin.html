@@ -1,988 +1,1221 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Admin KopiHub</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
     :root {
       --green: #173d2e;
       --green2: #24543e;
+      --green3: #315c45;
       --cream: #f7f5ed;
-      --white: #fff;
+      --white: #ffffff;
       --text: #26372d;
       --muted: #788278;
       --line: #e5e8df;
       --orange: #e99a48;
       --red: #a52c2c;
+      --shadow: 0 5px 20px rgba(25, 55, 37, .07);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
 
     body {
-      margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--cream);
       color: var(--text);
     }
 
-    button { cursor: pointer; font: inherit; }
-    button:disabled { opacity: .6; cursor: wait; }
-
-    .layout { min-height: 100vh; }
-
-    aside {
-      background: var(--green);
-      color: white;
-      padding: 24px 18px;
+    button {
+      cursor: pointer;
+      font: inherit;
     }
 
-    .brand { font-size: 24px; font-weight: 800; }
-    .brand span { color: #a9d2a6; }
-
-    .tagline {
-      color: #d1dfd3;
-      font-size: 12px;
-      margin: 7px 0 25px;
+    button:disabled {
+      opacity: .55;
+      cursor: wait;
     }
 
-    .nav-label {
-      color: #a9c2b0;
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      margin: 22px 10px 10px;
+    [hidden] {
+      display: none !important;
     }
 
-    .nav-item {
-      display: block;
-      width: 100%;
-      border: 0;
-      text-align: left;
-      padding: 12px;
-      margin: 4px 0;
-      border-radius: 10px;
-      color: #edf4ee;
-      background: transparent;
+    #loading {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 25px;
+      text-align: center;
+      color: var(--green);
+      background: var(--cream);
+      z-index: 3000;
+      font-weight: 650;
+    }
+
+    #denied {
+      display: none;
+      position: fixed;
+      inset: 0;
+      overflow-y: auto;
+      padding: 25px;
+      background: var(--cream);
+      z-index: 3001;
+    }
+
+    .denied-card {
+      max-width: 480px;
+      margin: 60px auto;
+      padding: 28px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .denied-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      color: var(--red);
+      background: #fce8e6;
+      margin-bottom: 18px;
+    }
+
+    .denied-card h2 {
+      margin: 0 0 10px;
+      color: var(--green);
+    }
+
+    .denied-card p {
+      color: var(--muted);
+      line-height: 1.6;
       font-size: 14px;
     }
 
-    .nav-item.active,
-    .nav-item:hover { background: var(--green2); }
+    /* ===== STRUKTUR UTAMA ===== */
 
-    main { padding: 22px 16px 40px; min-width: 0; }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
+    #app {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 0;
+      overflow: hidden;
     }
 
-    h1 { font-size: 25px; margin: 0 0 7px; }
-    h2 { font-size: 19px; }
-    .muted { color: var(--muted); font-size: 13px; }
+    .layout {
+      display: grid;
+      grid-template-columns: 245px minmax(0, 1fr);
+    }
 
-    .profile {
-      background: white;
-      border: 1px solid var(--line);
-      padding: 10px 14px;
-      border-radius: 12px;
+    /* ===== SIDEBAR DESKTOP ===== */
+
+    aside {
+      height: 100%;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 26px 17px;
+      color: white;
+      background: var(--green);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      margin: 0 10px;
+      font-size: 27px;
+      font-weight: 850;
+      letter-spacing: -1.2px;
+    }
+
+    .sidebar-brand .hub {
+      color: var(--orange);
+    }
+
+    .sidebar-tagline {
+      margin: 7px 10px 28px;
+      color: #c6d9ca;
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: 2px;
+    }
+
+    .nav-label {
+      margin: 24px 10px 10px;
+      color: #a9c2b0;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0;
+      padding: 12px;
+      border: 0;
+      border-radius: 11px;
+      color: #e7eee8;
+      background: transparent;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: white;
+      background: var(--green2);
+    }
+
+    .nav-item.active {
+      box-shadow: inset 3px 0 0 var(--orange);
+    }
+
+    .sidebar-logout {
+      width: 100%;
+      margin-top: 30px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #64816d;
+      border-radius: 11px;
+      color: white;
+      background: transparent;
       font-size: 13px;
     }
 
-    .section-title { margin: 26px 0 14px; font-size: 17px; }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+    .sidebar-logout svg {
+      width: 17px;
     }
 
-    .card, .panel {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 17px;
+    /* ===== AREA MAIN ===== */
+
+    main {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: var(--cream);
+    }
+
+    /* ===== HEADER TERKUNCI ===== */
+
+    .topbar {
+      position: relative;
+      z-index: 20;
+      flex: 0 0 auto;
+      width: 100%;
+      min-height: 116px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 20px 28px;
+      color: white;
+      background: var(--green);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 15px rgba(15, 45, 29, .08);
+    }
+
+    .topbar-content {
       min-width: 0;
     }
 
-    .stat-label, .stat-note {
-      color: var(--muted);
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 21px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .topbar-brand .hub {
+      color: var(--orange);
+    }
+
+    .coffee-bean {
+      width: 7px;
+      height: 10px;
+      display: inline-block;
+      margin: -9px 1px 0 -1px;
+      border-radius: 70% 35% 70% 35%;
+      background: #a66b3d;
+      transform: rotate(35deg);
+      position: relative;
+    }
+
+    .topbar-label {
+      margin-bottom: 5px;
+      color: #b9d5bd;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .topbar h1 {
+      margin: 0 0 5px;
+      color: white;
+      font-size: 23px;
+      line-height: 1.2;
+      font-weight: 850;
+      letter-spacing: -.5px;
+    }
+
+    .topbar-description {
+      color: #d1dfd3;
       font-size: 12px;
     }
 
-    .stat-value {
-      font-size: 25px;
-      font-weight: 750;
-      margin: 12px 0 5px;
+    .topbar-divider {
+      width: 100%;
+      height: 1px;
+      margin-top: 12px;
+      background: rgba(255,255,255,.18);
     }
 
+    .topbar-footer {
+      margin-top: 8px;
+      color: #b9d5bd;
+      font-size: 9px;
+      font-weight: 750;
+      letter-spacing: 1.8px;
+    }
+
+    .profile-button {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #c5d9c9;
+      border-radius: 50%;
+      color: white;
+      background: var(--green2);
+    }
+
+    .profile-button svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.8;
+    }
+
+    /* ===== AREA TENGAH YANG SCROLL ===== */
+
+    .admin-content-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+      padding: 24px 28px 35px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #c7d0c6 transparent;
+    }
+
+    .admin-content-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .admin-content-scroll::-webkit-scrollbar-thumb {
+      background: #c7d0c6;
+      border-radius: 10px;
+    }
+
+    /* ===== KONTEN ===== */
+
     .warning {
-      padding: 14px;
-      border-radius: 12px;
-      background: #fff0df;
+      padding: 15px 16px;
+      border: 1px solid #f0d9bb;
+      border-radius: 13px;
       color: #754719;
+      background: #fff0df;
       font-size: 13px;
       line-height: 1.6;
     }
 
+    .section-title {
+      margin: 25px 0 14px;
+      color: var(--green);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card,
+    .panel {
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .stat-value {
+      margin: 12px 0 5px;
+      color: var(--green);
+      font-size: 27px;
+      font-weight: 850;
+      letter-spacing: -.5px;
+    }
+
+    .stat-note {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
     .status {
-      display: inline-block;
-      border-radius: 20px;
-      padding: 5px 10px;
-      background: #e6f3e6;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 30px;
       color: #236338;
+      background: #e6f3e6;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .status svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .panel p {
+      line-height: 1.6;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .action-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 4px 5px 4px 0;
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      background: var(--green);
       font-size: 12px;
       font-weight: 700;
     }
 
-    .logout {
-      margin-top: 24px;
-      border: 1px solid #6e8a78;
-      background: transparent;
-      color: white;
-      padding: 11px 13px;
-      border-radius: 10px;
-      width: 100%;
+    .action-button:hover {
+      background: var(--green2);
     }
 
-    .action-button {
-      border: 0;
-      background: var(--green);
-      color: white;
-      padding: 10px 14px;
-      border-radius: 9px;
-      margin: 4px 4px 4px 0;
+    .action-button svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .action-button.danger {
+      background: var(--red);
     }
 
     .shop-card {
-      padding: 16px 0;
+      padding: 17px 0;
       border-bottom: 1px solid var(--line);
     }
 
-    .shop-card:last-child { border-bottom: 0; }
+    .shop-card:last-child {
+      border-bottom: 0;
+    }
+
+    .shop-card strong {
+      color: var(--green);
+      font-size: 14px;
+    }
 
     .shop-detail {
+      margin: 8px 0;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
+      font-size: 12px;
+      line-height: 1.8;
       overflow-wrap: anywhere;
     }
 
     .shop-status {
       display: inline-block;
-      padding: 4px 9px;
+      margin: 4px 0 9px;
+      padding: 5px 10px;
       border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      margin: 8px 0;
+      font-size: 11px;
+      font-weight: 750;
     }
 
     .shop-status.active {
-      background: #e6f3e6;
       color: #236338;
+      background: #e6f3e6;
     }
 
     .shop-status.inactive {
-      background: #fce8e6;
       color: var(--red);
+      background: #fce8e6;
     }
 
-    #loading {
-      padding: 35px;
+    .empty-state {
+      padding: 25px 10px;
+      color: var(--muted);
       text-align: center;
+      font-size: 13px;
     }
 
-    #denied {
+    .empty-state svg {
+      display: block;
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 10px;
+      color: #9aa99b;
+    }
+
+    /* ===== NAVIGASI BAWAH TERKUNCI ===== */
+
+    .mobile-bottom-nav {
       display: none;
-      margin: 40px auto;
-      max-width: 520px;
-      padding: 24px;
-      background: white;
-      border-radius: 16px;
     }
-/* ===== HEADER ADMIN KOPIHUB ===== */
-
-.topbar-content {
-  min-width: 0;
-}
-
-.topbar-label {
-  color: #b9d5bd;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  margin-bottom: 9px;
-}
-
-.topbar h1 {
-  font-size: 25px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-.profile-button {
-  width: 54px;
-  height: 54px;
-  border: 2px solid #c5d9c9;
-  background: rgba(255,255,255,.08);
-}
-
-
-    .topbar {
-  position: sticky;
-  top: 0;
-  z-index: 800;
-  
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: -22px -15px 24px;
-  padding: 22px 18px;
-  background: var(--green);
-  color: white;
-  border-radius: 0 0 20px 20px;
-}
-
-.topbar h1 {
-  color: white;
-  font-size: 22px;
-  margin: 0 0 5px;
-}
-
-.topbar .muted {
-  color: #d1dfd3;
-}
-
-.profile-button {
-  width: 46px;
-  height: 46px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border: 2px solid #d1dfd3;
-  border-radius: 50%;
-  background: #24543e;
-  color: white;
-}
-
-.profile-button svg {
-  width: 23px;
-  height: 23px;
-}
-
-/* ===== BOTTOM NAVIGATION ===== */
-
-.mobile-bottom-nav {
-  display: none;
-}
-
-@media (max-width: 849px) {
-#app.layout {
-  display: block !important;
-  width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-  overflow-x: clip;
-  box-sizing: border-box;
-}
-
-#app main {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  overflow-x: clip;
-}
-  #app aside {
-    display: none;
-  }
-
-  #app main {
-    padding: 0 15px 110px;
-  }
-
-  .topbar {
-    margin: 0 -15px 24px;
-    padding: 22px 18px;
-  }
-
-  .profile {
-    display: none;
-  }
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.stats .card {
-  min-width: 0;
-  padding: 20px 16px;
-  border-radius: 20px;
-}
-
-  /* Kartu komisi memenuhi lebar dashboard */
-.stats .card:nth-child(3) {
-  grid-column: 1 / -1;
-}
-.stats .stat-label {
-  font-size: 14px;
-}
-
-.stats .stat-value {
-  font-size: 21px;
-}
-
-.stats .stat-note {
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-  .mobile-bottom-nav {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 900;
-    background: var(--green);
-    padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
-    box-shadow: 0 -4px 18px rgba(0, 0, 0, .12);
-  }
-
-  .bottom-nav-item {
-    border: 0;
-    background: transparent;
-    color: #cbd9ce;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    font-size: 10px;
-    padding: 5px 1px;
-  }
-
-  .bottom-nav-item .nav-icon {
-    font-size: 21px;
-    line-height: 1.2;
-  }
-
-  .bottom-nav-item.active {
-    color: white;
-    font-weight: 800;
-  }
-
-  .bottom-nav-item.menu-button {
-    color: #f2c18d;
-    font-weight: 800;
-  }
-}
-
-
-/* ===== PANEL MENU ADMIN ===== */
-
-.mobile-menu-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(15, 30, 22, 0.48);
-}
-
-.mobile-menu-overlay.show {
-  display: block;
-}
-
-.mobile-menu-sheet {
-  display: none;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1001;
-  background: var(--cream);
-  color: var(--text);
-  padding: 12px 20px calc(25px + env(safe-area-inset-bottom));
-  border-radius: 24px 24px 0 0;
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
-  max-height: 82vh;
-  overflow-y: auto;
-}
-
-.mobile-menu-sheet.show {
-  display: block;
-}
-
-.menu-handle {
-  width: 42px;
-  height: 5px;
-  border-radius: 10px;
-  background: #c8cec5;
-  margin: 0 auto 18px;
-}
-
-.menu-sheet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-.menu-sheet-header h2 {
-  margin: 0;
-  font-size: 19px;
-  color: var(--green);
-}
-
-.menu-close {
-  width: 36px;
-  height: 36px;
-  border: 0;
-  border-radius: 50%;
-  background: #e9e8df;
-  color: var(--green);
-  font-size: 25px;
-}
-
-.mobile-menu-list {
-  display: grid;
-  gap: 9px;
-}
-
-.mobile-menu-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 13px 14px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: white;
-  color: var(--text);
-  text-align: left;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.mobile-menu-icon {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: #edf2e9;
-  color: var(--green);
-  font-size: 19px;
-}
-
-.mobile-menu-item.logout-item {
-  color: var(--red);
-  background: #fff5f3;
-  border-color: #f0d9d5;
-}
-
-.mobile-menu-item.logout-item .mobile-menu-icon {
-  color: var(--red);
-  background: #fce8e6;
-}
-
-/* ===== PANEL HAMBURGER MOBILE ===== */
-
-.mobile-menu-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(15, 30, 22, 0.48);
-}
-
-.mobile-menu-overlay.show {
-  display: block;
-}
-
-.mobile-menu-sheet {
-  display: none;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1001;
-  background: var(--cream);
-  color: var(--text);
-  padding: 12px 20px calc(25px + env(safe-area-inset-bottom));
-  border-radius: 24px 24px 0 0;
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
-  max-height: 82vh;
-  overflow-y: auto;
-}
-
-.mobile-menu-sheet.show {
-  display: block;
-}
-
-.menu-handle {
-  width: 42px;
-  height: 5px;
-  border-radius: 10px;
-  background: #c9cec4;
-  margin: 0 auto 18px;
-}
-
-.menu-sheet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
-
-.menu-close {
-  border: none;
-  background: #e9e8df;
-  color: var(--text);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.mobile-menu-list {
-  display: grid;
-  gap: 10px;
-}
-
-.mobile-menu-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: white;
-  color: var(--text);
-  font-size: 14px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.mobile-menu-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  border-radius: 12px;
-  background: #edf1e9;
-  color: var(--green);
-}
-
-.mobile-menu-item.logout-item {
-  color: var(--red);
-  background: #fff7f5;
-  border-color: #f0d8d3;
-}    
-    
-/* ===== KOPIHUB ADMIN MOBILE SCROLL FINAL ===== */
-
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-@media (max-width: 849px) {
-
-  html,
-  body {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  #app.layout {
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  #app aside {
-    display: none;
-  }
-
-  #app main {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-    padding: 0;
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-
-  /* HEADER TETAP DI ATAS */
-  #app .topbar {
-    position: relative;
-    top: auto;
-    z-index: 800;
-    flex: 0 0 auto;
-    width: 100%;
-    margin: 0 0 20px;
-  }
-
-  /* HANYA BAGIAN INI YANG BISA DI-SCROLL */
-  #app .admin-content-scroll {
-    display: block;
-    flex: 1 1 auto;
-    min-height: 0;
-    width: 100%;
-    padding: 0 15px 130px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-  }
-
-  /* NAVIGASI TETAP DI BAWAH */
-  #app .mobile-bottom-nav {
-    display: grid;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 900;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-}
 
+    /* ===== MENU HAMBURGER ===== */
+
+    .mobile-menu-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15, 30, 22, .5);
+    }
+
+    .mobile-menu-overlay.show {
+      display: block;
+    }
+
+    .mobile-menu-sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1001;
+      max-height: 82vh;
+      max-height: 82dvh;
+      padding: 12px 20px calc(25px + env(safe-area-inset-bottom));
+      overflow-y: auto;
+      border-radius: 24px 24px 0 0;
+      color: var(--text);
+      background: var(--cream);
+      box-shadow: 0 -8px 30px rgba(0,0,0,.18);
+      transform: translateY(110%);
+      visibility: hidden;
+      transition: transform .25s ease, visibility .25s;
+    }
+
+    .mobile-menu-sheet.show {
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    .menu-handle {
+      width: 42px;
+      height: 5px;
+      margin: 0 auto 18px;
+      border-radius: 10px;
+      background: #c8cec5;
+    }
+
+    .menu-sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 17px;
+    }
+
+    .menu-sheet-header h2 {
+      margin: 0;
+      color: var(--green);
+      font-size: 19px;
+    }
+
+    .menu-close {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      color: var(--green);
+      background: #e9e8df;
+    }
+
+    .menu-close svg {
+      width: 19px;
+    }
+
+    .mobile-menu-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .mobile-menu-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      color: var(--text);
+      background: white;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .mobile-menu-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--green);
+      background: #edf2e9;
+    }
+
+    .mobile-menu-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .mobile-menu-item.logout-item {
+      color: var(--red);
+      background: #fff5f3;
+      border-color: #f0d9d5;
+    }
+
+    .mobile-menu-item.logout-item .mobile-menu-icon {
+      color: var(--red);
+      background: #fce8e6;
+    }
+
+    /* ===== RESPONSIVE MOBILE ===== */
+
+    @media (max-width: 849px) {
+      html, body {
+        height: 100%;
+        min-height: 0;
+        overflow: hidden !important;
+      }
+
+      #app.layout {
+        display: block;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      #app aside {
+        display: none;
+      }
+
+      #app main {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .topbar {
+        flex: 0 0 auto;
+        min-height: 116px;
+        padding: 17px 18px;
+        border-radius: 0 0 18px 18px;
+      }
+
+      .topbar-brand {
+        font-size: 19px;
+      }
+
+      .topbar h1 {
+        font-size: 21px;
+      }
+
+      .topbar-description {
+        font-size: 11px;
+      }
+
+      .profile-button {
+        width: 43px;
+        height: 43px;
+      }
+
+      .admin-content-scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: 20px 15px 25px;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        touch-action: pan-y;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stats .card {
+        min-width: 0;
+        padding: 16px 14px;
+        border-radius: 17px;
+      }
+
+      .stats .card:nth-child(3) {
+        grid-column: 1 / -1;
+      }
+
+      .stat-label {
+        font-size: 11px;
+      }
+
+      .stat-value {
+        font-size: 23px;
+      }
+
+      .stat-note {
+        font-size: 10px;
+      }
+
+      .mobile-bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 900;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
+        background: var(--green);
+        box-shadow: 0 -4px 18px rgba(0,0,0,.13);
+      }
+
+      .bottom-nav-item {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 4px 1px;
+        border: 0;
+        color: #cbd9ce;
+        background: transparent;
+        font-size: 9px;
+        font-weight: 600;
+      }
+
+      .bottom-nav-item svg {
+        width: 21px;
+        height: 21px;
+        stroke-width: 1.8;
+      }
+
+      .bottom-nav-item.active {
+        color: white;
+        font-weight: 800;
+      }
+
+      .bottom-nav-item.active svg {
+        stroke-width: 2.4;
+      }
+
+      .bottom-nav-item.menu-button {
+        color: #f2c18d;
+      }
+
+      .section-title {
+        margin-top: 22px;
+      }
+    }
+
+    @media (min-width: 850px) {
+      .mobile-menu-overlay,
+      .mobile-menu-sheet {
+        display: none !important;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <div id="loading">Memeriksa akun Admin KopiHub...</div>
+
+  <div id="loading">
+    Memeriksa akun Admin KopiHub...
+  </div>
 
   <div id="denied">
-    <h2>Akses Admin tidak tersedia</h2>
-    <p id="denied-message">
-      Akun ini belum berhasil diverifikasi sebagai Admin platform.
-    </p>
-    <button class="action-button" onclick="window.location.href='admin-login.html'">
-  Kembali ke halaman login
-</button>
+    <div class="denied-card">
+      <div class="denied-icon">
+        <i data-lucide="shield-alert"></i>
+      </div>
+      <h2>Akses Admin tidak tersedia</h2>
+      <p id="denied-message">
+        Akun ini belum berhasil diverifikasi sebagai Admin platform.
+      </p>
+      <button class="action-button" id="back-to-login" type="button">
+        Kembali ke halaman login
+      </button>
+    </div>
   </div>
 
-  <div id="app" class="layout" style="display:none">
+  <div id="app" class="layout">
+
+    <!-- SIDEBAR DESKTOP -->
     <aside>
-      <div class="brand">Kopi<span>Hub</span></div>
-      <div class="tagline">PLATFORM MANAGEMENT</div>
+      <div class="sidebar-brand">
+        <span>Kopi</span><span class="hub">Hub</span>
+      </div>
+      <div class="sidebar-tagline">PLATFORM MANAGEMENT</div>
 
       <div class="nav-label">MENU UTAMA</div>
-      <button type="button" id="nav-dashboard" class="nav-item active">
-        ▦ &nbsp; Dashboard
+
+      <button type="button" id="nav-dashboard"
+        class="nav-item active">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
       </button>
+
       <button type="button" id="nav-shops" class="nav-item">
-        ▤ &nbsp; Kedai Mitra
+        <i data-lucide="store"></i>
+        <span>Kedai Mitra</span>
       </button>
+
+      <button type="button" id="nav-orders" class="nav-item">
+        <i data-lucide="receipt-text"></i>
+        <span>Pesanan</span>
+      </button>
+
       <button type="button" id="nav-applications" class="nav-item">
-      ♧ &nbsp; Pendaftaran Mitra
+        <i data-lucide="clipboard-check"></i>
+        <span>Pendaftaran Mitra</span>
       </button>
-      <div class="nav-item">♙ &nbsp; Pengguna &amp; Akses</div>
+
+      <button type="button" class="nav-item"
+        data-coming-soon="Pengguna & Akses">
+        <i data-lucide="users"></i>
+        <span>Pengguna &amp; Akses</span>
+      </button>
 
       <div class="nav-label">KEUANGAN</div>
-      <div class="nav-item">▣ &nbsp; Transaksi Platform</div>
-      <div class="nav-item">◈ &nbsp; Komisi &amp; Pendapatan</div>
-      <div class="nav-item">▥ &nbsp; Laporan</div>
+
+      <button type="button" class="nav-item"
+        data-coming-soon="Transaksi Platform">
+        <i data-lucide="credit-card"></i>
+        <span>Transaksi Platform</span>
+      </button>
+
+      <button type="button" id="nav-commission" class="nav-item">
+        <i data-lucide="wallet"></i>
+        <span>Komisi &amp; Pendapatan</span>
+      </button>
+
+      <button type="button" class="nav-item"
+        data-coming-soon="Laporan">
+        <i data-lucide="chart-no-axes-column"></i>
+        <span>Laporan</span>
+      </button>
 
       <div class="nav-label">SISTEM</div>
-      <div class="nav-item">⚙ &nbsp; Pengaturan Platform</div>
-      <div class="nav-item">◷ &nbsp; Audit Log</div>
 
-      <button id="logout" class="logout" type="button">
-        Keluar dari Admin
+      <button type="button" class="nav-item"
+        data-coming-soon="Pengaturan Platform">
+        <i data-lucide="settings"></i>
+        <span>Pengaturan Platform</span>
+      </button>
+
+      <button type="button" class="nav-item"
+        data-coming-soon="Audit Log">
+        <i data-lucide="history"></i>
+        <span>Audit Log</span>
+      </button>
+
+      <button type="button" id="logout" class="sidebar-logout">
+        <i data-lucide="log-out"></i>
+        <span>Keluar dari Admin</span>
       </button>
     </aside>
-   
-  </main>
-<div class="topbar">
 
-  <div class="topbar-content">
+    <!-- AREA UTAMA -->
+    <main>
 
-    <div class="topbar-brand" aria-label="KopiHub">
-      <span class="brand-kopi">Kop</span><span class="brand-i">i<span class="coffee-bean"></span></span><span class="brand-hub">Hub</span>
-    </div>
+      <!-- HEADER TETAP -->
+      <header class="topbar">
+        <div class="topbar-content">
 
-    <div class="topbar-heading">
-      <h1 id="page-title">Dashboard Admin</h1>
-      <div class="topbar-description">
-        Pusat Pengelolaan Coffee Shop
-      </div>
-    </div>
+          <div class="topbar-brand">
+            <span>Kop</span><span class="coffee-bean"></span><span>Hub</span>
+          </div>
 
-    <div id="admin-email" hidden></div>
+          <div class="topbar-label">KOPIHUB PLATFORM</div>
 
-  </div>
+          <h1 id="page-title">Dashboard Admin</h1>
 
-  <button
-    type="button"
-    class="profile-button"
-    id="admin-profile-button"
-    aria-label="Profil Admin">
-    <i data-lucide="user-round"></i>
-  </button>
+          <div class="topbar-description">
+            Pusat pengelolaan layanan KopiHub
+          </div>
 
-  <div class="topbar-footer">
-    <span>PLATFORM MANAGEMENT</span>
+          <div class="topbar-divider"></div>
 
-    <span class="admin-panel-label">
-      <span class="admin-dot"></span>
-      ADMIN PANEL
-    </span>
-  </div>
+          <div class="topbar-footer">ADMIN PANEL · PLATFORM MANAGEMENT</div>
 
-</div>
+          <div id="admin-email" hidden></div>
+        </div>
 
+        <button type="button" class="profile-button"
+          id="admin-profile-button" aria-label="Profil Admin">
+          <i data-lucide="user-round"></i>
+        </button>
+      </header>
+
+      <!-- HANYA BAGIAN INI YANG BOLEH SCROLL -->
       <div class="admin-content-scroll">
-      <section id="dashboard-view">
-        <div class="warning">
-          <strong>Dashboard tahap awal.</strong>
-          Angka contoh di bawah belum diambil dari database dan tidak
-          boleh digunakan sebagai laporan transaksi nyata.
-        </div>
 
-        <h2 class="section-title">Ringkasan Platform</h2>
+        <!-- DASHBOARD -->
+        <section id="dashboard-view">
 
-<div class="stats">
-  <div class="card">
-    <div class="stat-label">Kedai Mitra</div>
-    <div class="stat-value" id="stat-shops">—</div>
-    <div class="stat-note" id="stat-shops-note">
-      Memuat data kedai...
-    </div>
-  </div>
+          <div class="warning">
+            <strong>Dashboard tahap awal.</strong>
+            Statistik kedai dan pesanan dihitung dari database.
+            Perhitungan komisi masih menunggu integrasi.
+          </div>
 
-  <div class="card">
-    <div class="stat-label">Total Pesanan</div>
-    <div class="stat-value" id="stat-orders">—</div>
-    <div class="stat-note" id="stat-orders-note">
-      Memuat data pesanan...
-    </div>
-  </div>
+          <h2 class="section-title">Ringkasan Platform</h2>
 
-  <div class="card">
-    <div class="stat-label">Komisi KopiHub</div>
-    <div class="stat-value" id="stat-commission">—</div>
-    <div class="stat-note" id="stat-commission-note">
-      Menunggu integrasi perhitungan komisi
-    </div>
-  </div>
-</div>
+          <div class="stats">
 
-        <h2 class="section-title">Status Admin</h2>
-        <div class="panel">
-          <div class="status">✓ Admin terverifikasi</div>
-          <p>Selamat datang di pusat pengelolaan KopiHub.</p>
+            <div class="card">
+              <div class="stat-label">Kedai Mitra</div>
+              <div class="stat-value" id="stat-shops">—</div>
+              <div class="stat-note" id="stat-shops-note">
+                Memuat data kedai...
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="stat-label">Total Pesanan</div>
+              <div class="stat-value" id="stat-orders">—</div>
+              <div class="stat-note" id="stat-orders-note">
+                Memuat data pesanan...
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="stat-label">Komisi KopiHub</div>
+              <div class="stat-value" id="stat-commission">—</div>
+              <div class="stat-note" id="stat-commission-note">
+                Menunggu integrasi perhitungan komisi
+              </div>
+            </div>
+
+          </div>
+
+          <h2 class="section-title">Status Admin</h2>
+
+          <div class="panel">
+            <div class="status">
+              <i data-lucide="shield-check"></i>
+              Admin terverifikasi
+            </div>
+
+            <p>Selamat datang di pusat pengelolaan KopiHub.</p>
+
+            <p class="muted">
+              Gunakan halaman ini untuk memantau platform,
+              mengelola kedai mitra, dan memeriksa pendaftaran.
+            </p>
+          </div>
+
+        </section>
+
+        <!-- KEDAI MITRA -->
+        <section id="shops-section" hidden>
+
+          <h2 class="section-title">Kedai Mitra</h2>
+
           <p class="muted">
-            Kamu dapat menggunakan halaman ini setelah login dengan
-            akun yang memiliki hak Admin platform.
-          </p>
-        </div>
-      </section>
-
-      <section id="shops-section" hidden>
-        <h2 class="section-title">Kedai Mitra</h2>
-        <p class="muted">
-          Daftar kedai yang terdaftar di platform KopiHub.
-        </p>
-
-        <div class="panel">
-          <button type="button" id="reload-shops" class="action-button">
-            Muat Ulang Kedai
-          </button>
-          <p id="shops-message" aria-live="polite">
-            Menyiapkan daftar kedai...
-          </p>
-          <div id="shops-list"></div>
-        </div>
-      </section>
-          
-      <section id="orders-section" hidden>
-        <h2 class="section-title">Pesanan Platform</h2>
-        <p class="muted">
-          Daftar pesanan yang masuk dari seluruh kedai mitra KopiHub.
-        </p>
-
-        <div class="panel">
-          <button type="button" id="reload-orders"
-            class="action-button">
-            Muat Ulang Pesanan
-          </button>
-
-          <p id="orders-message" aria-live="polite">
-            Menyiapkan daftar pesanan...
+            Daftar kedai yang terdaftar di platform KopiHub.
           </p>
 
-          <div id="orders-list"></div>
-        </div>
-      </section>
+          <div class="panel">
+            <button type="button" id="reload-shops"
+              class="action-button">
+              <i data-lucide="refresh-cw"></i>
+              Muat Ulang Kedai
+            </button>
 
-    <section id="applications-section" hidden>
-        <h2 class="section-title">Pendaftaran Mitra</h2>
-        <p class="muted">
-          Periksa pendaftaran kedai sebelum memberikan akses kepada pemilik.
-        </p>
+            <p id="shops-message" class="muted" aria-live="polite">
+              Menyiapkan daftar kedai...
+            </p>
 
-        <div class="panel">
-          <button type="button" id="reload-applications"
-            class="action-button">
-            Muat Ulang Pendaftaran
-          </button>
+            <div id="shops-list"></div>
+          </div>
 
-          <p id="applications-message" aria-live="polite">
-            Menyiapkan daftar pendaftaran...
+        </section>
+
+        <!-- PESANAN -->
+        <section id="orders-section" hidden>
+
+          <h2 class="section-title">Pesanan Platform</h2>
+
+          <p class="muted">
+            Daftar pesanan dari seluruh kedai mitra KopiHub.
           </p>
 
-          <div id="applications-list"></div>
-        </div>
-      </section>
+          <div class="panel">
+
+            <button type="button" id="reload-orders"
+              class="action-button">
+              <i data-lucide="refresh-cw"></i>
+              Muat Ulang Pesanan
+            </button>
+
+            <p id="orders-message" class="muted" aria-live="polite">
+              Menyiapkan daftar pesanan...
+            </p>
+
+            <div id="orders-list"></div>
+
+          </div>
+        </section>
+
+        <!-- PENDAFTARAN MITRA -->
+        <section id="applications-section" hidden>
+
+          <h2 class="section-title">Pendaftaran Mitra</h2>
+
+          <p class="muted">
+            Periksa pendaftaran kedai sebelum memberikan akses kepada pemilik.
+          </p>
+
+          <div class="panel">
+
+            <button type="button" id="reload-applications"
+              class="action-button">
+              <i data-lucide="refresh-cw"></i>
+              Muat Ulang Pendaftaran
+            </button>
+
+            <p id="applications-message" class="muted"
+              aria-live="polite">
+              Menyiapkan daftar pendaftaran...
+            </p>
+
+            <div id="applications-list"></div>
+
+          </div>
+        </section>
+
+        <!-- KOMISI -->
+        <section id="commission-section" hidden>
+
+          <h2 class="section-title">Komisi &amp; Pendapatan</h2>
+
+          <div class="panel">
+            <p>
+              <strong>Pengelolaan Komisi KopiHub</strong>
+            </p>
+            <p class="muted">
+              Halaman perhitungan komisi akan diintegrasikan setelah
+              struktur transaksi dan pencatatan biaya layanan ditetapkan.
+            </p>
+          </div>
+
+        </section>
+
       </div>
-      </main>
+    </main>
 
+    <!-- NAVIGASI BAWAH TETAP -->
+    <nav class="mobile-bottom-nav">
 
-<!-- NAVIGASI BAWAH KHUSUS HANDPHONE -->
-<nav class="mobile-bottom-nav">
+      <button type="button"
+        class="bottom-nav-item active"
+        id="mobile-nav-dashboard">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Beranda</span>
+      </button>
 
-  <button type="button"
-    class="bottom-nav-item active"
-    id="mobile-nav-dashboard">
-    <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
-    <span>Beranda</span>
-  </button>
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-shops">
+        <i data-lucide="store"></i>
+        <span>Kedai</span>
+      </button>
 
-  <button type="button"
-    class="bottom-nav-item"
-    id="mobile-nav-shops">
-    <span class="nav-icon"><i data-lucide="store"></i></span>
-    <span>Kedai</span>
-  </button>
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-orders">
+        <i data-lucide="receipt-text"></i>
+        <span>Pesanan</span>
+      </button>
 
-  <button type="button"
-    class="bottom-nav-item"
-    id="mobile-nav-orders">
-    <span class="nav-icon"><i data-lucide="receipt-text"></i></span>
-    <span>Pesanan</span>
-  </button>
+      <button type="button"
+        class="bottom-nav-item"
+        id="mobile-nav-commission">
+        <i data-lucide="wallet"></i>
+        <span>Komisi</span>
+      </button>
 
-  <button type="button"
-    class="bottom-nav-item"
-    id="mobile-nav-commission">
-    <span class="nav-icon"><i data-lucide="wallet"></i></span>
-    <span>Komisi</span>
-  </button>
+      <button type="button"
+        class="bottom-nav-item menu-button"
+        id="mobile-menu-open">
+        <i data-lucide="utensils"></i>
+        <span>Menu</span>
+      </button>
 
-  <button type="button"
-    class="bottom-nav-item menu-button"
-    id="mobile-menu-open">
-    <span class="nav-icon"><i data-lucide="utensils"></i></span>
-    <span>Menu</span>
-  </button>
+    </nav>
 
-</nav>
+    <!-- OVERLAY MENU -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
 
-    <!-- LATAR BELAKANG PANEL MENU -->
-    <div class="mobile-menu-overlay"
-      id="mobile-menu-overlay"></div>
-
-    <!-- PANEL MENU HAMBURGER -->
-    <div class="mobile-menu-sheet"
-      id="mobile-menu-sheet">
+    <!-- PANEL HAMBURGER -->
+    <div class="mobile-menu-sheet" id="mobile-menu-sheet">
 
       <div class="menu-handle"></div>
 
       <div class="menu-sheet-header">
         <h2>Menu Admin</h2>
 
-        <button type="button"
-          class="menu-close"
-          id="mobile-menu-close"
-          aria-label="Tutup menu">
-          ×
+        <button type="button" class="menu-close"
+          id="mobile-menu-close" aria-label="Tutup menu">
+          <i data-lucide="x"></i>
         </button>
       </div>
 
       <div class="mobile-menu-list">
 
-        <button type="button"
-          class="mobile-menu-item"
+        <button type="button" class="mobile-menu-item"
           id="mobile-menu-applications">
-          <span class="mobile-menu-icon">♧</span>
+          <span class="mobile-menu-icon">
+            <i data-lucide="clipboard-check"></i>
+          </span>
           <span>Pendaftaran Mitra</span>
         </button>
 
-        <button type="button"
-          class="mobile-menu-item"
+        <button type="button" class="mobile-menu-item"
           data-coming-soon="Pengguna & Akses">
-          <span class="mobile-menu-icon">♙</span>
+          <span class="mobile-menu-icon">
+            <i data-lucide="users"></i>
+          </span>
           <span>Pengguna &amp; Akses</span>
         </button>
 
-        <button type="button"
-          class="mobile-menu-item"
+        <button type="button" class="mobile-menu-item"
           data-coming-soon="Transaksi Platform">
-          <span class="mobile-menu-icon">▣</span>
+          <span class="mobile-menu-icon">
+            <i data-lucide="credit-card"></i>
+          </span>
           <span>Transaksi Platform</span>
         </button>
 
-        <button type="button"
-          class="mobile-menu-item"
-          data-coming-soon="Komisi & Pendapatan">
-          <span class="mobile-menu-icon">◈</span>
+        <button type="button" class="mobile-menu-item"
+          id="mobile-menu-commission">
+          <span class="mobile-menu-icon">
+            <i data-lucide="wallet"></i>
+          </span>
           <span>Komisi &amp; Pendapatan</span>
         </button>
 
-        <button type="button"
-          class="mobile-menu-item"
+        <button type="button" class="mobile-menu-item"
           data-coming-soon="Laporan">
-          <span class="mobile-menu-icon">▥</span>
+          <span class="mobile-menu-icon">
+            <i data-lucide="chart-no-axes-column"></i>
+          </span>
           <span>Laporan</span>
         </button>
 
-        <button type="button"
-          class="mobile-menu-item"
+        <button type="button" class="mobile-menu-item"
           data-coming-soon="Pengaturan Platform">
-          <span class="mobile-menu-icon">⚙</span>
+          <span class="mobile-menu-icon">
+            <i data-lucide="settings"></i>
+          </span>
           <span>Pengaturan Platform</span>
         </button>
 
-        <button type="button"
-          class="mobile-menu-item"
+        <button type="button" class="mobile-menu-item"
           data-coming-soon="Audit Log">
-          <span class="mobile-menu-icon">◷</span>
+          <span class="mobile-menu-icon">
+            <i data-lucide="history"></i>
+          </span>
           <span>Audit Log</span>
         </button>
 
         <button type="button"
           class="mobile-menu-item logout-item"
           id="mobile-menu-logout">
-          <span class="mobile-menu-icon">↪</span>
+          <span class="mobile-menu-icon">
+            <i data-lucide="log-out"></i>
+          </span>
           <span>Keluar dari Admin</span>
         </button>
 
@@ -992,108 +1225,212 @@ body {
   </div>
 
   <script>
-    const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+    /* =========================================
+       KONFIGURASI SUPABASE
+    ========================================= */
 
-    // Publishable key boleh digunakan di frontend.
-    // Jangan pernah menaruh service_role atau secret key di sini.
+    const SUPABASE_URL = "GANTI_DENGAN_SUPABASE_URL_ASLI";
+
     const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+      "GANTI_DENGAN_PUBLISHABLE_KEY_ASLI";
 
     const client = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     );
 
+    /* =========================================
+       ELEMEN UTAMA
+    ========================================= */
+
     const loading = document.getElementById("loading");
     const denied = document.getElementById("denied");
     const app = document.getElementById("app");
-    const dashboardView = document.getElementById("dashboard-view");
-    const ordersSection = document.getElementById("orders-section");
-    const shopsSection = document.getElementById("shops-section");
-    const shopsList = document.getElementById("shops-list");
-    const shopsMessage = document.getElementById("shops-message");
-const applicationsSection =
-  document.getElementById("applications-section");
 
-const applicationsList =
-  document.getElementById("applications-list");
+    const dashboardView =
+      document.getElementById("dashboard-view");
 
-const applicationsMessage =
-  document.getElementById("applications-message");
+    const shopsSection =
+      document.getElementById("shops-section");
 
+    const ordersSection =
+      document.getElementById("orders-section");
 
-function showPage(page) {
-  dashboardView.hidden = page !== "dashboard";
-  shopsSection.hidden = page !== "shops";
-  ordersSection.hidden = page !== "orders";
-  applicationsSection.hidden = page !== "applications";
+    const applicationsSection =
+      document.getElementById("applications-section");
 
-  document.getElementById("page-title").textContent =
-    page === "shops"
-      ? "Kedai Mitra"
-      : page === "orders"
-        ? "Pesanan Platform"
-        : page === "applications"
-          ? "Pendaftaran Mitra"
-          : "Dashboard Admin";
+    const commissionSection =
+      document.getElementById("commission-section");
 
-  document.getElementById("nav-dashboard").classList.toggle(
-    "active", page === "dashboard"
-  );
+    const shopsList =
+      document.getElementById("shops-list");
 
-  document.getElementById("nav-shops").classList.toggle(
-    "active", page === "shops"
-  );
+    const shopsMessage =
+      document.getElementById("shops-message");
 
-  document.getElementById("nav-applications").classList.toggle(
-    "active", page === "applications"
-  );
+    const ordersList =
+      document.getElementById("orders-list");
 
-  if (page === "shops") {
-    loadPartnerShops();
-  }
+    const ordersMessage =
+      document.getElementById("orders-message");
 
-  if (page === "applications") {
-    loadApplications();
-  }
-}
+    const applicationsList =
+      document.getElementById("applications-list");
 
-async function loadDashboardStats() {
-  const shopsValue = document.getElementById("stat-shops");
-  const shopsNote = document.getElementById("stat-shops-note");
-  const ordersValue = document.getElementById("stat-orders");
-  const ordersNote = document.getElementById("stat-orders-note");
+    const applicationsMessage =
+      document.getElementById("applications-message");
 
-  // Hitung kedai dari database
-  const { count: shopCount, error: shopsError } = await client
-    .from("kh_shops")
-    .select("id", { count: "exact", head: true });
+    /* =========================================
+       IKON
+    ========================================= */
 
-  if (shopsError) {
-    shopsValue.textContent = "!";
-    shopsNote.textContent = "Gagal memuat data kedai";
-    console.error("Gagal menghitung kedai:", shopsError.message);
-  } else {
-    shopsValue.textContent = Number(shopCount ?? 0)
-      .toLocaleString("id-ID");
-    shopsNote.textContent = "Total kedai terdaftar";
-  }
+    function refreshIcons() {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
 
-  // Hitung seluruh pesanan yang tersimpan
-  const { count: orderCount, error: ordersError } = await client
-    .from("kh_orders")
-    .select("id", { count: "exact", head: true });
+    /* =========================================
+       NAVIGASI HALAMAN
+    ========================================= */
 
-  if (ordersError) {
-    ordersValue.textContent = "!";
-    ordersNote.textContent = "Gagal memuat data pesanan";
-    console.error("Gagal menghitung pesanan:", ordersError.message);
-  } else {
-    ordersValue.textContent = Number(orderCount ?? 0)
-      .toLocaleString("id-ID");
-    ordersNote.textContent = "Total pesanan tercatat";
-  }
-}
+    const pageTitles = {
+      dashboard: "Dashboard Admin",
+      shops: "Kedai Mitra",
+      orders: "Pesanan Platform",
+      applications: "Pendaftaran Mitra",
+      commission: "Komisi & Pendapatan"
+    };
+
+    function setDesktopActive(page) {
+      document.querySelectorAll("aside .nav-item")
+        .forEach(button => button.classList.remove("active"));
+
+      const map = {
+        dashboard: "nav-dashboard",
+        shops: "nav-shops",
+        orders: "nav-orders",
+        applications: "nav-applications",
+        commission: "nav-commission"
+      };
+
+      if (map[page]) {
+        document.getElementById(map[page])
+          ?.classList.add("active");
+      }
+    }
+
+    function setMobileActive(page) {
+      const map = {
+        dashboard: "mobile-nav-dashboard",
+        shops: "mobile-nav-shops",
+        orders: "mobile-nav-orders",
+        commission: "mobile-nav-commission"
+      };
+
+      document.querySelectorAll(".bottom-nav-item")
+        .forEach(button => button.classList.remove("active"));
+
+      if (map[page]) {
+        document.getElementById(map[page])
+          ?.classList.add("active");
+      }
+    }
+
+    function showPage(page) {
+      dashboardView.hidden = page !== "dashboard";
+      shopsSection.hidden = page !== "shops";
+      ordersSection.hidden = page !== "orders";
+      applicationsSection.hidden = page !== "applications";
+      commissionSection.hidden = page !== "commission";
+
+      document.getElementById("page-title").textContent =
+        pageTitles[page] || "Dashboard Admin";
+
+      setDesktopActive(page);
+      setMobileActive(page);
+
+      const content =
+        document.querySelector(".admin-content-scroll");
+
+      if (content) {
+        content.scrollTop = 0;
+      }
+
+      if (page === "shops") {
+        loadPartnerShops();
+      }
+
+      if (page === "orders") {
+        loadOrders();
+      }
+
+      if (page === "applications") {
+        loadApplications();
+      }
+
+      refreshIcons();
+    }
+
+    /* =========================================
+       STATISTIK DASHBOARD
+    ========================================= */
+
+    async function loadDashboardStats() {
+      const shopsValue =
+        document.getElementById("stat-shops");
+
+      const shopsNote =
+        document.getElementById("stat-shops-note");
+
+      const ordersValue =
+        document.getElementById("stat-orders");
+
+      const ordersNote =
+        document.getElementById("stat-orders-note");
+
+      const { count: shopCount, error: shopsError } =
+        await client
+          .from("kh_shops")
+          .select("id", {
+            count: "exact",
+            head: true
+          });
+
+      if (shopsError) {
+        shopsValue.textContent = "!";
+        shopsNote.textContent = "Gagal memuat data kedai";
+        console.error("Gagal menghitung kedai:", shopsError);
+      } else {
+        shopsValue.textContent =
+          Number(shopCount ?? 0).toLocaleString("id-ID");
+
+        shopsNote.textContent = "Total kedai terdaftar";
+      }
+
+      const { count: orderCount, error: ordersError } =
+        await client
+          .from("kh_orders")
+          .select("id", {
+            count: "exact",
+            head: true
+          });
+
+      if (ordersError) {
+        ordersValue.textContent = "!";
+        ordersNote.textContent = "Gagal memuat data pesanan";
+        console.error("Gagal menghitung pesanan:", ordersError);
+      } else {
+        ordersValue.textContent =
+          Number(orderCount ?? 0).toLocaleString("id-ID");
+
+        ordersNote.textContent = "Total pesanan tercatat";
+      }
+    }
+
+    /* =========================================
+       VERIFIKASI ADMIN
+    ========================================= */
 
     async function initAdmin() {
       try {
@@ -1128,17 +1465,27 @@ async function loadDashboardStats() {
         document.getElementById("admin-email").textContent =
           user.email || "Akun terverifikasi";
 
-loading.style.display = "none";
-app.style.display = "grid";
+        loading.style.display = "none";
+        app.style.display = "grid";
 
-await loadDashboardStats();
+        refreshIcons();
+
+        await loadDashboardStats();
+
       } catch (error) {
         loading.style.display = "none";
         denied.style.display = "block";
+
         document.getElementById("denied-message").textContent =
           error.message || "Verifikasi akun gagal.";
+
+        refreshIcons();
       }
     }
+
+    /* =========================================
+       MEMUAT KEDAI MITRA
+    ========================================= */
 
     async function loadPartnerShops() {
       shopsMessage.textContent = "Memuat data kedai...";
@@ -1149,7 +1496,9 @@ await loadDashboardStats();
         .select(
           "id, name, business_type, address, phone, is_active, created_at"
         )
-        .order("created_at", { ascending: false });
+        .order("created_at", {
+          ascending: false
+        });
 
       if (error) {
         shopsMessage.textContent =
@@ -1158,14 +1507,21 @@ await loadDashboardStats();
       }
 
       if (!data || data.length === 0) {
-        shopsMessage.textContent =
-          "Belum ada kedai yang dapat ditampilkan.";
+        shopsMessage.textContent = "";
+        shopsList.innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="store"></i>
+            Belum ada kedai yang dapat ditampilkan.
+          </div>
+        `;
+        refreshIcons();
         return;
       }
 
-      shopsMessage.textContent = "Jumlah kedai: " + data.length;
+      shopsMessage.textContent =
+        "Jumlah kedai: " + data.length;
 
-      data.forEach((shop) => {
+      data.forEach(shop => {
         const card = document.createElement("div");
         card.className = "shop-card";
 
@@ -1174,6 +1530,7 @@ await loadDashboardStats();
 
         const detail = document.createElement("div");
         detail.className = "shop-detail";
+
         detail.textContent = [
           shop.business_type || "Jenis usaha belum diisi",
           shop.address || "Alamat belum diisi",
@@ -1181,20 +1538,27 @@ await loadDashboardStats();
         ].join(" · ");
 
         const status = document.createElement("div");
-        status.className = "shop-status " +
+        status.className =
+          "shop-status " +
           (shop.is_active ? "active" : "inactive");
-        status.textContent = shop.is_active ? "Aktif" : "Nonaktif";
+
+        status.textContent =
+          shop.is_active ? "Aktif" : "Nonaktif";
 
         const button = document.createElement("button");
         button.type = "button";
         button.className = "action-button";
+
         button.textContent = shop.is_active
           ? "Nonaktifkan Kedai"
           : "Aktifkan Kedai";
 
         button.addEventListener("click", async () => {
           const nextStatus = !shop.is_active;
-          const action = nextStatus ? "mengaktifkan" : "menonaktifkan";
+
+          const action = nextStatus
+            ? "mengaktifkan"
+            : "menonaktifkan";
 
           if (!confirm(
             `Yakin ingin ${action} ${shop.name || "kedai ini"}?`
@@ -1206,22 +1570,27 @@ await loadDashboardStats();
           button.textContent = "Menyimpan...";
 
           try {
-            const { error: updateError } = await client.rpc(
-              "admin_set_shop_active",
-              {
-                p_shop_id: shop.id,
-                p_is_active: nextStatus
-              }
-            );
+            const { error: updateError } =
+              await client.rpc(
+                "admin_set_shop_active",
+                {
+                  p_shop_id: shop.id,
+                  p_is_active: nextStatus
+                }
+              );
 
             if (updateError) {
               throw updateError;
             }
 
             alert("Status kedai berhasil diperbarui.");
+
             await loadPartnerShops();
+            await loadDashboardStats();
+
           } catch (error) {
             alert("Status gagal diubah: " + error.message);
+
             button.disabled = false;
             button.textContent = shop.is_active
               ? "Nonaktifkan Kedai"
@@ -1233,267 +1602,457 @@ await loadDashboardStats();
         shopsList.appendChild(card);
       });
     }
-async function loadApplications() {
-  applicationsMessage.textContent = "Memuat pendaftaran...";
-  applicationsList.replaceChildren();
 
-  const { data, error } = await client
-    .from("kh_shop_applications")
-    .select(
-      "id, shop_name, owner_name, phone, business_type, address, status, created_at"
-    )
-    .eq("status", "pending")
-    .order("created_at", { ascending: false });
+    /* =========================================
+       MEMUAT PESANAN PLATFORM
+       Tidak menampilkan nama pelanggan
+       Tidak menampilkan nomor meja
+    ========================================= */
 
-  if (error) {
-    applicationsMessage.textContent =
-      "Gagal memuat pendaftaran: " + error.message;
-    return;
-  }
+    async function loadOrders() {
+      ordersMessage.textContent = "Memuat data pesanan...";
+      ordersList.replaceChildren();
 
-  if (!data || data.length === 0) {
-    applicationsMessage.textContent =
-      "Belum ada pendaftaran mitra yang menunggu pemeriksaan.";
-    return;
-  }
+      const { data, error } = await client
+        .from("kh_orders")
+        .select("id, shop_id, status, created_at")
+        .order("created_at", {
+          ascending: false
+        })
+        .limit(100);
 
-  applicationsMessage.textContent =
-    "Pendaftaran menunggu pemeriksaan: " + data.length;
-
-  data.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = "shop-card";
-
-    const name = document.createElement("strong");
-    name.textContent = item.shop_name;
-
-    const detail = document.createElement("div");
-    detail.className = "shop-detail";
-    detail.textContent = [
-      "Pemilik: " + item.owner_name,
-      "Telepon: " + item.phone,
-      "Jenis usaha: " + item.business_type,
-      "Alamat: " + (item.address || "Belum diisi"),
-      "Tanggal: " +
-        new Date(item.created_at).toLocaleDateString("id-ID")
-    ].join(" · ");
-
-    const status = document.createElement("div");
-    status.className = "shop-status inactive";
-    status.textContent = "Menunggu pemeriksaan";
-
-    const approve = document.createElement("button");
-    approve.type = "button";
-    approve.className = "action-button";
-    approve.textContent = "Setujui";
-
-    const reject = document.createElement("button");
-    reject.type = "button";
-    reject.className = "action-button";
-    reject.style.background = "#a52c2c";
-    reject.textContent = "Tolak";
-
-    approve.addEventListener("click", () => {
-      reviewApplication(item, "approved", approve, reject);
-    });
-
-    reject.addEventListener("click", () => {
-      reviewApplication(item, "rejected", approve, reject);
-    });
-
-    card.append(name, detail, status, approve, reject);
-    applicationsList.appendChild(card);
-  });
-}
-
-async function reviewApplication(item, decision, approve, reject) {
-  const approved = decision === "approved";
-  const action = approved ? "menyetujui" : "menolak";
-
-  if (!confirm(
-    `Yakin ingin ${action} pendaftaran ${item.shop_name}?`
-  )) {
-    return;
-  }
-
-  let reviewNote = null;
-
-  if (!approved) {
-    reviewNote = prompt("Alasan penolakan (opsional):");
-
-    if (reviewNote === null) {
-      return;
-    }
-  }
-
-  approve.disabled = true;
-  reject.disabled = true;
-
-  try {
-    const { data, error } = await client.rpc(
-      "admin_review_shop_application",
-      {
-        p_application_id: item.id,
-        p_decision: decision,
-        p_review_note: reviewNote
+      if (error) {
+        ordersMessage.textContent =
+          "Pesanan gagal dimuat: " + error.message;
+        return;
       }
-    );
 
-    if (error) {
-      throw error;
+      if (!data || data.length === 0) {
+        ordersMessage.textContent = "";
+
+        ordersList.innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="receipt-text"></i>
+            Belum ada pesanan yang dapat ditampilkan.
+          </div>
+        `;
+
+        refreshIcons();
+        return;
+      }
+
+      ordersMessage.textContent =
+        "Menampilkan " + data.length + " pesanan terbaru.";
+
+      data.forEach(order => {
+        const card = document.createElement("div");
+        card.className = "shop-card";
+
+        const title = document.createElement("strong");
+        title.textContent =
+          "Pesanan #" + String(order.id).slice(0, 8);
+
+        const detail = document.createElement("div");
+        detail.className = "shop-detail";
+
+        const date = order.created_at
+          ? new Date(order.created_at).toLocaleString("id-ID")
+          : "Tanggal tidak tersedia";
+
+        detail.textContent =
+          "ID Kedai: " + (order.shop_id || "—") +
+          " · Tanggal: " + date;
+
+        const status = document.createElement("div");
+        status.className = "shop-status inactive";
+        status.textContent =
+          order.status || "Status belum tersedia";
+
+        card.append(title, detail, status);
+        ordersList.appendChild(card);
+      });
     }
 
-    if (!data || data.success !== true) {
-      throw new Error("Sistem belum mengonfirmasi hasil pemeriksaan.");
+    /* =========================================
+       MEMUAT PENDAFTARAN MITRA
+    ========================================= */
+
+    async function loadApplications() {
+      applicationsMessage.textContent =
+        "Memuat pendaftaran...";
+
+      applicationsList.replaceChildren();
+
+      const { data, error } = await client
+        .from("kh_shop_applications")
+        .select(
+          "id, shop_name, owner_name, phone, business_type, address, status, created_at"
+        )
+        .eq("status", "pending")
+        .order("created_at", {
+          ascending: false
+        });
+
+      if (error) {
+        applicationsMessage.textContent =
+          "Gagal memuat pendaftaran: " + error.message;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        applicationsMessage.textContent = "";
+
+        applicationsList.innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="clipboard-check"></i>
+            Belum ada pendaftaran mitra yang menunggu pemeriksaan.
+          </div>
+        `;
+
+        refreshIcons();
+        return;
+      }
+
+      applicationsMessage.textContent =
+        "Pendaftaran menunggu pemeriksaan: " + data.length;
+
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "shop-card";
+
+        const name = document.createElement("strong");
+        name.textContent = item.shop_name || "Kedai tanpa nama";
+
+        const detail = document.createElement("div");
+        detail.className = "shop-detail";
+
+        detail.textContent = [
+          "Pemilik: " + (item.owner_name || "—"),
+          "Telepon: " + (item.phone || "—"),
+          "Jenis usaha: " + (item.business_type || "—"),
+          "Alamat: " + (item.address || "Belum diisi"),
+          "Tanggal: " + (
+            item.created_at
+              ? new Date(item.created_at).toLocaleDateString("id-ID")
+              : "—"
+          )
+        ].join(" · ");
+
+        const status = document.createElement("div");
+        status.className = "shop-status inactive";
+        status.textContent = "Menunggu pemeriksaan";
+
+        const approve = document.createElement("button");
+        approve.type = "button";
+        approve.className = "action-button";
+        approve.textContent = "Setujui";
+
+        const reject = document.createElement("button");
+        reject.type = "button";
+        reject.className = "action-button danger";
+        reject.textContent = "Tolak";
+
+        approve.addEventListener("click", () => {
+          reviewApplication(
+            item,
+            "approved",
+            approve,
+            reject
+          );
+        });
+
+        reject.addEventListener("click", () => {
+          reviewApplication(
+            item,
+            "rejected",
+            approve,
+            reject
+          );
+        });
+
+        card.append(
+          name,
+          detail,
+          status,
+          approve,
+          reject
+        );
+
+        applicationsList.appendChild(card);
+      });
     }
 
-    alert(
-      approved
-        ? "Pendaftaran disetujui. Kedai dan akses pemilik telah dibuat."
-        : "Pendaftaran telah ditolak."
-    );
+    /* =========================================
+       SETUJUI / TOLAK PENDAFTARAN
+    ========================================= */
 
-    await loadApplications();
-    await loadDashboardStats();
-  } catch (error) {
-    alert("Pemeriksaan gagal: " + error.message);
-    approve.disabled = false;
-    reject.disabled = false;
-  }
-}
-    document.getElementById("nav-dashboard").addEventListener(
-      "click", () => showPage("dashboard")
-    );
+    async function reviewApplication(
+      item,
+      decision,
+      approve,
+      reject
+    ) {
+      const approved = decision === "approved";
 
-    document.getElementById("nav-shops").addEventListener(
-      "click", () => showPage("shops")
-    );
+      const action = approved
+        ? "menyetujui"
+        : "menolak";
 
-    document.getElementById("reload-shops").addEventListener(
-      "click", loadPartnerShops
-    );
-    document.getElementById("nav-applications").addEventListener(
-      "click", () => showPage("applications")
-    );
+      if (!confirm(
+        `Yakin ingin ${action} pendaftaran ${item.shop_name}?`
+      )) {
+        return;
+      }
 
-    document.getElementById("reload-applications").addEventListener(
-      "click", loadApplications
-    );
-    document.getElementById("logout").addEventListener(
-      "click", async () => {
-        const { error } = await client.auth.signOut();
+      let reviewNote = null;
 
-        if (error) {
-          alert("Gagal keluar: " + error.message);
+      if (!approved) {
+        reviewNote = prompt(
+          "Alasan penolakan (opsional):"
+        );
+
+        if (reviewNote === null) {
           return;
         }
-
-        window.location.href = "admin-login.html";
       }
+
+      approve.disabled = true;
+      reject.disabled = true;
+
+      try {
+        const { data, error } = await client.rpc(
+          "admin_review_shop_application",
+          {
+            p_application_id: item.id,
+            p_decision: decision,
+            p_review_note: reviewNote
+          }
+        );
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data || data.success !== true) {
+          throw new Error(
+            "Sistem belum mengonfirmasi hasil pemeriksaan."
+          );
+        }
+
+        alert(
+          approved
+            ? "Pendaftaran disetujui. Kedai dan akses pemilik telah dibuat."
+            : "Pendaftaran telah ditolak."
+        );
+
+        await loadApplications();
+        await loadDashboardStats();
+
+      } catch (error) {
+        alert("Pemeriksaan gagal: " + error.message);
+
+        approve.disabled = false;
+        reject.disabled = false;
+      }
+    }
+
+    /* =========================================
+       EVENT NAVIGASI DESKTOP
+    ========================================= */
+
+    document.getElementById("nav-dashboard")
+      .addEventListener("click", () => {
+        showPage("dashboard");
+      });
+
+    document.getElementById("nav-shops")
+      .addEventListener("click", () => {
+        showPage("shops");
+      });
+
+    document.getElementById("nav-orders")
+      .addEventListener("click", () => {
+        showPage("orders");
+      });
+
+    document.getElementById("nav-applications")
+      .addEventListener("click", () => {
+        showPage("applications");
+      });
+
+    document.getElementById("nav-commission")
+      .addEventListener("click", () => {
+        showPage("commission");
+      });
+
+    /* =========================================
+       TOMBOL MUAT ULANG
+    ========================================= */
+
+    document.getElementById("reload-shops")
+      .addEventListener("click", loadPartnerShops);
+
+    document.getElementById("reload-orders")
+      .addEventListener("click", loadOrders);
+
+    document.getElementById("reload-applications")
+      .addEventListener("click", loadApplications);
+
+    /* =========================================
+       LOGOUT
+    ========================================= */
+
+    async function logoutAdmin() {
+      if (!confirm("Yakin ingin keluar dari Admin KopiHub?")) {
+        return;
+      }
+
+      const { error } = await client.auth.signOut();
+
+      if (error) {
+        alert("Gagal keluar: " + error.message);
+        return;
+      }
+
+      window.location.href = "admin-login.html";
+    }
+
+    document.getElementById("logout")
+      .addEventListener("click", logoutAdmin);
+
+    document.getElementById("mobile-menu-logout")
+      .addEventListener("click", async () => {
+        closeMobileMenu();
+        await logoutAdmin();
+      });
+
+    document.getElementById("back-to-login")
+      .addEventListener("click", () => {
+        window.location.href = "admin-login.html";
+      });
+
+    /* =========================================
+       PROFIL ADMIN
+    ========================================= */
+
+    document.getElementById("admin-profile-button")
+      .addEventListener("click", () => {
+        const email =
+          document.getElementById("admin-email").textContent;
+
+        alert(
+          "Profil Admin KopiHub\n\n" +
+          (email || "Akun Admin terverifikasi")
+        );
+      });
+
+    /* =========================================
+       MENU HAMBURGER MOBILE
+    ========================================= */
+
+    const mobileMenuOpen =
+      document.getElementById("mobile-menu-open");
+
+    const mobileMenuClose =
+      document.getElementById("mobile-menu-close");
+
+    const mobileMenuSheet =
+      document.getElementById("mobile-menu-sheet");
+
+    const mobileMenuOverlay =
+      document.getElementById("mobile-menu-overlay");
+
+    function openMobileMenu() {
+      mobileMenuOverlay.classList.add("show");
+      mobileMenuSheet.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeMobileMenu() {
+      mobileMenuOverlay.classList.remove("show");
+      mobileMenuSheet.classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    mobileMenuOpen.addEventListener(
+      "click",
+      openMobileMenu
     );
-/* ===== MENU HAMBURGER MOBILE ===== */
 
-const mobileMenuOpen =
-  document.getElementById("mobile-menu-open");
+    mobileMenuClose.addEventListener(
+      "click",
+      closeMobileMenu
+    );
 
-const mobileMenuClose =
-  document.getElementById("mobile-menu-close");
+    mobileMenuOverlay.addEventListener(
+      "click",
+      closeMobileMenu
+    );
 
-const mobileMenuSheet =
-  document.getElementById("mobile-menu-sheet");
+    /* =========================================
+       NAVIGASI BAWAH MOBILE
+    ========================================= */
 
-const mobileMenuOverlay =
-  document.getElementById("mobile-menu-overlay");
+    document.getElementById("mobile-nav-dashboard")
+      .addEventListener("click", () => {
+        showPage("dashboard");
+      });
 
-function openMobileMenu() {
-  mobileMenuOverlay.classList.add("show");
-  mobileMenuSheet.classList.add("show");
-}
+    document.getElementById("mobile-nav-shops")
+      .addEventListener("click", () => {
+        showPage("shops");
+      });
 
-function closeMobileMenu() {
-  mobileMenuOverlay.classList.remove("show");
-  mobileMenuSheet.classList.remove("show");
-}
+    document.getElementById("mobile-nav-orders")
+      .addEventListener("click", () => {
+        showPage("orders");
+      });
 
-mobileMenuOpen.addEventListener("click", openMobileMenu);
+    document.getElementById("mobile-nav-commission")
+      .addEventListener("click", () => {
+        showPage("commission");
+      });
 
-mobileMenuClose.addEventListener("click", closeMobileMenu);
+    /* =========================================
+       MENU HAMBURGER
+    ========================================= */
 
-mobileMenuOverlay.addEventListener("click", closeMobileMenu);
+    document.getElementById("mobile-menu-applications")
+      .addEventListener("click", () => {
+        closeMobileMenu();
+        showPage("applications");
+      });
 
+    document.getElementById("mobile-menu-commission")
+      .addEventListener("click", () => {
+        closeMobileMenu();
+        showPage("commission");
+      });
 
-/* Navigasi bawah */
+    /* =========================================
+       MENU YANG BELUM TERSEDIA
+    ========================================= */
 
-function setMobileActive(id) {
-  document.querySelectorAll(".bottom-nav-item")
-    .forEach((button) => {
-      button.classList.remove("active");
-    });
+    document.querySelectorAll("[data-coming-soon]")
+      .forEach(button => {
+        button.addEventListener("click", () => {
+          const name = button.dataset.comingSoon;
 
-  document.getElementById(id).classList.add("active");
-}
+          alert(
+            "Fitur " + name +
+            " akan kita bangun pada tahap berikutnya."
+          );
+        });
+      });
 
-document.getElementById("mobile-nav-dashboard")
-  .addEventListener("click", () => {
-    showPage("dashboard");
-    setMobileActive("mobile-nav-dashboard");
-  });
+    /* =========================================
+       MULAI APLIKASI
+    ========================================= */
 
-document.getElementById("mobile-nav-shops")
-  .addEventListener("click", () => {
-    showPage("shops");
-    setMobileActive("mobile-nav-shops");
-  });
-
-document.getElementById("mobile-nav-orders")
-  .addEventListener("click", () => {
-    showPage("orders");
-    setMobileActive("mobile-nav-orders");
-  });
-
-document.getElementById("mobile-nav-commission")
-  .addEventListener("click", () => {
-    alert("Halaman Komisi Admin akan kita buat pada tahap berikutnya.");
-  });
-
-
-/* Menu Pendaftaran Mitra */
-
-document.getElementById("mobile-menu-applications")
-  .addEventListener("click", () => {
-    closeMobileMenu();
-    showPage("applications");
-    setMobileActive("mobile-nav-dashboard");
-  });
-
-
-/* Menu yang belum tersedia */
-
-document.querySelectorAll("[data-coming-soon]")
-  .forEach((button) => {
-    button.addEventListener("click", () => {
-      const name = button.dataset.comingSoon;
-
-      alert("Fitur " + name +
-        " akan kita bangun pada tahap berikutnya.");
-    });
-  });
-
-
-/* Keluar dari Admin */
-
-document.getElementById("mobile-menu-logout")
-  .addEventListener("click", () => {
-    closeMobileMenu();
-    document.getElementById("logout").click();
-  });
+    refreshIcons();
     initAdmin();
 
-    // Tampilkan ikon navigasi Lucide
-    lucide.createIcons();
   </script>
-</body>
-</html>
-  </script>
+
 </body>
 </html>

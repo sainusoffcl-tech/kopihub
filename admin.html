@@ -1748,6 +1748,10 @@
 
       requestAnimationFrame(measureHeader);
 
+      if (page === "dashboard") {
+  showDashboardShopList();
+  loadDashboardShops();
+}
       if (page === "shops") {
         loadPartnerShops();
       }

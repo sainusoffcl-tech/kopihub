@@ -230,109 +230,33 @@
       overflow: hidden;
       background: var(--cream);
     }
+    
+<!-- HEADER TETAP - DESAIN PATEN NOMOR 4 -->
+<header class="topbar">
+  <div class="topbar-content">
 
-    /* ===== HEADER TERKUNCI ===== */
+    <div class="topbar-brand">
+      <span>Kop</span><span class="coffee-bean"></span><span class="hub">Hub</span>
+    </div>
 
-    .topbar {
-      position: relative;
-      z-index: 20;
-      flex: 0 0 auto;
-      width: 100%;
-      min-height: 116px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 20px 28px;
-      color: white;
-      background: var(--green);
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 4px 15px rgba(15, 45, 29, .08);
-    }
+    <div class="topbar-label">
+      PUSAT MANAGEMENT COFFEE SHOP
+    </div>
 
-    .topbar-content {
-      min-width: 0;
-    }
+    <div class="topbar-divider"></div>
 
-    .topbar-brand {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 21px;
-      line-height: 1;
-      font-weight: 850;
-      letter-spacing: -1px;
-    }
+    <h1 id="page-title" class="topbar-panel-title">
+      Admin Panel KopiHub
+    </h1>
 
-    .topbar-brand .hub {
-      color: var(--orange);
-    }
+    <div id="admin-email" hidden></div>
+  </div>
 
-    .coffee-bean {
-      width: 7px;
-      height: 10px;
-      display: inline-block;
-      margin: -9px 1px 0 -1px;
-      border-radius: 70% 35% 70% 35%;
-      background: #a66b3d;
-      transform: rotate(35deg);
-      position: relative;
-    }
-
-    .topbar-label {
-      margin-bottom: 5px;
-      color: #b9d5bd;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    .topbar h1 {
-      margin: 0 0 5px;
-      color: white;
-      font-size: 23px;
-      line-height: 1.2;
-      font-weight: 850;
-      letter-spacing: -.5px;
-    }
-
-    .topbar-description {
-      color: #d1dfd3;
-      font-size: 12px;
-    }
-
-    .topbar-divider {
-      width: 100%;
-      height: 1px;
-      margin-top: 12px;
-      background: rgba(255,255,255,.18);
-    }
-
-    .topbar-footer {
-      margin-top: 8px;
-      color: #b9d5bd;
-      font-size: 9px;
-      font-weight: 750;
-      letter-spacing: 1.8px;
-    }
-
-    .profile-button {
-      width: 46px;
-      height: 46px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      border: 1.5px solid #c5d9c9;
-      border-radius: 50%;
-      color: white;
-      background: var(--green2);
-    }
-
-    .profile-button svg {
-      width: 22px;
-      height: 22px;
-      stroke-width: 1.8;
-    }
+  <button type="button" class="profile-button"
+    id="admin-profile-button" aria-label="Profil Admin">
+    <i data-lucide="user-round"></i>
+  </button>
+</header>
 
     /* ===== AREA TENGAH YANG SCROLL ===== */
 

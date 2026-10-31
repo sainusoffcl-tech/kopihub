@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -20,7 +21,10 @@
       --line: #e5e8df;
       --orange: #e99a48;
       --red: #a52c2c;
-      --shadow: 0 5px 20px rgba(25, 55, 37, .07);
+      --shadow: 0 5px 20px rgba(25,55,37,.07);
+
+      --compact-height: 56px;
+      --collapse-distance: 120px;
     }
 
     * {
@@ -109,7 +113,9 @@
       font-size: 14px;
     }
 
-    /* ===== STRUKTUR UTAMA ===== */
+    /* =====================================
+       STRUKTUR UTAMA
+    ===================================== */
 
     #app {
       display: none;
@@ -122,10 +128,12 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 245px minmax(0, 1fr);
+      grid-template-columns: 245px minmax(0,1fr);
     }
 
-    /* ===== SIDEBAR DESKTOP ===== */
+    /* =====================================
+       SIDEBAR DESKTOP
+    ===================================== */
 
     aside {
       height: 100%;
@@ -218,7 +226,9 @@
       width: 17px;
     }
 
-    /* ===== AREA MAIN ===== */
+    /* =====================================
+       AREA MAIN
+    ===================================== */
 
     main {
       display: flex;
@@ -230,110 +240,180 @@
       overflow: hidden;
       background: var(--cream);
     }
-    /* ===== HEADER KOPIHUB - DESAIN NOMOR 4 RINGKAS ===== */
 
-.topbar {
-  position: relative;
-  z-index: 20;
-  flex: 0 0 auto;
-  width: 100%;
-  min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 9px 22px;
-  color: white;
-  background: var(--green);
-  border-radius: 0 0 18px 18px;
-  box-shadow: 0 4px 15px rgba(15,45,29,.08);
-}
+    /* =====================================
+       HEADER SHELL
+       DUA LAPISAN HEADER
+    ===================================== */
 
-.topbar-content {
-  flex: 1;
-  min-width: 0;
-}
+    .header-shell {
+      position: relative;
+      z-index: 30;
+      flex: 0 0 auto;
+      width: 100%;
+      min-width: 0;
+      background: var(--green);
+    }
 
-.topbar-brand {
-  display: flex;
-  align-items: center;
-  margin-bottom: 3px;
-  font-size: 25px;
-  line-height: 1;
-  font-weight: 850;
-  letter-spacing: -1px;
-}
+    /* LAPISAN PERTAMA: HEADER BESAR */
 
-.brand-kopi {
-  color: #fff;
-}
+    .topbar {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 22px;
+      color: white;
+      background: var(--green);
+      border-radius: 0 0 18px 18px;
+      box-shadow: 0 4px 15px rgba(15,45,29,.08);
 
-.brand-i {
-  position: relative;
-}
+      transform-origin: top center;
+      will-change: transform, opacity;
+    }
 
-.coffee-bean {
-  position: absolute;
-  width: 8px;
-  height: 11px;
-  top: -3px;
-  left: 50%;
-  border-radius: 70% 35% 70% 35%;
-  background: #a66b3d;
-  transform: translateX(-50%) rotate(35deg);
-}
+    .topbar-content {
+      flex: 1;
+      min-width: 0;
+    }
 
-.topbar-brand .hub {
-  color: var(--orange);
-}
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3px;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
 
-.topbar-label {
-  margin: 0;
-  color: #c5d9c9;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-}
+    .brand-kopi {
+      color: #fff;
+    }
 
-.topbar-divider {
-  width: 100%;
-  height: 1px;
-  margin: 7px 0 6px;
-  background: rgba(255,255,255,.22);
-}
+    .brand-i {
+      position: relative;
+    }
 
-.topbar-panel-title {
-  margin: 0;
-  color: white;
-  font-size: 15px;
-  line-height: 1.2;
-  font-weight: 650;
-}
+    .coffee-bean {
+      position: absolute;
+      width: 8px;
+      height: 11px;
+      top: -3px;
+      left: 50%;
+      border-radius: 70% 35% 70% 35%;
+      background: #a66b3d;
+      transform: translateX(-50%) rotate(35deg);
+    }
 
-.profile-button {
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border: 1.5px solid #c5d9c9;
-  border-radius: 50%;
-  color: white;
-  background: var(--green2);
-}
+    .topbar-brand .hub {
+      color: var(--orange);
+    }
 
-.profile-button svg {
-  width: 21px;
-  height: 21px;
-  stroke-width: 1.8;
-}
+    .topbar-label {
+      margin: 0;
+      color: #c5d9c9;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+    }
 
-    /* ===== AREA TENGAH YANG SCROLL ===== */
+    .topbar-divider {
+      width: 100%;
+      height: 1px;
+      margin: 7px 0 6px;
+      background: rgba(255,255,255,.22);
+    }
+
+    .topbar-panel-title {
+      margin: 0;
+      color: white;
+      font-size: 15px;
+      line-height: 1.2;
+      font-weight: 650;
+    }
+
+    .profile-button {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #c5d9c9;
+      border-radius: 50%;
+      color: white;
+      background: var(--green2);
+    }
+
+    .profile-button svg {
+      width: 21px;
+      height: 21px;
+      stroke-width: 1.8;
+    }
+
+    /* LAPISAN KEDUA: HEADER RINGKAS */
+
+    .compact-header {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 16px;
+      color: white;
+      background: var(--green);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      will-change: opacity, transform;
+    }
+
+    .compact-brand {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .compact-brand .hub {
+      color: var(--orange);
+    }
+
+    .compact-profile {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #c5d9c9;
+      border-radius: 50%;
+      color: white;
+      background: var(--green2);
+    }
+
+    .compact-profile svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    /* =====================================
+       AREA TENGAH YANG SCROLL
+    ===================================== */
 
     .admin-content-scroll {
       flex: 1 1 auto;
       min-height: 0;
       width: 100%;
+      min-width: 0;
       padding: 24px 28px 35px;
       overflow-y: auto;
       overflow-x: hidden;
@@ -352,7 +432,9 @@
       border-radius: 10px;
     }
 
-    /* ===== KONTEN ===== */
+    /* =====================================
+       KONTEN DASHBOARD
+    ===================================== */
 
     .warning {
       padding: 15px 16px;
@@ -373,7 +455,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(3,minmax(0,1fr));
       gap: 14px;
     }
 
@@ -518,20 +600,24 @@
       color: #9aa99b;
     }
 
-    /* ===== NAVIGASI BAWAH TERKUNCI ===== */
+    /* =====================================
+       NAVIGASI BAWAH
+    ===================================== */
 
     .mobile-bottom-nav {
       display: none;
     }
 
-    /* ===== MENU HAMBURGER ===== */
+    /* =====================================
+       MENU HAMBURGER
+    ===================================== */
 
     .mobile-menu-overlay {
       display: none;
       position: fixed;
       inset: 0;
       z-index: 1000;
-      background: rgba(15, 30, 22, .5);
+      background: rgba(15,30,22,.5);
     }
 
     .mobile-menu-overlay.show {
@@ -645,120 +731,165 @@
       background: #fce8e6;
     }
 
-    /* ===== RESPONSIVE MOBILE ===== */
+    /* =====================================
+       MOBILE
+    ===================================== */
 
     @media (max-width: 849px) {
-      html, body {
+
+      html,
+      body {
+        width: 100%;
         height: 100%;
-        min-height: 0;
+        max-width: 100%;
+        overflow: hidden !important;
+        overscroll-behavior: none;
+      }
+
+      body {
+        position: fixed;
+        inset: 0;
+      }
+
+      #app.layout {
+        position: fixed !important;
+        inset: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100%;
+        height: 100vh !important;
+        height: 100dvh !important;
+        min-height: 0 !important;
+        margin: 0;
+        padding: 0;
         overflow: hidden !important;
       }
 
-#app.layout {
-  display: flex !important;
-  flex-direction: column;
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  max-width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-      #app main {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.topbar,
-.admin-content-scroll {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-#app {
-  overflow-x: hidden !important;
-}
-
-.admin-content-scroll {
-  min-width: 0;
-}
       #app aside {
         display: none;
       }
 
       #app main {
-        display: flex;
-        flex-direction: column;
+        display: flex !important;
+        flex: 1 1 0% !important;
+        flex-direction: column !important;
         width: 100%;
-        height: 100%;
-        min-height: 0;
+        height: auto !important;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 0 !important;
+        margin: 0;
         padding: 0;
-        overflow: hidden;
+        overflow: hidden !important;
       }
 
+      /* HEADER DUA LAPISAN */
 
-      /* HEADER DESAIN NOMOR 4 - MOBILE */
-      .topbar {
+      .header-shell {
+        position: relative;
         flex: 0 0 auto;
+        width: 100%;
+        min-width: 0;
+        min-height: 56px;
+        height: auto;
+        overflow: hidden;
+        background: var(--green);
+        border-radius: 18px 18px 0 0;
+        will-change: height;
+      }
+
+      .topbar {
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
         min-height: 0;
-        padding: 12px 18px;
-        border-radius: 0 0 18px 18px;
-        gap: 10px;
+        padding:
+          calc(env(safe-area-inset-top, 0px) + 10px)
+          16px
+          12px;
+        gap: 9px;
+        border-radius: 18px 18px 0 0;
+        box-shadow: none;
+        transform: translateY(0) scale(1);
+        transform-origin: top center;
+        will-change: transform, opacity;
+      }
+
+      .topbar-content {
+        min-width: 0;
+        max-width: 100%;
       }
 
       .topbar-brand {
-        font-size: 25px;
-        margin-bottom: 4px;
+        font-size: 23px;
+        line-height: 1;
+        margin-bottom: 2px;
       }
 
       .topbar-label {
-        font-size: 8px;
-        letter-spacing: 1.3px;
+        font-size: 7.5px;
+        letter-spacing: 1.1px;
       }
 
       .topbar-divider {
-        margin: 8px 0 6px;
+        margin: 5px 0 4px;
       }
 
       .topbar-panel-title {
-        font-size: 15px;
+        font-size: 14px;
+        line-height: 1.15;
       }
 
       .profile-button {
-        width: 42px;
-        height: 42px;
+        width: 38px;
+        height: 38px;
       }
 
+      .profile-button svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* HEADER RINGKAS */
+
+      .compact-header {
+        position: absolute;
+        inset: 0;
+        padding:
+          calc(env(safe-area-inset-top, 0px) + 8px)
+          16px
+          8px;
+        min-height: 56px;
+        border-radius: 18px 18px 0 0;
+      }
+
+      /* SATU-SATUNYA AREA SCROLL */
 
       .admin-content-scroll {
-        flex: 1 1 auto;
-        min-height: 0;
-        padding: 20px 15px 25px;
-        overflow-y: auto !important;
+        display: block;
+        flex: 1 1 0% !important;
+        width: 100%;
+        height: auto !important;
+        min-width: 0;
+        min-height: 0 !important;
+        padding: 14px 15px calc(100px + env(safe-area-inset-bottom));
         overflow-x: hidden !important;
+        overflow-y: auto !important;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-y: contain;
+        overscroll-behavior-x: none;
         touch-action: pan-y;
       }
 
+      .admin-content-scroll::-webkit-scrollbar {
+        width: 0;
+      }
+
+      /* KARTU RINGKASAN */
+
       .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2,minmax(0,1fr));
         gap: 12px;
       }
 
@@ -784,18 +915,35 @@
         font-size: 10px;
       }
 
+      .section-title {
+        margin-top: 22px;
+      }
+
+      .stats,
+      .card,
+      .panel,
+      #dashboard-view {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      /* NAVIGASI BAWAH TETAP */
+
       .mobile-bottom-nav {
-        position: fixed;
+        position: fixed !important;
         left: 0;
         right: 0;
         bottom: 0;
         z-index: 900;
         width: 100%;
+        max-width: 100%;
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(5,minmax(0,1fr));
         padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
         background: var(--green);
         box-shadow: 0 -4px 18px rgba(0,0,0,.13);
+        touch-action: none;
+        overscroll-behavior: none;
       }
 
       .bottom-nav-item {
@@ -831,228 +979,35 @@
       .bottom-nav-item.menu-button {
         color: #f2c18d;
       }
-
-      .section-title {
-        margin-top: 22px;
-      }
     }
 
     @media (min-width: 850px) {
+      .header-shell {
+        height: auto !important;
+        overflow: visible;
+      }
+
+      .topbar {
+        position: relative;
+      }
+
+      .compact-header {
+        display: none;
+      }
+
       .mobile-menu-overlay,
       .mobile-menu-sheet {
         display: none !important;
       }
     }
-  /* ===== PERBAIKAN LAYOUT MOBILE KOPIHUB ===== */
-@media (max-width: 849px) {
 
-  html,
-  body {
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden !important;
-    overscroll-behavior: none;
-  }
-
-  body {
-    position: fixed;
-    inset: 0;
-  }
-
-  #app.layout {
-    position: fixed !important;
-    inset: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    overflow: hidden !important;
-  }
-
-  #app main {
-    flex: 1 1 auto;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  /* HEADER DESAIN NOMOR 4 - MOBILE */
-  .topbar {
-    flex: 0 0 auto;
-    min-width: 0;
-    width: 100%;
-    max-width: 100%;
-    min-height: 0;
-    padding: calc(12px + env(safe-area-inset-top)) 18px 12px;
-    border-radius: 18px 18px 0 0;
-    gap: 10px;
-    touch-action: none;
-    overscroll-behavior: none;
-  }
-
-  .topbar-content {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  /* HANYA BAGIAN TENGAH YANG SCROLL */
-  .admin-content-scroll {
-    flex: 1 1 auto;
-    min-width: 0;
-    min-height: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: none;
-  }
-
-  /* MENCEGAH KONTEN MELEBIHI LAYAR */
-  .stats,
-  .card,
-  .panel,
-  #dashboard-view {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  /* NAVIGASI TETAP SEPERTI DESAIN SEKARANG */
-  .mobile-bottom-nav {
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    max-width: 100%;
-    touch-action: none;
-    overscroll-behavior: none;
-  }
-}
-  
-/* ===== PERBAIKAN FINAL LAYOUT MOBILE KOPIHUB ===== */
-@media (max-width: 849px) {
-
-  /* LAYAR UTAMA */
-  #app.layout {
-    position: fixed !important;
-    inset: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-  }
-
-  /* AREA MAIN: JANGAN MEMAKSA TINGGI 100% */
-  #app main {
-    display: flex !important;
-    flex: 1 1 0% !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    height: auto !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-  }
-
- /* HEADER DESAIN NOMOR 4 - MENTOK KE ATAS */
-.topbar {
-  position: relative;
-  z-index: 20;
-  flex: 0 0 auto;
-  width: 100%;
-  min-width: 0;
-  min-height: 0;
-  padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px 12px;
-  gap: 9px;
-  border-radius: 0;
-  touch-action: none;
-  overscroll-behavior: none;
-}
-
-  .topbar-brand {
-    font-size: 23px;
-    line-height: 1;
-    margin-bottom: 2px;
-  }
-
-  .topbar-label {
-    font-size: 7.5px;
-    letter-spacing: 1.1px;
-  }
-
-  .topbar-divider {
-    margin: 5px 0 4px;
-  }
-
-  .topbar-panel-title {
-    font-size: 14px;
-    line-height: 1.15;
-  }
-
-  .profile-button {
-    width: 38px;
-    height: 38px;
-  }
-
-  .profile-button svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  /* SATU-SATUNYA AREA YANG BOLEH SCROLL */
-  .admin-content-scroll {
-    display: block;
-    flex: 1 1 0% !important;
-    width: 100%;
-    height: auto !important;
-    min-width: 0;
-    min-height: 0 !important;
-    padding: 14px 15px calc(100px + env(safe-area-inset-bottom));
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    touch-action: pan-y;
-  }
-
-  /* UKURAN KARTU TETAP */
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .stats .card {
-    min-width: 0;
-    padding: 16px 14px;
-    border-radius: 17px;
-  }
-
-  .stats .card:nth-child(3) {
-    grid-column: 1 / -1;
-  }
-
-  /* NAVIGASI BAWAH TETAP */
-  .mobile-bottom-nav {
-    position: fixed !important;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 900;
-    width: 100%;
-    max-width: 100%;
-    touch-action: none;
-    overscroll-behavior: none;
-  }
-}
+    @media (prefers-reduced-motion: reduce) {
+      .topbar,
+      .compact-header,
+      .mobile-menu-sheet {
+        transition: none !important;
+      }
+    }
 
   </style>
 </head>
@@ -1089,8 +1044,7 @@
 
       <div class="nav-label">MENU UTAMA</div>
 
-      <button type="button" id="nav-dashboard"
-        class="nav-item active">
+      <button type="button" id="nav-dashboard" class="nav-item active">
         <i data-lucide="layout-dashboard"></i>
         <span>Dashboard</span>
       </button>
@@ -1157,34 +1111,59 @@
 
     <!-- AREA UTAMA -->
     <main>
-<!-- HEADER KOPIHUB - DESAIN NOMOR 4 RINGKAS -->
-<header class="topbar">
-  <div class="topbar-content">
 
-    <div class="topbar-brand">
-      <span>Kop</span><span class="coffee-bean"></span><span class="hub">Hub</span>
-    </div>
+      <!-- HEADER SHELL: DUA LAPISAN -->
+      <div class="header-shell" id="header-shell">
 
-    <div class="topbar-label">
-      PUSAT MANAJEMEN COFFEE SHOP
-    </div>
+        <!-- LAPISAN PERTAMA: EXPANDED HEADER -->
+        <header class="topbar" id="expanded-header">
 
-    <div class="topbar-divider"></div>
+          <div class="topbar-content" id="topbar-content">
 
-    <h1 id="page-title" class="topbar-panel-title">
-      Admin Panel KopiHub
-    </h1>
+            <div class="topbar-brand">
+              <span class="brand-kopi">Kop</span><span class="brand-i">i<span class="coffee-bean"></span></span><span class="hub">Hub</span>
+            </div>
 
-    <div id="admin-email" hidden></div>
-  </div>
+            <div class="topbar-label">
+              PUSAT MANAJEMEN COFFEE SHOP
+            </div>
 
-  <button type="button" class="profile-button"
-    id="admin-profile-button" aria-label="Profil Admin">
-    <i data-lucide="user-round"></i>
-  </button>
-</header>
+            <div class="topbar-divider"></div>
+
+            <h1 id="page-title" class="topbar-panel-title">
+              Admin Panel KopiHub
+            </h1>
+
+            <div id="admin-email" hidden></div>
+
+          </div>
+
+          <button type="button" class="profile-button"
+            id="admin-profile-button" aria-label="Profil Admin">
+            <i data-lucide="user-round"></i>
+          </button>
+
+        </header>
+
+        <!-- LAPISAN KEDUA: COMPACT HEADER -->
+        <div class="compact-header" id="compact-header">
+
+          <div class="compact-brand">
+            <span>Kopi</span><span class="hub">Hub</span>
+          </div>
+
+          <button type="button" class="compact-profile"
+            id="admin-profile-button-compact"
+            aria-label="Profil Admin">
+            <i data-lucide="user-round"></i>
+          </button>
+
+        </div>
+
+      </div>
+
       <!-- HANYA BAGIAN INI YANG BOLEH SCROLL -->
-      <div class="admin-content-scroll">
+      <div class="admin-content-scroll" id="admin-content-scroll">
 
         <!-- DASHBOARD -->
         <section id="dashboard-view">
@@ -1253,6 +1232,7 @@
           </p>
 
           <div class="panel">
+
             <button type="button" id="reload-shops"
               class="action-button">
               <i data-lucide="refresh-cw"></i>
@@ -1264,6 +1244,7 @@
             </p>
 
             <div id="shops-list"></div>
+
           </div>
 
         </section>
@@ -1292,6 +1273,7 @@
             <div id="orders-list"></div>
 
           </div>
+
         </section>
 
         <!-- PENDAFTARAN MITRA -->
@@ -1319,6 +1301,7 @@
             <div id="applications-list"></div>
 
           </div>
+
         </section>
 
         <!-- KOMISI -->
@@ -1330,6 +1313,7 @@
             <p>
               <strong>Pengelolaan Komisi KopiHub</strong>
             </p>
+
             <p class="muted">
               Halaman perhitungan komisi akan diintegrasikan setelah
               struktur transaksi dan pencatatan biaya layanan ditetapkan.
@@ -1471,14 +1455,15 @@
   </div>
 
   <script>
+
     /* =========================================
        KONFIGURASI SUPABASE
     ========================================= */
 
-    const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+    const SUPABASE_URL = "nilai asli saya sensor";
 
     const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+      "Nilai asli saya sensor";
 
     const client = window.supabase.createClient(
       SUPABASE_URL,
@@ -1535,6 +1520,162 @@
         window.lucide.createIcons();
       }
     }
+
+    /* =========================================
+       COLLAPSING HEADER + PARALLAX
+    ========================================= */
+
+    const headerShell =
+      document.getElementById("header-shell");
+
+    const expandedHeader =
+      document.getElementById("expanded-header");
+
+    const compactHeader =
+      document.getElementById("compact-header");
+
+    const topbarContent =
+      document.getElementById("topbar-content");
+
+    const contentScroll =
+      document.getElementById("admin-content-scroll");
+
+    const COLLAPSE_DISTANCE = 120;
+    const COMPACT_HEIGHT = 56;
+
+    let expandedHeight = 0;
+    let headerAnimationFrame = null;
+
+    function isMobileLayout() {
+      return window.matchMedia("(max-width: 849px)").matches;
+    }
+
+    function measureHeader() {
+      if (!isMobileLayout()) {
+        headerShell.style.height = "";
+        expandedHeader.style.transform = "";
+        expandedHeader.style.opacity = "";
+        compactHeader.style.opacity = "";
+        compactHeader.style.visibility = "";
+        compactHeader.style.pointerEvents = "";
+        compactHeader.style.transform = "";
+        return;
+      }
+
+      /*
+       * Ukur tinggi asli header besar.
+       * Nilai ini mempertimbangkan safe area iPhone.
+       */
+
+      expandedHeader.style.transform = "none";
+      expandedHeader.style.opacity = "1";
+
+      const measuredHeight =
+        expandedHeader.getBoundingClientRect().height;
+
+      if (measuredHeight > 0) {
+        expandedHeight = measuredHeight;
+      }
+
+      updateCollapsingHeader();
+    }
+
+    function updateCollapsingHeader() {
+      if (!isMobileLayout()) return;
+
+      const scrollPosition = contentScroll.scrollTop;
+
+      /*
+       * Progress 0 = header besar.
+       * Progress 1 = header ringkas.
+       */
+
+      const progress = Math.min(
+        Math.max(scrollPosition / COLLAPSE_DISTANCE, 0),
+        1
+      );
+
+      /*
+       * Mengubah tinggi ruang header secara bertahap.
+       */
+
+      const currentHeight =
+        expandedHeight -
+        ((expandedHeight - COMPACT_HEIGHT) * progress);
+
+      headerShell.style.height =
+        Math.max(COMPACT_HEIGHT, currentHeight) + "px";
+
+      /*
+       * PARALLAX RINGAN:
+       * Konten header bergerak sedikit lebih lambat.
+       */
+
+      const parallaxY = -14 * progress;
+      const scale = 1 - (0.025 * progress);
+
+      topbarContent.style.transform =
+        `translateY(${parallaxY}px)`;
+
+      /*
+       * Header besar memudar dan mengecil.
+       */
+
+      expandedHeader.style.transform =
+        `translateY(${-22 * progress}px) scale(${scale})`;
+
+      expandedHeader.style.opacity =
+        String(1 - progress);
+
+      /*
+       * Header ringkas muncul di atas.
+       */
+
+      compactHeader.style.opacity =
+        String(progress);
+
+      compactHeader.style.visibility =
+        progress > 0.02 ? "visible" : "hidden";
+
+      compactHeader.style.pointerEvents =
+        progress > 0.8 ? "auto" : "none";
+
+      compactHeader.style.transform =
+        `translateY(${-8 + (8 * progress)}px)`;
+    }
+
+    /*
+     * Membatasi update animasi agar mengikuti
+     * frame layar dan tidak membebani scroll.
+     */
+
+    contentScroll.addEventListener("scroll", () => {
+      if (headerAnimationFrame !== null) return;
+
+      headerAnimationFrame = requestAnimationFrame(() => {
+        updateCollapsingHeader();
+        headerAnimationFrame = null;
+      });
+    }, { passive: true });
+
+    /*
+     * Ukur ulang ketika orientasi atau ukuran
+     * layar berubah.
+     */
+
+    window.addEventListener("resize", () => {
+      requestAnimationFrame(measureHeader);
+    });
+
+    window.addEventListener("orientationchange", () => {
+      setTimeout(measureHeader, 150);
+    });
+
+    /*
+     * Pengukuran awal setelah halaman siap.
+     */
+
+    requestAnimationFrame(measureHeader);
 
     /* =========================================
        NAVIGASI HALAMAN
@@ -1596,12 +1737,16 @@
       setDesktopActive(page);
       setMobileActive(page);
 
-      const content =
-        document.querySelector(".admin-content-scroll");
-
-      if (content) {
-        content.scrollTop = 0;
+      if (contentScroll) {
+        contentScroll.scrollTop = 0;
       }
+
+      /*
+       * Kembalikan header ke posisi besar
+       * ketika berpindah halaman.
+       */
+
+      requestAnimationFrame(measureHeader);
 
       if (page === "shops") {
         loadPartnerShops();
@@ -1712,9 +1857,21 @@
           user.email || "Akun terverifikasi";
 
         loading.style.display = "none";
+
+        /*
+         * Desktop menggunakan grid.
+         * CSS mobile tetap memaksa layout flex.
+         */
+
         app.style.display = "grid";
 
         refreshIcons();
+
+        /*
+         * Ukur header setelah aplikasi ditampilkan.
+         */
+
+        requestAnimationFrame(measureHeader);
 
         await loadDashboardStats();
 
@@ -1754,12 +1911,14 @@
 
       if (!data || data.length === 0) {
         shopsMessage.textContent = "";
+
         shopsList.innerHTML = `
           <div class="empty-state">
             <i data-lucide="store"></i>
             Belum ada kedai yang dapat ditampilkan.
           </div>
         `;
+
         refreshIcons();
         return;
       }
@@ -2181,16 +2340,21 @@
        PROFIL ADMIN
     ========================================= */
 
-    document.getElementById("admin-profile-button")
-      .addEventListener("click", () => {
-        const email =
-          document.getElementById("admin-email").textContent;
+    function showAdminProfile() {
+      const email =
+        document.getElementById("admin-email").textContent;
 
-        alert(
-          "Profil Admin KopiHub\n\n" +
-          (email || "Akun Admin terverifikasi")
-        );
-      });
+      alert(
+        "Profil Admin KopiHub\n\n" +
+        (email || "Akun Admin terverifikasi")
+      );
+    }
+
+    document.getElementById("admin-profile-button")
+      .addEventListener("click", showAdminProfile);
+
+    document.getElementById("admin-profile-button-compact")
+      .addEventListener("click", showAdminProfile);
 
     /* =========================================
        MENU HAMBURGER MOBILE

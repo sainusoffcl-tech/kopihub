@@ -2716,15 +2716,6 @@ $("shop-profile-form").addEventListener("submit",async event => {
   }
 });
 
-$("header-profile-button").addEventListener("click",() => {
-  const profil = $("profil-kedai");
-  profil.hidden = false;
-
-  profil.scrollIntoView({
-    behavior:"smooth",
-    block:"start"
-  });
-});
 
 $("close-shop-profile").addEventListener("click",() => {
   $("profil-kedai").hidden = true;

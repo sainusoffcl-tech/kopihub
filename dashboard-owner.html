@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -37,7 +36,45 @@
     }
 
     .owner-header {
+      position:sticky;
+      top:0;
+      z-index:100;
       border-radius:0 0 24px 24px;
+      box-shadow:0 4px 18px rgba(18,59,44,.10);
+      transition:padding .22s ease, border-radius .22s ease,
+        box-shadow .22s ease;
+    }
+
+    .owner-header.is-collapsed {
+      padding:8px 18px;
+      border-radius:0 0 16px 16px;
+      box-shadow:0 3px 14px rgba(18,59,44,.16);
+    }
+
+    .owner-header .brand {
+      transition:font-size .22s ease, line-height .22s ease;
+    }
+
+    .owner-header p {
+      transition:font-size .22s ease, margin .22s ease;
+    }
+
+    .owner-header.is-collapsed .brand {
+      font-size:20px;
+      line-height:1.2;
+    }
+
+    .owner-header.is-collapsed p {
+      margin-top:2px;
+      font-size:12px;
+    }
+
+    .owner-header.is-collapsed .profile-icon-button {
+      flex-basis:40px;
+      width:40px;
+      height:40px;
+      min-height:40px;
+      padding:9px;
     }
 
     .owner-header-top {
@@ -585,9 +622,9 @@
     </div>
 
     <div class="stat">
-      <div class="stat-label">Biaya Layanan</div>
-      <div class="stat-number" id="today-service-fee">Belum ditetapkan</div>
-      <p class="muted">Tarif final KopiHub belum ditentukan.</p>
+      <div class="stat-label">Estimasi Biaya Layanan KopiHub</div>
+      <div class="stat-number" id="today-service-fee">—</div>
+      <p class="muted">Rp3.000 per pesanan selesai. Ditanggung Owner, bukan pelanggan.</p>
     </div>
   </section>
 
@@ -662,6 +699,52 @@
       <h3>Daftar Menu</h3>
       <div id="menu-list" class="muted">Menunggu data kedai...</div>
     </div>
+  </section>
+
+  <!-- KELOLA PERANGKAT KASIR -->
+  <section class="panel" id="kelola-kasir">
+    <h2>Kelola Perangkat Kasir</h2>
+    <p class="muted">
+      Kasir menggunakan perangkat yang dipasangkan oleh Owner. Tidak diperlukan
+      undangan email atau akun Owner pada perangkat kasir. Pengelolaan pesanan
+      tetap dilakukan melalui Dashboard Kasir.
+    </p>
+
+    <div class="report-note">
+      <strong>Ketentuan keamanan</strong><br>
+      Kode pairing berlaku 10 menit dan hanya dapat digunakan sekali.
+      Satu perangkat terikat pada satu kedai. Sesi kasir maksimal 12 jam.
+      Membuat kode baru akan mencabut token perangkat sebelumnya dan mengakhiri
+      sesi yang masih terbuka.
+    </div>
+
+    <div class="button-stack">
+      <button class="primary" id="create-cashier-pairing" type="button">
+        Buat Kode Pairing Perangkat
+      </button>
+      <button class="danger" id="revoke-cashier-device" type="button">
+        Cabut Akses Perangkat Kasir
+      </button>
+    </div>
+
+    <div id="cashier-pairing-result" class="qr-box" hidden>
+      <strong>Kode Pairing Perangkat Kasir</strong>
+      <p class="muted" id="cashier-pairing-shop"></p>
+      <div id="cashier-pairing-code"
+        style="font-size:28px;font-weight:850;letter-spacing:4px;color:#123b2c;margin:12px 0;overflow-wrap:anywhere"></div>
+      <p class="muted" id="cashier-pairing-expiry"></p>
+      <button class="secondary" id="copy-cashier-pairing" type="button">
+        Salin Kode Pairing
+      </button>
+      <p class="muted">
+        Berikan kode ini hanya kepada staf yang sedang memasangkan perangkat
+        kasir. Jangan bagikan kode melalui ruang publik.
+      </p>
+    </div>
+
+    <p class="muted" id="cashier-message" role="status" aria-live="polite">
+      Siap mengelola perangkat kasir.
+    </p>
   </section>
 
   <!-- QR MENU -->
@@ -835,13 +918,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
 
-<script>
+  <script>
 "use strict";
 
 /*
-  PENTING:
-  Masukkan kembali URL dan publishable key asli dari file lama.
-  Jangan pernah memakai service_role key di browser.
+  Jangan memasukkan service_role key ke halaman browser.
 */
 const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
@@ -1099,6 +1180,7 @@ async function loadShops() {
 
     await refreshMenu();
     await loadOrders();
+    await loadCashierDevicePanel();
 
   } catch (error) {
     console.error("Gagal memuat dashboard:", error);
@@ -1417,6 +1499,268 @@ async function deleteProduct(id) {
 }
 
 /* =========================
+   COLLAPSING HEADER
+========================= */
+
+(() => {
+  const header = document.querySelector(".owner-header");
+  let lastScrollY = window.scrollY || 0;
+  let ticking = false;
+
+  function updateHeader() {
+    const currentY = window.scrollY || 0;
+    const difference = currentY - lastScrollY;
+
+    if (currentY <= 24) {
+      header.classList.remove("is-collapsed");
+    } else if (difference > 5 && currentY > 80) {
+      header.classList.add("is-collapsed");
+    } else if (difference < -5) {
+      header.classList.remove("is-collapsed");
+    }
+
+    lastScrollY = currentY;
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateHeader);
+      ticking = true;
+    }
+  }, {passive:true});
+})();
+
+    /* =========================
+   KELOLA PERANGKAT KASIR
+   Menggunakan Edge Function cashier-access.
+   Owner device actions: create_pairing_code, disable_device.
+========================= */
+
+const CASHIER_ACCESS_URL =
+  "https://ozcliasebeydgyvgluht.supabase.co/functions/v1/cashier-access";
+
+let latestPairingCode = "";
+let pairingExpiryTimer = null;
+
+function cashierMessage(message, error = false) {
+  const el = $("cashier-message");
+  el.textContent = message;
+  el.style.color = error ? "#b42318" : "";
+}
+
+async function callCashierAccess(action) {
+  if (!client) {
+    throw new Error("Koneksi Supabase belum siap.");
+  }
+
+  const shop = selectedShop();
+  if (!shop?.id) {
+    throw new Error("Kedai Owner belum tersedia.");
+  }
+
+  const {data:sessionData, error:sessionError} =
+    await client.auth.getSession();
+
+  if (sessionError) throw sessionError;
+
+  const accessToken = sessionData.session?.access_token;
+  if (!accessToken) {
+    throw new Error("Sesi login tidak ditemukan. Silakan login kembali.");
+  }
+
+  const response = await fetch(CASHIER_ACCESS_URL, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_PUBLISHABLE_KEY,
+      "Authorization":"Bearer " + accessToken
+    },
+    body:JSON.stringify({
+      action,
+      shopId:shop.id
+    })
+  });
+
+  let result = {};
+  try {
+    result = await response.json();
+  } catch (_) {
+    throw new Error("Respons server pengelolaan perangkat tidak dapat dibaca.");
+  }
+
+  if (!response.ok || result.error || result.success === false) {
+    throw new Error(
+      result.error || result.message ||
+      "Permintaan gagal (HTTP " + response.status + ")."
+    );
+  }
+
+  return result;
+}
+
+function clearPairingDisplay(message = "") {
+  latestPairingCode = "";
+  $("cashier-pairing-result").hidden = true;
+  $("cashier-pairing-code").textContent = "";
+  $("cashier-pairing-expiry").textContent = "";
+
+  if (pairingExpiryTimer) {
+    clearTimeout(pairingExpiryTimer);
+    pairingExpiryTimer = null;
+  }
+
+  if (message) cashierMessage(message);
+}
+
+async function createCashierPairing() {
+  const button = $("create-cashier-pairing");
+  const shop = selectedShop();
+
+  if (!shop) {
+    cashierMessage("Kedai Owner belum tersedia.", true);
+    return;
+  }
+
+  const confirmed = confirm(
+    "Buat kode pairing baru untuk " + shop.name + "?\n\n" +
+    "Perangkat yang sebelumnya terpasang akan kehilangan akses dan " +
+    "semua sesi kasir yang masih terbuka akan diakhiri."
+  );
+
+  if (!confirmed) return;
+
+  button.disabled = true;
+  $("revoke-cashier-device").disabled = true;
+
+  clearPairingDisplay();
+  cashierMessage("Membuat kode pairing yang baru...");
+
+  try {
+    const result = await callCashierAccess("create_pairing_code");
+
+    if (!result.pairingCode || !result.expiresAt) {
+      throw new Error("Server tidak mengirim kode pairing yang lengkap.");
+    }
+
+    latestPairingCode = String(result.pairingCode);
+
+    $("cashier-pairing-code").textContent = latestPairingCode;
+
+    $("cashier-pairing-shop").textContent =
+      "Kedai: " + shop.name + " · Slug: " + shop.slug;
+
+    $("cashier-pairing-expiry").textContent =
+      "Berlaku sampai " + new Date(result.expiresAt).toLocaleString("id-ID", {
+        dateStyle:"medium",
+        timeStyle:"short"
+      }) + " (maksimal 10 menit).";
+
+    $("cashier-pairing-result").hidden = false;
+
+    cashierMessage(
+      "Kode berhasil dibuat. Berikan kode kepada staf untuk memasangkan perangkat."
+    );
+
+    const remaining = Math.max(
+      0,
+      new Date(result.expiresAt).getTime() - Date.now()
+    );
+
+    pairingExpiryTimer = setTimeout(() => {
+      clearPairingDisplay(
+        "Kode pairing telah melewati waktu berlakunya. Buat kode baru jika diperlukan."
+      );
+    }, remaining);
+
+  } catch (error) {
+    console.error("Gagal membuat pairing kasir:", error);
+    cashierMessage("Gagal membuat kode pairing: " + error.message, true);
+  } finally {
+    button.disabled = false;
+    $("revoke-cashier-device").disabled = false;
+  }
+}
+
+async function revokeCashierDevice() {
+  const shop = selectedShop();
+
+  if (!shop) {
+    cashierMessage("Kedai Owner belum tersedia.", true);
+    return;
+  }
+
+  if (!confirm(
+    "Cabut seluruh akses perangkat kasir untuk " + shop.name + "?\n\n" +
+    "Perangkat yang terpasang tidak akan bisa digunakan lagi sampai " +
+    "Owner membuat kode pairing baru. Sesi kasir aktif akan diakhiri."
+  )) return;
+
+  const button = $("revoke-cashier-device");
+
+  button.disabled = true;
+  $("create-cashier-pairing").disabled = true;
+
+  cashierMessage("Mencabut akses perangkat kasir...");
+
+  try {
+    const result = await callCashierAccess("disable_device");
+
+    clearPairingDisplay();
+
+    cashierMessage(
+      result.message || "Akses perangkat kasir berhasil dicabut."
+    );
+
+  } catch (error) {
+    console.error("Gagal mencabut perangkat kasir:", error);
+
+    cashierMessage(
+      "Gagal mencabut akses perangkat: " + error.message,
+      true
+    );
+
+  } finally {
+    button.disabled = false;
+    $("create-cashier-pairing").disabled = false;
+  }
+}
+
+async function loadCashierDevicePanel() {
+  if (!selectedShop() || !client) return;
+
+  clearPairingDisplay();
+
+  cashierMessage(
+    "Pengelolaan perangkat siap. Buat kode pairing untuk memasangkan perangkat kasir."
+  );
+}
+
+$("create-cashier-pairing").addEventListener(
+  "click",
+  createCashierPairing
+);
+
+$("revoke-cashier-device").addEventListener(
+  "click",
+  revokeCashierDevice
+);
+
+$("copy-cashier-pairing").addEventListener("click", async () => {
+  if (!latestPairingCode) {
+    cashierMessage("Tidak ada kode pairing yang dapat disalin.", true);
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(latestPairingCode);
+    cashierMessage("Kode pairing berhasil disalin.");
+  } catch (_) {
+    window.prompt("Salin kode pairing ini:", latestPairingCode);
+  }
+});
+
+/* =========================
    TANGGAL DAN GRAFIK
 ========================= */
 
@@ -1631,9 +1975,18 @@ async function loadOrders() {
       (sum, order) => sum + orderValue(order), 0
     );
 
+    const completedToday = todaysOrders.filter(order => {
+      const status = String(order.order_status || order.status || "").toLowerCase();
+      return status === "completed";
+    }).length;
+
+    const SERVICE_FEE_PER_ORDER = 3000;
+
     $("today-orders").textContent = todaysOrders.length;
     $("today-sales").textContent = rupiah(paidValue);
-    $("today-service-fee").textContent = "Belum ditetapkan";
+    $("today-service-fee").textContent = rupiah(
+      completedToday * SERVICE_FEE_PER_ORDER
+    );
 
     $("summary-income").textContent = rupiah(paidValue);
     $("summary-sales").textContent = rupiah(totalValue);
@@ -1808,9 +2161,8 @@ function renderPaymentReport(orders) {
   body.replaceChildren();
 
   /*
-    Nilai "cashier" yang ada pada data lama belum dapat
-    dianggap sebagai metode pembayaran yang sebenarnya.
-    Karena itu, nilai tersebut tidak diklaim sebagai Cash.
+    Nilai "cashier" pada data lama belum dapat dianggap
+    sebagai metode pembayaran yang sebenarnya.
   */
 
   const validMethods = orders
@@ -1872,8 +2224,7 @@ function renderPaymentReport(orders) {
     body.appendChild(row);
   });
 }
-
-function updateReport() {
+    function updateReport() {
   if (!selectedShop()) return;
 
   try {
@@ -2471,6 +2822,7 @@ shopSelect.addEventListener("change", async () => {
 
   await refreshMenu();
   await loadOrders();
+  await loadCashierDevicePanel();
 });
 
 loadShops();

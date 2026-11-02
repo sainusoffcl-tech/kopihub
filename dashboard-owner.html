@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#174c38">
+  <meta name="theme-color" content="#123b2c">
   <title>Dashboard Owner | KopiHub</title>
 
   <style>
@@ -17,9 +17,16 @@
       --border:#e1e8e2;
       --orange:#e99a48;
       --danger:#a72d2d;
+      --header-height:120px;
+      --nav-height:70px;
     }
 
     * { box-sizing:border-box; }
+
+    html {
+      scroll-behavior:smooth;
+      scroll-padding-top:100px;
+    }
 
     body {
       margin:0;
@@ -27,16 +34,27 @@
       color:var(--text);
       background:var(--bg);
       line-height:1.5;
+      padding-bottom:calc(var(--nav-height) + env(safe-area-inset-bottom) + 20px);
     }
 
-    header {
-      padding:22px 18px;
-      color:#fff;
-      background:var(--green-dark);
-    }
+    /* =========================
+       STICKY COLLAPSING HEADER
+    ========================= */
 
     .owner-header {
-      border-radius:0 0 24px 24px;
+      position:sticky;
+      top:0;
+      z-index:1000;
+      width:100%;
+      padding:18px 18px 17px;
+      color:#fff;
+      background:var(--green-dark);
+      border-radius:0 0 22px 22px;
+      box-shadow:0 4px 15px rgba(18,59,44,.13);
+      transition:
+        padding .25s ease,
+        border-radius .25s ease,
+        box-shadow .25s ease;
     }
 
     .owner-header-top {
@@ -44,28 +62,58 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
+      max-width:1000px;
+      margin:auto;
+    }
+
+    .brand-area {
+      min-width:0;
+      flex:1;
     }
 
     .brand {
-      font-size:26px;
-      font-weight:800;
+      font-size:27px;
+      font-weight:850;
+      letter-spacing:-.7px;
+      line-height:1.1;
+      white-space:nowrap;
     }
 
-    header p {
+    .brand-kopi { color:#fff; }
+    .brand-hub { color:var(--orange); }
+
+    .header-shop-name {
+      display:block;
+      margin-top:7px;
+      color:#f2d9c1;
+      font-size:14px;
+      font-weight:650;
+      line-height:1.3;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      transition:font-size .25s ease, margin .25s ease;
+    }
+
+    .header-caption {
       color:#d7e9de;
       margin:5px 0 0;
+      font-size:11px;
+      letter-spacing:.7px;
+      text-transform:uppercase;
     }
 
     .profile-icon-button {
-      flex:0 0 48px;
-      width:48px;
-      height:48px;
-      min-height:48px;
-      padding:11px;
+      flex:0 0 46px;
+      width:46px;
+      height:46px;
+      min-height:46px;
+      padding:10px;
       border-radius:50%;
       background:#f8c9a8;
       color:var(--green-dark);
       overflow:hidden;
+      transition:width .25s ease,height .25s ease;
     }
 
     .profile-icon-button svg {
@@ -85,11 +133,39 @@
       border-radius:50%;
     }
 
+    /* Header mengecil saat scroll */
+
+    .owner-header.is-collapsed {
+      padding:9px 18px;
+      border-radius:0 0 15px 15px;
+      box-shadow:0 3px 12px rgba(18,59,44,.18);
+    }
+
+    .owner-header.is-collapsed .brand {
+      font-size:21px;
+    }
+
+    .owner-header.is-collapsed .header-shop-name {
+      margin-top:3px;
+      font-size:12px;
+    }
+
+    .owner-header.is-collapsed .header-caption {
+      display:none;
+    }
+
+    .owner-header.is-collapsed .profile-icon-button {
+      width:40px;
+      height:40px;
+      min-height:40px;
+      flex-basis:40px;
+    }
+
     main {
       width:100%;
       max-width:1000px;
       margin:0 auto;
-      padding:20px 16px 40px;
+      padding:20px 16px 35px;
       min-width:0;
       overflow-x:clip;
     }
@@ -340,14 +416,10 @@
       margin:14px 0;
     }
 
-    .report-filter .field {
-      margin:0;
-    }
+    .report-filter .field { margin:0; }
 
     .report-filter input,
-    .report-filter select {
-      margin-bottom:5px;
-    }
+    .report-filter select { margin-bottom:5px; }
 
     .report-table-wrap {
       width:100%;
@@ -376,9 +448,7 @@
       color:var(--green-dark);
     }
 
-    .report-table tr:last-child td {
-      border-bottom:0;
-    }
+    .report-table tr:last-child td { border-bottom:0; }
 
     .report-section-title {
       margin:22px 0 8px;
@@ -406,11 +476,117 @@
       padding:12px 7px;
     }
 
-    footer {
-      padding:22px;
+    /* =========================
+       RIWAYAT TRANSAKSI
+    ========================= */
+
+    .transaction-item {
+      padding:14px 0;
+      border-bottom:1px solid var(--border);
+    }
+
+    .transaction-item:last-child { border-bottom:0; }
+
+    .transaction-top {
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    .transaction-number {
+      font-weight:750;
+      color:var(--green-dark);
+      overflow-wrap:anywhere;
+    }
+
+    .transaction-amount {
+      font-weight:750;
+      white-space:nowrap;
+      color:var(--green-dark);
+    }
+
+    .transaction-meta {
+      margin-top:5px;
       color:var(--muted);
       font-size:12px;
-      text-align:center;
+    }
+
+    .transaction-status {
+      display:inline-block;
+      margin-top:8px;
+      padding:4px 9px;
+      border-radius:20px;
+      background:#e8f2ec;
+      color:var(--green-dark);
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .transaction-status.unpaid {
+      background:#fff2df;
+      color:#895719;
+    }
+
+    .transaction-status.cancelled {
+      background:#fff0ef;
+      color:#a72d2d;
+    }
+
+    /* =========================
+       FOOTER NAVIGATION STICKY
+    ========================= */
+
+    .bottom-navigation {
+      position:fixed;
+      z-index:1100;
+      left:0;
+      right:0;
+      bottom:0;
+      min-height:var(--nav-height);
+      padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+      background:var(--green-dark);
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      box-shadow:0 -4px 18px rgba(18,59,44,.16);
+      border-radius:17px 17px 0 0;
+    }
+
+    .nav-button {
+      min-width:0;
+      width:100%;
+      min-height:52px;
+      padding:5px 2px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      background:transparent;
+      color:#d7e9de;
+      border-radius:10px;
+      font-size:10px;
+      font-weight:650;
+      border:0;
+    }
+
+    .nav-button .nav-icon {
+      font-size:19px;
+      line-height:1.2;
+    }
+
+    .nav-button.active {
+      color:#fff;
+      background:rgba(255,255,255,.14);
+    }
+
+    .nav-button.active .nav-icon {
+      color:var(--orange);
+    }
+
+    .nav-button:focus-visible {
+      outline:2px solid var(--orange);
+      outline-offset:-2px;
     }
 
     [hidden] { display:none !important; }
@@ -423,6 +599,14 @@
       .report-filter {
         grid-template-columns:1fr 1fr 1fr;
         align-items:end;
+      }
+
+      .bottom-navigation {
+        left:50%;
+        right:auto;
+        width:min(100%,650px);
+        transform:translateX(-50%);
+        border-radius:17px 17px 0 0;
       }
     }
 
@@ -451,17 +635,32 @@
       .chart-label { font-size:10px; }
       .chart-track { height:110px; }
       .report-actions { grid-template-columns:1fr; }
+      .nav-button { font-size:9px; }
+      .nav-button .nav-icon { font-size:17px; }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      *,*::before,*::after {
+        transition:none !important;
+        animation:none !important;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<header class="owner-header">
+<header class="owner-header" id="owner-header">
   <div class="owner-header-top">
-    <div>
-      <div class="brand">â KopiHub</div>
-      <p id="header-shop-name">Dashboard Owner</p>
+    <div class="brand-area">
+      <div class="brand">
+        <span class="brand-kopi">Kopi</span><span class="brand-hub">Hub</span>
+      </div>
+      <div class="header-shop-name" id="header-shop-name">
+        Memuat kedai...
+      </div>
+      <p class="header-caption">Dashboard Owner</p>
     </div>
 
     <button class="profile-icon-button" id="header-profile-button"
@@ -478,7 +677,7 @@
   </div>
 </header>
 
-<main>
+<main id="home-section">
 
   <select id="shop-select" hidden aria-hidden="true"></select>
   <div id="connection-status" hidden></div>
@@ -535,14 +734,14 @@
   <!-- RINGKASAN -->
   <section class="business-summary">
     <div class="summary-card">
-      <div class="summary-icon">ð°</div>
+      <div class="summary-icon">💰</div>
       <div class="stat-label">Total Pendapatan</div>
       <div class="stat-number" id="summary-income">Rp0</div>
       <p class="muted">Pesanan lunas hari ini</p>
     </div>
 
     <div class="summary-card">
-      <div class="summary-icon">ð</div>
+      <div class="summary-icon">📈</div>
       <div class="stat-label">Total Penjualan</div>
       <div class="stat-number" id="summary-sales">Rp0</div>
       <p class="muted">Nilai pesanan hari ini</p>
@@ -565,22 +764,22 @@
   <section class="stats">
     <div class="stat">
       <div class="stat-label">Jumlah Menu</div>
-      <div class="stat-number" id="menu-count">â</div>
+      <div class="stat-number" id="menu-count">—</div>
     </div>
 
     <div class="stat">
       <div class="stat-label">Menu Tersedia</div>
-      <div class="stat-number" id="available-count">â</div>
+      <div class="stat-number" id="available-count">—</div>
     </div>
 
     <div class="stat">
       <div class="stat-label">Pesanan Hari Ini</div>
-      <div class="stat-number" id="today-orders">â</div>
+      <div class="stat-number" id="today-orders">—</div>
     </div>
 
     <div class="stat">
       <div class="stat-label">Penjualan Hari Ini (Sudah Dibayar)</div>
-      <div class="stat-number" id="today-sales">â</div>
+      <div class="stat-number" id="today-sales">—</div>
     </div>
 
     <div class="stat">
@@ -663,8 +862,32 @@
     </div>
   </section>
 
+  <!-- RIWAYAT TRANSAKSI -->
+  <section class="panel" id="transaksi-section">
+    <h2>Riwayat Transaksi</h2>
+    <p class="muted">
+      Daftar transaksi kedai yang sedang dikelola. Informasi pelanggan
+      dan nomor meja tidak ditampilkan di halaman ini.
+    </p>
+
+    <div class="field">
+      <label for="transaction-filter">Filter Transaksi</label>
+      <select id="transaction-filter">
+        <option value="all">Semua Transaksi</option>
+        <option value="paid">Sudah Dibayar</option>
+        <option value="unpaid">Belum Dibayar</option>
+      </select>
+    </div>
+
+    <p class="muted" id="transaction-message">
+      Memuat riwayat transaksi...
+    </p>
+
+    <div id="transaction-list"></div>
+  </section>
+
   <!-- QR MENU -->
-  <section class="panel">
+  <section class="panel" id="lainnya-section">
     <h2>QR Menu Kedai</h2>
     <p class="muted">
       QR ini membuka halaman pilihan menu, bukan QRIS pembayaran.
@@ -735,32 +958,32 @@
     <div class="stats">
       <div class="stat">
         <div class="stat-label">Nilai Seluruh Pesanan</div>
-        <div class="stat-number" id="report-order-value">â</div>
+        <div class="stat-number" id="report-order-value">—</div>
       </div>
 
       <div class="stat">
         <div class="stat-label">Omzet Sudah Dibayar</div>
-        <div class="stat-number" id="report-paid-sales">â</div>
+        <div class="stat-number" id="report-paid-sales">—</div>
       </div>
 
       <div class="stat">
         <div class="stat-label">Nilai Belum Dibayar</div>
-        <div class="stat-number" id="report-unpaid-sales">â</div>
+        <div class="stat-number" id="report-unpaid-sales">—</div>
       </div>
 
       <div class="stat">
         <div class="stat-label">Pesanan Lunas</div>
-        <div class="stat-number" id="report-paid-count">â</div>
+        <div class="stat-number" id="report-paid-count">—</div>
       </div>
 
       <div class="stat">
         <div class="stat-label">Pesanan Belum Lunas</div>
-        <div class="stat-number" id="report-unpaid-count">â</div>
+        <div class="stat-number" id="report-unpaid-count">—</div>
       </div>
 
       <div class="stat">
         <div class="stat-label">Jumlah Produk Terjual</div>
-        <div class="stat-number" id="report-products-sold">â</div>
+        <div class="stat-number" id="report-products-sold">—</div>
       </div>
     </div>
 
@@ -776,14 +999,13 @@
           </tr>
         </thead>
         <tbody id="report-product-list">
-          <tr>
-            <td colspan="3">Laporan belum dimuat.</td>
-          </tr>
+          <tr><td colspan="3">Laporan belum dimuat.</td></tr>
         </tbody>
       </table>
     </div>
 
     <h3 class="report-section-title">Metode Pembayaran</h3>
+
     <div class="report-table-wrap">
       <table class="report-table">
         <thead>
@@ -794,9 +1016,7 @@
           </tr>
         </thead>
         <tbody id="report-payment-methods">
-          <tr>
-            <td colspan="3">Data metode pembayaran belum tersedia.</td>
-          </tr>
+          <tr><td colspan="3">Data metode pembayaran belum tersedia.</td></tr>
         </tbody>
       </table>
     </div>
@@ -827,7 +1047,33 @@
 
 </main>
 
-<footer>KopiHub Â© 2026 Â· Dashboard Owner Coffee Shop</footer>
+<!-- NAVIGASI BAWAH -->
+<nav class="bottom-navigation" aria-label="Navigasi Dashboard Owner">
+  <button class="nav-button active" type="button" data-target="home-section">
+    <span class="nav-icon">⌂</span>
+    <span>HOME</span>
+  </button>
+
+  <button class="nav-button" type="button" data-target="kelola-menu">
+    <span class="nav-icon">☕</span>
+    <span>MENU</span>
+  </button>
+
+  <button class="nav-button" type="button" data-target="transaksi-section">
+    <span class="nav-icon">▤</span>
+    <span>TRANSAKSI</span>
+  </button>
+
+  <button class="nav-button" type="button" data-target="sales-report-panel">
+    <span class="nav-icon">▥</span>
+    <span>LAPORAN</span>
+  </button>
+
+  <button class="nav-button" type="button" data-target="lainnya-section">
+    <span class="nav-icon">•••</span>
+    <span>LAINNYA</span>
+  </button>
+</nav>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -837,11 +1083,6 @@
 <script>
 "use strict";
 
-/*
-  PENTING:
-  Masukkan kembali URL dan publishable key asli dari file lama.
-  Jangan pernah memakai service_role key di browser.
-*/
 const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
@@ -857,6 +1098,89 @@ let editingProductId = null;
 let requestVersion = 0;
 
 const shopSelect = $("shop-select");
+
+/* =========================
+   STICKY HEADER
+========================= */
+
+const ownerHeader = $("owner-header");
+
+let headerTicking = false;
+
+window.addEventListener("scroll", () => {
+  if (headerTicking) return;
+
+  headerTicking = true;
+
+  requestAnimationFrame(() => {
+    ownerHeader.classList.toggle(
+      "is-collapsed",
+      window.scrollY > 55
+    );
+
+    headerTicking = false;
+  });
+}, {passive:true});
+
+/* =========================
+   NAVIGASI FOOTER
+========================= */
+
+const navButtons = [...document.querySelectorAll(".nav-button")];
+
+navButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const target = $(button.dataset.target);
+
+    if (!target) return;
+
+    target.scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+    navButtons.forEach(item =>
+      item.classList.toggle("active", item === button)
+    );
+  });
+});
+
+const navSections = [
+  {id:"home-section", button:0},
+  {id:"kelola-menu", button:1},
+  {id:"transaksi-section", button:2},
+  {id:"sales-report-panel", button:3},
+  {id:"lainnya-section", button:4}
+];
+
+if ("IntersectionObserver" in window) {
+  const navObserver = new IntersectionObserver(entries => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+    if (!visible) return;
+
+    const index = navSections.findIndex(
+      section => section.id === visible.target.id
+    );
+
+    if (index < 0) return;
+
+    navButtons.forEach((button,i) =>
+      button.classList.toggle("active", i === index)
+    );
+  }, {
+    root:null,
+    rootMargin:"-20% 0px -60% 0px",
+    threshold:[0,.1,.25,.5]
+  });
+
+  navSections.forEach(section => {
+    const element = $(section.id);
+    if (element) navObserver.observe(element);
+  });
+}
 
 function rupiah(value) {
   return new Intl.NumberFormat("id-ID", {
@@ -928,7 +1252,7 @@ function renderSelectedShop() {
   }
 
   $("shop-details").textContent = shop
-    ? "Kedai: " + shop.name + " Â· Slug: " + shop.slug
+    ? "Kedai: " + shop.name + " · Slug: " + shop.slug
     : "Belum ada kedai yang dipilih.";
 
   $("make-qr").disabled = !shop;
@@ -958,31 +1282,6 @@ function renderSelectedShop() {
 }
 
 async function loadShops() {
-  if (
-    !SUPABASE_URL.startsWith("https://") ||
-    SUPABASE_URL.includes("GANTI_DENGAN") ||
-    SUPABASE_PUBLISHABLE_KEY.includes("GANTI_DENGAN")
-  ) {
-    showStatus("Isi kredensial Supabase terlebih dahulu.", true);
-
-    shopSelect.innerHTML =
-      '<option value="">Supabase belum dikonfigurasi</option>';
-
-    $("shop-details").textContent =
-      "Dashboard belum terhubung ke Supabase.";
-
-    $("sales-chart").innerHTML =
-      '<p class="muted">Grafik menunggu koneksi Supabase.</p>';
-
-    $("chart-message").textContent =
-      "Tambahkan kredensial Supabase untuk memuat data.";
-
-    $("report-message").textContent =
-      "Dashboard belum terhubung ke Supabase.";
-
-    return;
-  }
-
   try {
     if (!window.supabase) {
       throw new Error("Library Supabase tidak termuat.");
@@ -993,23 +1292,21 @@ async function loadShops() {
       SUPABASE_PUBLISHABLE_KEY
     );
 
-    const { data:sessionData, error:sessionError } =
+    const {data:sessionData,error:sessionError} =
       await client.auth.getSession();
 
     if (sessionError) throw sessionError;
 
     if (!sessionData.session) {
       showStatus("Silakan login terlebih dahulu.", true);
-
       shopSelect.innerHTML =
         '<option value="">Silakan login</option>';
-
       return;
     }
 
     const userId = sessionData.session.user.id;
 
-    const { data:memberships, error:memberError } =
+    const {data:memberships,error:memberError} =
       await client
         .from("kh_shop_members")
         .select("shop_id, role")
@@ -1019,7 +1316,9 @@ async function loadShops() {
 
     const ownerMemberships = (memberships || []).filter(
       member =>
-        String(member.role || "").toLowerCase() === "owner"
+        ["owner","manager"].includes(
+          String(member.role || "").toLowerCase()
+        )
     );
 
     const uniqueShopIds = [
@@ -1065,20 +1364,15 @@ async function loadShops() {
 
     const shopId = uniqueShopIds[0];
 
-    const { data:shop, error:shopError } =
+    const {data:shop,error:shopError} =
       await client
         .from("kh_shops")
-        .select(
-          "id, name, slug, is_active, timezone, logo_url, description"
-        )
+        .select("id, name, slug, is_active, timezone, logo_url, description")
         .eq("id", shopId)
         .maybeSingle();
 
     if (shopError) throw shopError;
-
-    if (!shop) {
-      throw new Error("Data kedai untuk akun ini tidak ditemukan.");
-    }
+    if (!shop) throw new Error("Data kedai tidak ditemukan.");
 
     shops = [shop];
 
@@ -1101,11 +1395,7 @@ async function loadShops() {
 
   } catch (error) {
     console.error("Gagal memuat dashboard:", error);
-
-    showStatus(
-      "Gagal memuat kedai: " + error.message,
-      true
-    );
+    showStatus("Gagal memuat kedai: " + error.message, true);
   }
 }
 
@@ -1123,7 +1413,7 @@ async function refreshMenu() {
   $("menu-category").disabled = true;
 
   try {
-    const [catResult, productResult] = await Promise.all([
+    const [catResult,productResult] = await Promise.all([
       client
         .from("kh_categories")
         .select("id, name, sort_order")
@@ -1133,28 +1423,20 @@ async function refreshMenu() {
 
       client
         .from("kh_products")
-        .select(
-          "id, shop_id, category_id, name, description, price, is_available, created_at"
-        )
+        .select("id, shop_id, category_id, name, description, price, is_available, created_at")
         .eq("shop_id", shop.id)
         .order("created_at", {ascending:false})
     ]);
 
-    if (
-      version !== requestVersion ||
-      shopSelect.value !== shop.id
-    ) return;
+    if (version !== requestVersion || shopSelect.value !== shop.id) return;
 
     if (catResult.error) throw catResult.error;
-
     categories = catResult.data || [];
 
     if (productResult.error) throw productResult.error;
-
     products = productResult.data || [];
 
     const categorySelect = $("menu-category");
-
     categorySelect.replaceChildren();
 
     const placeholder = document.createElement("option");
@@ -1217,10 +1499,10 @@ function renderProducts() {
 
     details.textContent =
       (category ? category.name : "Kategori tidak tersedia") +
-      " Â· " + rupiah(product.price) +
-      " Â· " + (product.is_available ? "Tersedia" : "Habis");
+      " · " + rupiah(product.price) +
+      " · " + (product.is_available ? "Tersedia" : "Habis");
 
-    card.append(name, details);
+    card.append(name,details);
 
     if (product.description) {
       const desc = document.createElement("p");
@@ -1236,46 +1518,36 @@ function renderProducts() {
     edit.type = "button";
     edit.className = "secondary";
     edit.textContent = "Edit";
-
-    edit.addEventListener("click", () => {
-      startEdit(product.id);
-    });
+    edit.addEventListener("click",() => startEdit(product.id));
 
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "danger";
     remove.textContent = "Hapus";
+    remove.addEventListener("click",() => deleteProduct(product.id));
 
-    remove.addEventListener("click", () => {
-      deleteProduct(product.id);
-    });
-
-    actions.append(edit, remove);
+    actions.append(edit,remove);
     card.appendChild(actions);
     list.appendChild(card);
   });
 }
 
-$("show-add-menu").addEventListener("click", () => {
+$("show-add-menu").addEventListener("click",() => {
   resetMenuForm();
   $("menu-form-panel").hidden = false;
   $("menu-name").focus();
 });
 
-$("toggle-menu-list").addEventListener("click", () => {
+$("toggle-menu-list").addEventListener("click",() => {
   const panel = $("menu-list-panel");
-
   panel.hidden = !panel.hidden;
-
   $("toggle-menu-list").textContent =
     panel.hidden ? "Daftar Menu" : "Tutup Daftar Menu";
 });
 
 function resetMenuForm() {
   editingProductId = null;
-
   $("menu-form").reset();
-
   $("save-menu").textContent = "Simpan Menu";
   $("menu-form-title").textContent = "Tambah Menu Baru";
   $("cancel-edit").textContent = "Batal";
@@ -1284,14 +1556,10 @@ function resetMenuForm() {
 
 function startEdit(id) {
   const product = products.find(item => item.id === id);
-
   if (!product) return;
 
   if (!categories.some(item => item.id === product.category_id)) {
-    showMenuMessage(
-      "Kategori menu tidak aktif atau tidak ditemukan.",
-      true
-    );
+    showMenuMessage("Kategori menu tidak aktif atau tidak ditemukan.",true);
     return;
   }
 
@@ -1311,7 +1579,7 @@ function startEdit(id) {
   $("kelola-menu").scrollIntoView({behavior:"smooth"});
 }
 
-$("menu-form").addEventListener("submit", async event => {
+$("menu-form").addEventListener("submit",async event => {
   event.preventDefault();
 
   const shop = selectedShop();
@@ -1320,15 +1588,15 @@ $("menu-form").addEventListener("submit", async event => {
   const price = Number($("menu-price").value);
 
   if (!shop || !client) {
-    return showMenuMessage("Pilih kedai terlebih dahulu.", true);
+    return showMenuMessage("Pilih kedai terlebih dahulu.",true);
   }
 
   if (!categories.some(item => item.id === categoryId)) {
-    return showMenuMessage("Pilih kategori yang valid.", true);
+    return showMenuMessage("Pilih kategori yang valid.",true);
   }
 
   if (!name || !Number.isSafeInteger(price) || price <= 0) {
-    return showMenuMessage("Nama menu dan harga wajib valid.", true);
+    return showMenuMessage("Nama menu dan harga wajib valid.",true);
   }
 
   const wasEditing = Boolean(editingProductId);
@@ -1349,38 +1617,30 @@ $("menu-form").addEventListener("submit", async event => {
     };
 
     const result = editingProductId
-      ? await client
-          .from("kh_products")
+      ? await client.from("kh_products")
           .update(payload)
-          .eq("id", editingProductId)
-          .eq("shop_id", shop.id)
-      : await client
-          .from("kh_products")
-          .insert(payload);
+          .eq("id",editingProductId)
+          .eq("shop_id",shop.id)
+      : await client.from("kh_products").insert(payload);
 
     if (result.error) throw result.error;
 
     resetMenuForm();
 
     showMenuMessage(
-      wasEditing
-        ? "Menu berhasil diperbarui."
-        : "Menu berhasil disimpan."
+      wasEditing ? "Menu berhasil diperbarui." : "Menu berhasil disimpan."
     );
 
     await refreshMenu();
 
   } catch (error) {
-    showMenuMessage(
-      "Gagal menyimpan menu: " + error.message,
-      true
-    );
+    showMenuMessage("Gagal menyimpan menu: " + error.message,true);
   } finally {
     save.disabled = false;
   }
 });
 
-$("cancel-edit").addEventListener("click", () => {
+$("cancel-edit").addEventListener("click",() => {
   resetMenuForm();
   $("menu-form-panel").hidden = true;
   showMenuMessage("Formulir ditutup.");
@@ -1391,27 +1651,22 @@ async function deleteProduct(id) {
   const product = products.find(item => item.id === id);
 
   if (!shop || !product || product.shop_id !== shop.id) return;
-
   if (!confirm('Hapus menu "' + product.name + '"?')) return;
 
   try {
     const {error} = await client
       .from("kh_products")
       .delete()
-      .eq("id", id)
-      .eq("shop_id", shop.id);
+      .eq("id",id)
+      .eq("shop_id",shop.id);
 
     if (error) throw error;
 
     showMenuMessage("Menu berhasil dihapus.");
-
     await refreshMenu();
 
   } catch (error) {
-    showMenuMessage(
-      "Gagal menghapus menu: " + error.message,
-      true
-    );
+    showMenuMessage("Gagal menghapus menu: " + error.message,true);
   }
 }
 
@@ -1428,42 +1683,33 @@ function getDateFormatter(timezone) {
   });
 }
 
-function getDateKey(value, formatter) {
+function getDateKey(value,formatter) {
   if (!value) return "";
 
   const parts = formatter.formatToParts(new Date(value));
-
-  const part = type =>
-    parts.find(item => item.type === type)?.value || "";
+  const part = type => parts.find(item => item.type === type)?.value || "";
 
   return `${part("year")}-${part("month")}-${part("day")}`;
 }
 
-function addDaysToKey(key, amount) {
-  const [year, month, day] = key.split("-").map(Number);
-
-  const date = new Date(Date.UTC(year, month - 1, day));
-
+function addDaysToKey(key,amount) {
+  const [year,month,day] = key.split("-").map(Number);
+  const date = new Date(Date.UTC(year,month - 1,day));
   date.setUTCDate(date.getUTCDate() + amount);
-
   return date.toISOString().slice(0,10);
 }
 
 function compactRupiah(value) {
   if (value >= 1000000) {
-    return "Rp" +
-      (value / 1000000).toLocaleString(
-        "id-ID",
-        {maximumFractionDigits:1}
-      ) + "jt";
+    return "Rp" + (value / 1000000).toLocaleString(
+      "id-ID",{maximumFractionDigits:1}
+    ) + "jt";
   }
 
   if (value >= 1000) {
-    return "Rp" +
-      (value / 1000).toLocaleString(
-        "id-ID",
-        {maximumFractionDigits:0}
-      ) + "rb";
+    return "Rp" + (value / 1000).toLocaleString(
+      "id-ID",{maximumFractionDigits:0}
+    ) + "rb";
   }
 
   return "Rp" + value;
@@ -1477,37 +1723,32 @@ function orderValue(order) {
   return Number(order.subtotal ?? 0);
 }
 
-function renderSalesChart(orders, formatter, todayKey) {
+function renderSalesChart(orders,formatter,todayKey) {
   const chart = $("sales-chart");
-
   chart.replaceChildren();
 
   const dayKeys = [];
 
   for (let i = 6; i >= 0; i--) {
-    dayKeys.push(addDaysToKey(todayKey, -i));
+    dayKeys.push(addDaysToKey(todayKey,-i));
   }
 
   const totals = dayKeys.map(key =>
     (orders || [])
       .filter(order =>
         order.created_at &&
-        getDateKey(order.created_at, formatter) === key &&
+        getDateKey(order.created_at,formatter) === key &&
         isPaid(order)
       )
-      .reduce((sum, order) => sum + orderValue(order), 0)
+      .reduce((sum,order) => sum + orderValue(order),0)
   );
 
-  const max = Math.max(...totals, 1);
+  const max = Math.max(...totals,1);
+  const weekdays = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
 
-  const weekdays = [
-    "Min","Sen","Sel","Rab","Kam","Jum","Sab"
-  ];
-
-  dayKeys.forEach((key, index) => {
-    const [year, month, day] = key.split("-").map(Number);
-
-    const dateObj = new Date(year, month - 1, day);
+  dayKeys.forEach((key,index) => {
+    const [year,month,day] = key.split("-").map(Number);
+    const dateObj = new Date(year,month - 1,day);
 
     const col = document.createElement("div");
     col.className = "chart-day";
@@ -1526,11 +1767,10 @@ function renderSalesChart(orders, formatter, todayKey) {
 
     bar.style.height =
       (totals[index] > 0
-        ? Math.max(5, totals[index] / max * 100)
+        ? Math.max(5,totals[index] / max * 100)
         : 0) + "%";
 
     bar.title = rupiah(totals[index]);
-
     track.appendChild(bar);
 
     const label = document.createElement("div");
@@ -1541,8 +1781,7 @@ function renderSalesChart(orders, formatter, todayKey) {
     dayNumber.className = "chart-label";
     dayNumber.textContent = String(day);
 
-    col.append(value, track, label, dayNumber);
-
+    col.append(value,track,label,dayNumber);
     chart.appendChild(col);
   });
 
@@ -1552,7 +1791,7 @@ function renderSalesChart(orders, formatter, todayKey) {
 }
 
 /* =========================
-   MEMUAT DATA PESANAN
+   DATA PESANAN
 ========================= */
 
 async function fetchAllShopOrders(shopId) {
@@ -1560,19 +1799,16 @@ async function fetchAllShopOrders(shopId) {
   const pageSize = 1000;
 
   for (let offset = 0; ; offset += pageSize) {
-    const {data, error} = await client
+    const {data,error} = await client
       .from("kh_orders")
-      .select(
-        "id, order_number, status, order_status, subtotal, total_amount, created_at, payment_status, items, order_type, payment_method, service_fee, tax_amount"
-      )
-      .eq("shop_id", shopId)
-      .order("created_at", {ascending:false})
-      .range(offset, offset + pageSize - 1);
+      .select("id, order_number, status, order_status, subtotal, total_amount, created_at, payment_status, items, order_type, payment_method, service_fee, tax_amount")
+      .eq("shop_id",shopId)
+      .order("created_at",{ascending:false})
+      .range(offset,offset + pageSize - 1);
 
     if (error) throw error;
 
     const rows = data || [];
-
     results.push(...rows);
 
     if (rows.length < pageSize) break;
@@ -1585,14 +1821,11 @@ async function loadOrders() {
   const shop = selectedShop();
 
   if (!client || !shop) {
-    $("report-message").textContent =
-      "Pilih kedai terlebih dahulu.";
+    $("report-message").textContent = "Pilih kedai terlebih dahulu.";
     return;
   }
 
-  $("report-message").textContent =
-    "Memuat laporan penjualan...";
-
+  $("report-message").textContent = "Memuat laporan penjualan...";
   $("sales-chart").innerHTML =
     '<p class="muted">Memuat grafik penjualan...</p>';
 
@@ -1608,26 +1841,22 @@ async function loadOrders() {
 
     const timezone = shop.timezone || "Asia/Jayapura";
     const formatter = getDateFormatter(timezone);
-    const todayKey = getDateKey(new Date(), formatter);
+    const todayKey = getDateKey(new Date(),formatter);
 
     const todaysOrders = orders.filter(order =>
       order.created_at &&
-      getDateKey(order.created_at, formatter) === todayKey
+      getDateKey(order.created_at,formatter) === todayKey
     );
 
     const paidOrders = todaysOrders.filter(isPaid);
     const unpaidOrders = todaysOrders.filter(order => !isPaid(order));
 
     const totalValue = todaysOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
+      (sum,order) => sum + orderValue(order),0
     );
 
     const paidValue = paidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
-    );
-
-    const unpaidValue = unpaidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
+      (sum,order) => sum + orderValue(order),0
     );
 
     $("today-orders").textContent = todaysOrders.length;
@@ -1637,12 +1866,12 @@ async function loadOrders() {
     $("summary-income").textContent = rupiah(paidValue);
     $("summary-sales").textContent = rupiah(totalValue);
 
-    renderSalesChart(orders, formatter, todayKey);
-
+    renderSalesChart(orders,formatter,todayKey);
+    renderTransactions();
     updateReport();
 
   } catch (error) {
-    console.error("Gagal memuat laporan:", error);
+    console.error("Gagal memuat laporan:",error);
 
     $("report-message").textContent =
       "Gagal memuat laporan: " + error.message;
@@ -1651,11 +1880,108 @@ async function loadOrders() {
       '<p class="muted">Grafik gagal dimuat. Periksa koneksi dan izin akses kh_orders.</p>';
 
     $("chart-message").textContent = "";
+    $("transaction-message").textContent =
+      "Riwayat transaksi gagal dimuat.";
   }
 }
 
 /* =========================
-   LOGIKA LAPORAN PENJUALAN
+   RIWAYAT TRANSAKSI
+========================= */
+
+function renderTransactions() {
+  const list = $("transaction-list");
+  const filter = $("transaction-filter").value;
+
+  list.replaceChildren();
+
+  let rows = [...allOrders];
+
+  if (filter === "paid") {
+    rows = rows.filter(isPaid);
+  } else if (filter === "unpaid") {
+    rows = rows.filter(order => !isPaid(order));
+  }
+
+  rows = rows.slice(0,50);
+
+  $("transaction-message").textContent =
+    rows.length
+      ? "Menampilkan " + rows.length + " transaksi terbaru."
+      : "Belum ada transaksi untuk ditampilkan.";
+
+  if (!rows.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Belum ada transaksi.";
+    list.appendChild(empty);
+    return;
+  }
+
+  rows.forEach(order => {
+    const item = document.createElement("article");
+    item.className = "transaction-item";
+
+    const top = document.createElement("div");
+    top.className = "transaction-top";
+
+    const number = document.createElement("div");
+    number.className = "transaction-number";
+    number.textContent =
+      "Pesanan #" + (order.order_number || String(order.id).slice(0,8));
+
+    const amount = document.createElement("div");
+    amount.className = "transaction-amount";
+    amount.textContent = rupiah(orderValue(order));
+
+    top.append(number,amount);
+
+    const meta = document.createElement("div");
+    meta.className = "transaction-meta";
+
+    const dateText = order.created_at
+      ? new Date(order.created_at).toLocaleString("id-ID",{
+          dateStyle:"medium",
+          timeStyle:"short"
+        })
+      : "Tanggal tidak tersedia";
+
+    const paymentMethod = order.payment_method || "Metode belum diketahui";
+
+    meta.textContent = dateText + " · " + paymentMethod;
+
+    const status = document.createElement("span");
+    status.className = "transaction-status";
+
+    if (isPaid(order)) {
+      status.textContent = "Sudah dibayar";
+    } else {
+      status.textContent = "Belum dibayar";
+      status.classList.add("unpaid");
+    }
+
+    const orderStatus = String(
+      order.order_status || order.status || ""
+    ).toLowerCase();
+
+    if (
+      orderStatus.includes("cancel") ||
+      orderStatus.includes("batal")
+    ) {
+      status.textContent = "Dibatalkan";
+      status.classList.remove("unpaid");
+      status.classList.add("cancelled");
+    }
+
+    item.append(top,meta,status);
+    list.appendChild(item);
+  });
+}
+
+$("transaction-filter").addEventListener("change",renderTransactions);
+
+/* =========================
+   LOGIKA LAPORAN
 ========================= */
 
 function parseOrderItems(value) {
@@ -1682,31 +2008,23 @@ function parseOrderItems(value) {
       quantity:Number.isFinite(quantity) ? quantity : 0,
       price:Number.isFinite(price) ? price : 0
     };
-  }).filter(item =>
-    item.quantity > 0 && item.price >= 0
-  );
+  }).filter(item => item.quantity > 0 && item.price >= 0);
 }
 
 function getReportRange() {
   const shop = selectedShop();
-
   const timezone = shop?.timezone || "Asia/Jayapura";
   const formatter = getDateFormatter(timezone);
-  const today = getDateKey(new Date(), formatter);
-
+  const today = getDateKey(new Date(),formatter);
   const period = $("report-period").value;
 
   if (period === "today") {
-    return {
-      start:today,
-      end:today,
-      label:"Hari Ini"
-    };
+    return {start:today,end:today,label:"Hari Ini"};
   }
 
   if (period === "last7") {
     return {
-      start:addDaysToKey(today, -6),
+      start:addDaysToKey(today,-6),
       end:today,
       label:"7 Hari Terakhir"
     };
@@ -1746,47 +2064,35 @@ function aggregateProducts(orders) {
       const key = item.name;
 
       if (!map.has(key)) {
-        map.set(key, {
-          name:item.name,
-          quantity:0,
-          total:0
-        });
+        map.set(key,{name:item.name,quantity:0,total:0});
       }
 
       const product = map.get(key);
-
       product.quantity += item.quantity;
       product.total += item.quantity * item.price;
     });
   });
 
-  return [...map.values()].sort(
-    (a,b) => b.total - a.total
-  );
+  return [...map.values()].sort((a,b) => b.total - a.total);
 }
 
 function renderProductReport(productsData) {
   const body = $("report-product-list");
-
   body.replaceChildren();
 
   if (!productsData.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-
     cell.colSpan = 3;
     cell.textContent =
       "Belum ada rincian produk dari pesanan lunas pada periode ini.";
-
     row.appendChild(cell);
     body.appendChild(row);
-
     return;
   }
 
   productsData.forEach(product => {
     const row = document.createElement("tr");
-
     const name = document.createElement("td");
     name.textContent = product.name;
 
@@ -1796,43 +2102,14 @@ function renderProductReport(productsData) {
     const total = document.createElement("td");
     total.textContent = rupiah(product.total);
 
-    row.append(name, quantity, total);
+    row.append(name,quantity,total);
     body.appendChild(row);
   });
 }
 
 function renderPaymentReport(orders) {
   const body = $("report-payment-methods");
-
   body.replaceChildren();
-
-  /*
-    Nilai "cashier" yang ada pada data lama belum dapat
-    dianggap sebagai metode pembayaran yang sebenarnya.
-    Karena itu, nilai tersebut tidak diklaim sebagai Cash.
-  */
-
-  const validMethods = orders
-    .filter(isPaid)
-    .map(order => String(order.payment_method || "").trim())
-    .filter(method =>
-      method &&
-      method.toLowerCase() !== "cashier"
-    );
-
-  if (!validMethods.length) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-
-    cell.colSpan = 3;
-    cell.textContent =
-      "Belum tersedia. Data metode pembayaran belum dapat diidentifikasi secara akurat.";
-
-    row.appendChild(cell);
-    body.appendChild(row);
-
-    return;
-  }
 
   const groups = new Map();
 
@@ -1842,22 +2119,27 @@ function renderPaymentReport(orders) {
     if (!method || method.toLowerCase() === "cashier") return;
 
     if (!groups.has(method)) {
-      groups.set(method, {
-        method,
-        count:0,
-        total:0
-      });
+      groups.set(method,{method,count:0,total:0});
     }
 
     const group = groups.get(method);
-
     group.count++;
     group.total += orderValue(order);
   });
 
+  if (!groups.size) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 3;
+    cell.textContent =
+      "Belum tersedia. Data metode pembayaran belum dapat diidentifikasi secara akurat.";
+    row.appendChild(cell);
+    body.appendChild(row);
+    return;
+  }
+
   groups.forEach(group => {
     const row = document.createElement("tr");
-
     const method = document.createElement("td");
     method.textContent = group.method;
 
@@ -1867,7 +2149,7 @@ function renderPaymentReport(orders) {
     const total = document.createElement("td");
     total.textContent = rupiah(group.total);
 
-    row.append(method, count, total);
+    row.append(method,count,total);
     body.appendChild(row);
   });
 }
@@ -1883,9 +2165,7 @@ function updateReport() {
 
     const periodOrders = allOrders.filter(order => {
       if (!order.created_at) return false;
-
-      const key = getDateKey(order.created_at, formatter);
-
+      const key = getDateKey(order.created_at,formatter);
       return key >= range.start && key <= range.end;
     });
 
@@ -1893,21 +2173,21 @@ function updateReport() {
     const unpaidOrders = periodOrders.filter(order => !isPaid(order));
 
     const totalValue = periodOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
+      (sum,order) => sum + orderValue(order),0
     );
 
     const paidValue = paidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
+      (sum,order) => sum + orderValue(order),0
     );
 
     const unpaidValue = unpaidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
+      (sum,order) => sum + orderValue(order),0
     );
 
     const productData = aggregateProducts(paidOrders);
 
     const productCount = productData.reduce(
-      (sum, item) => sum + item.quantity, 0
+      (sum,item) => sum + item.quantity,0
     );
 
     currentReport = {
@@ -1926,13 +2206,10 @@ function updateReport() {
       generatedAt:new Date().toISOString()
     };
 
-    $("report-period-label").textContent =
-      "Periode: " + range.label;
-
+    $("report-period-label").textContent = "Periode: " + range.label;
     $("report-order-value").textContent = rupiah(totalValue);
     $("report-paid-sales").textContent = rupiah(paidValue);
     $("report-unpaid-sales").textContent = rupiah(unpaidValue);
-
     $("report-paid-count").textContent = paidOrders.length;
     $("report-unpaid-count").textContent = unpaidOrders.length;
     $("report-products-sold").textContent = productCount;
@@ -1956,15 +2233,13 @@ function updateReport() {
 
   } catch (error) {
     currentReport = null;
-
     $("download-report-excel").disabled = true;
     $("download-report-pdf").disabled = true;
-
     $("report-message").textContent = error.message;
   }
 }
 
-$("report-period").addEventListener("change", () => {
+$("report-period").addEventListener("change",() => {
   const custom = $("report-period").value === "custom";
 
   $("report-start-wrap").hidden = !custom;
@@ -1976,7 +2251,7 @@ $("report-period").addEventListener("change", () => {
       shop?.timezone || "Asia/Jayapura"
     );
 
-    const today = getDateKey(new Date(), formatter);
+    const today = getDateKey(new Date(),formatter);
 
     if (!$("report-start-date").value) {
       $("report-start-date").value = today;
@@ -1988,21 +2263,20 @@ $("report-period").addEventListener("change", () => {
   }
 });
 
-$("refresh-sales-report").addEventListener("click", () => {
-  if (!allOrders.length && !selectedShop()) {
-    $("report-message").textContent =
-      "Kedai belum tersedia.";
+$("refresh-sales-report").addEventListener("click",() => {
+  if (!selectedShop()) {
+    $("report-message").textContent = "Kedai belum tersedia.";
     return;
   }
 
   updateReport();
 });
 
-$("report-start-date").addEventListener("change", () => {
+$("report-start-date").addEventListener("change",() => {
   if ($("report-period").value === "custom") updateReport();
 });
 
-$("report-end-date").addEventListener("change", () => {
+$("report-end-date").addEventListener("change",() => {
   if ($("report-period").value === "custom") updateReport();
 });
 
@@ -2013,11 +2287,11 @@ $("report-end-date").addEventListener("change", () => {
 function safeFileName(value) {
   return String(value || "kopihub")
     .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^a-z0-9_-]+/g,"-")
+    .replace(/^-+|-+$/g,"");
 }
 
-$("download-report-excel").addEventListener("click", () => {
+$("download-report-excel").addEventListener("click",() => {
   if (!currentReport) {
     alert("Tampilkan laporan terlebih dahulu.");
     return;
@@ -2032,38 +2306,31 @@ $("download-report-excel").addEventListener("click", () => {
 
   const summaryRows = [
     ["LAPORAN PENJUALAN KOPIHUB"],
-    ["Nama Kedai", report.shopName],
-    ["Periode", report.range.label],
-    ["Zona Waktu", report.timezone],
+    ["Nama Kedai",report.shopName],
+    ["Periode",report.range.label],
+    ["Zona Waktu",report.timezone],
     [],
-    ["Ringkasan", "Nilai"],
-    ["Nilai Seluruh Pesanan", report.totalValue],
-    ["Omzet Sudah Dibayar", report.paidValue],
-    ["Nilai Belum Dibayar", report.unpaidValue],
-    ["Jumlah Pesanan", report.orders.length],
-    ["Pesanan Lunas", report.paidOrders.length],
-    ["Pesanan Belum Lunas", report.unpaidOrders.length],
-    ["Jumlah Produk Terjual", report.productCount],
+    ["Ringkasan","Nilai"],
+    ["Nilai Seluruh Pesanan",report.totalValue],
+    ["Omzet Sudah Dibayar",report.paidValue],
+    ["Nilai Belum Dibayar",report.unpaidValue],
+    ["Jumlah Pesanan",report.orders.length],
+    ["Pesanan Lunas",report.paidOrders.length],
+    ["Pesanan Belum Lunas",report.unpaidOrders.length],
+    ["Jumlah Produk Terjual",report.productCount],
     [],
-    ["Catatan", "Omzet dihitung dari subtotal pesanan berstatus paid."]
+    ["Catatan","Omzet dihitung dari subtotal pesanan berstatus paid."]
   ];
 
   const productRows = [
     ["Nama Produk","Jumlah Terjual","Nilai Penjualan"],
     ...report.productData.map(item => [
-      item.name,
-      item.quantity,
-      item.total
+      item.name,item.quantity,item.total
     ])
   ];
 
   const orderRows = [
-    [
-      "Nomor Pesanan",
-      "Tanggal",
-      "Status Pembayaran",
-      "Subtotal"
-    ],
+    ["Nomor Pesanan","Tanggal","Status Pembayaran","Subtotal"],
     ...report.orders.map(order => [
       order.order_number ?? order.id,
       order.created_at
@@ -2077,38 +2344,29 @@ $("download-report-excel").addEventListener("click", () => {
   const workbook = XLSX.utils.book_new();
 
   XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(summaryRows),
-    "Ringkasan"
+    workbook,XLSX.utils.aoa_to_sheet(summaryRows),"Ringkasan"
   );
 
   XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(productRows),
-    "Penjualan Produk"
+    workbook,XLSX.utils.aoa_to_sheet(productRows),"Penjualan Produk"
   );
 
   XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(orderRows),
-    "Daftar Pesanan"
+    workbook,XLSX.utils.aoa_to_sheet(orderRows),"Daftar Pesanan"
   );
 
-  const fileName =
-    "laporan-penjualan-" +
-    safeFileName(report.shopSlug) +
-    "-" + report.range.start +
-    "-sampai-" + report.range.end +
-    ".xlsx";
-
-  XLSX.writeFile(workbook, fileName);
+  XLSX.writeFile(
+    workbook,
+    "laporan-penjualan-" + safeFileName(report.shopSlug) +
+    "-" + report.range.start + "-sampai-" + report.range.end + ".xlsx"
+  );
 });
 
 /* =========================
    UNDUH PDF
 ========================= */
 
-$("download-report-pdf").addEventListener("click", () => {
+$("download-report-pdf").addEventListener("click",() => {
   if (!currentReport) {
     alert("Tampilkan laporan terlebih dahulu.");
     return;
@@ -2120,7 +2378,6 @@ $("download-report-pdf").addEventListener("click", () => {
   }
 
   const report = currentReport;
-
   const {jsPDF} = window.jspdf;
 
   const doc = new jsPDF({
@@ -2130,43 +2387,40 @@ $("download-report-pdf").addEventListener("click", () => {
   });
 
   doc.setFontSize(17);
-  doc.text("Laporan Penjualan KopiHub", 14, 18);
+  doc.text("Laporan Penjualan KopiHub",14,18);
 
   doc.setFontSize(11);
-  doc.text("Kedai: " + report.shopName, 14, 27);
-  doc.text("Periode: " + report.range.label, 14, 34);
-  doc.text("Zona waktu: " + report.timezone, 14, 41);
+  doc.text("Kedai: " + report.shopName,14,27);
+  doc.text("Periode: " + report.range.label,14,34);
+  doc.text("Zona waktu: " + report.timezone,14,41);
 
   doc.autoTable({
     startY:48,
     head:[["Ringkasan","Nilai"]],
     body:[
-      ["Nilai seluruh pesanan", rupiah(report.totalValue)],
-      ["Omzet sudah dibayar", rupiah(report.paidValue)],
-      ["Nilai belum dibayar", rupiah(report.unpaidValue)],
-      ["Jumlah pesanan", String(report.orders.length)],
-      ["Pesanan lunas", String(report.paidOrders.length)],
-      ["Pesanan belum lunas", String(report.unpaidOrders.length)],
-      ["Jumlah produk terjual", String(report.productCount)]
+      ["Nilai seluruh pesanan",rupiah(report.totalValue)],
+      ["Omzet sudah dibayar",rupiah(report.paidValue)],
+      ["Nilai belum dibayar",rupiah(report.unpaidValue)],
+      ["Jumlah pesanan",String(report.orders.length)],
+      ["Pesanan lunas",String(report.paidOrders.length)],
+      ["Pesanan belum lunas",String(report.unpaidOrders.length)],
+      ["Jumlah produk terjual",String(report.productCount)]
     ],
     theme:"grid",
     styles:{fontSize:9}
   });
 
-  const productStart =
-    (doc.lastAutoTable?.finalY || 48) + 10;
+  const productStart = (doc.lastAutoTable?.finalY || 48) + 10;
 
   doc.setFontSize(12);
-  doc.text("Rincian Penjualan Produk", 14, productStart);
+  doc.text("Rincian Penjualan Produk",14,productStart);
 
   doc.autoTable({
     startY:productStart + 4,
     head:[["Nama Produk","Jumlah","Nilai Penjualan"]],
     body:report.productData.length
       ? report.productData.map(item => [
-          item.name,
-          String(item.quantity),
-          rupiah(item.total)
+          item.name,String(item.quantity),rupiah(item.total)
         ])
       : [["Belum ada rincian produk","0","Rp0"]],
     theme:"grid",
@@ -2186,28 +2440,23 @@ $("download-report-pdf").addEventListener("click", () => {
     "Sumber pesanan Online/Kasir belum ditampilkan karena penanda sumber belum tersedia.";
 
   doc.setFontSize(8);
-  doc.text(doc.splitTextToSize(note, 180), 14, noteY);
+  doc.text(doc.splitTextToSize(note,180),14,noteY);
 
-  const fileName =
-    "laporan-penjualan-" +
-    safeFileName(report.shopSlug) +
-    "-" + report.range.start +
-    "-sampai-" + report.range.end +
-    ".pdf";
-
-  doc.save(fileName);
+  doc.save(
+    "laporan-penjualan-" + safeFileName(report.shopSlug) +
+    "-" + report.range.start + "-sampai-" + report.range.end + ".pdf"
+  );
 });
 
 /* =========================
    QR MENU
 ========================= */
 
-$("make-qr").addEventListener("click", () => {
+$("make-qr").addEventListener("click",() => {
   const shop = selectedShop();
 
   if (!shop) {
-    $("qr-status").textContent =
-      "Pilih kedai terlebih dahulu.";
+    $("qr-status").textContent = "Pilih kedai terlebih dahulu.";
     return;
   }
 
@@ -2229,18 +2478,16 @@ $("make-qr").addEventListener("click", () => {
 
   $("qr-image").onerror = () => {
     $("qr-image").hidden = true;
-
     $("qr-status").textContent =
       "QR gagal dimuat. Periksa koneksi internet.";
   };
 });
 
-$("share-qr").addEventListener("click", async () => {
+$("share-qr").addEventListener("click",async () => {
   const url = $("menu-url").textContent.trim();
 
   if ($("qr-image").hidden || !url) {
-    $("qr-status").textContent =
-      "Buat QR menu terlebih dahulu.";
+    $("qr-status").textContent = "Buat QR menu terlebih dahulu.";
     return;
   }
 
@@ -2263,10 +2510,8 @@ $("share-qr").addEventListener("click", async () => {
   } else {
     try {
       await navigator.clipboard.writeText(url);
-
       $("qr-status").textContent =
         "Tautan menu berhasil disalin. Bagikan melalui WhatsApp.";
-
     } catch (error) {
       $("qr-status").textContent =
         "Salin tautan menu ini secara manual: " + url;
@@ -2278,9 +2523,8 @@ $("share-qr").addEventListener("click", async () => {
    PROFIL KEDAI
 ========================= */
 
-$("remove-shop-logo").addEventListener("click", () => {
+$("remove-shop-logo").addEventListener("click",() => {
   $("profile-shop-logo").value = "";
-
   $("profile-logo-image").removeAttribute("src");
   $("profile-logo-preview").hidden = true;
 
@@ -2288,7 +2532,7 @@ $("remove-shop-logo").addEventListener("click", () => {
     "Logo ditandai untuk dihapus. Klik Simpan Profil Kedai untuk menerapkan perubahan.";
 });
 
-$("shop-profile-form").addEventListener("submit", async event => {
+$("shop-profile-form").addEventListener("submit",async event => {
   event.preventDefault();
 
   const shop = selectedShop();
@@ -2302,12 +2546,10 @@ $("shop-profile-form").addEventListener("submit", async event => {
   const name = $("profile-shop-name").value.trim();
   const description = $("profile-shop-description").value.trim();
   const file = $("profile-shop-logo").files[0];
-
   const saveButton = $("save-shop-profile");
 
   if (!name) {
-    $("profile-message").textContent =
-      "Nama kedai wajib diisi.";
+    $("profile-message").textContent = "Nama kedai wajib diisi.";
     return;
   }
 
@@ -2324,56 +2566,44 @@ $("shop-profile-form").addEventListener("submit", async event => {
   }
 
   saveButton.disabled = true;
-
-  $("profile-message").textContent =
-    "Menyimpan profil kedai...";
+  $("profile-message").textContent = "Menyimpan profil kedai...";
 
   try {
     const removeLogo =
-      $("profile-logo-preview").hidden &&
-      !file;
+      $("profile-logo-preview").hidden && !file;
 
-    let logoUrl = removeLogo
-      ? null
-      : (shop.logo_url || null);
+    let logoUrl = removeLogo ? null : (shop.logo_url || null);
 
     if (file) {
-      const safeName = file.name.replace(
-        /[^a-zA-Z0-9._-]/g,
-        "-"
-      );
-
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
       const filePath =
         shop.id + "/" + Date.now() + "-" + safeName;
 
-      const {error:uploadError} =
-        await client.storage
-          .from("shop-logos")
-          .upload(filePath, file, {
-            contentType:file.type,
-            cacheControl:"3600",
-            upsert:false
-          });
+      const {error:uploadError} = await client.storage
+        .from("shop-logos")
+        .upload(filePath,file,{
+          contentType:file.type,
+          cacheControl:"3600",
+          upsert:false
+        });
 
       if (uploadError) throw uploadError;
 
-      const {data:publicData} =
-        client.storage
-          .from("shop-logos")
-          .getPublicUrl(filePath);
+      const {data:publicData} = client.storage
+        .from("shop-logos")
+        .getPublicUrl(filePath);
 
       logoUrl = publicData.publicUrl;
     }
 
-    const {error:updateError} =
-      await client
-        .from("kh_shops")
-        .update({
-          name,
-          description:description || null,
-          logo_url:logoUrl
-        })
-        .eq("id", shop.id);
+    const {error:updateError} = await client
+      .from("kh_shops")
+      .update({
+        name,
+        description:description || null,
+        logo_url:logoUrl
+      })
+      .eq("id",shop.id);
 
     if (updateError) throw updateError;
 
@@ -2382,10 +2612,7 @@ $("shop-profile-form").addEventListener("submit", async event => {
     shop.logo_url = logoUrl;
 
     const option = shopSelect.selectedOptions[0];
-
-    if (option) {
-      option.textContent = shop.name + " (" + shop.slug + ")";
-    }
+    if (option) option.textContent = shop.name;
 
     renderSelectedShop();
 
@@ -2393,19 +2620,16 @@ $("shop-profile-form").addEventListener("submit", async event => {
       "Profil kedai berhasil disimpan.";
 
   } catch (error) {
-    console.error("Gagal menyimpan profil:", error);
-
+    console.error("Gagal menyimpan profil:",error);
     $("profile-message").textContent =
       "Gagal menyimpan profil: " + error.message;
-
   } finally {
     saveButton.disabled = !selectedShop();
   }
 });
 
-$("header-profile-button").addEventListener("click", () => {
+$("header-profile-button").addEventListener("click",() => {
   const profil = $("profil-kedai");
-
   profil.hidden = false;
 
   profil.scrollIntoView({
@@ -2414,7 +2638,7 @@ $("header-profile-button").addEventListener("click", () => {
   });
 });
 
-$("close-shop-profile").addEventListener("click", () => {
+$("close-shop-profile").addEventListener("click",() => {
   $("profil-kedai").hidden = true;
 
   $("header-profile-button").scrollIntoView({
@@ -2427,14 +2651,12 @@ $("close-shop-profile").addEventListener("click", () => {
    LOGOUT
 ========================= */
 
-$("logout").addEventListener("click", async function() {
+$("logout").addEventListener("click",async function() {
   const logoutButton = this;
   const originalText = logoutButton.textContent;
 
   if (!client) {
-    alert(
-      "Koneksi Supabase belum siap. Muat ulang halaman, lalu coba lagi."
-    );
+    alert("Koneksi Supabase belum siap. Muat ulang halaman, lalu coba lagi.");
     return;
   }
 
@@ -2443,17 +2665,14 @@ $("logout").addEventListener("click", async function() {
 
   try {
     const {error} = await client.auth.signOut();
-
     if (error) throw error;
 
     window.location.replace("akun.html");
 
   } catch (error) {
-    console.error("Gagal keluar dari akun:", error);
+    console.error("Gagal keluar dari akun:",error);
 
-    alert(
-      "Gagal keluar dari akun. Periksa koneksi internet, lalu coba lagi."
-    );
+    alert("Gagal keluar dari akun. Periksa koneksi internet, lalu coba lagi.");
 
     logoutButton.disabled = false;
     logoutButton.textContent = originalText;
@@ -2461,13 +2680,12 @@ $("logout").addEventListener("click", async function() {
 });
 
 /* =========================
-   EVENT DAN MULAI DASHBOARD
+   MULAI DASHBOARD
 ========================= */
 
-shopSelect.addEventListener("change", async () => {
+shopSelect.addEventListener("change",async () => {
   renderSelectedShop();
   resetMenuForm();
-
   await refreshMenu();
   await loadOrders();
 });

@@ -1100,7 +1100,13 @@
 
 <script>
 "use strict";
-
+window.addEventListener("error", function(event) {
+  alert(
+    "Kesalahan Dashboard Owner:\n" +
+    event.message +
+    "\nBaris: " + event.lineno
+  );
+});
 const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 

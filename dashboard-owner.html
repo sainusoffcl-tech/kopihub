@@ -1257,17 +1257,28 @@ navButtons.forEach((button, index) => {
 });
 
 // Tombol profil pada header membuka halaman Lainnya.
-$("header-profile-button").onclick = () => {
+$("header-profile-button").addEventListener("click", () => {
   openOwnerPage(4);
 
   setTimeout(() => {
-    $("profil-kedai").scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }, 100);
-};
+    const profil = $("profil-kedai");
 
+    if (!profil) return;
+
+    const headerHeight = ownerHeader.offsetHeight;
+
+    const targetPosition =
+      window.scrollY +
+      profil.getBoundingClientRect().top -
+      headerHeight -
+      12;
+
+    window.scrollTo({
+      top: Math.max(0, targetPosition),
+      behavior: "smooth"
+    });
+  }, 300);
+});
 // Awali dashboard dari HOME.
 openOwnerPage(0);
 function rupiah(value) {

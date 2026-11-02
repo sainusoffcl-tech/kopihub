@@ -917,1916 +917,2314 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+<body>
 
-  <script>
-"use strict";
+  <!-- HEADER -->
+  <header class="owner-header" id="owner-header">
+    <div class="owner-header-top">
+      <div>
+        <div class="brand">KopiHub</div>
+        <p>Dashboard Owner</p>
+      </div>
+
+      <button
+        type="button"
+        class="profile-icon-button"
+        id="profile-button"
+        aria-label="Profil kedai"
+        onclick="showSection('profil')"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"></circle>
+          <path d="M4 21c0-4.2 3.4-7 8-7s8 2.8 8 7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div style="margin-top:14px">
+      <strong id="header-shop-name">Memuat kedai...</strong>
+      <div class="muted" style="color:#d7e9de" id="header-owner-email">
+        Memeriksa akun...
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- LOADING -->
+    <section id="loading-section" class="panel">
+      <h2>Memuat Dashboard...</h2>
+      <p class="muted">Mohon tunggu, kami sedang memeriksa akun dan data kedai.</p>
+    </section>
+
+    <!-- ERROR -->
+    <section id="error-section" class="panel" hidden>
+      <h2>Dashboard tidak dapat dibuka</h2>
+      <p class="muted" id="error-message">
+        Terjadi kesalahan saat memuat dashboard.
+      </p>
+      <button type="button" onclick="location.reload()">
+        Coba Lagi
+      </button>
+      <button type="button" class="secondary" onclick="logoutOwner()">
+        Keluar
+      </button>
+    </section>
+
+    <!-- DASHBOARD HOME -->
+    <section id="section-dashboard" hidden>
+      <h1>Ringkasan Kedai</h1>
+      <p class="muted">
+        Pantau perkembangan dan aktivitas bisnis kedai kamu.
+      </p>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Total Penjualan Hari Ini</div>
+          <div class="stat-number" id="stat-sales">Rp0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Pesanan Hari Ini</div>
+          <div class="stat-number" id="stat-orders">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Produk Terjual</div>
+          <div class="stat-number" id="stat-products">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Status Kedai</div>
+          <div class="stat-number" id="stat-shop-status">-</div>
+        </div>
+      </div>
+
+      <div class="chart-panel">
+        <h2>Aktivitas Penjualan</h2>
+        <p class="muted">Ringkasan omzet tujuh hari terakhir.</p>
+        <div id="sales-chart" class="sales-chart">
+          <p class="muted">Memuat grafik...</p>
+        </div>
+      </div>
+
+      <div class="business-summary">
+        <div class="summary-card">
+          <div class="summary-icon">☕</div>
+          <div class="stat-label">Jumlah Produk</div>
+          <div class="stat-number" id="summary-products">0</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-icon">📂</div>
+          <div class="stat-label">Kategori Menu</div>
+          <div class="stat-number" id="summary-categories">0</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Akses Cepat</h2>
+
+        <div class="button-stack">
+          <button type="button" onclick="showSection('menu')">
+            Kelola Menu
+          </button>
+
+          <button type="button" class="secondary"
+            onclick="showSection('kasir')">
+            Kelola Perangkat Kasir
+          </button>
+
+          <button type="button" class="secondary"
+            onclick="showSection('laporan')">
+            Lihat Laporan Penjualan
+          </button>
+
+          <button type="button" class="secondary"
+            onclick="showSection('profil')">
+            Profil Kedai
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU MANAGEMENT -->
+    <section id="section-menu" hidden>
+      <h1>Kelola Menu</h1>
+      <p class="muted">
+        Tambahkan dan atur kategori, produk, harga, serta ketersediaan menu.
+      </p>
+
+      <div class="panel">
+        <h2>Tambah Kategori</h2>
+
+        <div class="field">
+          <label for="category-name">Nama Kategori</label>
+          <input
+            id="category-name"
+            type="text"
+            maxlength="100"
+            placeholder="Contoh: Coffee Signature"
+          >
+        </div>
+
+        <button type="button" onclick="addCategory()">
+          Tambah Kategori
+        </button>
+      </div>
+
+      <div class="panel">
+        <h2>Tambah Produk</h2>
+
+        <div class="field">
+          <label for="product-name">Nama Produk</label>
+          <input
+            id="product-name"
+            type="text"
+            maxlength="150"
+            placeholder="Nama produk"
+          >
+        </div>
+
+        <div class="field">
+          <label for="product-category">Kategori</label>
+          <select id="product-category">
+            <option value="">Pilih kategori</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="product-price">Harga (Rp)</label>
+          <input
+            id="product-price"
+            type="number"
+            min="0"
+            step="500"
+            placeholder="Contoh: 25000"
+          >
+        </div>
+
+        <div class="field">
+          <label for="product-stock">Stok</label>
+          <input
+            id="product-stock"
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Jumlah stok"
+          >
+        </div>
+
+        <div class="field">
+          <label for="product-description">Deskripsi</label>
+          <textarea
+            id="product-description"
+            rows="3"
+            maxlength="500"
+            placeholder="Deskripsi produk (opsional)"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="product-image">URL Foto Produk</label>
+          <input
+            id="product-image"
+            type="url"
+            placeholder="https://..."
+          >
+        </div>
+
+        <button type="button" onclick="addProduct()">
+          Simpan Produk
+        </button>
+      </div>
+
+      <div class="panel">
+        <h2>Daftar Kategori</h2>
+        <div id="category-list">
+          <p class="muted">Memuat kategori...</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Daftar Produk</h2>
+
+        <input
+          id="product-search"
+          type="search"
+          placeholder="Cari nama produk..."
+          oninput="renderProducts()"
+        >
+
+        <div id="product-list">
+          <p class="muted">Memuat produk...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASHIER DEVICE MANAGEMENT -->
+    <section id="section-kasir" hidden>
+      <h1>Kelola Perangkat Kasir</h1>
+      <p class="muted">
+        Pasangkan perangkat kasir dan kendalikan aksesnya dari dashboard Owner.
+      </p>
+
+      <div class="panel">
+        <h2>Status Perangkat</h2>
+
+        <div id="cashier-device-status">
+          <p class="muted">Memeriksa perangkat kasir...</p>
+        </div>
+
+        <div class="button-stack">
+          <button type="button" onclick="createPairingCode()">
+            Buat Kode Pairing
+          </button>
+
+          <button
+            type="button"
+            class="danger"
+            onclick="disableCashierDevice()"
+          >
+            Cabut Akses Perangkat
+          </button>
+        </div>
+
+        <div id="pairing-result" class="qr-box" hidden>
+          <h3>Kode Pairing Perangkat</h3>
+          <div
+            id="pairing-code-display"
+            style="font-size:28px;font-weight:800;letter-spacing:4px;color:#174c38"
+          ></div>
+          <p class="muted" id="pairing-expiry"></p>
+          <p class="muted">
+            Berikan kode ini hanya kepada staf kasir yang berwenang.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Informasi Keamanan</h2>
+        <ul class="muted">
+          <li>Kode pairing berlaku selama 10 menit.</li>
+          <li>Perangkat hanya terhubung dengan satu kedai.</li>
+          <li>Sesi kasir berlaku maksimal 12 jam.</li>
+          <li>Owner dapat mencabut akses perangkat kapan saja.</li>
+          <li>Aktivitas kasir dicatat dalam sistem.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- REPORT -->
+    <section id="section-laporan" hidden>
+      <h1>Laporan Penjualan</h1>
+      <p class="muted">
+        Laporan hanya menampilkan transaksi kedai milik Owner yang sedang login.
+      </p>
+
+      <div class="panel">
+        <h2>Periode Laporan</h2>
+
+        <div class="report-filter">
+          <div class="field">
+            <label for="report-period">Pilih Periode</label>
+            <select id="report-period" onchange="changeReportPeriod()">
+              <option value="today">Hari Ini</option>
+              <option value="7days">7 Hari Terakhir</option>
+              <option value="month">Bulan Ini</option>
+              <option value="custom">Rentang Tanggal</option>
+            </select>
+          </div>
+
+          <div class="field" id="report-start-wrap" hidden>
+            <label for="report-start">Tanggal Awal</label>
+            <input type="date" id="report-start">
+          </div>
+
+          <div class="field" id="report-end-wrap" hidden>
+            <label for="report-end">Tanggal Akhir</label>
+            <input type="date" id="report-end">
+          </div>
+        </div>
+
+        <button type="button" onclick="loadSalesReport()">
+          Tampilkan Laporan
+        </button>
+      </div>
+
+      <div id="report-content">
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Omzet</div>
+            <div class="stat-number" id="report-revenue">Rp0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Pesanan Selesai</div>
+            <div class="stat-number" id="report-order-count">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Produk Terjual</div>
+            <div class="stat-number" id="report-unit-count">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">Biaya Layanan KopiHub</div>
+            <div class="stat-number" id="report-service-fee">Rp0</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Rincian Penjualan</h2>
+
+          <h3 class="report-section-title">Sumber Pesanan</h3>
+          <div id="report-source-breakdown" class="muted">
+            Belum ada data.
+          </div>
+
+          <h3 class="report-section-title">Metode Pembayaran</h3>
+          <div id="report-payment-breakdown" class="muted">
+            Belum ada data.
+          </div>
+
+          <h3 class="report-section-title">Produk Terjual</h3>
+          <div id="report-product-breakdown" class="muted">
+            Belum ada data.
+          </div>
+
+          <div class="report-note">
+            Biaya layanan Rp3.000 per pesanan yang memenuhi ketentuan
+            dibebankan kepada Owner, bukan pelanggan. PPh belum diterapkan.
+          </div>
+
+          <div class="report-actions">
+            <button type="button" onclick="downloadExcelReport()">
+              Unduh Excel
+            </button>
+
+            <button type="button" class="secondary"
+              onclick="downloadPDFReport()">
+              Unduh PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+        <!-- QR MENU -->
+    <section id="section-qr" hidden>
+      <h1>Menu Pelanggan</h1>
+      <p class="muted">
+        Buka halaman menu kedai atau bagikan tautannya kepada pelanggan.
+      </p>
+
+      <div class="panel">
+        <h2>Menu Digital Kedai</h2>
+
+        <div class="qr-box">
+          <div style="font-size:42px;margin-bottom:10px">☕</div>
+          <h3 id="qr-shop-name">Menu Kedai</h3>
+          <p class="muted">
+            Menu digital dapat dibuka pelanggan melalui tautan khusus kedai.
+          </p>
+
+          <div class="field" style="margin-top:16px">
+            <label for="customer-menu-url">Tautan Menu Pelanggan</label>
+            <input
+              type="url"
+              id="customer-menu-url"
+              readonly
+              placeholder="Tautan menu akan ditampilkan di sini"
+            >
+          </div>
+
+          <div class="button-stack">
+            <button type="button" onclick="openCustomerMenu()">
+              Buka Menu Pelanggan
+            </button>
+
+            <button type="button" class="secondary"
+              onclick="shareCustomerMenu()">
+              Bagikan QR / Tautan Menu
+            </button>
+          </div>
+
+          <div id="qr-share-message" class="muted" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Informasi Menu</h2>
+        <p class="muted">
+          Pastikan nama produk, harga, stok, dan ketersediaan menu sudah
+          diperbarui sebelum pelanggan melakukan pemesanan.
+        </p>
+      </div>
+    </section>
+
+    <!-- SHOP PROFILE -->
+    <section id="section-profil" hidden>
+      <h1>Profil Kedai</h1>
+      <p class="muted">
+        Perbarui informasi kedai yang ditampilkan kepada pelanggan.
+      </p>
+
+      <div class="panel">
+        <h2>Identitas Kedai</h2>
+
+        <div class="shop-logo-preview" id="shop-logo-preview">
+          <span>☕</span>
+        </div>
+
+        <div class="field">
+          <label for="shop-logo-url">URL Logo Kedai</label>
+          <input
+            type="url"
+            id="shop-logo-url"
+            placeholder="https://..."
+          >
+        </div>
+
+        <div class="field">
+          <label for="shop-profile-name">Nama Kedai</label>
+          <input
+            type="text"
+            id="shop-profile-name"
+            maxlength="120"
+            placeholder="Nama kedai"
+          >
+        </div>
+
+        <div class="field">
+          <label for="shop-business-type">Jenis Usaha</label>
+          <input
+            type="text"
+            id="shop-business-type"
+            maxlength="100"
+            placeholder="Contoh: Coffee Shop"
+          >
+        </div>
+
+        <div class="field">
+          <label for="shop-phone">Nomor Telepon</label>
+          <input
+            type="tel"
+            id="shop-phone"
+            maxlength="30"
+            placeholder="Nomor telepon kedai"
+          >
+        </div>
+
+        <div class="field">
+          <label for="shop-address">Alamat Kedai</label>
+          <textarea
+            id="shop-address"
+            rows="3"
+            maxlength="500"
+            placeholder="Alamat lengkap kedai"
+          ></textarea>
+        </div>
+
+        <button type="button" onclick="saveShopProfile()">
+          Simpan Profil Kedai
+        </button>
+
+        <p class="muted" id="profile-save-message" style="margin-top:12px"></p>
+      </div>
+
+      <div class="panel">
+        <h2>Informasi Akun Owner</h2>
+
+        <div class="field">
+          <label>Email Akun</label>
+          <input
+            type="email"
+            id="owner-account-email"
+            readonly
+          >
+        </div>
+
+        <button type="button" class="secondary" onclick="logoutOwner()">
+          Keluar dari Akun
+        </button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="owner-footer">
+      <strong>KopiHub</strong>
+      <p>Platform pemesanan dan pengelolaan coffee shop.</p>
+      <small>© 2026 KopiHub. Semua hak dilindungi.</small>
+    </footer>
+
+  </main>
+  <!-- SUPABASE LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* =====================================================
+   KOPIHUB OWNER DASHBOARD
+   BAGIAN 4: KONFIGURASI DAN FUNGSI DASAR
+===================================================== */
+
+/* KONFIGURASI SUPABASE */
+const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
 
 /*
-  Jangan memasukkan service_role key ke halaman browser.
+  Gunakan Supabase publishable key milik project KopiHub.
+  Jangan pernah memasukkan service_role key ke halaman ini.
 */
-const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+const SUPABASE_ANON_KEY = "MASUKKAN_SUPABASE_PUBLISHABLE_KEY";
 
-const $ = id => document.getElementById(id);
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
-let client = null;
-let shops = [];
+/* DATA DASHBOARD */
+let currentUser = null;
+let currentShop = null;
+let currentShopMember = null;
+
 let categories = [];
 let products = [];
-let allOrders = [];
-let currentReport = null;
-let editingProductId = null;
-let requestVersion = 0;
 
-const shopSelect = $("shop-select");
+let reportData = {
+  orders: [],
+  items: []
+};
 
-function rupiah(value) {
+/* FORMAT RUPIAH */
+function formatRupiah(value) {
   return new Intl.NumberFormat("id-ID", {
-    style:"currency",
-    currency:"IDR",
-    maximumFractionDigits:0
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
   }).format(Number(value) || 0);
 }
 
-function showStatus(message, error = false) {
-  const status = $("connection-status");
-
-  if (!status) {
-    console[error ? "error" : "log"](message);
-    return;
-  }
-
-  status.textContent = message;
-  status.style.background = error ? "#fff0ef" : "#e8f2ec";
-  status.style.color = error ? "#9b2525" : "#174c38";
-}
-
-function showMenuMessage(message, error = false) {
-  $("menu-message").textContent = message;
-  $("menu-message").style.color = error ? "#b42318" : "";
-}
-
-function selectedShop() {
-  return shops.find(shop => shop.id === shopSelect.value) || null;
-}
-
-function getMenuUrl(slug) {
-  return new URL(
-    "menu.html?kedai=" + encodeURIComponent(slug),
-    location.href
-  ).href;
-}
-
-function clearQr(message) {
-  $("qr-image").hidden = true;
-  $("qr-image").removeAttribute("src");
-  $("menu-url").textContent = "";
-  $("qr-status").textContent = message;
-  $("open-menu").href = "menu.html";
-}
-
-function renderSelectedShop() {
-  const shop = selectedShop();
-
-  $("header-shop-name").textContent =
-    shop ? shop.name : "Dashboard Owner";
-
-  const headerLogo = $("header-shop-logo");
-  const fallbackSvg = $("header-profile-fallback-svg");
-
-  if (shop && shop.logo_url) {
-    headerLogo.src = shop.logo_url;
-    headerLogo.hidden = false;
-    fallbackSvg.hidden = true;
-
-    headerLogo.onerror = () => {
-      headerLogo.hidden = true;
-      fallbackSvg.hidden = false;
+/* ESCAPE HTML UNTUK MENCEGAH HTML INJECTION */
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, function(char) {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
     };
-  } else {
-    headerLogo.removeAttribute("src");
-    headerLogo.hidden = true;
-    fallbackSvg.hidden = false;
-  }
 
-  $("shop-details").textContent = shop
-    ? "Kedai: " + shop.name + " · Slug: " + shop.slug
-    : "Belum ada kedai yang dipilih.";
-
-  $("make-qr").disabled = !shop;
-
-  $("qr-title").textContent = shop
-    ? "QR Menu " + shop.name
-    : "QR Menu KopiHub";
-
-  clearQr(
-    shop ? "Tekan Buat QR Menu." : "Pilih kedai terlebih dahulu."
-  );
-
-  $("profile-shop-name").value = shop?.name || "";
-  $("profile-shop-description").value = shop?.description || "";
-  $("profile-shop-logo").value = "";
-  $("profile-message").textContent = "";
-
-  if (shop?.logo_url) {
-    $("profile-logo-image").src = shop.logo_url;
-    $("profile-logo-preview").hidden = false;
-  } else {
-    $("profile-logo-image").removeAttribute("src");
-    $("profile-logo-preview").hidden = true;
-  }
-
-  $("save-shop-profile").disabled = !shop;
-}
-
-async function loadShops() {
-  if (
-    !SUPABASE_URL.startsWith("https://") ||
-    SUPABASE_URL.includes("GANTI_DENGAN") ||
-    SUPABASE_PUBLISHABLE_KEY.includes("GANTI_DENGAN")
-  ) {
-    showStatus("Isi kredensial Supabase terlebih dahulu.", true);
-
-    shopSelect.innerHTML =
-      '<option value="">Supabase belum dikonfigurasi</option>';
-
-    $("shop-details").textContent =
-      "Dashboard belum terhubung ke Supabase.";
-
-    $("sales-chart").innerHTML =
-      '<p class="muted">Grafik menunggu koneksi Supabase.</p>';
-
-    $("chart-message").textContent =
-      "Tambahkan kredensial Supabase untuk memuat data.";
-
-    $("report-message").textContent =
-      "Dashboard belum terhubung ke Supabase.";
-
-    return;
-  }
-
-  try {
-    if (!window.supabase) {
-      throw new Error("Library Supabase tidak termuat.");
-    }
-
-    client = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
-
-    const { data:sessionData, error:sessionError } =
-      await client.auth.getSession();
-
-    if (sessionError) throw sessionError;
-
-    if (!sessionData.session) {
-      showStatus("Silakan login terlebih dahulu.", true);
-
-      shopSelect.innerHTML =
-        '<option value="">Silakan login</option>';
-
-      return;
-    }
-
-    const userId = sessionData.session.user.id;
-
-    const { data:memberships, error:memberError } =
-      await client
-        .from("kh_shop_members")
-        .select("shop_id, role")
-        .eq("user_id", userId);
-
-    if (memberError) throw memberError;
-
-    const ownerMemberships = (memberships || []).filter(
-      member =>
-        String(member.role || "").toLowerCase() === "owner"
-    );
-
-    const uniqueShopIds = [
-      ...new Set(
-        ownerMemberships
-          .map(member => member.shop_id)
-          .filter(Boolean)
-      )
-    ];
-
-    if (uniqueShopIds.length !== 1) {
-      shops = [];
-
-      shopSelect.innerHTML =
-        '<option value="">Akun belum terhubung ke satu kedai</option>';
-
-      shopSelect.disabled = true;
-
-      $("shop-details").textContent =
-        uniqueShopIds.length === 0
-          ? "Akun ini belum memiliki kedai. Hubungi administrator KopiHub."
-          : "Akun ini terhubung ke lebih dari satu kedai. Administrator perlu memperbaiki hubungan akun dan kedai.";
-
-      $("header-shop-name").textContent = "Dashboard Owner";
-
-      clearQr("Akun belum terhubung ke satu kedai.");
-
-      $("menu-list").textContent = "Kedai belum dapat dimuat.";
-
-      $("sales-chart").innerHTML =
-        '<p class="muted">Grafik belum tersedia.</p>';
-
-      $("report-message").textContent =
-        "Akun Owner belum terhubung dengan tepat satu kedai.";
-
-      showStatus(
-        "Akses dashboard memerlukan tepat satu kedai untuk akun owner.",
-        true
-      );
-
-      return;
-    }
-
-    const shopId = uniqueShopIds[0];
-
-    const { data:shop, error:shopError } =
-      await client
-        .from("kh_shops")
-        .select(
-          "id, name, slug, is_active, timezone, logo_url, description"
-        )
-        .eq("id", shopId)
-        .maybeSingle();
-
-    if (shopError) throw shopError;
-
-    if (!shop) {
-      throw new Error("Data kedai untuk akun ini tidak ditemukan.");
-    }
-
-    shops = [shop];
-
-    shopSelect.replaceChildren();
-
-    const option = document.createElement("option");
-    option.value = shop.id;
-    option.textContent = shop.name;
-
-    shopSelect.appendChild(option);
-    shopSelect.value = shop.id;
-    shopSelect.disabled = true;
-
-    renderSelectedShop();
-
-    showStatus("Dashboard terhubung ke kedai milik akun ini.");
-
-    await refreshMenu();
-    await loadOrders();
-    await loadCashierDevicePanel();
-
-  } catch (error) {
-    console.error("Gagal memuat dashboard:", error);
-
-    showStatus(
-      "Gagal memuat kedai: " + error.message,
-      true
-    );
-  }
-}
-
-/* =========================
-   KELOLA MENU
-========================= */
-
-async function refreshMenu() {
-  const shop = selectedShop();
-  const version = ++requestVersion;
-
-  if (!client || !shop) return;
-
-  $("menu-list").textContent = "Memuat menu...";
-  $("menu-category").disabled = true;
-
-  try {
-    const [catResult, productResult] = await Promise.all([
-      client
-        .from("kh_categories")
-        .select("id, name, sort_order")
-        .eq("shop_id", shop.id)
-        .eq("is_active", true)
-        .order("sort_order"),
-
-      client
-        .from("kh_products")
-        .select(
-          "id, shop_id, category_id, name, description, price, is_available, created_at"
-        )
-        .eq("shop_id", shop.id)
-        .order("created_at", {ascending:false})
-    ]);
-
-    if (
-      version !== requestVersion ||
-      shopSelect.value !== shop.id
-    ) return;
-
-    if (catResult.error) throw catResult.error;
-
-    categories = catResult.data || [];
-
-    if (productResult.error) throw productResult.error;
-
-    products = productResult.data || [];
-
-    const categorySelect = $("menu-category");
-
-    categorySelect.replaceChildren();
-
-    const placeholder = document.createElement("option");
-    placeholder.value = "";
-    placeholder.textContent = categories.length
-      ? "Pilih kategori"
-      : "Belum ada kategori aktif";
-
-    categorySelect.appendChild(placeholder);
-
-    categories.forEach(category => {
-      const option = document.createElement("option");
-      option.value = category.id;
-      option.textContent = category.name;
-      categorySelect.appendChild(option);
-    });
-
-    categorySelect.disabled = !categories.length;
-
-    $("menu-count").textContent = products.length;
-
-    $("available-count").textContent =
-      products.filter(product => product.is_available).length;
-
-    renderProducts();
-
-  } catch (error) {
-    $("menu-list").textContent =
-      "Gagal memuat menu: " + error.message;
-
-    showMenuMessage(
-      "Gagal memuat kategori atau menu: " + error.message,
-      true
-    );
-  }
-}
-
-function renderProducts() {
-  const list = $("menu-list");
-  list.replaceChildren();
-
-  if (!products.length) {
-    list.textContent = "Belum ada menu untuk kedai ini.";
-    return;
-  }
-
-  products.forEach(product => {
-    const card = document.createElement("article");
-    card.className = "menu-item";
-
-    const name = document.createElement("strong");
-    name.textContent = product.name;
-
-    const details = document.createElement("p");
-    details.className = "muted";
-
-    const category = categories.find(
-      item => item.id === product.category_id
-    );
-
-    details.textContent =
-      (category ? category.name : "Kategori tidak tersedia") +
-      " · " + rupiah(product.price) +
-      " · " + (product.is_available ? "Tersedia" : "Habis");
-
-    card.append(name, details);
-
-    if (product.description) {
-      const desc = document.createElement("p");
-      desc.className = "muted";
-      desc.textContent = product.description;
-      card.appendChild(desc);
-    }
-
-    const actions = document.createElement("div");
-    actions.className = "menu-actions";
-
-    const edit = document.createElement("button");
-    edit.type = "button";
-    edit.className = "secondary";
-    edit.textContent = "Edit";
-
-    edit.addEventListener("click", () => {
-      startEdit(product.id);
-    });
-
-    const remove = document.createElement("button");
-    remove.type = "button";
-    remove.className = "danger";
-    remove.textContent = "Hapus";
-
-    remove.addEventListener("click", () => {
-      deleteProduct(product.id);
-    });
-
-    actions.append(edit, remove);
-    card.appendChild(actions);
-    list.appendChild(card);
+    return entities[char];
   });
 }
 
-$("show-add-menu").addEventListener("click", () => {
-  resetMenuForm();
-  $("menu-form-panel").hidden = false;
-  $("menu-name").focus();
-});
+/* PESAN STATUS */
+function showMessage(elementId, message, isError = false) {
+  const element = document.getElementById(elementId);
 
-$("toggle-menu-list").addEventListener("click", () => {
-  const panel = $("menu-list-panel");
+  if (!element) return;
 
-  panel.hidden = !panel.hidden;
-
-  $("toggle-menu-list").textContent =
-    panel.hidden ? "Daftar Menu" : "Tutup Daftar Menu";
-});
-
-function resetMenuForm() {
-  editingProductId = null;
-
-  $("menu-form").reset();
-
-  $("save-menu").textContent = "Simpan Menu";
-  $("menu-form-title").textContent = "Tambah Menu Baru";
-  $("cancel-edit").textContent = "Batal";
-  $("cancel-edit").hidden = false;
+  element.textContent = message;
+  element.style.color = isError ? "#a72d2d" : "#174c38";
 }
 
-function startEdit(id) {
-  const product = products.find(item => item.id === id);
+/* TAMPILKAN SATU BAGIAN DASHBOARD */
+function showSection(sectionName) {
+  const sections = [
+    "dashboard",
+    "menu",
+    "kasir",
+    "laporan",
+    "qr",
+    "profil"
+  ];
 
-  if (!product) return;
+  sections.forEach(function(name) {
+    const section = document.getElementById("section-" + name);
 
-  if (!categories.some(item => item.id === product.category_id)) {
-    showMenuMessage(
-      "Kategori menu tidak aktif atau tidak ditemukan.",
-      true
-    );
-    return;
-  }
-
-  editingProductId = product.id;
-
-  $("menu-name").value = product.name || "";
-  $("menu-category").value = product.category_id;
-  $("menu-price").value = product.price;
-  $("menu-description").value = product.description || "";
-  $("menu-available").value = String(Boolean(product.is_available));
-
-  $("save-menu").textContent = "Simpan Perubahan";
-  $("cancel-edit").hidden = false;
-  $("menu-form-panel").hidden = false;
-  $("menu-form-title").textContent = "Edit Menu";
-
-  $("kelola-menu").scrollIntoView({behavior:"smooth"});
-}
-
-$("menu-form").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const shop = selectedShop();
-  const name = $("menu-name").value.trim();
-  const categoryId = $("menu-category").value;
-  const price = Number($("menu-price").value);
-
-  if (!shop || !client) {
-    return showMenuMessage("Pilih kedai terlebih dahulu.", true);
-  }
-
-  if (!categories.some(item => item.id === categoryId)) {
-    return showMenuMessage("Pilih kategori yang valid.", true);
-  }
-
-  if (!name || !Number.isSafeInteger(price) || price <= 0) {
-    return showMenuMessage("Nama menu dan harga wajib valid.", true);
-  }
-
-  const wasEditing = Boolean(editingProductId);
-  const save = $("save-menu");
-
-  save.disabled = true;
-  showMenuMessage("Menyimpan menu...");
-
-  try {
-    const payload = {
-      shop_id:shop.id,
-      category_id:categoryId,
-      name,
-      price,
-      description:$("menu-description").value.trim() || null,
-      is_available:$("menu-available").value === "true",
-      item_type:"drink"
-    };
-
-    const result = editingProductId
-      ? await client
-          .from("kh_products")
-          .update(payload)
-          .eq("id", editingProductId)
-          .eq("shop_id", shop.id)
-      : await client
-          .from("kh_products")
-          .insert(payload);
-
-    if (result.error) throw result.error;
-
-    resetMenuForm();
-
-    showMenuMessage(
-      wasEditing
-        ? "Menu berhasil diperbarui."
-        : "Menu berhasil disimpan."
-    );
-
-    await refreshMenu();
-
-  } catch (error) {
-    showMenuMessage(
-      "Gagal menyimpan menu: " + error.message,
-      true
-    );
-  } finally {
-    save.disabled = false;
-  }
-});
-
-$("cancel-edit").addEventListener("click", () => {
-  resetMenuForm();
-  $("menu-form-panel").hidden = true;
-  showMenuMessage("Formulir ditutup.");
-});
-
-async function deleteProduct(id) {
-  const shop = selectedShop();
-  const product = products.find(item => item.id === id);
-
-  if (!shop || !product || product.shop_id !== shop.id) return;
-
-  if (!confirm('Hapus menu "' + product.name + '"?')) return;
-
-  try {
-    const {error} = await client
-      .from("kh_products")
-      .delete()
-      .eq("id", id)
-      .eq("shop_id", shop.id);
-
-    if (error) throw error;
-
-    showMenuMessage("Menu berhasil dihapus.");
-
-    await refreshMenu();
-
-  } catch (error) {
-    showMenuMessage(
-      "Gagal menghapus menu: " + error.message,
-      true
-    );
-  }
-}
-
-/* =========================
-   COLLAPSING HEADER
-========================= */
-
-(() => {
-  const header = document.querySelector(".owner-header");
-  let lastScrollY = window.scrollY || 0;
-  let ticking = false;
-
-  function updateHeader() {
-    const currentY = window.scrollY || 0;
-    const difference = currentY - lastScrollY;
-
-    if (currentY <= 24) {
-      header.classList.remove("is-collapsed");
-    } else if (difference > 5 && currentY > 80) {
-      header.classList.add("is-collapsed");
-    } else if (difference < -5) {
-      header.classList.remove("is-collapsed");
+    if (section) {
+      section.hidden = name !== sectionName;
     }
-
-    lastScrollY = currentY;
-    ticking = false;
-  }
-
-  window.addEventListener("scroll", () => {
-    if (!ticking) {
-      window.requestAnimationFrame(updateHeader);
-      ticking = true;
-    }
-  }, {passive:true});
-})();
-
-    /* =========================
-   KELOLA PERANGKAT KASIR
-   Menggunakan Edge Function cashier-access.
-   Owner device actions: create_pairing_code, disable_device.
-========================= */
-
-const CASHIER_ACCESS_URL =
-  "https://ozcliasebeydgyvgluht.supabase.co/functions/v1/cashier-access";
-
-let latestPairingCode = "";
-let pairingExpiryTimer = null;
-
-function cashierMessage(message, error = false) {
-  const el = $("cashier-message");
-  el.textContent = message;
-  el.style.color = error ? "#b42318" : "";
-}
-
-async function callCashierAccess(action) {
-  if (!client) {
-    throw new Error("Koneksi Supabase belum siap.");
-  }
-
-  const shop = selectedShop();
-  if (!shop?.id) {
-    throw new Error("Kedai Owner belum tersedia.");
-  }
-
-  const {data:sessionData, error:sessionError} =
-    await client.auth.getSession();
-
-  if (sessionError) throw sessionError;
-
-  const accessToken = sessionData.session?.access_token;
-  if (!accessToken) {
-    throw new Error("Sesi login tidak ditemukan. Silakan login kembali.");
-  }
-
-  const response = await fetch(CASHIER_ACCESS_URL, {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      "apikey":SUPABASE_PUBLISHABLE_KEY,
-      "Authorization":"Bearer " + accessToken
-    },
-    body:JSON.stringify({
-      action,
-      shopId:shop.id
-    })
   });
 
-  let result = {};
-  try {
-    result = await response.json();
-  } catch (_) {
-    throw new Error("Respons server pengelolaan perangkat tidak dapat dibaca.");
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  if (sectionName === "laporan") {
+    changeReportPeriod();
   }
 
-  if (!response.ok || result.error || result.success === false) {
-    throw new Error(
-      result.error || result.message ||
-      "Permintaan gagal (HTTP " + response.status + ")."
-    );
+  if (sectionName === "qr") {
+    updateCustomerMenuLink();
   }
 
-  return result;
+  if (sectionName === "profil") {
+    fillShopProfile();
+  }
 }
 
-function clearPairingDisplay(message = "") {
-  latestPairingCode = "";
-  $("cashier-pairing-result").hidden = true;
-  $("cashier-pairing-code").textContent = "";
-  $("cashier-pairing-expiry").textContent = "";
+/* HEADER COLLAPSING SAAT HALAMAN DIGULIR */
+let previousScrollPosition = 0;
 
-  if (pairingExpiryTimer) {
-    clearTimeout(pairingExpiryTimer);
-    pairingExpiryTimer = null;
+window.addEventListener("scroll", function() {
+  const header = document.getElementById("owner-header");
+
+  if (!header) return;
+
+  const currentPosition = window.scrollY;
+
+  if (currentPosition > 100 && currentPosition > previousScrollPosition) {
+    header.classList.add("is-collapsed");
+  } else if (currentPosition < previousScrollPosition) {
+    header.classList.remove("is-collapsed");
   }
 
-  if (message) cashierMessage(message);
-}
+  previousScrollPosition = currentPosition;
+}, { passive: true });
 
-async function createCashierPairing() {
-  const button = $("create-cashier-pairing");
-  const shop = selectedShop();
-
-  if (!shop) {
-    cashierMessage("Kedai Owner belum tersedia.", true);
-    return;
-  }
-
-  const confirmed = confirm(
-    "Buat kode pairing baru untuk " + shop.name + "?\n\n" +
-    "Perangkat yang sebelumnya terpasang akan kehilangan akses dan " +
-    "semua sesi kasir yang masih terbuka akan diakhiri."
-  );
+/* KELUAR DARI AKUN */
+async function logoutOwner() {
+  const confirmed = confirm("Apakah kamu yakin ingin keluar dari akun?");
 
   if (!confirmed) return;
 
-  button.disabled = true;
-  $("revoke-cashier-device").disabled = true;
+  const { error } = await supabaseClient.auth.signOut();
 
-  clearPairingDisplay();
-  cashierMessage("Membuat kode pairing yang baru...");
+  if (error) {
+    alert("Gagal keluar: " + error.message);
+    return;
+  }
+
+  window.location.href = "akun.html";
+}
+
+/* TAMPILKAN ERROR DASHBOARD */
+function showDashboardError(message) {
+  document.getElementById("loading-section").hidden = true;
+  document.getElementById("error-section").hidden = false;
+
+  document.getElementById("error-message").textContent =
+    message || "Terjadi kesalahan saat memuat dashboard.";
+}
+
+/* CEK KELENGKAPAN DATA */
+function requireShop() {
+  if (!currentShop || !currentShop.id) {
+    throw new Error("Data kedai belum tersedia.");
+  }
+}
+
+/* URL MENU PELANGGAN */
+function updateCustomerMenuLink() {
+  if (!currentShop) return;
+
+  const input = document.getElementById("customer-menu-url");
+  const shopName = document.getElementById("qr-shop-name");
+
+  if (!input) return;
+
+  const slug = currentShop.slug;
+
+  if (!slug) {
+    input.value = "";
+    input.placeholder = "Slug kedai belum tersedia.";
+  } else {
+    input.value =
+      window.location.origin +
+      window.location.pathname.replace(/[^/]*$/, "") +
+      "menu.html?shop=" +
+      encodeURIComponent(slug);
+  }
+
+  if (shopName) {
+    shopName.textContent = currentShop.name || "Menu Kedai";
+  }
+}
+
+/* BUKA MENU PELANGGAN */
+function openCustomerMenu() {
+  const input = document.getElementById("customer-menu-url");
+
+  if (!input || !input.value) {
+    alert("Tautan menu belum tersedia. Periksa data kedai.");
+    return;
+  }
+
+  window.open(input.value, "_blank", "noopener,noreferrer");
+}
+
+/* BAGIKAN TAUTAN MENU */
+async function shareCustomerMenu() {
+  const input = document.getElementById("customer-menu-url");
+  const message = document.getElementById("qr-share-message");
+
+  if (!input || !input.value) {
+    showMessage("qr-share-message", "Tautan menu belum tersedia.", true);
+    return;
+  }
+
+  const shareData = {
+    title: "Menu " + (currentShop?.name || "KopiHub"),
+    text: "Lihat menu dan pesan melalui KopiHub.",
+    url: input.value
+  };
 
   try {
-    const result = await callCashierAccess("create_pairing_code");
+    if (navigator.share) {
+      await navigator.share(shareData);
+      showMessage("qr-share-message", "Tautan siap dibagikan.");
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(input.value);
+      showMessage("qr-share-message", "Tautan menu berhasil disalin.");
+    } else {
+      input.focus();
+      input.select();
+      showMessage(
+        "qr-share-message",
+        "Pilih dan salin tautan menu secara manual."
+      );
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") {
+      showMessage("qr-share-message", "Tautan belum berhasil dibagikan.", true);
+    }
+  }
+}
 
-    if (!result.pairingCode || !result.expiresAt) {
-      throw new Error("Server tidak mengirim kode pairing yang lengkap.");
+/* AKHIR BAGIAN 4 */
+</script>
+<script>
+/* =====================================================
+   KOPIHUB OWNER DASHBOARD
+   BAGIAN 5: LOGIN, AKSES OWNER, DAN PROFIL KEDAI
+===================================================== */
+
+/* MEMERIKSA LOGIN DAN AKSES OWNER */
+async function initializeOwnerDashboard() {
+  try {
+    const { data: authData, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError || !authData.user) {
+      window.location.href = "akun.html";
+      return;
     }
 
-    latestPairingCode = String(result.pairingCode);
+    currentUser = authData.user;
 
-    $("cashier-pairing-code").textContent = latestPairingCode;
+    document.getElementById("owner-account-email").value =
+      currentUser.email || "";
 
-    $("cashier-pairing-shop").textContent =
-      "Kedai: " + shop.name + " · Slug: " + shop.slug;
+    document.getElementById("header-owner-email").textContent =
+      currentUser.email || "";
 
-    $("cashier-pairing-expiry").textContent =
-      "Berlaku sampai " + new Date(result.expiresAt).toLocaleString("id-ID", {
-        dateStyle:"medium",
-        timeStyle:"short"
-      }) + " (maksimal 10 menit).";
+    /*
+      Memeriksa keanggotaan akun pada kedai.
+      Hanya Owner dan Manager aktif yang boleh membuka dashboard ini.
+    */
+    const { data: member, error: memberError } =
+      await supabaseClient
+        .from("kh_shop_members")
+        .select("shop_id, role, is_active")
+        .eq("user_id", currentUser.id)
+        .eq("is_active", true)
+        .in("role", ["owner", "manager"])
+        .limit(1)
+        .maybeSingle();
 
-    $("cashier-pairing-result").hidden = false;
-
-    cashierMessage(
-      "Kode berhasil dibuat. Berikan kode kepada staf untuk memasangkan perangkat."
-    );
-
-    const remaining = Math.max(
-      0,
-      new Date(result.expiresAt).getTime() - Date.now()
-    );
-
-    pairingExpiryTimer = setTimeout(() => {
-      clearPairingDisplay(
-        "Kode pairing telah melewati waktu berlakunya. Buat kode baru jika diperlukan."
+    if (memberError) {
+      throw new Error(
+        "Gagal memeriksa akses kedai: " + memberError.message
       );
-    }, remaining);
+    }
+
+    if (!member || !member.shop_id) {
+      throw new Error(
+        "Akun ini belum memiliki akses Owner atau Manager aktif."
+      );
+    }
+
+    currentShopMember = member;
+
+    /* MENGAMBIL DATA KEDAI */
+    const { data: shop, error: shopError } =
+      await supabaseClient
+        .from("kh_shops")
+        .select("*")
+        .eq("id", member.shop_id)
+        .maybeSingle();
+
+    if (shopError) {
+      throw new Error(
+        "Gagal mengambil data kedai: " + shopError.message
+      );
+    }
+
+    if (!shop) {
+      throw new Error("Data kedai tidak ditemukan.");
+    }
+
+    currentShop = shop;
+
+    /* MENAMPILKAN IDENTITAS KEDAI */
+    const shopName =
+      currentShop.name ||
+      currentShop.shop_name ||
+      "Kedai KopiHub";
+
+    document.getElementById("header-shop-name").textContent =
+      shopName;
+
+    document.getElementById("stat-shop-status").textContent =
+      currentShop.is_active === false ? "Nonaktif" : "Aktif";
+
+    document.getElementById("loading-section").hidden = true;
+
+    /* MEMUAT DATA DASHBOARD */
+    await loadCategories();
+    await loadProducts();
+
+    fillShopProfile();
+    updateCustomerMenuLink();
+
+    document.getElementById("section-dashboard").hidden = false;
+
+    await loadDashboardSummary();
+    await loadSalesReport();
 
   } catch (error) {
-    console.error("Gagal membuat pairing kasir:", error);
-    cashierMessage("Gagal membuat kode pairing: " + error.message, true);
-  } finally {
-    button.disabled = false;
-    $("revoke-cashier-device").disabled = false;
+    console.error("Owner dashboard error:", error);
+    showDashboardError(error.message);
   }
 }
 
-async function revokeCashierDevice() {
-  const shop = selectedShop();
+/* MENGISI FORM PROFIL KEDAI */
+function fillShopProfile() {
+  if (!currentShop) return;
 
-  if (!shop) {
-    cashierMessage("Kedai Owner belum tersedia.", true);
+  const shopName =
+    currentShop.name ||
+    currentShop.shop_name ||
+    "";
+
+  document.getElementById("shop-profile-name").value =
+    shopName;
+
+  document.getElementById("shop-logo-url").value =
+    currentShop.logo_url || "";
+
+  document.getElementById("shop-business-type").value =
+    currentShop.business_type || "";
+
+  document.getElementById("shop-phone").value =
+    currentShop.phone || "";
+
+  document.getElementById("shop-address").value =
+    currentShop.address || "";
+
+  updateShopLogoPreview();
+}
+
+/* PREVIEW LOGO KEDAI */
+function updateShopLogoPreview() {
+  const preview = document.getElementById("shop-logo-preview");
+  const logoUrl = document.getElementById("shop-logo-url").value.trim();
+
+  if (!preview) return;
+
+  if (!logoUrl) {
+    preview.innerHTML = "<span>☕</span>";
     return;
   }
 
-  if (!confirm(
-    "Cabut seluruh akses perangkat kasir untuk " + shop.name + "?\n\n" +
-    "Perangkat yang terpasang tidak akan bisa digunakan lagi sampai " +
-    "Owner membuat kode pairing baru. Sesi kasir aktif akan diakhiri."
-  )) return;
+  /*
+    URL logo ditampilkan sebagai gambar.
+    Jika gagal dimuat, ikon kopi akan ditampilkan.
+  */
+  const image = document.createElement("img");
 
-  const button = $("revoke-cashier-device");
+  image.src = logoUrl;
+  image.alt = "Logo kedai";
+  image.referrerPolicy = "no-referrer";
 
-  button.disabled = true;
-  $("create-cashier-pairing").disabled = true;
+  image.onerror = function() {
+    preview.innerHTML = "<span>☕</span>";
+  };
 
-  cashierMessage("Mencabut akses perangkat kasir...");
+  preview.replaceChildren(image);
+}
 
+/* PERBARUI PREVIEW SAAT URL LOGO DIUBAH */
+document.getElementById("shop-logo-url")
+  .addEventListener("input", updateShopLogoPreview);
+
+/* SIMPAN PROFIL KEDAI */
+async function saveShopProfile() {
   try {
-    const result = await callCashierAccess("disable_device");
+    requireShop();
 
-    clearPairingDisplay();
+    const name =
+      document.getElementById("shop-profile-name").value.trim();
 
-    cashierMessage(
-      result.message || "Akses perangkat kasir berhasil dicabut."
+    const logoUrl =
+      document.getElementById("shop-logo-url").value.trim();
+
+    const businessType =
+      document.getElementById("shop-business-type").value.trim();
+
+    const phone =
+      document.getElementById("shop-phone").value.trim();
+
+    const address =
+      document.getElementById("shop-address").value.trim();
+
+    if (!name) {
+      showMessage(
+        "profile-save-message",
+        "Nama kedai wajib diisi.",
+        true
+      );
+      return;
+    }
+
+    if (logoUrl) {
+      try {
+        const parsedUrl = new URL(logoUrl);
+
+        if (!["https:", "http:"].includes(parsedUrl.protocol)) {
+          throw new Error("URL tidak valid");
+        }
+      } catch {
+        showMessage(
+          "profile-save-message",
+          "URL logo tidak valid.",
+          true
+        );
+        return;
+      }
+    }
+
+    const updateData = {
+      name: name,
+      logo_url: logoUrl || null,
+      business_type: businessType || null,
+      phone: phone || null,
+      address: address || null
+    };
+
+    const { data, error } = await supabaseClient
+      .from("kh_shops")
+      .update(updateData)
+      .eq("id", currentShop.id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    currentShop = data;
+
+    document.getElementById("header-shop-name").textContent =
+      currentShop.name || name;
+
+    updateCustomerMenuLink();
+    updateShopLogoPreview();
+
+    showMessage(
+      "profile-save-message",
+      "Profil kedai berhasil disimpan."
     );
 
   } catch (error) {
-    console.error("Gagal mencabut perangkat kasir:", error);
+    console.error("Save shop profile error:", error);
 
-    cashierMessage(
-      "Gagal mencabut akses perangkat: " + error.message,
+    showMessage(
+      "profile-save-message",
+      "Gagal menyimpan profil: " + error.message,
       true
     );
-
-  } finally {
-    button.disabled = false;
-    $("create-cashier-pairing").disabled = false;
   }
 }
 
-async function loadCashierDevicePanel() {
-  if (!selectedShop() || !client) return;
+/* AKHIR BAGIAN 5 */
+</script>
+<script>
+/* =====================================================
+   KOPIHUB OWNER DASHBOARD
+   BAGIAN 6: KELOLA KATEGORI DAN PRODUK
+===================================================== */
 
-  clearPairingDisplay();
+/* MEMUAT KATEGORI KEDAI */
+async function loadCategories() {
+  requireShop();
 
-  cashierMessage(
-    "Pengelolaan perangkat siap. Buat kode pairing untuk memasangkan perangkat kasir."
-  );
+  const { data, error } = await supabaseClient
+    .from("kh_categories")
+    .select("*")
+    .eq("shop_id", currentShop.id)
+    .order("name", { ascending: true });
+
+  if (error) {
+    throw new Error("Gagal memuat kategori: " + error.message);
+  }
+
+  categories = data || [];
+
+  renderCategories();
+  renderCategoryOptions();
+
+  document.getElementById("summary-categories").textContent =
+    categories.length;
 }
 
-$("create-cashier-pairing").addEventListener(
-  "click",
-  createCashierPairing
-);
+/* MENAMPILKAN DAFTAR KATEGORI */
+function renderCategories() {
+  const container = document.getElementById("category-list");
 
-$("revoke-cashier-device").addEventListener(
-  "click",
-  revokeCashierDevice
-);
+  if (!container) return;
 
-$("copy-cashier-pairing").addEventListener("click", async () => {
-  if (!latestPairingCode) {
-    cashierMessage("Tidak ada kode pairing yang dapat disalin.", true);
+  if (!categories.length) {
+    container.innerHTML =
+      '<p class="muted">Belum ada kategori menu.</p>';
     return;
   }
 
+  container.innerHTML = categories.map(function(category) {
+    return `
+      <div class="menu-item">
+        <div>
+          <strong>${escapeHTML(category.name || "Kategori")}</strong>
+        </div>
+
+        <button
+          type="button"
+          class="danger"
+          onclick="deleteCategory('${escapeHTML(category.id)}')"
+        >
+          Hapus
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+/* PILIHAN KATEGORI PADA FORM PRODUK */
+function renderCategoryOptions() {
+  const select = document.getElementById("product-category");
+
+  if (!select) return;
+
+  select.innerHTML =
+    '<option value="">Pilih kategori</option>';
+
+  categories.forEach(function(category) {
+    const option = document.createElement("option");
+
+    option.value = category.id;
+    option.textContent = category.name || "Kategori";
+
+    select.appendChild(option);
+  });
+}
+
+/* TAMBAH KATEGORI */
+async function addCategory() {
   try {
-    await navigator.clipboard.writeText(latestPairingCode);
-    cashierMessage("Kode pairing berhasil disalin.");
-  } catch (_) {
-    window.prompt("Salin kode pairing ini:", latestPairingCode);
-  }
-});
+    requireShop();
 
-/* =========================
-   TANGGAL DAN GRAFIK
-========================= */
+    const input = document.getElementById("category-name");
+    const name = input.value.trim();
 
-function getDateFormatter(timezone) {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone:timezone,
-    year:"numeric",
-    month:"2-digit",
-    day:"2-digit"
-  });
-}
+    if (!name) {
+      alert("Masukkan nama kategori terlebih dahulu.");
+      return;
+    }
 
-function getDateKey(value, formatter) {
-  if (!value) return "";
+    const duplicate = categories.some(function(category) {
+      return String(category.name || "").toLowerCase() ===
+        name.toLowerCase();
+    });
 
-  const parts = formatter.formatToParts(new Date(value));
+    if (duplicate) {
+      alert("Kategori tersebut sudah tersedia.");
+      return;
+    }
 
-  const part = type =>
-    parts.find(item => item.type === type)?.value || "";
-
-  return `${part("year")}-${part("month")}-${part("day")}`;
-}
-
-function addDaysToKey(key, amount) {
-  const [year, month, day] = key.split("-").map(Number);
-
-  const date = new Date(Date.UTC(year, month - 1, day));
-
-  date.setUTCDate(date.getUTCDate() + amount);
-
-  return date.toISOString().slice(0,10);
-}
-
-function compactRupiah(value) {
-  if (value >= 1000000) {
-    return "Rp" +
-      (value / 1000000).toLocaleString(
-        "id-ID",
-        {maximumFractionDigits:1}
-      ) + "jt";
-  }
-
-  if (value >= 1000) {
-    return "Rp" +
-      (value / 1000).toLocaleString(
-        "id-ID",
-        {maximumFractionDigits:0}
-      ) + "rb";
-  }
-
-  return "Rp" + value;
-}
-
-function isPaid(order) {
-  return String(order.payment_status || "").toLowerCase() === "paid";
-}
-
-function orderValue(order) {
-  return Number(order.subtotal ?? 0);
-}
-
-function renderSalesChart(orders, formatter, todayKey) {
-  const chart = $("sales-chart");
-
-  chart.replaceChildren();
-
-  const dayKeys = [];
-
-  for (let i = 6; i >= 0; i--) {
-    dayKeys.push(addDaysToKey(todayKey, -i));
-  }
-
-  const totals = dayKeys.map(key =>
-    (orders || [])
-      .filter(order =>
-        order.created_at &&
-        getDateKey(order.created_at, formatter) === key &&
-        isPaid(order)
-      )
-      .reduce((sum, order) => sum + orderValue(order), 0)
-  );
-
-  const max = Math.max(...totals, 1);
-
-  const weekdays = [
-    "Min","Sen","Sel","Rab","Kam","Jum","Sab"
-  ];
-
-  dayKeys.forEach((key, index) => {
-    const [year, month, day] = key.split("-").map(Number);
-
-    const dateObj = new Date(year, month - 1, day);
-
-    const col = document.createElement("div");
-    col.className = "chart-day";
-
-    const value = document.createElement("div");
-    value.className = "chart-value";
-    value.textContent = totals[index]
-      ? compactRupiah(totals[index])
-      : "Rp0";
-
-    const track = document.createElement("div");
-    track.className = "chart-track";
-
-    const bar = document.createElement("div");
-    bar.className = "chart-bar";
-
-    bar.style.height =
-      (totals[index] > 0
-        ? Math.max(5, totals[index] / max * 100)
-        : 0) + "%";
-
-    bar.title = rupiah(totals[index]);
-
-    track.appendChild(bar);
-
-    const label = document.createElement("div");
-    label.className = "chart-label";
-    label.textContent = weekdays[dateObj.getDay()];
-
-    const dayNumber = document.createElement("div");
-    dayNumber.className = "chart-label";
-    dayNumber.textContent = String(day);
-
-    col.append(value, track, label, dayNumber);
-
-    chart.appendChild(col);
-  });
-
-  $("chart-message").textContent =
-    "Grafik menampilkan pesanan berstatus paid berdasarkan zona waktu kedai. Hari ini: " +
-    rupiah(totals[6]) + ".";
-}
-
-/* =========================
-   MEMUAT DATA PESANAN
-========================= */
-
-async function fetchAllShopOrders(shopId) {
-  const results = [];
-  const pageSize = 1000;
-
-  for (let offset = 0; ; offset += pageSize) {
-    const {data, error} = await client
-      .from("kh_orders")
-      .select(
-        "id, order_number, status, order_status, subtotal, total_amount, created_at, payment_status, items, order_type, payment_method, service_fee, tax_amount"
-      )
-      .eq("shop_id", shopId)
-      .order("created_at", {ascending:false})
-      .range(offset, offset + pageSize - 1);
+    const { error } = await supabaseClient
+      .from("kh_categories")
+      .insert({
+        shop_id: currentShop.id,
+        name: name
+      });
 
     if (error) throw error;
 
-    const rows = data || [];
+    input.value = "";
 
-    results.push(...rows);
+    await loadCategories();
 
-    if (rows.length < pageSize) break;
+    alert("Kategori berhasil ditambahkan.");
+
+  } catch (error) {
+    console.error("Add category error:", error);
+    alert("Gagal menambahkan kategori: " + error.message);
   }
-
-  return results;
 }
 
-async function loadOrders() {
-  const shop = selectedShop();
+/* HAPUS KATEGORI */
+async function deleteCategory(categoryId) {
+  try {
+    requireShop();
 
-  if (!client || !shop) {
-    $("report-message").textContent =
-      "Pilih kedai terlebih dahulu.";
+    const category = categories.find(function(item) {
+      return String(item.id) === String(categoryId);
+    });
+
+    if (!category) {
+      alert("Kategori tidak ditemukan.");
+      return;
+    }
+
+    const hasProducts = products.some(function(product) {
+      return String(product.category_id) === String(categoryId);
+    });
+
+    if (hasProducts) {
+      alert(
+        "Kategori masih memiliki produk. " +
+        "Pindahkan atau hapus produknya terlebih dahulu."
+      );
+      return;
+    }
+
+    if (!confirm("Hapus kategori " + category.name + "?")) {
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("kh_categories")
+      .delete()
+      .eq("id", categoryId)
+      .eq("shop_id", currentShop.id);
+
+    if (error) throw error;
+
+    await loadCategories();
+
+    alert("Kategori berhasil dihapus.");
+
+  } catch (error) {
+    console.error("Delete category error:", error);
+    alert("Gagal menghapus kategori: " + error.message);
+  }
+}
+
+/* MEMUAT PRODUK */
+async function loadProducts() {
+  requireShop();
+
+  const { data, error } = await supabaseClient
+    .from("kh_products")
+    .select("*")
+    .eq("shop_id", currentShop.id)
+    .order("name", { ascending: true });
+
+  if (error) {
+    throw new Error("Gagal memuat produk: " + error.message);
+  }
+
+  products = data || [];
+
+  renderProducts();
+
+  document.getElementById("summary-products").textContent =
+    products.length;
+}
+
+/* MENAMPILKAN PRODUK */
+function renderProducts() {
+  const container = document.getElementById("product-list");
+
+  if (!container) return;
+
+  const search = (
+    document.getElementById("product-search")?.value || ""
+  ).trim().toLowerCase();
+
+  const filtered = products.filter(function(product) {
+    return String(product.name || "")
+      .toLowerCase()
+      .includes(search);
+  });
+
+  if (!filtered.length) {
+    container.innerHTML =
+      '<p class="muted">Produk belum tersedia.</p>';
     return;
   }
 
-  $("report-message").textContent =
-    "Memuat laporan penjualan...";
+  container.innerHTML = filtered.map(function(product) {
+    const category = categories.find(function(item) {
+      return String(item.id) === String(product.category_id);
+    });
 
-  $("sales-chart").innerHTML =
-    '<p class="muted">Memuat grafik penjualan...</p>';
+    const available = product.is_available !== false;
 
-  $("download-report-excel").disabled = true;
-  $("download-report-pdf").disabled = true;
+    return `
+      <div class="menu-item">
+        <div class="menu-item-info">
+          <strong>${escapeHTML(product.name || "Produk")}</strong>
 
+          <div class="muted">
+            ${escapeHTML(category?.name || "Tanpa kategori")}
+          </div>
+
+          <div class="menu-item-price">
+            ${formatRupiah(product.price)}
+          </div>
+
+          <div class="muted">
+            Stok: ${Number(product.stock) || 0}
+            · ${available ? "Tersedia" : "Tidak tersedia"}
+          </div>
+        </div>
+
+        <div class="button-stack">
+          <button
+            type="button"
+            class="secondary"
+            onclick="toggleProductAvailability('${escapeHTML(product.id)}')"
+          >
+            ${available ? "Nonaktifkan" : "Aktifkan"}
+          </button>
+
+          <button
+            type="button"
+            class="danger"
+            onclick="deleteProduct('${escapeHTML(product.id)}')"
+          >
+            Hapus
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* TAMBAH PRODUK */
+async function addProduct() {
   try {
-    const orders = await fetchAllShopOrders(shop.id);
+    requireShop();
 
-    if (String(shopSelect.value) !== String(shop.id)) return;
+    const name =
+      document.getElementById("product-name").value.trim();
 
-    allOrders = orders;
+    const categoryId =
+      document.getElementById("product-category").value;
 
-    const timezone = shop.timezone || "Asia/Jayapura";
-    const formatter = getDateFormatter(timezone);
-    const todayKey = getDateKey(new Date(), formatter);
+    const price =
+      Number(document.getElementById("product-price").value);
 
-    const todaysOrders = orders.filter(order =>
-      order.created_at &&
-      getDateKey(order.created_at, formatter) === todayKey
-    );
+    const stockInput =
+      document.getElementById("product-stock").value;
 
-    const paidOrders = todaysOrders.filter(isPaid);
-    const unpaidOrders = todaysOrders.filter(order => !isPaid(order));
+    const stock = Number(stockInput);
 
-    const totalValue = todaysOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
-    );
+    const description =
+      document.getElementById("product-description").value.trim();
 
-    const paidValue = paidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
-    );
+    const imageUrl =
+      document.getElementById("product-image").value.trim();
 
-    const unpaidValue = unpaidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
-    );
+    if (!name) {
+      alert("Nama produk wajib diisi.");
+      return;
+    }
 
-    const completedToday = todaysOrders.filter(order => {
-      const status = String(order.order_status || order.status || "").toLowerCase();
-      return status === "completed";
-    }).length;
+    if (!categoryId) {
+      alert("Pilih kategori produk.");
+      return;
+    }
 
-    const SERVICE_FEE_PER_ORDER = 3000;
+    if (!categories.some(function(item) {
+      return String(item.id) === String(categoryId);
+    })) {
+      alert("Kategori yang dipilih tidak valid.");
+      return;
+    }
 
-    $("today-orders").textContent = todaysOrders.length;
-    $("today-sales").textContent = rupiah(paidValue);
-    $("today-service-fee").textContent = rupiah(
-      completedToday * SERVICE_FEE_PER_ORDER
-    );
+    if (!Number.isFinite(price) || price <= 0) {
+      alert("Masukkan harga produk yang valid.");
+      return;
+    }
 
-    $("summary-income").textContent = rupiah(paidValue);
-    $("summary-sales").textContent = rupiah(totalValue);
+    if (
+      stockInput === "" ||
+      !Number.isInteger(stock) ||
+      stock < 0
+    ) {
+      alert("Masukkan jumlah stok berupa angka 0 atau lebih.");
+      return;
+    }
 
-    renderSalesChart(orders, formatter, todayKey);
+    if (imageUrl) {
+      try {
+        const parsedUrl = new URL(imageUrl);
 
-    updateReport();
+        if (!["https:", "http:"].includes(parsedUrl.protocol)) {
+          throw new Error("URL tidak valid");
+        }
+      } catch {
+        alert("URL foto produk tidak valid.");
+        return;
+      }
+    }
+
+    const { error } = await supabaseClient
+      .from("kh_products")
+      .insert({
+        shop_id: currentShop.id,
+        category_id: categoryId,
+        name: name,
+        price: price,
+        stock: stock,
+        description: description || null,
+        image_url: imageUrl || null,
+        is_available: true
+      });
+
+    if (error) throw error;
+
+    document.getElementById("product-name").value = "";
+    document.getElementById("product-category").value = "";
+    document.getElementById("product-price").value = "";
+    document.getElementById("product-stock").value = "";
+    document.getElementById("product-description").value = "";
+    document.getElementById("product-image").value = "";
+
+    await loadProducts();
+
+    alert("Produk berhasil ditambahkan.");
 
   } catch (error) {
-    console.error("Gagal memuat laporan:", error);
-
-    $("report-message").textContent =
-      "Gagal memuat laporan: " + error.message;
-
-    $("sales-chart").innerHTML =
-      '<p class="muted">Grafik gagal dimuat. Periksa koneksi dan izin akses kh_orders.</p>';
-
-    $("chart-message").textContent = "";
+    console.error("Add product error:", error);
+    alert("Gagal menambahkan produk: " + error.message);
   }
 }
 
-/* =========================
-   LOGIKA LAPORAN PENJUALAN
-========================= */
+/* AKTIFKAN / NONAKTIFKAN PRODUK */
+async function toggleProductAvailability(productId) {
+  try {
+    requireShop();
 
-function parseOrderItems(value) {
-  if (!value) return [];
+    const product = products.find(function(item) {
+      return String(item.id) === String(productId);
+    });
 
-  let items = value;
-
-  if (typeof items === "string") {
-    try {
-      items = JSON.parse(items);
-    } catch (error) {
-      return [];
+    if (!product) {
+      alert("Produk tidak ditemukan.");
+      return;
     }
+
+    const newStatus = product.is_available === false;
+
+    const { error } = await supabaseClient
+      .from("kh_products")
+      .update({
+        is_available: newStatus
+      })
+      .eq("id", productId)
+      .eq("shop_id", currentShop.id);
+
+    if (error) throw error;
+
+    await loadProducts();
+
+  } catch (error) {
+    console.error("Update product status error:", error);
+    alert("Gagal mengubah ketersediaan: " + error.message);
   }
-
-  if (!Array.isArray(items)) return [];
-
-  return items.map(item => {
-    const quantity = Number(item.qty ?? item.quantity ?? 0);
-    const price = Number(item.price ?? item.unit_price ?? 0);
-
-    return {
-      name:String(item.name ?? item.product_name ?? "Produk"),
-      quantity:Number.isFinite(quantity) ? quantity : 0,
-      price:Number.isFinite(price) ? price : 0
-    };
-  }).filter(item =>
-    item.quantity > 0 && item.price >= 0
-  );
 }
 
-function getReportRange() {
-  const shop = selectedShop();
+/* HAPUS PRODUK */
+async function deleteProduct(productId) {
+  try {
+    requireShop();
 
-  const timezone = shop?.timezone || "Asia/Jayapura";
-  const formatter = getDateFormatter(timezone);
-  const today = getDateKey(new Date(), formatter);
+    const product = products.find(function(item) {
+      return String(item.id) === String(productId);
+    });
 
-  const period = $("report-period").value;
+    if (!product) {
+      alert("Produk tidak ditemukan.");
+      return;
+    }
 
-  if (period === "today") {
-    return {
-      start:today,
-      end:today,
-      label:"Hari Ini"
-    };
+    if (!confirm("Hapus produk " + product.name + "?")) {
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("kh_products")
+      .delete()
+      .eq("id", productId)
+      .eq("shop_id", currentShop.id);
+
+    if (error) throw error;
+
+    await loadProducts();
+
+    alert("Produk berhasil dihapus.");
+
+  } catch (error) {
+    console.error("Delete product error:", error);
+    alert("Gagal menghapus produk: " + error.message);
+  }
+}
+
+/* AKHIR BAGIAN 6 */
+</script>
+<script>
+/* =====================================================
+   KOPIHUB OWNER DASHBOARD
+   BAGIAN 7: PENGELOLAAN PERANGKAT KASIR
+===================================================== */
+
+/* MEMANGGIL CASHIER MANAGEMENT EDGE FUNCTION */
+async function callCashierManagement(action, extraData = {}) {
+  if (!currentUser) {
+    throw new Error("Sesi Owner tidak ditemukan. Silakan login kembali.");
   }
 
-  if (period === "last7") {
-    return {
-      start:addDaysToKey(today, -6),
-      end:today,
-      label:"7 Hari Terakhir"
-    };
+  const { data, error } = await supabaseClient.functions.invoke(
+    "cashier-management",
+    {
+      body: {
+        action: action,
+        shop_id: currentShop.id,
+        ...extraData
+      }
+    }
+  );
+
+  if (error) {
+    let detail = error.message || "Permintaan ke server gagal.";
+
+    if (error.context && typeof error.context.json === "function") {
+      try {
+        const responseBody = await error.context.json();
+        detail = responseBody.error || responseBody.message || detail;
+      } catch (_) {
+        // Gunakan pesan error awal jika respons bukan JSON.
+      }
+    }
+
+    throw new Error(detail);
   }
 
-  if (period === "month") {
-    return {
-      start:today.slice(0,7) + "-01",
-      end:today,
-      label:"Bulan Ini"
-    };
+  if (data && data.error) {
+    throw new Error(data.error);
   }
 
-  const start = $("report-start-date").value;
-  const end = $("report-end-date").value;
+  return data || {};
+}
 
-  if (!start || !end) {
-    throw new Error("Silakan isi tanggal mulai dan tanggal akhir.");
+/* MEMERIKSA STATUS PERANGKAT KASIR */
+async function loadCashierDeviceStatus() {
+  const container = document.getElementById("cashier-device-status");
+
+  if (!container || !currentShop) return;
+
+  container.innerHTML =
+    '<p class="muted">Memeriksa perangkat kasir...</p>';
+
+  try {
+    const result = await callCashierManagement("device_status");
+
+    const enabled =
+      result.enabled === true ||
+      result.device_enabled === true;
+
+    const connected =
+      result.device_connected === true ||
+      result.paired === true;
+
+    container.innerHTML = `
+      <div class="menu-item">
+        <div>
+          <strong>Status Akses</strong>
+          <div class="muted">
+            ${enabled ? "Akses kasir aktif" : "Akses kasir nonaktif"}
+          </div>
+        </div>
+        <span class="status-pill ${enabled ? "status-active" : "status-inactive"}">
+          ${enabled ? "Aktif" : "Nonaktif"}
+        </span>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <strong>Status Perangkat</strong>
+          <div class="muted">
+            ${connected ? "Perangkat sudah dipasangkan" : "Belum ada perangkat terpasang"}
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-item">
+        <div>
+          <strong>Nama Staf Kasir</strong>
+          <div class="muted">
+            ${escapeHTML(result.staff_name || result.cashier_name || "-")}
+          </div>
+        </div>
+      </div>
+    `;
+
+  } catch (error) {
+    console.error("Cashier device status error:", error);
+
+    container.innerHTML = `
+      <p class="muted">
+        Status perangkat belum dapat dimuat.
+      </p>
+      <p style="color:#a72d2d">
+        ${escapeHTML(error.message)}
+      </p>
+      <button type="button" class="secondary"
+        onclick="loadCashierDeviceStatus()">
+        Coba Periksa Lagi
+      </button>
+    `;
+  }
+}
+
+/* MEMBUAT KODE PAIRING */
+async function createPairingCode() {
+  try {
+    requireShop();
+
+    const confirmed = confirm(
+      "Buat kode pairing baru untuk menghubungkan perangkat kasir?"
+    );
+
+    if (!confirmed) return;
+
+    const button = document.querySelector(
+      'button[onclick="createPairingCode()"]'
+    );
+
+    if (button) button.disabled = true;
+
+    const result = await callCashierManagement(
+      "create_pairing_code"
+    );
+
+    const code =
+      result.code ||
+      result.pairing_code ||
+      result.data?.code ||
+      result.data?.pairing_code;
+
+    if (!code) {
+      throw new Error(
+        "Server tidak mengembalikan kode pairing. Periksa format respons Edge Function."
+      );
+    }
+
+    document.getElementById("pairing-code-display").textContent =
+      code;
+
+    document.getElementById("pairing-expiry").textContent =
+      "Kode berlaku selama 10 menit.";
+
+    document.getElementById("pairing-result").hidden = false;
+
+    await loadCashierDeviceStatus();
+
+  } catch (error) {
+    console.error("Create pairing code error:", error);
+    alert("Gagal membuat kode pairing: " + error.message);
+
+  } finally {
+    const button = document.querySelector(
+      'button[onclick="createPairingCode()"]'
+    );
+
+    if (button) button.disabled = false;
+  }
+}
+
+/* MENCABUT AKSES PERANGKAT KASIR */
+async function disableCashierDevice() {
+  try {
+    requireShop();
+
+    const confirmed = confirm(
+      "Cabut akses perangkat kasir? Perangkat yang terhubung tidak dapat digunakan sampai dipasangkan kembali."
+    );
+
+    if (!confirmed) return;
+
+    const result = await callCashierManagement(
+      "disable_device"
+    );
+
+    document.getElementById("pairing-result").hidden = true;
+
+    await loadCashierDeviceStatus();
+
+    alert(
+      result.message ||
+      "Permintaan pencabutan akses perangkat telah diproses."
+    );
+
+  } catch (error) {
+    console.error("Disable cashier device error:", error);
+    alert("Gagal mencabut akses perangkat: " + error.message);
+  }
+}
+
+/* AKHIR BAGIAN 7 */
+</script>
+<script>
+/* =====================================================
+   KOPIHUB OWNER DASHBOARD
+   BAGIAN 8: RINGKASAN DAN LAPORAN PENJUALAN
+===================================================== */
+
+/*
+  Catatan:
+  Struktur kolom pesanan dan item harus dicocokkan dengan
+  database KopiHub sebelum laporan digunakan secara operasional.
+*/
+
+/* MENGAMBIL PESANAN SELESAI */
+async function fetchCompletedOrders(startDate, endDate) {
+  requireShop();
+
+  const { data, error } = await supabaseClient
+    .from("kh_orders")
+    .select("*")
+    .eq("shop_id", currentShop.id)
+    .gte("created_at", startDate)
+    .lt("created_at", endDate)
+    .in("status", ["completed", "selesai"]);
+
+  if (error) {
+    throw new Error("Gagal mengambil pesanan: " + error.message);
   }
 
-  if (start > end) {
-    throw new Error("Tanggal mulai tidak boleh melewati tanggal akhir.");
+  return data || [];
+}
+
+/* TANGGAL LOKAL DALAM FORMAT DATABASE */
+function localDateString(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+/* BATAS PERIODE LAPORAN */
+function getReportDateRange() {
+  const now = new Date();
+  const today = localDateString(now);
+
+  let start = new Date(now);
+  let end = new Date(now);
+
+  end.setDate(end.getDate() + 1);
+
+  const period = document.getElementById("report-period").value;
+
+  if (period === "7days") {
+    start.setDate(start.getDate() - 6);
+  } else if (period === "month") {
+    start = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (period === "custom") {
+    const startValue =
+      document.getElementById("report-start").value;
+
+    const endValue =
+      document.getElementById("report-end").value;
+
+    if (!startValue || !endValue) {
+      throw new Error("Pilih tanggal awal dan tanggal akhir.");
+    }
+
+    if (startValue > endValue) {
+      throw new Error("Tanggal awal tidak boleh melewati tanggal akhir.");
+    }
+
+    start = new Date(startValue + "T00:00:00");
+    end = new Date(endValue + "T00:00:00");
+    end.setDate(end.getDate() + 1);
   }
 
   return {
-    start,
-    end,
-    label:"Rentang " + start + " sampai " + end
+    start: localDateString(start) + "T00:00:00",
+    end: localDateString(end) + "T00:00:00",
+    label: period,
+    today: today
   };
 }
 
-function aggregateProducts(orders) {
-  const map = new Map();
+/* FILTER TANGGAL CUSTOM */
+function changeReportPeriod() {
+  const period = document.getElementById("report-period").value;
 
-  orders.forEach(order => {
-    parseOrderItems(order.items).forEach(item => {
-      const key = item.name;
+  const custom = period === "custom";
 
-      if (!map.has(key)) {
-        map.set(key, {
-          name:item.name,
-          quantity:0,
-          total:0
-        });
-      }
-
-      const product = map.get(key);
-
-      product.quantity += item.quantity;
-      product.total += item.quantity * item.price;
-    });
-  });
-
-  return [...map.values()].sort(
-    (a,b) => b.total - a.total
-  );
-}
-
-function renderProductReport(productsData) {
-  const body = $("report-product-list");
-
-  body.replaceChildren();
-
-  if (!productsData.length) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-
-    cell.colSpan = 3;
-    cell.textContent =
-      "Belum ada rincian produk dari pesanan lunas pada periode ini.";
-
-    row.appendChild(cell);
-    body.appendChild(row);
-
-    return;
-  }
-
-  productsData.forEach(product => {
-    const row = document.createElement("tr");
-
-    const name = document.createElement("td");
-    name.textContent = product.name;
-
-    const quantity = document.createElement("td");
-    quantity.textContent = product.quantity;
-
-    const total = document.createElement("td");
-    total.textContent = rupiah(product.total);
-
-    row.append(name, quantity, total);
-    body.appendChild(row);
-  });
-}
-
-function renderPaymentReport(orders) {
-  const body = $("report-payment-methods");
-
-  body.replaceChildren();
-
-  /*
-    Nilai "cashier" pada data lama belum dapat dianggap
-    sebagai metode pembayaran yang sebenarnya.
-  */
-
-  const validMethods = orders
-    .filter(isPaid)
-    .map(order => String(order.payment_method || "").trim())
-    .filter(method =>
-      method &&
-      method.toLowerCase() !== "cashier"
-    );
-
-  if (!validMethods.length) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-
-    cell.colSpan = 3;
-    cell.textContent =
-      "Belum tersedia. Data metode pembayaran belum dapat diidentifikasi secara akurat.";
-
-    row.appendChild(cell);
-    body.appendChild(row);
-
-    return;
-  }
-
-  const groups = new Map();
-
-  orders.filter(isPaid).forEach(order => {
-    const method = String(order.payment_method || "").trim();
-
-    if (!method || method.toLowerCase() === "cashier") return;
-
-    if (!groups.has(method)) {
-      groups.set(method, {
-        method,
-        count:0,
-        total:0
-      });
-    }
-
-    const group = groups.get(method);
-
-    group.count++;
-    group.total += orderValue(order);
-  });
-
-  groups.forEach(group => {
-    const row = document.createElement("tr");
-
-    const method = document.createElement("td");
-    method.textContent = group.method;
-
-    const count = document.createElement("td");
-    count.textContent = group.count;
-
-    const total = document.createElement("td");
-    total.textContent = rupiah(group.total);
-
-    row.append(method, count, total);
-    body.appendChild(row);
-  });
-}
-    function updateReport() {
-  if (!selectedShop()) return;
-
-  try {
-    const shop = selectedShop();
-    const timezone = shop.timezone || "Asia/Jayapura";
-    const formatter = getDateFormatter(timezone);
-    const range = getReportRange();
-
-    const periodOrders = allOrders.filter(order => {
-      if (!order.created_at) return false;
-
-      const key = getDateKey(order.created_at, formatter);
-
-      return key >= range.start && key <= range.end;
-    });
-
-    const paidOrders = periodOrders.filter(isPaid);
-    const unpaidOrders = periodOrders.filter(order => !isPaid(order));
-
-    const totalValue = periodOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
-    );
-
-    const paidValue = paidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
-    );
-
-    const unpaidValue = unpaidOrders.reduce(
-      (sum, order) => sum + orderValue(order), 0
-    );
-
-    const productData = aggregateProducts(paidOrders);
-
-    const productCount = productData.reduce(
-      (sum, item) => sum + item.quantity, 0
-    );
-
-    currentReport = {
-      shopName:shop.name,
-      shopSlug:shop.slug,
-      timezone,
-      range,
-      orders:periodOrders,
-      paidOrders,
-      unpaidOrders,
-      totalValue,
-      paidValue,
-      unpaidValue,
-      productData,
-      productCount,
-      generatedAt:new Date().toISOString()
-    };
-
-    $("report-period-label").textContent =
-      "Periode: " + range.label;
-
-    $("report-order-value").textContent = rupiah(totalValue);
-    $("report-paid-sales").textContent = rupiah(paidValue);
-    $("report-unpaid-sales").textContent = rupiah(unpaidValue);
-
-    $("report-paid-count").textContent = paidOrders.length;
-    $("report-unpaid-count").textContent = unpaidOrders.length;
-    $("report-products-sold").textContent = productCount;
-
-    renderProductReport(productData);
-    renderPaymentReport(periodOrders);
-
-    $("report-data-note").textContent =
-      "Omzet dihitung dari subtotal pesanan berstatus paid. " +
-      "Rincian produk dihitung dari items pada pesanan lunas. " +
-      "Zona waktu kedai: " + timezone +
-      ". Sumber pesanan Online/Kasir belum ditampilkan karena kolom sumber pesanan belum tersedia.";
-
-    $("report-message").textContent =
-      periodOrders.length + " pesanan ditemukan. " +
-      paidOrders.length + " pesanan lunas dan " +
-      unpaidOrders.length + " pesanan belum lunas.";
-
-    $("download-report-excel").disabled = false;
-    $("download-report-pdf").disabled = false;
-
-  } catch (error) {
-    currentReport = null;
-
-    $("download-report-excel").disabled = true;
-    $("download-report-pdf").disabled = true;
-
-    $("report-message").textContent = error.message;
-  }
-}
-
-$("report-period").addEventListener("change", () => {
-  const custom = $("report-period").value === "custom";
-
-  $("report-start-wrap").hidden = !custom;
-  $("report-end-wrap").hidden = !custom;
+  document.getElementById("report-start-wrap").hidden = !custom;
+  document.getElementById("report-end-wrap").hidden = !custom;
 
   if (custom) {
-    const shop = selectedShop();
-    const formatter = getDateFormatter(
-      shop?.timezone || "Asia/Jayapura"
-    );
+    const today = localDateString(new Date());
 
-    const today = getDateKey(new Date(), formatter);
-
-    if (!$("report-start-date").value) {
-      $("report-start-date").value = today;
+    if (!document.getElementById("report-start").value) {
+      document.getElementById("report-start").value = today;
     }
 
-    if (!$("report-end-date").value) {
-      $("report-end-date").value = today;
+    if (!document.getElementById("report-end").value) {
+      document.getElementById("report-end").value = today;
     }
   }
-});
-
-$("refresh-sales-report").addEventListener("click", () => {
-  if (!allOrders.length && !selectedShop()) {
-    $("report-message").textContent =
-      "Kedai belum tersedia.";
-    return;
-  }
-
-  updateReport();
-});
-
-$("report-start-date").addEventListener("change", () => {
-  if ($("report-period").value === "custom") updateReport();
-});
-
-$("report-end-date").addEventListener("change", () => {
-  if ($("report-period").value === "custom") updateReport();
-});
-
-/* =========================
-   UNDUH EXCEL
-========================= */
-
-function safeFileName(value) {
-  return String(value || "kopihub")
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
-$("download-report-excel").addEventListener("click", () => {
-  if (!currentReport) {
-    alert("Tampilkan laporan terlebih dahulu.");
-    return;
+/* RINGKASAN DASHBOARD */
+async function loadDashboardSummary() {
+  try {
+    requireShop();
+
+    const today = localDateString(new Date());
+
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+    const tomorrow = localDateString(tomorrowDate);
+
+    const orders = await fetchCompletedOrders(
+      today + "T00:00:00",
+      tomorrow + "T00:00:00"
+    );
+
+    const revenue = orders.reduce(function(total, order) {
+      return total + Number(
+        order.total_amount ??
+        order.total ??
+        order.grand_total ??
+        0
+      );
+    }, 0);
+
+    document.getElementById("stat-sales").textContent =
+      formatRupiah(revenue);
+
+    document.getElementById("stat-orders").textContent =
+      orders.length;
+
+    document.getElementById("stat-products").textContent =
+      "Perlu data item";
+
+    await renderSalesChart();
+
+  } catch (error) {
+    console.error("Dashboard summary error:", error);
+
+    document.getElementById("stat-sales").textContent = "-";
+    document.getElementById("stat-orders").textContent = "-";
+    document.getElementById("stat-products").textContent = "-";
   }
+}
 
-  if (!window.XLSX) {
-    alert("Fitur Excel belum termuat. Periksa koneksi internet.");
-    return;
-  }
+/* GRAFIK OMZET TUJUH HARI */
+async function renderSalesChart() {
+  const container = document.getElementById("sales-chart");
 
-  const report = currentReport;
-
-  const summaryRows = [
-    ["LAPORAN PENJUALAN KOPIHUB"],
-    ["Nama Kedai", report.shopName],
-    ["Periode", report.range.label],
-    ["Zona Waktu", report.timezone],
-    [],
-    ["Ringkasan", "Nilai"],
-    ["Nilai Seluruh Pesanan", report.totalValue],
-    ["Omzet Sudah Dibayar", report.paidValue],
-    ["Nilai Belum Dibayar", report.unpaidValue],
-    ["Jumlah Pesanan", report.orders.length],
-    ["Pesanan Lunas", report.paidOrders.length],
-    ["Pesanan Belum Lunas", report.unpaidOrders.length],
-    ["Jumlah Produk Terjual", report.productCount],
-    [],
-    ["Catatan", "Omzet dihitung dari subtotal pesanan berstatus paid."]
-  ];
-
-  const productRows = [
-    ["Nama Produk","Jumlah Terjual","Nilai Penjualan"],
-    ...report.productData.map(item => [
-      item.name,
-      item.quantity,
-      item.total
-    ])
-  ];
-
-  const orderRows = [
-    [
-      "Nomor Pesanan",
-      "Tanggal",
-      "Status Pembayaran",
-      "Subtotal"
-    ],
-    ...report.orders.map(order => [
-      order.order_number ?? order.id,
-      order.created_at
-        ? new Date(order.created_at).toLocaleString("id-ID")
-        : "",
-      order.payment_status || "Tidak diketahui",
-      orderValue(order)
-    ])
-  ];
-
-  const workbook = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(summaryRows),
-    "Ringkasan"
-  );
-
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(productRows),
-    "Penjualan Produk"
-  );
-
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(orderRows),
-    "Daftar Pesanan"
-  );
-
-  const fileName =
-    "laporan-penjualan-" +
-    safeFileName(report.shopSlug) +
-    "-" + report.range.start +
-    "-sampai-" + report.range.end +
-    ".xlsx";
-
-  XLSX.writeFile(workbook, fileName);
-});
-
-/* =========================
-   UNDUH PDF
-========================= */
-
-$("download-report-pdf").addEventListener("click", () => {
-  if (!currentReport) {
-    alert("Tampilkan laporan terlebih dahulu.");
-    return;
-  }
-
-  if (!window.jspdf || !window.jspdf.jsPDF) {
-    alert("Fitur PDF belum termuat. Periksa koneksi internet.");
-    return;
-  }
-
-  const report = currentReport;
-
-  const {jsPDF} = window.jspdf;
-
-  const doc = new jsPDF({
-    orientation:"portrait",
-    unit:"mm",
-    format:"a4"
-  });
-
-  doc.setFontSize(17);
-  doc.text("Laporan Penjualan KopiHub", 14, 18);
-
-  doc.setFontSize(11);
-  doc.text("Kedai: " + report.shopName, 14, 27);
-  doc.text("Periode: " + report.range.label, 14, 34);
-  doc.text("Zona waktu: " + report.timezone, 14, 41);
-
-  doc.autoTable({
-    startY:48,
-    head:[["Ringkasan","Nilai"]],
-    body:[
-      ["Nilai seluruh pesanan", rupiah(report.totalValue)],
-      ["Omzet sudah dibayar", rupiah(report.paidValue)],
-      ["Nilai belum dibayar", rupiah(report.unpaidValue)],
-      ["Jumlah pesanan", String(report.orders.length)],
-      ["Pesanan lunas", String(report.paidOrders.length)],
-      ["Pesanan belum lunas", String(report.unpaidOrders.length)],
-      ["Jumlah produk terjual", String(report.productCount)]
-    ],
-    theme:"grid",
-    styles:{fontSize:9}
-  });
-
-  const productStart =
-    (doc.lastAutoTable?.finalY || 48) + 10;
-
-  doc.setFontSize(12);
-  doc.text("Rincian Penjualan Produk", 14, productStart);
-
-  doc.autoTable({
-    startY:productStart + 4,
-    head:[["Nama Produk","Jumlah","Nilai Penjualan"]],
-    body:report.productData.length
-      ? report.productData.map(item => [
-          item.name,
-          String(item.quantity),
-          rupiah(item.total)
-        ])
-      : [["Belum ada rincian produk","0","Rp0"]],
-    theme:"grid",
-    styles:{fontSize:8},
-    columnStyles:{
-      0:{cellWidth:85},
-      1:{cellWidth:25},
-      2:{cellWidth:60}
-    }
-  });
-
-  const noteY = (doc.lastAutoTable?.finalY || productStart) + 10;
-
-  const note =
-    "Catatan: omzet dihitung dari subtotal pesanan berstatus paid. " +
-    "Rincian produk dihitung dari items pada pesanan lunas. " +
-    "Sumber pesanan Online/Kasir belum ditampilkan karena penanda sumber belum tersedia.";
-
-  doc.setFontSize(8);
-  doc.text(doc.splitTextToSize(note, 180), 14, noteY);
-
-  const fileName =
-    "laporan-penjualan-" +
-    safeFileName(report.shopSlug) +
-    "-" + report.range.start +
-    "-sampai-" + report.range.end +
-    ".pdf";
-
-  doc.save(fileName);
-});
-
-/* =========================
-   QR MENU
-========================= */
-
-$("make-qr").addEventListener("click", () => {
-  const shop = selectedShop();
-
-  if (!shop) {
-    $("qr-status").textContent =
-      "Pilih kedai terlebih dahulu.";
-    return;
-  }
-
-  const url = getMenuUrl(shop.slug);
-
-  $("menu-url").textContent = url;
-  $("open-menu").href = url;
-  $("qr-status").textContent = "Memuat QR menu...";
-  $("qr-image").hidden = false;
-
-  $("qr-image").src =
-    "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
-    encodeURIComponent(url);
-
-  $("qr-image").onload = () => {
-    $("qr-status").textContent =
-      "QR berhasil dimuat. Coba pindai dengan kamera HP.";
-  };
-
-  $("qr-image").onerror = () => {
-    $("qr-image").hidden = true;
-
-    $("qr-status").textContent =
-      "QR gagal dimuat. Periksa koneksi internet.";
-  };
-});
-
-$("share-qr").addEventListener("click", async () => {
-  const url = $("menu-url").textContent.trim();
-
-  if ($("qr-image").hidden || !url) {
-    $("qr-status").textContent =
-      "Buat QR menu terlebih dahulu.";
-    return;
-  }
-
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title:$("qr-title").textContent,
-        text:"Silakan buka menu kedai melalui tautan berikut:",
-        url
-      });
-
-      $("qr-status").textContent = "Menu siap dibagikan.";
-
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        $("qr-status").textContent =
-          "Gagal membagikan menu. Silakan salin tautannya.";
-      }
-    }
-  } else {
-    try {
-      await navigator.clipboard.writeText(url);
-
-      $("qr-status").textContent =
-        "Tautan menu berhasil disalin. Bagikan melalui WhatsApp.";
-
-    } catch (error) {
-      $("qr-status").textContent =
-        "Salin tautan menu ini secara manual: " + url;
-    }
-  }
-});
-
-/* =========================
-   PROFIL KEDAI
-========================= */
-
-$("remove-shop-logo").addEventListener("click", () => {
-  $("profile-shop-logo").value = "";
-
-  $("profile-logo-image").removeAttribute("src");
-  $("profile-logo-preview").hidden = true;
-
-  $("profile-message").textContent =
-    "Logo ditandai untuk dihapus. Klik Simpan Profil Kedai untuk menerapkan perubahan.";
-});
-
-$("shop-profile-form").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const shop = selectedShop();
-
-  if (!client || !shop) {
-    $("profile-message").textContent =
-      "Pilih kedai terlebih dahulu.";
-    return;
-  }
-
-  const name = $("profile-shop-name").value.trim();
-  const description = $("profile-shop-description").value.trim();
-  const file = $("profile-shop-logo").files[0];
-
-  const saveButton = $("save-shop-profile");
-
-  if (!name) {
-    $("profile-message").textContent =
-      "Nama kedai wajib diisi.";
-    return;
-  }
-
-  if (
-    file &&
-    (
-      !["image/png","image/jpeg","image/webp"].includes(file.type) ||
-      file.size > 2 * 1024 * 1024
-    )
-  ) {
-    $("profile-message").textContent =
-      "Pilih gambar PNG, JPG, atau WebP maksimal 2 MB.";
-    return;
-  }
-
-  saveButton.disabled = true;
-
-  $("profile-message").textContent =
-    "Menyimpan profil kedai...";
+  if (!container || !currentShop) return;
 
   try {
-    const removeLogo =
-      $("profile-logo-preview").hidden &&
-      !file;
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + 1);
 
-    let logoUrl = removeLogo
-      ? null
-      : (shop.logo_url || null);
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 6);
 
-    if (file) {
-      const safeName = file.name.replace(
-        /[^a-zA-Z0-9._-]/g,
-        "-"
+    const orders = await fetchCompletedOrders(
+      localDateString(startDate) + "T00:00:00",
+      localDateString(endDate) + "T00:00:00"
+    );
+
+    const dailyTotals = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+
+      const key = localDateString(date);
+
+      const total = orders
+        .filter(function(order) {
+          return String(order.created_at || "").slice(0, 10) === key;
+        })
+        .reduce(function(sum, order) {
+          return sum + Number(
+            order.total_amount ??
+            order.total ??
+            order.grand_total ??
+            0
+          );
+        }, 0);
+
+      dailyTotals.push({
+        date: date,
+        total: total
+      });
+    }
+
+    const maxTotal = Math.max(
+      ...dailyTotals.map(item => item.total),
+      1
+    );
+
+    container.innerHTML = dailyTotals.map(function(item) {
+      const height = Math.max(
+        5,
+        Math.round(item.total / maxTotal * 100)
       );
 
-      const filePath =
-        shop.id + "/" + Date.now() + "-" + safeName;
+      const day = item.date.toLocaleDateString("id-ID", {
+        weekday: "short"
+      });
 
-      const {error:uploadError} =
-        await client.storage
-          .from("shop-logos")
-          .upload(filePath, file, {
-            contentType:file.type,
-            cacheControl:"3600",
-            upsert:false
-          });
-
-      if (uploadError) throw uploadError;
-
-      const {data:publicData} =
-        client.storage
-          .from("shop-logos")
-          .getPublicUrl(filePath);
-
-      logoUrl = publicData.publicUrl;
-    }
-
-    const {error:updateError} =
-      await client
-        .from("kh_shops")
-        .update({
-          name,
-          description:description || null,
-          logo_url:logoUrl
-        })
-        .eq("id", shop.id);
-
-    if (updateError) throw updateError;
-
-    shop.name = name;
-    shop.description = description || null;
-    shop.logo_url = logoUrl;
-
-    const option = shopSelect.selectedOptions[0];
-
-    if (option) {
-      option.textContent = shop.name + " (" + shop.slug + ")";
-    }
-
-    renderSelectedShop();
-
-    $("profile-message").textContent =
-      "Profil kedai berhasil disimpan.";
+      return `
+        <div class="chart-column">
+          <div class="chart-value">${escapeHTML(
+            item.total > 0 ? formatRupiah(item.total) : "Rp0"
+          )}</div>
+          <div class="chart-bar-wrap">
+            <div class="chart-bar" style="height:${height}%"></div>
+          </div>
+          <div class="chart-label">${escapeHTML(day)}</div>
+        </div>
+      `;
+    }).join("");
 
   } catch (error) {
-    console.error("Gagal menyimpan profil:", error);
+    console.error("Sales chart error:", error);
 
-    $("profile-message").textContent =
-      "Gagal menyimpan profil: " + error.message;
-
-  } finally {
-    saveButton.disabled = !selectedShop();
+    container.innerHTML =
+      '<p class="muted">Grafik belum dapat dimuat.</p>';
   }
-});
+}
 
-$("header-profile-button").addEventListener("click", () => {
-  const profil = $("profil-kedai");
-
-  profil.hidden = false;
-
-  profil.scrollIntoView({
-    behavior:"smooth",
-    block:"start"
-  });
-});
-
-$("close-shop-profile").addEventListener("click", () => {
-  $("profil-kedai").hidden = true;
-
-  $("header-profile-button").scrollIntoView({
-    behavior:"smooth",
-    block:"center"
-  });
-});
-
-/* =========================
-   LOGOUT
-========================= */
-
-$("logout").addEventListener("click", async function() {
-  const logoutButton = this;
-  const originalText = logoutButton.textContent;
-
-  if (!client) {
-    alert(
-      "Koneksi Supabase belum siap. Muat ulang halaman, lalu coba lagi."
-    );
-    return;
-  }
-
-  logoutButton.disabled = true;
-  logoutButton.textContent = "Sedang keluar...";
+/* MEMUAT LAPORAN PENJUALAN */
+async function loadSalesReport() {
+  const content = document.getElementById("report-content");
 
   try {
-    const {error} = await client.auth.signOut();
+    requireShop();
 
-    if (error) throw error;
+    content.innerHTML =
+      '<p class="muted">Memuat laporan penjualan...</p>';
 
-    window.location.replace("akun.html");
+    const range = getReportDateRange();
 
-  } catch (error) {
-    console.error("Gagal keluar dari akun:", error);
-
-    alert(
-      "Gagal keluar dari akun. Periksa koneksi internet, lalu coba lagi."
+    const orders = await fetchCompletedOrders(
+      range.start,
+      range.end
     );
 
-    logoutButton.disabled = false;
-    logoutButton.textContent = originalText;
+    reportData.orders = orders;
+
+    const revenue = orders.reduce(function(total, order) {
+      return total + Number(
+        order.total_amount ??
+        order.total ??
+        order.grand_total ??
+        0
+      );
+    }, 0);
+
+    const serviceFee = orders.length * 3000;
+
+    document.getElementById("report-revenue").textContent =
+      formatRupiah(revenue);
+
+    document.getElementById("report-order-count").textContent =
+      orders.length;
+
+    document.getElementById("report-unit-count").textContent =
+      "Perlu data item";
+
+    document.getElementById("report-service-fee").textContent =
+      formatRupiah(serviceFee);
+
+    renderReportBreakdowns(orders);
+
+    content.innerHTML =
+      document.getElementById("report-content").innerHTML;
+
+  } catch (error) {
+    console.error("Sales report error:", error);
+
+    content.innerHTML = `
+      <div class="panel">
+        <p style="color:#a72d2d">
+          Gagal memuat laporan: ${escapeHTML(error.message)}
+        </p>
+      </div>
+    `;
   }
-});
+}
 
-/* =========================
-   EVENT DAN MULAI DASHBOARD
-========================= */
+/* RINCIAN SUMBER DAN METODE PEMBAYARAN */
+function renderReportBreakdowns(orders) {
+  const onlineCount = orders.filter(function(order) {
+    return ["online", "qr", "customer"].includes(
+      String(order.order_source || order.source || "").toLowerCase()
+    );
+  }).length;
 
-shopSelect.addEventListener("change", async () => {
-  renderSelectedShop();
-  resetMenuForm();
+  const cashierCount = orders.filter(function(order) {
+    return ["cashier", "pos", "kasir"].includes(
+      String(order.order_source || order.source || "").toLowerCase()
+    );
+  }).length;
 
-  await refreshMenu();
-  await loadOrders();
-  await loadCashierDevicePanel();
-});
+  const paymentCounts = {};
 
-loadShops();
+  orders.forEach(function(order) {
+    const method =
+      order.payment_method || "Belum diketahui";
 
+    paymentCounts[method] =
+      (paymentCounts[method] || 0) + 1;
+  });
+
+  const sourceElement =
+    document.getElementById("report-source-breakdown");
+
+  const paymentElement =
+    document.getElementById("report-payment-breakdown");
+
+  const productElement =
+    document.getElementById("report-product-breakdown");
+
+  sourceElement.innerHTML = `
+    <div class="menu-item">
+      <span>Online / QR</span>
+      <strong>${onlineCount} pesanan</strong>
+    </div>
+    <div class="menu-item">
+      <span>Kasir / POS</span>
+      <strong>${cashierCount} pesanan</strong>
+    </div>
+  `;
+
+  paymentElement.innerHTML = Object.entries(paymentCounts)
+    .map(function(entry) {
+      return `
+        <div class="menu-item">
+          <span>${escapeHTML(entry[0])}</span>
+          <strong>${entry[1]} pesanan</strong>
+        </div>
+      `;
+    }).join("") || "Belum ada data.";
+
+  productElement.innerHTML =
+    '<p class="muted">Rincian produk akan ditampilkan setelah struktur tabel item pesanan disesuaikan.</p>';
+}
+
+/* AKHIR BAGIAN 8 */
 </script>
+<!-- LIBRARY UNTUK EKSPOR LAPORAN -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+/* =====================================================
+   KOPIHUB OWNER DASHBOARD
+   BAGIAN 9: EKSPOR LAPORAN DAN INISIALISASI
+===================================================== */
+
+/* SIMPAN PERIODE LAPORAN */
+let currentReportRange = null;
+
+/* PERBAIKAN PEMUATAN LAPORAN */
+async function loadSalesReport() {
+  try {
+    requireShop();
+
+    const range = getReportDateRange();
+    currentReportRange = range;
+
+    document.getElementById("report-revenue").textContent = "Memuat...";
+    document.getElementById("report-order-count").textContent = "...";
+    document.getElementById("report-unit-count").textContent = "...";
+    document.getElementById("report-service-fee").textContent = "...";
+
+    const orders = await fetchCompletedOrders(
+      range.start,
+      range.end
+    );
+
+    reportData.orders = orders;
+
+    const revenue = orders.reduce(function(total, order) {
+      return total + Number(
+        order.total_amount ??
+        order.total ??
+        order.grand_total ??
+        0
+      );
+    }, 0);
+
+    const serviceFee = orders.length * 3000;
+
+    document.getElementById("report-revenue").textContent =
+      formatRupiah(revenue);
+
+    document.getElementById("report-order-count").textContent =
+      orders.length;
+
+    document.getElementById("report-unit-count").textContent =
+      "Belum tersedia";
+
+    document.getElementById("report-service-fee").textContent =
+      formatRupiah(serviceFee);
+
+    renderReportBreakdowns(orders);
+
+  } catch (error) {
+    console.error("Sales report error:", error);
+
+    document.getElementById("report-revenue").textContent = "-";
+    document.getElementById("report-order-count").textContent = "-";
+    document.getElementById("report-unit-count").textContent = "-";
+    document.getElementById("report-service-fee").textContent = "-";
+
+    document.getElementById("report-source-breakdown").textContent =
+      "Laporan gagal dimuat.";
+
+    document.getElementById("report-payment-breakdown").textContent =
+      error.message;
+
+    document.getElementById("report-product-breakdown").textContent =
+      "Belum tersedia.";
+  }
+}
+
+/* NAMA FILE LAPORAN */
+function getReportFileName(extension) {
+  const shopName = String(
+    currentShop?.name || "kedai"
+  )
+    .replace(/[^a-z0-9-_]/gi, "-")
+    .toLowerCase();
+
+  return "laporan-kopihub-" + shopName + "." + extension;
+}
+
+/* UNDUH EXCEL */
+function downloadExcelReport() {
+  try {
+    if (!window.XLSX) {
+      throw new Error("Library Excel belum berhasil dimuat.");
+    }
+
+    if (!reportData.orders.length) {
+      alert("Tidak ada pesanan untuk diekspor.");
+      return;
+    }
+
+    const orders = reportData.orders.map(function(order) {
+      return {
+        "Nomor Pesanan": order.order_number || order.id || "-",
+        "Tanggal": order.created_at || "-",
+        "Sumber Pesanan":
+          order.order_source || order.source || "Belum diketahui",
+        "Metode Pembayaran":
+          order.payment_method || "Belum diketahui",
+        "Status": order.status || "-",
+        "Total": Number(
+          order.total_amount ??
+          order.total ??
+          order.grand_total ??
+          0
+        )
+      };
+    });
+
+    const summary = [
+      ["LAPORAN PENJUALAN KOPIHUB"],
+      ["Nama Kedai", currentShop.name || "-"],
+      ["Tanggal Awal", currentReportRange?.start || "-"],
+      ["Tanggal Akhir", currentReportRange?.end || "-"],
+      ["Jumlah Pesanan", reportData.orders.length],
+      [
+        "Total Omzet",
+        reportData.orders.reduce(function(total, order) {
+          return total + Number(
+            order.total_amount ??
+            order.total ??
+            order.grand_total ??
+            0
+          );
+        }, 0)
+      ],
+      [
+        "Estimasi Biaya Layanan",
+        reportData.orders.length * 3000
+      ]
+    ];
+
+    const workbook = XLSX.utils.book_new();
+
+    const summarySheet = XLSX.utils.aoa_to_sheet(summary);
+    const orderSheet = XLSX.utils.json_to_sheet(orders);
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      summarySheet,
+      "Ringkasan"
+    );
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      orderSheet,
+      "Transaksi"
+    );
+
+    XLSX.writeFile(
+      workbook,
+      getReportFileName("xlsx")
+    );
+
+  } catch (error) {
+    console.error("Excel export error:", error);
+    alert("Gagal membuat Excel: " + error.message);
+  }
+}
+
+/* UNDUH PDF */
+function downloadPDFReport() {
+  try {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      throw new Error("Library PDF belum berhasil dimuat.");
+    }
+
+    if (!reportData.orders.length) {
+      alert("Tidak ada pesanan untuk diekspor.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    const revenue = reportData.orders.reduce(function(total, order) {
+      return total + Number(
+        order.total_amount ??
+        order.total ??
+        order.grand_total ??
+        0
+      );
+    }, 0);
+
+    pdf.setFontSize(18);
+    pdf.text("Laporan Penjualan KopiHub", 14, 20);
+
+    pdf.setFontSize(11);
+    pdf.text(
+      "Nama Kedai: " + (currentShop.name || "-"),
+      14,
+      30
+    );
+
+    pdf.text(
+      "Jumlah Pesanan: " + reportData.orders.length,
+      14,
+      38
+    );
+
+    pdf.text(
+      "Total Omzet: " + formatRupiah(revenue),
+      14,
+      46
+    );
+
+    pdf.text(
+      "Estimasi Biaya Layanan: " +
+      formatRupiah(reportData.orders.length * 3000),
+      14,
+      54
+    );
+
+    const rows = reportData.orders.map(function(order) {
+      return [
+        String(order.order_number || order.id || "-"),
+        String(order.created_at || "-").slice(0, 10),
+        String(order.order_source || order.source || "-"),
+        String(order.payment_method || "-"),
+        formatRupiah(
+          order.total_amount ??
+          order.total ??
+          order.grand_total ??
+          0
+        )
+      ];
+    });
+
+    pdf.autoTable({
+      startY: 64,
+      head: [[
+        "Nomor",
+        "Tanggal",
+        "Sumber",
+        "Pembayaran",
+        "Total"
+      ]],
+      body: rows,
+      styles: {
+        fontSize: 8
+      },
+      headStyles: {
+        fillColor: [23, 76, 56]
+      }
+    });
+
+    pdf.save(getReportFileName("pdf"));
+
+  } catch (error) {
+    console.error("PDF export error:", error);
+    alert("Gagal membuat PDF: " + error.message);
+  }
+}
+
+/* PERBARUI STATUS KASIR SAAT BAGIANNYA DIBUKA */
+const originalShowSection = showSection;
+
+showSection = function(sectionName) {
+  originalShowSection(sectionName);
+
+  if (sectionName === "kasir" && currentShop) {
+    loadCashierDeviceStatus();
+  }
+};
+
+/* INISIALISASI DASHBOARD */
+document.addEventListener("DOMContentLoaded", function() {
+  initializeOwnerDashboard();
+});
+
+/* AKHIR JAVASCRIPT KOPIHUB OWNER DASHBOARD */
+</script>
+
 </body>
 </html>

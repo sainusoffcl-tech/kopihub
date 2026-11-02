@@ -645,7 +645,25 @@
         transition:none !important;
         animation:none !important;
       }
-    }
+   }
+    /* SISTEM 5 HALAMAN OWNER */
+.owner-page {
+  display: none;
+  animation: pageFade .2s ease;
+}
+
+.owner-page.active {
+  display: block;
+}
+
+@keyframes pageFade {
+  from { opacity: .5; }
+  to { opacity: 1; }
+}
+
+.owner-page > section {
+  margin-bottom: 18px;
+}
   </style>
 </head>
 
@@ -1123,65 +1141,135 @@ window.addEventListener("scroll", () => {
 }, {passive:true});
 
 /* =========================
-   NAVIGASI FOOTER
+   SISTEM 5 HALAMAN OWNER
 ========================= */
 
-const navButtons = [...document.querySelectorAll(".nav-button")];
-
-navButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    const target = $(button.dataset.target);
-
-    if (!target) return;
-
-    target.scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-
-    navButtons.forEach(item =>
-      item.classList.toggle("active", item === button)
-    );
-  });
-});
-
-const navSections = [
-  {id:"home-section", button:0},
-  {id:"kelola-menu", button:1},
-  {id:"transaksi-section", button:2},
-  {id:"sales-report-panel", button:3},
-  {id:"lainnya-section", button:4}
+const navButtons = [
+  ...document.querySelectorAll(".nav-button")
 ];
 
-if ("IntersectionObserver" in window) {
-  const navObserver = new IntersectionObserver(entries => {
-    const visible = entries
-      .filter(entry => entry.isIntersecting)
-      .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+const mainContent = $("home-section");
 
-    if (!visible) return;
+const pageHome = document.createElement("div");
+const pageMenu = document.createElement("div");
+const pageTransactions = document.createElement("div");
+const pageReports = document.createElement("div");
+const pageOthers = document.createElement("div");
 
-    const index = navSections.findIndex(
-      section => section.id === visible.target.id
-    );
+pageHome.className = "owner-page active";
+pageMenu.className = "owner-page";
+pageTransactions.className = "owner-page";
+pageReports.className = "owner-page";
+pageOthers.className = "owner-page";
 
-    if (index < 0) return;
+pageHome.id = "page-home";
+pageMenu.id = "page-menu";
+pageTransactions.id = "page-transactions";
+pageReports.id = "page-reports";
+pageOthers.id = "page-others";
 
-    navButtons.forEach((button,i) =>
-      button.classList.toggle("active", i === index)
-    );
-  }, {
-    root:null,
-    rootMargin:"-20% 0px -60% 0px",
-    threshold:[0,.1,.25,.5]
+const utilityElements = [
+  $("shop-select"),
+  $("connection-status"),
+  $("shop-details"),
+  $("header-profile-fallback"),
+  $("close-shop-profile")
+];
+
+// Simpan elemen tersembunyi yang digunakan sistem.
+const utilityContainer = document.createElement("div");
+utilityContainer.hidden = true;
+
+utilityElements.forEach(element => {
+  if (element) utilityContainer.appendChild(element);
+});
+
+mainContent.appendChild(utilityContainer);
+
+// HOME
+[
+  document.querySelector(".business-summary"),
+  document.querySelector(".chart-panel"),
+  document.querySelector(".stats")
+].forEach(element => {
+  if (element) pageHome.appendChild(element);
+});
+
+// MENU
+pageMenu.appendChild($("kelola-menu"));
+
+// TRANSAKSI
+pageTransactions.appendChild($("transaksi-section"));
+
+// LAPORAN
+pageReports.appendChild($("sales-report-panel"));
+
+// LAINNYA
+pageOthers.appendChild($("profil-kedai"));
+pageOthers.appendChild($("lainnya-section"));
+pageOthers.appendChild($("logout"));
+
+// Profil dapat ditampilkan di halaman Lainnya.
+$("profil-kedai").hidden = false;
+
+// Masukkan semua halaman ke dashboard.
+mainContent.append(
+  pageHome,
+  pageMenu,
+  pageTransactions,
+  pageReports,
+  pageOthers
+);
+
+const ownerPages = [
+  pageHome,
+  pageMenu,
+  pageTransactions,
+  pageReports,
+  pageOthers
+];
+
+function openOwnerPage(index) {
+  if (index < 0 || index >= ownerPages.length) return;
+
+  ownerPages.forEach((page, i) => {
+    page.classList.toggle("active", i === index);
   });
 
-  navSections.forEach(section => {
-    const element = $(section.id);
-    if (element) navObserver.observe(element);
+  navButtons.forEach((button, i) => {
+    button.classList.toggle("active", i === index);
+    button.setAttribute(
+      "aria-current",
+      i === index ? "page" : "false"
+    );
+  });
+
+  // Kembali ke bagian atas agar header terbuka.
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
   });
 }
 
+// Navigasi lima halaman.
+navButtons.forEach((button, index) => {
+  button.onclick = () => openOwnerPage(index);
+});
+
+// Tombol profil pada header membuka halaman Lainnya.
+$("header-profile-button").onclick = () => {
+  openOwnerPage(4);
+
+  setTimeout(() => {
+    $("profil-kedai").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 100);
+};
+
+// Awali dashboard dari HOME.
+openOwnerPage(0);
 function rupiah(value) {
   return new Intl.NumberFormat("id-ID", {
     style:"currency",

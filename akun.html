@@ -4,258 +4,501 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#174c38">
+  <meta name="theme-color" content="#123B2C">
+  <meta name="description" content="Masuk atau daftar sebagai mitra KopiHub.">
   <title>Akun KopiHub</title>
 
   <style>
     :root {
-      --green: #174c38;
-      --light: #e8f2ec;
-      --bg: #f5f7f5;
-      --text: #26352d;
-      --muted: #718078;
+      --green: #123B2C;
+      --green-2: #174C38;
+      --cream: #FAF9F5;
+      --orange: #E99A48;
+      --text: #26382F;
+      --muted: #77827A;
+      --line: #E2E7E1;
+      --danger-bg: #FFF0EF;
+      --danger: #A32D25;
+      --success-bg: #E8F2EC;
+      --success: #174C38;
     }
 
     * { box-sizing: border-box; }
 
+    html { min-height: 100%; }
+
     body {
       margin: 0;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
+      min-height: 100svh;
+      padding: 28px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       color: var(--text);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(233,154,72,.17), transparent 27%),
+        radial-gradient(circle at 88% 88%, rgba(250,249,245,.12), transparent 30%),
+        var(--green);
     }
 
-    .container {
+    button, input, select, textarea { font: inherit; }
+
+    .page-shell {
       width: 100%;
-      max-width: 440px;
-      background: white;
-      border-radius: 18px;
-      padding: 26px 22px;
-      box-shadow: 0 8px 30px #173d2c12;
+      max-width: 460px;
+      margin: auto;
     }
 
     .brand {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 19px;
+      color: #fff;
+      font-size: 29px;
+      font-weight: 800;
+      letter-spacing: -.9px;
+    }
+
+    .brand-mark {
+      width: 37px;
+      height: 37px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(250,249,245,.12);
+      color: var(--orange);
+    }
+
+    .brand-name span { color: var(--orange); }
+
+    .container {
+      width: 100%;
+      padding: 30px 26px 25px;
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 25px;
+      background: var(--cream);
+      box-shadow: 0 24px 70px rgba(0,0,0,.22);
+    }
+
+    .intro {
       text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .intro h1 {
+      margin: 0 0 8px;
       color: var(--green);
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 8px;
+      font-size: clamp(25px, 6vw, 29px);
+      line-height: 1.2;
+      letter-spacing: -.8px;
+      font-weight: 800;
     }
 
     .subtitle {
-      text-align: center;
+      max-width: 300px;
+      margin: 0 auto;
       color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 24px;
+      font-size: 13.5px;
+      line-height: 1.55;
     }
 
     .tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 5px;
+      padding: 5px;
       margin-bottom: 22px;
+      border: 1px solid #E8EBE5;
+      border-radius: 13px;
+      background: #F0F2ED;
     }
 
     .tab {
+      min-height: 43px;
+      padding: 10px 8px;
       border: 0;
       border-radius: 9px;
-      padding: 12px;
-      background: var(--light);
-      color: var(--green);
-      font-weight: bold;
+      background: transparent;
+      color: #69766D;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
+      transition: background .2s ease, color .2s ease, box-shadow .2s ease;
     }
 
     .tab.active {
-      background: var(--green);
-      color: white;
+      color: #fff;
+      background: var(--green-2);
+      box-shadow: 0 3px 9px rgba(18,59,44,.18);
     }
+
+    .field { margin: 0 0 16px; }
 
     label {
       display: block;
+      margin: 0 0 8px;
+      color: #34463B;
       font-size: 13px;
-      font-weight: bold;
-      margin: 14px 0 7px;
+      font-weight: 700;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      width: 18px;
+      height: 18px;
+      transform: translateY(-50%);
+      color: #89958C;
+      pointer-events: none;
     }
 
     input, select, textarea {
+      display: block;
       width: 100%;
-      padding: 13px;
-      border: 1px solid #dce4de;
-      border-radius: 9px;
-      font-size: 16px;
-      font-family: Arial, sans-serif;
-      background: white;
+      min-height: 49px;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      background: #fff;
       color: var(--text);
+      font-size: 15px;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
     }
 
-    textarea { resize: vertical; }
+    .input-wrap input { padding-left: 43px; }
+
+    input::placeholder,
+    textarea::placeholder { color: #A1AAA3; }
 
     input:focus, select:focus, textarea:focus {
-      outline: 2px solid #9bc7ab;
-      border-color: var(--green);
+      border-color: #6E9A7D;
+      box-shadow: 0 0 0 3px rgba(23,76,56,.10);
+      background: #fff;
     }
 
-    .password-wrapper { position: relative; }
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
 
     .password-wrapper input { padding-right: 54px; }
 
     .password-toggle {
       position: absolute;
-      right: 6px;
       top: 50%;
+      right: 7px;
+      display: grid;
+      place-items: center;
+      width: 39px;
+      height: 39px;
       transform: translateY(-50%);
-      width: 42px;
-      min-height: 42px;
-      padding: 8px;
-      border: none;
-      border-radius: 8px;
+      border: 0;
+      border-radius: 9px;
       background: transparent;
+      color: #77827A;
       cursor: pointer;
-      font-size: 20px;
+    }
+
+    .password-toggle:active { background: #F0F2ED; }
+
+    .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin: -4px 0 5px;
+    }
+
+    .text-link {
+      padding: 4px 0;
+      border: 0;
+      background: transparent;
+      color: #A96727;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .main-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
       width: 100%;
-      margin-top: 20px;
-      padding: 14px;
+      min-height: 51px;
+      margin-top: 18px;
+      padding: 14px 18px;
       border: 0;
-      border-radius: 10px;
-      background: var(--green);
-      color: white;
+      border-radius: 12px;
+      background: var(--green-2);
+      color: #fff;
       font-size: 15px;
-      font-weight: bold;
+      font-weight: 750;
+      box-shadow: 0 7px 16px rgba(18,59,44,.16);
       cursor: pointer;
+      transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+
+    .main-button:active {
+      transform: translateY(1px);
+      background: var(--green);
+      box-shadow: 0 3px 9px rgba(18,59,44,.14);
     }
 
     button:disabled {
-      opacity: .6;
+      opacity: .58;
       cursor: wait;
     }
 
-    .link-button {
-      display: block;
-      width: 100%;
-      margin-top: 16px;
-      padding: 5px;
-      background: transparent;
+    .signup-prompt {
+      margin: 19px 0 0;
+      color: #77827A;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .signup-prompt button {
+      padding: 0;
       border: 0;
-      color: var(--green);
-      text-decoration: underline;
+      background: transparent;
+      color: var(--green-2);
+      font-size: inherit;
+      font-weight: 800;
       cursor: pointer;
     }
 
     .message {
       display: none;
-      padding: 12px;
-      margin-top: 16px;
-      border-radius: 9px;
-      font-size: 14px;
-      line-height: 1.5;
+      padding: 12px 13px;
+      margin-top: 17px;
+      border-radius: 11px;
+      font-size: 13px;
+      line-height: 1.55;
       overflow-wrap: anywhere;
     }
 
     .message.show { display: block; }
-    .message.error { background: #fff0ef; color: #a32d25; }
-    .message.success { background: var(--light); color: var(--green); }
+    .message.error { background: var(--danger-bg); color: var(--danger); }
+    .message.success { background: var(--success-bg); color: var(--success); }
     .hidden { display: none !important; }
 
     .small {
+      margin: 19px 5px 0;
+      color: rgba(250,249,245,.72);
       text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-      margin-top: 20px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .tagline {
+      margin-top: 10px;
+      color: rgba(250,249,245,.92);
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    @media (max-width: 380px) {
+      body { padding: 18px 13px; }
+      .container {
+        padding: 25px 19px 22px;
+        border-radius: 21px;
+      }
+      .brand { margin-bottom: 15px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="container">
-    <div class="brand">☕ KopiHub</div>
-    <div class="subtitle">Platform digital untuk kedai kopi</div>
+  <main class="page-shell">
 
-    <div class="tabs">
-      <button class="tab active" id="loginTab" type="button">
-        Masuk
-      </button>
-      <button class="tab" id="signupTab" type="button">
-        Daftar Mitra
-      </button>
+    <div class="brand" aria-label="KopiHub">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="23" height="23" fill="none">
+          <path d="M5 8h12v7a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V8Z"
+            stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 4c1.3 1 1.3 2 0 3M12 3c1.3 1 1.3 2 0 3"
+            stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand-name">Kopi<span>Hub</span></span>
     </div>
 
-    <form id="accountForm">
-      <div id="nameField" class="hidden">
-        <label for="fullName">Nama lengkap pemilik</label>
-        <input id="fullName" type="text" autocomplete="name"
-          placeholder="Nama lengkap pemilik">
+    <section class="container">
+
+      <div class="intro">
+        <h1 id="formTitle">Selamat Datang!</h1>
+        <p class="subtitle" id="formSubtitle">
+          Masuk untuk melanjutkan perjalanan bersama KopiHub.
+        </p>
       </div>
 
-      <div id="shopFields" class="hidden">
-        <label for="shopName">Nama kedai</label>
-        <input id="shopName" type="text"
-          placeholder="Contoh: Aroma Coffee">
+      <div class="tabs" role="tablist" aria-label="Jenis akun">
+        <button class="tab active" id="loginTab" type="button"
+          role="tab" aria-selected="true">
+          Masuk
+        </button>
 
-        <label for="phone">Nomor telepon / WhatsApp</label>
-        <input id="phone" type="tel" autocomplete="tel"
-          placeholder="Nomor WhatsApp aktif">
-
-        <label for="businessType">Jenis usaha</label>
-        <select id="businessType">
-          <option value="">Pilih jenis usaha</option>
-          <option value="coffee_shop">Coffee shop</option>
-          <option value="cafe">Kafe</option>
-          <option value="other">Lainnya</option>
-        </select>
-
-        <label for="address">Alamat kedai</label>
-        <textarea id="address" rows="3"
-          placeholder="Alamat lengkap kedai"></textarea>
+        <button class="tab" id="signupTab" type="button"
+          role="tab" aria-selected="false">
+          Daftar Mitra
+        </button>
       </div>
 
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="email"
-        placeholder="nama@email.com" required>
+      <form id="accountForm">
 
-      <label for="password">Kata sandi</label>
-      <div class="password-wrapper">
-        <input id="password" type="password"
-          autocomplete="current-password" minlength="6"
-          placeholder="Minimal 6 karakter" required>
+        <div id="nameField" class="field hidden">
+          <label for="fullName">Nama lengkap pemilik</label>
+          <input id="fullName" type="text" autocomplete="name"
+            placeholder="Masukkan nama lengkap pemilik">
+        </div>
 
-        <button id="toggle-password" class="password-toggle"
-          type="button" aria-label="Tampilkan kata sandi"
-          aria-pressed="false">👁</button>
-      </div>
+        <div id="shopFields" class="hidden">
 
-      <button id="submitButton" class="main-button" type="submit">
-        Masuk ke KopiHub
-      </button>
-    </form>
+          <div class="field">
+            <label for="shopName">Nama kedai</label>
+            <input id="shopName" type="text"
+              placeholder="Contoh: Aroma Coffee">
+          </div>
 
-    <button id="forgotButton" class="link-button" type="button">
-      Lupa kata sandi?
-    </button>
+          <div class="field">
+            <label for="phone">Nomor telepon / WhatsApp</label>
+            <input id="phone" type="tel" autocomplete="tel"
+              placeholder="Nomor WhatsApp aktif">
+          </div>
 
-    <div id="message" class="message" role="status"
-      aria-live="polite"></div>
+          <div class="field">
+            <label for="businessType">Jenis usaha</label>
+            <select id="businessType">
+              <option value="">Pilih jenis usaha</option>
+              <option value="coffee_shop">Coffee shop</option>
+              <option value="cafe">Kafe</option>
+              <option value="other">Lainnya</option>
+            </select>
+          </div>
 
-    <div class="small">
+          <div class="field">
+            <label for="address">Alamat kedai</label>
+            <textarea id="address" rows="3"
+              placeholder="Masukkan alamat lengkap kedai"></textarea>
+          </div>
+
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24"
+              fill="none" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2"
+                stroke="currentColor" stroke-width="1.8"/>
+              <path d="m4 7 8 6 8-6" stroke="currentColor"
+                stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round"/>
+            </svg>
+
+            <input id="email" type="email" autocomplete="email"
+              placeholder="nama@email.com" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Kata sandi</label>
+
+          <div class="input-wrap password-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24"
+              fill="none" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="2"
+                stroke="currentColor" stroke-width="1.8"/>
+              <path d="M8 10V7a4 4 0 1 1 8 0v3"
+                stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round"/>
+              <path d="M12 14v3" stroke="currentColor"
+                stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+
+            <input id="password" type="password"
+              autocomplete="current-password" minlength="6"
+              placeholder="Masukkan kata sandi" required>
+
+            <button id="toggle-password" class="password-toggle"
+              type="button" aria-label="Tampilkan kata sandi"
+              aria-pressed="false">
+
+              <svg id="eyeIcon" viewBox="0 0 24 24"
+                width="20" height="20" fill="none"
+                aria-hidden="true">
+                <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"
+                  stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="12" cy="12" r="2.7"
+                  stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+
+            </button>
+          </div>
+        </div>
+
+        <div class="forgot-row">
+          <button id="forgotButton" class="text-link" type="button">
+            Lupa kata sandi?
+          </button>
+        </div>
+
+        <button id="submitButton" class="main-button" type="submit">
+          Masuk ke KopiHub
+          <svg viewBox="0 0 24 24" width="18" height="18"
+            fill="none" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6"
+              stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+      </form>
+
+      <p class="signup-prompt" id="signupPrompt">
+        Belum punya akun mitra?
+        <button id="signupPromptButton" type="button">
+          Daftar sekarang
+        </button>
+      </p>
+
+      <div id="message" class="message"
+        role="status" aria-live="polite"></div>
+
+    </section>
+
+    <p class="small">
       Jaga kerahasiaan kata sandi akunmu.
       Pendaftaran mitra akan melalui proses pemeriksaan KopiHub.
-    </div>
+    </p>
+
+    <div class="tagline">SATU PLATFORM, BANYAK CERITA</div>
+
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    // Ganti dengan URL dan publishable key proyek Supabase KopiHub.
+    // Konfigurasi proyek Supabase KopiHub.
     const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
-      "GANTI_DENGAN_PUBLISHABLE_KEY_SUPABASE";
 
     const form = document.getElementById("accountForm");
     const emailInput = document.getElementById("email");
@@ -271,8 +514,13 @@
     const loginTab = document.getElementById("loginTab");
     const signupTab = document.getElementById("signupTab");
     const forgotButton = document.getElementById("forgotButton");
+    const signupPrompt = document.getElementById("signupPrompt");
+    const signupPromptButton = document.getElementById("signupPromptButton");
+    const formTitle = document.getElementById("formTitle");
+    const formSubtitle = document.getElementById("formSubtitle");
     const messageBox = document.getElementById("message");
     const togglePassword = document.getElementById("toggle-password");
+    const eyeIcon = document.getElementById("eyeIcon");
 
     let mode = "login";
     let client = null;
@@ -294,66 +542,103 @@
       loginTab.disabled = value;
       signupTab.disabled = value;
       forgotButton.disabled = value;
+      signupPromptButton.disabled = value;
+
       submitButton.textContent = value
         ? "Mohon tunggu..."
-        : mode === "signup" ? "Buat Akun" : "Masuk ke KopiHub";
+        : mode === "signup" ? "Buat Akun Mitra" :
+          mode === "complete" ? "Kirim Pengajuan Mitra" :
+          "Masuk ke KopiHub";
     }
 
-    
-function setMode(nextMode) {
-  if (busy) return;
+    function setMode(nextMode) {
+      if (busy) return;
 
-  mode = nextMode;
+      mode = nextMode;
 
-  const isSignup = mode === "signup";
-  const isComplete = mode === "complete";
-  const showShopFields = isSignup || isComplete;
+      const isSignup = mode === "signup";
+      const isComplete = mode === "complete";
+      const showShopFields = isSignup || isComplete;
 
-  loginTab.classList.toggle("active", mode === "login");
-  signupTab.classList.toggle("active", isSignup);
+      loginTab.classList.toggle("active", mode === "login");
+      signupTab.classList.toggle("active", isSignup);
 
-  nameField.classList.toggle("hidden", !showShopFields);
-  shopFields.classList.toggle("hidden", !showShopFields);
+      loginTab.setAttribute("aria-selected", String(mode === "login"));
+      signupTab.setAttribute("aria-selected", String(isSignup));
 
-  nameInput.required = showShopFields;
-  shopNameInput.required = showShopFields;
-  phoneInput.required = showShopFields;
-  businessTypeInput.required = showShopFields;
-  addressInput.required = showShopFields;
+      nameField.classList.toggle("hidden", !showShopFields);
+      shopFields.classList.toggle("hidden", !showShopFields);
 
-  passwordInput.autocomplete = isSignup
-    ? "new-password" : "current-password";
+      nameInput.required = showShopFields;
+      shopNameInput.required = showShopFields;
+      phoneInput.required = showShopFields;
+      businessTypeInput.required = showShopFields;
+      addressInput.required = showShopFields;
 
-  if (isComplete) {
-    submitButton.textContent = "Kirim Pengajuan Mitra";
-    forgotButton.classList.add("hidden");
-  } else {
-    submitButton.textContent = isSignup
-      ? "Buat Akun" : "Masuk ke KopiHub";
+      passwordInput.autocomplete = isSignup
+        ? "new-password"
+        : "current-password";
 
-    forgotButton.classList.toggle("hidden", showShopFields);
-  }
+      if (isComplete) {
+        formTitle.textContent = "Lengkapi Data Kedai";
+        formSubtitle.textContent =
+          "Lengkapi informasi kedai untuk mengirim pengajuan mitra.";
+        submitButton.textContent = "Kirim Pengajuan Mitra";
+        forgotButton.classList.add("hidden");
+        signupPrompt.classList.add("hidden");
+        loginTab.disabled = true;
+        signupTab.disabled = true;
 
-  clearMessage();
-}
+      } else if (isSignup) {
+        formTitle.textContent = "Daftar Mitra KopiHub";
+        formSubtitle.textContent =
+          "Mulai kelola kedai dan jangkau lebih banyak pelanggan.";
+        submitButton.textContent = "Buat Akun Mitra";
+        forgotButton.classList.add("hidden");
+        signupPrompt.classList.add("hidden");
+        loginTab.disabled = false;
+        signupTab.disabled = false;
 
+      } else {
+        formTitle.textContent = "Selamat Datang!";
+        formSubtitle.textContent =
+          "Masuk untuk melanjutkan perjalanan bersama KopiHub.";
+        submitButton.textContent = "Masuk ke KopiHub";
+        forgotButton.classList.remove("hidden");
+        signupPrompt.classList.remove("hidden");
+        loginTab.disabled = false;
+        signupTab.disabled = false;
+      }
+
+      clearMessage();
+    }
 
     loginTab.addEventListener("click", () => setMode("login"));
     signupTab.addEventListener("click", () => setMode("signup"));
 
+    signupPromptButton.addEventListener("click", () => {
+      setMode("signup");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
     togglePassword.addEventListener("click", () => {
       const reveal = passwordInput.type === "password";
+
       passwordInput.type = reveal ? "text" : "password";
-      togglePassword.textContent = reveal ? "🙈" : "👁";
+
       togglePassword.setAttribute(
         "aria-label",
         reveal ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
       );
+
       togglePassword.setAttribute("aria-pressed", String(reveal));
+
+      eyeIcon.innerHTML = reveal
+        ? '<path d="m3 3 18 18M10.6 10.6a2 2 0 0 0 2.8 2.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.1 0 9.5 7 9.5 7a15 15 0 0 1-3.1 3.8M6.2 6.2C3.8 7.8 2.5 12 2.5 12s3.4 7 9.5 7c1.2 0 2.3-.3 3.3-.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+        : '<path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.7" stroke="currentColor" stroke-width="1.8"/>';
     });
 
     function getRedirectUrl(file) {
-      // Website KopiHub memakai GitHub Pages di /kopihub/.
       return new URL("/kopihub/" + file, window.location.origin).href;
     }
 
@@ -380,10 +665,9 @@ function setMode(nextMode) {
     }
 
     async function ensureProfile(user, details) {
-      // Periksa dahulu agar nilai hak Admin tidak tertimpa.
       const { data: existing, error: readError } = await client
         .from("kh_profiles")
-        .select("id, is_platform_admin")
+        .select("id, full_name, is_platform_admin")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -404,7 +688,7 @@ function setMode(nextMode) {
           phone: details.phone || null,
           is_platform_admin: false
         })
-        .select("id, is_platform_admin")
+        .select("id, full_name, is_platform_admin")
         .single();
 
       if (insertError) {
@@ -463,6 +747,7 @@ function setMode(nextMode) {
             "KopiHub untuk memeriksa statusnya."
           );
         }
+
         return;
       }
 
@@ -534,8 +819,6 @@ function setMode(nextMode) {
         return;
       }
 
-
-      // Pengguna tanpa keanggotaan perlu memiliki data kedai.
       if (!hasShopDetails(details)) {
         nameInput.value = details.full_name || profile.full_name || "";
         shopNameInput.value = details.shop_name || "";
@@ -544,14 +827,16 @@ function setMode(nextMode) {
         addressInput.value = details.address || "";
 
         setMode("complete");
+
         showMessage(
-          "Lengkapi data Aroma Coffee dan kirim pengajuan mitra kamu."
+          "Lengkapi data pemilik dan kedai, lalu kirim pengajuan mitra kamu."
         );
+
         return;
       }
 
       await ensureApplication(user, details);
-      }
+    }
 
     form.addEventListener("submit", async event => {
       event.preventDefault();
@@ -560,7 +845,6 @@ function setMode(nextMode) {
 
       if (
         !SUPABASE_URL.startsWith("https://") ||
-        SUPABASE_URL.includes("GANTI_DENGAN") ||
         !SUPABASE_PUBLISHABLE_KEY ||
         SUPABASE_PUBLISHABLE_KEY.includes("GANTI_DENGAN")
       ) {
@@ -573,7 +857,10 @@ function setMode(nextMode) {
       }
 
       if (!client) {
-        showMessage("Koneksi Supabase belum siap. Muat ulang halaman.", "error");
+        showMessage(
+          "Koneksi Supabase belum siap. Muat ulang halaman.",
+          "error"
+        );
         return;
       }
 
@@ -583,7 +870,6 @@ function setMode(nextMode) {
         const email = emailInput.value.trim().toLowerCase();
         const password = passwordInput.value;
 
-        
         if (mode === "complete") {
           const { data: userData, error: userError } =
             await client.auth.getUser();
@@ -593,7 +879,9 @@ function setMode(nextMode) {
           const user = userData.user;
 
           if (!user) {
-            throw new Error("Sesi login berakhir. Silakan login kembali.");
+            throw new Error(
+              "Sesi login berakhir. Silakan login kembali."
+            );
           }
 
           const details = {
@@ -646,7 +934,7 @@ function setMode(nextMode) {
           if (applicationError) throw applicationError;
 
           showMessage(
-            "Pengajuan Aroma Coffee berhasil dikirim dan menunggu persetujuan Admin."
+            "Pengajuan mitra berhasil dikirim dan menunggu persetujuan Admin."
           );
 
           return;
@@ -677,7 +965,10 @@ function setMode(nextMode) {
           if (error) throw error;
 
           if (data.session && data.user) {
-            showMessage("Akun dibuat. Menyiapkan profil dan pengajuan kedai...");
+            showMessage(
+              "Akun dibuat. Menyiapkan profil dan pengajuan kedai..."
+            );
+
             await routeUser(data.user);
             return;
           }
@@ -687,6 +978,7 @@ function setMode(nextMode) {
             "verifikasi, lalu kembali ke halaman ini dan login. " +
             "Pengajuan kedai akan diproses setelah login."
           );
+
         } else {
           const { data, error } = await client.auth.signInWithPassword({
             email,
@@ -696,14 +988,18 @@ function setMode(nextMode) {
           if (error) throw error;
 
           if (!data.user) {
-            throw new Error("Data akun tidak ditemukan. Silakan login kembali.");
+            throw new Error(
+              "Data akun tidak ditemukan. Silakan login kembali."
+            );
           }
 
           await routeUser(data.user);
         }
+
       } catch (error) {
         console.error("Kesalahan akun KopiHub:", error);
         showMessage(error.message || "Terjadi kesalahan.", "error");
+
       } finally {
         setBusy(false);
       }
@@ -741,12 +1037,15 @@ function setMode(nextMode) {
           "Jika email terdaftar, instruksi pemulihan kata sandi akan " +
           "dikirim. Periksa kotak masuk dan folder spam."
         );
+
       } catch (error) {
         console.error("Kesalahan pemulihan akun:", error);
+
         showMessage(
           error.message || "Gagal mengirim instruksi pemulihan.",
           "error"
         );
+
       } finally {
         forgotButton.disabled = false;
       }
@@ -762,8 +1061,10 @@ function setMode(nextMode) {
         if (!data.session) return;
 
         await routeUser(data.session.user);
+
       } catch (error) {
         console.error("Pemeriksaan sesi gagal:", error);
+
         showMessage(
           error.message || "Gagal memeriksa sesi akun.",
           "error"
@@ -775,7 +1076,6 @@ function setMode(nextMode) {
       if (
         window.supabase &&
         SUPABASE_URL.startsWith("https://") &&
-        !SUPABASE_URL.includes("GANTI_DENGAN") &&
         SUPABASE_PUBLISHABLE_KEY &&
         !SUPABASE_PUBLISHABLE_KEY.includes("GANTI_DENGAN")
       ) {
@@ -786,6 +1086,7 @@ function setMode(nextMode) {
 
         checkExistingSession();
       }
+
     } catch (error) {
       console.error("Inisialisasi Supabase gagal:", error);
       showMessage("Gagal menginisialisasi Supabase.", "error");

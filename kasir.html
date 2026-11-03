@@ -2,1140 +2,1880 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Kasir - KopiHub</title>
-
-  <style>
-    :root {
-      --green: #123b2c;
-      --green-light: #1c5940;
-      --cream: #faf9f5;
-      --orange: #e99a55;
-      --text: #24342c;
-      --muted: #69766f;
-      --border: #e5e8e2;
-      --white: #ffffff;
-      --red: #b83232;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: var(--cream);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-    }
-
-    button, input, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .topbar {
-      background: var(--green);
-      color: white;
-      padding: 18px 20px;
-    }
-
-    .topbar-inner {
-      max-width: 1200px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    .brand small {
-      display: block;
-      margin-top: 4px;
-      font-size: 12px;
-      font-weight: 400;
-      opacity: .8;
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 22px 16px 40px;
-    }
-
-    .welcome {
-      margin-bottom: 20px;
-    }
-
-    .welcome h1 {
-      margin: 0 0 6px;
-      font-size: 27px;
-    }
-
-    .welcome p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .notice {
-      padding: 13px 15px;
-      border-radius: 12px;
-      background: #edf5ee;
-      border: 1px solid #d4e6d7;
-      margin-bottom: 18px;
-      font-size: 14px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .notice.error {
-      background: #fff0ef;
-      border-color: #f1c7c4;
-      color: #8b2525;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-
-    .stat {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 17px;
-      min-width: 0;
-    }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .stat-value {
-      font-size: 27px;
-      font-weight: 800;
-      margin-top: 8px;
-    }
-
-    .toolbar {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 190px auto;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .field {
-      width: 100%;
-      min-width: 0;
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 10px;
-      padding: 12px;
-      color: var(--text);
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 14px;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .btn-green {
-      background: var(--green);
-      color: white;
-    }
-
-    .btn-green:hover {
-      background: var(--green-light);
-    }
-
-    .btn-orange {
-      background: var(--orange);
-      color: #2d2116;
-    }
-
-    .btn-light {
-      background: white;
-      color: var(--green);
-      border: 1px solid var(--border);
-    }
-
-    .btn:disabled {
-      opacity: .55;
-      cursor: wait;
-    }
-
-    .orders {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .order-card {
-      min-width: 0;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 3px 12px rgba(18, 59, 44, .04);
-    }
-
-    .order-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .order-number {
-      font-size: 17px;
-      font-weight: 800;
-      overflow-wrap: anywhere;
-    }
-
-    .order-time {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 5px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      white-space: nowrap;
-      background: #f0f1ef;
-      color: #4c5851;
-    }
-
-    .badge.awaiting_confirmation {
-      background: #fff0d9;
-      color: #87520c;
-    }
-
-    .badge.pending {
-      background: #e7f0ff;
-      color: #2456a5;
-    }
-
-    .badge.processing {
-      background: #e9e3ff;
-      color: #5639a0;
-    }
-
-    .badge.ready_for_delivery {
-      background: #dff5e6;
-      color: #17683b;
-    }
-
-    .badge.completed {
-      background: #e8ece9;
-      color: #3d5045;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      padding: 13px 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .info-label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
-    .info-value {
-      font-size: 14px;
-      font-weight: 650;
-      overflow-wrap: anywhere;
-    }
-
-    .items {
-      padding: 13px 0;
-    }
-
-    .items-title {
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .item-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 5px 0;
-      font-size: 13px;
-    }
-
-    .item-row span:first-child {
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
-
-    .item-row span:last-child {
-      white-space: nowrap;
-    }
-
-    .order-note {
-      background: #f7f7f2;
-      border-radius: 9px;
-      padding: 10px;
-      margin-bottom: 12px;
-      font-size: 13px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .total-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    .total-label {
-      font-weight: 700;
-    }
-
-    .total-price {
-      font-size: 20px;
-      font-weight: 850;
-      color: var(--green);
-      white-space: nowrap;
-    }
-
-    .payment-line {
-      margin-top: 12px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .payment-paid {
-      color: #17683b;
-      font-weight: 800;
-    }
-
-    .payment-unpaid {
-      color: #87520c;
-      font-weight: 800;
-    }
-
-    .order-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 15px;
-    }
-
-    .order-actions .btn {
-      flex: 1 1 145px;
-    }
-
-    .empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 38px 20px;
-      background: white;
-      border: 1px dashed #ccd4cc;
-      border-radius: 16px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      padding: 25px 12px 10px;
-    }
-
-    @media (max-width: 760px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .stat {
-        padding: 13px 15px;
-      }
-
-      .stat-value {
-        font-size: 23px;
-      }
-
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-
-      .orders {
-        grid-template-columns: 1fr;
-      }
-
-      .welcome h1 {
-        font-size: 24px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123b2c">
+<title>Dashboard Kasir | KopiHub</title>
+
+<style>
+:root {
+  --green:#123b2c;
+  --green2:#174c38;
+  --green3:#216247;
+  --cream:#faf9f5;
+  --orange:#e99a55;
+  --text:#24342c;
+  --muted:#748078;
+  --border:#e8ebe5;
+  --white:#fff;
+  --red:#b83232;
+  --shadow:0 5px 20px rgba(18,59,44,.055);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+[hidden]{display:none!important}
+
+/* HEADER COLLAPSING */
+.header-shell{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:var(--green);
+  color:white;
+  box-shadow:0 3px 15px rgba(0,0,0,.12);
+}
+.topbar{
+  min-height:76px;
+  padding:13px 18px;
+  transition:min-height .25s ease,padding .25s ease;
+}
+.topbar-inner{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand{
+  min-width:0;
+  font-size:23px;
+  font-weight:900;
+  letter-spacing:-.7px;
+  line-height:1.1;
+}
+.brand span{color:var(--orange)}
+.brand small{
+  display:block;
+  margin-top:5px;
+  color:rgba(255,255,255,.72);
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:1.2px;
+}
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.header-staff{
+  max-width:130px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#f3eee3;
+  font-size:12px;
+  font-weight:650;
+}
+.header-icon-btn{
+  width:38px;
+  height:38px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  background:rgba(255,255,255,.1);
+  color:white;
+  font-size:17px;
+}
+.header-subline{
+  max-width:1100px;
+  margin:auto;
+  padding:0 18px 11px;
+  color:rgba(255,255,255,.65);
+  font-size:10px;
+  letter-spacing:1.15px;
+  transition:opacity .2s ease,height .2s ease,padding .2s ease;
+}
+.header-shell.collapsed .topbar{
+  min-height:53px;
+  padding:8px 18px;
+}
+.header-shell.collapsed .brand{font-size:19px}
+.header-shell.collapsed .brand small{display:none}
+.header-shell.collapsed .header-subline{
+  height:0;
+  padding:0;
+  opacity:0;
+  overflow:hidden;
+}
+
+/* PAGE */
+.container{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:22px 16px 110px;
+}
+.welcome{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:18px;
+}
+.welcome h1{
+  margin:0 0 5px;
+  font-size:25px;
+  letter-spacing:-.7px;
+}
+.welcome p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+.live-indicator{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  border-radius:20px;
+  background:#e8f3eb;
+  color:#216247;
+  font-size:10px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.live-dot{
+  width:7px;height:7px;
+  border-radius:50%;
+  background:#36a66a;
+}
+
+/* NOTICE */
+.notice{
+  padding:12px 14px;
+  border:1px solid #d6e8d9;
+  border-radius:13px;
+  background:#edf5ee;
+  color:#285c39;
+  margin-bottom:17px;
+  font-size:13px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.notice.error{
+  background:#fff0ef;
+  border-color:#f1c7c4;
+  color:#8b2525;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:11px;
+  margin-bottom:22px;
+}
+.stat{
+  min-width:0;
+  padding:16px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+}
+.stat-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+}
+.stat-label{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.4;
+}
+.stat-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:29px;height:29px;
+  border-radius:10px;
+  background:#edf4ef;
+  color:var(--green);
+  font-size:15px;
+}
+.stat-value{
+  margin-top:9px;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:-.7px;
+}
+
+/* TOOLBAR */
+.section-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin:0 0 12px;
+}
+.section-heading h2{
+  margin:0;
+  font-size:17px;
+  letter-spacing:-.3px;
+}
+.section-heading span{
+  color:var(--muted);
+  font-size:11px;
+}
+.toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 180px 42px;
+  gap:9px;
+  margin-bottom:16px;
+}
+.field{
+  width:100%;
+  min-width:0;
+  padding:12px 13px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  outline:none;
+  background:white;
+  color:var(--text);
+  font-size:13px;
+}
+.field:focus{
+  border-color:#6b9b7e;
+  box-shadow:0 0 0 3px rgba(33,98,71,.08);
+}
+.refresh-btn{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:white;
+  color:var(--green);
+  font-size:18px;
+  font-weight:800;
+}
+
+/* BUTTONS */
+.btn{
+  border:0;
+  border-radius:11px;
+  padding:11px 14px;
+  font-size:12px;
+  font-weight:800;
+  transition:transform .15s ease,opacity .15s ease;
+}
+.btn:active{transform:scale(.98)}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:var(--green2)}
+.btn-orange{background:var(--orange);color:#302216}
+.btn-light{
+  background:white;
+  color:var(--green);
+  border:1px solid var(--border);
+}
+.btn-danger{
+  background:#fff0ef;
+  color:var(--red);
+  border:1px solid #f2d2cf;
+}
+.btn-block{width:100%}
+
+/* ORDERS */
+.orders{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.order-card{
+  min-width:0;
+  padding:16px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:17px;
+  box-shadow:var(--shadow);
+}
+.order-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:13px;
+}
+.order-number{
+  font-size:16px;
+  font-weight:900;
+  overflow-wrap:anywhere;
+}
+.order-time{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:11px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 9px;
+  border-radius:20px;
+  background:#eef0ed;
+  color:#4c5851;
+  font-size:10px;
+  font-weight:850;
+  white-space:nowrap;
+}
+.badge.awaiting_confirmation{background:#fff0d9;color:#87520c}
+.badge.processing{background:#e9e3ff;color:#5639a0}
+.badge.ready_for_delivery{background:#dff5e6;color:#17683b}
+.badge.completed{background:#e8ece9;color:#3d5045}
+.badge.cancelled{background:#fff0ef;color:#a22d2d}
+
+.assignment{
+  margin:0 0 12px;
+  padding:9px 10px;
+  border-radius:10px;
+  background:#f5f7f3;
+  color:#526057;
+  font-size:11px;
+  line-height:1.45;
+}
+.assignment.mine{
+  background:#eaf4ed;
+  color:#216247;
+}
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:11px;
+  padding:12px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.info-label{
+  margin-bottom:4px;
+  color:var(--muted);
+  font-size:10px;
+}
+.info-value{
+  font-size:12px;
+  font-weight:750;
+  overflow-wrap:anywhere;
+}
+.items{padding:13px 0}
+.items-title{
+  margin-bottom:7px;
+  font-size:12px;
+  font-weight:900;
+}
+.item-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:5px 0;
+  font-size:12px;
+}
+.item-row span:first-child{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.item-row span:last-child{white-space:nowrap}
+.order-note{
+  margin-bottom:12px;
+  padding:10px;
+  border-radius:10px;
+  background:#f7f7f2;
+  font-size:12px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.total-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.total-label{font-size:12px;font-weight:800}
+.total-price{
+  color:var(--green);
+  font-size:19px;
+  font-weight:950;
+  white-space:nowrap;
+}
+.payment-line{
+  margin-top:10px;
+  font-size:11px;
+  line-height:1.5;
+}
+.payment-paid{color:#17683b;font-weight:850}
+.payment-unpaid{color:#87520c;font-weight:850}
+.order-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+.order-actions .btn{flex:1 1 125px}
+.empty{
+  grid-column:1/-1;
+  padding:38px 20px;
+  border:1px dashed #ccd4cc;
+  border-radius:16px;
+  background:white;
+  color:var(--muted);
+  text-align:center;
+  font-size:13px;
+  line-height:1.6;
+}
+.footer{
+  padding:25px 10px 8px;
+  color:var(--muted);
+  text-align:center;
+  font-size:11px;
+}
+
+/* STICKY BOTTOM NAV */
+.bottom-nav{
+  position:fixed;
+  z-index:60;
+  right:0;bottom:0;left:0;
+  padding:8px 9px calc(8px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(20,50,35,.09);
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.nav-inner{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  max-width:650px;
+  margin:auto;
+  gap:4px;
+}
+.nav-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  min-height:48px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  color:#7a857d;
+  font-size:10px;
+  font-weight:750;
+}
+.nav-btn .nav-icon{font-size:18px;line-height:1}
+.nav-btn.active{
+  background:#edf4ef;
+  color:var(--green);
+}
+
+/* LOGIN / ACTIVATION */
+.auth-wrap{
+  width:100%;
+  max-width:430px;
+  margin:26px auto;
+  padding:0 16px;
+}
+.auth-card{
+  padding:22px;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:white;
+  box-shadow:var(--shadow);
+}
+.auth-brand{
+  margin-bottom:20px;
+  text-align:center;
+}
+.auth-brand strong{
+  color:var(--green);
+  font-size:25px;
+  font-weight:950;
+}
+.auth-brand strong span{color:var(--orange)}
+.auth-brand p{
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+.auth-card h1{
+  margin:0 0 6px;
+  font-size:21px;
+  letter-spacing:-.5px;
+}
+.auth-desc{
+  margin:0 0 19px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+.form-group{margin-bottom:13px}
+.form-group label{
+  display:block;
+  margin-bottom:6px;
+  font-size:11px;
+  font-weight:800;
+}
+.form-group input{
+  width:100%;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  outline:none;
+  background:#fff;
+  font-size:14px;
+}
+.form-group input:focus{
+  border-color:#6b9b7e;
+  box-shadow:0 0 0 3px rgba(33,98,71,.08);
+}
+.auth-switch{
+  margin-top:16px;
+  color:var(--muted);
+  text-align:center;
+  font-size:12px;
+  line-height:1.7;
+}
+.text-button{
+  padding:0;
+  border:0;
+  background:none;
+  color:var(--green);
+  font-weight:850;
+  text-decoration:underline;
+}
+.pin-hint{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:10px;
+}
+.auth-footer{
+  margin-top:20px;
+  color:var(--muted);
+  text-align:center;
+  font-size:10px;
+}
+
+/* RESPONSIVE */
+@media(max-width:760px){
+  .container{padding:18px 13px 105px}
+  .stats{gap:8px}
+  .stat{padding:12px 11px;border-radius:14px}
+  .stat-label{font-size:10px}
+  .stat-value{font-size:22px}
+  .stat-icon{width:25px;height:25px;font-size:13px}
+  .orders{grid-template-columns:1fr}
+  .toolbar{grid-template-columns:minmax(0,1fr) 42px}
+  .toolbar select{grid-column:1/-1;grid-row:2}
+  .welcome h1{font-size:22px}
+  .order-card{padding:15px}
+}
+@media(min-width:761px){
+  .auth-wrap{margin-top:45px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+    transition:none!important;
+  }
+}
+</style>
 </head>
 
 <body>
-  <header class="topbar">
+
+<header class="header-shell" id="header-shell">
+  <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        KopiHub
-        <small>Dashboard Kasir</small>
+        Kopi<span>Hub</span>
+        <small>DASHBOARD OPERASIONAL KASIR</small>
       </div>
-
-      <div class="top-actions">
-        <button class="btn btn-light" id="refresh-btn" type="button">
-          Muat Ulang
-        </button>
-        <button class="btn btn-orange" id="logout-btn" type="button">
-          Keluar
-        </button>
+      <div class="header-right">
+        <span class="header-staff" id="header-staff"></span>
+        <button class="header-icon-btn" id="header-refresh" type="button"
+          aria-label="Muat ulang" title="Muat ulang">↻</button>
       </div>
     </div>
-  </header>
+  </div>
+  <div class="header-subline">SATU PLATFORM, BANYAK CERITA</div>
+</header>
 
-  <main class="container">
-    <section class="welcome">
+<!-- LOGIN -->
+<section class="auth-wrap" id="login-view" hidden>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <strong>Kopi<span>Hub</span></strong>
+      <p>Sistem Kasir Mitra</p>
+    </div>
+
+    <h1>Login Kasir</h1>
+    <p class="auth-desc">
+      Masuk menggunakan identitas kasir dan PIN pribadi yang sudah dibuat.
+    </p>
+
+    <div id="login-notice" class="notice" hidden></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="login-shop">Nama Kedai</label>
+        <input id="login-shop" required autocomplete="organization"
+          placeholder="Contoh: Aroma Coffee">
+      </div>
+      <div class="form-group">
+        <label for="login-name">Nama Kasir</label>
+        <input id="login-name" required autocomplete="name"
+          placeholder="Nama sesuai data Owner">
+      </div>
+      <div class="form-group">
+        <label for="login-code">Cashier ID</label>
+        <input id="login-code" required autocomplete="username"
+          placeholder="Masukkan Cashier ID">
+      </div>
+      <div class="form-group">
+        <label for="login-pin">PIN Pribadi</label>
+        <input id="login-pin" required type="password"
+          inputmode="numeric" pattern="[0-9]{6,8}" minlength="6" maxlength="8"
+          autocomplete="current-password" placeholder="PIN 6–8 digit">
+      </div>
+      <button class="btn btn-green btn-block" id="login-submit" type="submit">
+        Masuk ke Dashboard
+      </button>
+    </form>
+
+    <div class="auth-switch">
+      Belum mengaktifkan identitas kasir?
+      <br>
+      <button class="text-button" id="show-activation" type="button">
+        Aktivasi Kasir Pertama Kali
+      </button>
+    </div>
+  </div>
+  <div class="auth-footer">KopiHub · Sistem operasional mitra</div>
+</section>
+
+<!-- AKTIVASI -->
+<section class="auth-wrap" id="activation-view" hidden>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <strong>Kopi<span>Hub</span></strong>
+      <p>Aktivasi Identitas Kasir</p>
+    </div>
+
+    <h1>Buat PIN Pribadi</h1>
+    <p class="auth-desc">
+      Masukkan informasi dan kode aktivasi yang diberikan Owner kedai.
+      Buat PIN pribadi yang hanya kamu ketahui.
+    </p>
+
+    <div id="activation-notice" class="notice" hidden></div>
+
+    <form id="activation-form">
+      <div class="form-group">
+        <label for="activation-shop">Nama Kedai</label>
+        <input id="activation-shop" required placeholder="Nama kedai">
+      </div>
+      <div class="form-group">
+        <label for="activation-name">Nama Kasir</label>
+        <input id="activation-name" required placeholder="Nama sesuai data Owner">
+      </div>
+      <div class="form-group">
+        <label for="activation-code">Cashier ID</label>
+        <input id="activation-code" required placeholder="Cashier ID">
+      </div>
+      <div class="form-group">
+        <label for="setup-code">Kode Aktivasi dari Owner</label>
+        <input id="setup-code" required autocomplete="one-time-code"
+          placeholder="Masukkan kode aktivasi">
+      </div>
+      <div class="form-group">
+        <label for="new-pin">Buat PIN Pribadi</label>
+        <input id="new-pin" required type="password" inputmode="numeric"
+          pattern="[0-9]{6,8}" minlength="6" maxlength="8"
+          autocomplete="new-password" placeholder="6–8 digit">
+        <div class="pin-hint">Gunakan 6–8 angka. Jangan bagikan PIN kepada siapa pun.</div>
+      </div>
+      <div class="form-group">
+        <label for="confirm-pin">Ulangi PIN</label>
+        <input id="confirm-pin" required type="password" inputmode="numeric"
+          pattern="[0-9]{6,8}" minlength="6" maxlength="8"
+          autocomplete="new-password" placeholder="Ulangi PIN">
+      </div>
+      <button class="btn btn-green btn-block" id="activation-submit" type="submit">
+        Aktifkan Identitas Kasir
+      </button>
+    </form>
+
+    <div class="auth-switch">
+      Sudah memiliki PIN?
+      <br>
+      <button class="text-button" id="show-login" type="button">
+        Kembali ke Login Kasir
+      </button>
+    </div>
+  </div>
+  <div class="auth-footer">KopiHub · Sistem operasional mitra</div>
+</section>
+
+<!-- DASHBOARD -->
+<main class="container" id="dashboard-view" hidden>
+
+  <section class="welcome">
+    <div>
       <h1>Pesanan Kedai</h1>
       <p id="shop-name">Menghubungkan ke kedai...</p>
-    </section>
+      <p id="cashier-name" style="margin-top:3px"></p>
+    </div>
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      Sesi Aktif
+    </div>
+  </section>
 
-    <div id="notice" class="notice" role="status" aria-live="polite">
-      Menghubungkan ke Supabase...
+  <div id="notice" class="notice" role="status" aria-live="polite">
+    Menghubungkan ke sistem kasir...
+  </div>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-top">
+        <div class="stat-label">Pesanan Aktif</div>
+        <div class="stat-icon">▣</div>
+      </div>
+      <div class="stat-value" id="stat-active">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-top">
+        <div class="stat-label">Menunggu Tunai</div>
+        <div class="stat-icon">Rp</div>
+      </div>
+      <div class="stat-value" id="stat-payment">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-top">
+        <div class="stat-label">Tugas Saya</div>
+        <div class="stat-icon">✓</div>
+      </div>
+      <div class="stat-value" id="stat-mine">—</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-heading">
+      <h2 id="list-heading">Daftar Pesanan</h2>
+      <span id="order-count">Memuat...</span>
     </div>
 
-    <section class="stats">
-      <div class="stat">
-        <div class="stat-label">Pesanan Aktif</div>
-        <div class="stat-value" id="stat-active">—</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Menunggu Pembayaran Tunai</div>
-        <div class="stat-value" id="stat-payment">—</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Pesanan Selesai</div>
-        <div class="stat-value" id="stat-completed">—</div>
-      </div>
-    </section>
-
-    <section class="toolbar">
-      <input
-        class="field"
-        id="search"
-        type="search"
-        placeholder="Cari nomor pesanan atau nama pelanggan..."
-        aria-label="Cari pesanan"
-      >
-
+    <div class="toolbar">
+      <input class="field" id="search" type="search"
+        placeholder="Cari nomor pesanan atau meja..."
+        aria-label="Cari pesanan">
+      <button class="refresh-btn" id="refresh-btn" type="button"
+        aria-label="Muat ulang pesanan">↻</button>
       <select class="field" id="status-filter" aria-label="Filter status">
         <option value="all">Semua Status</option>
         <option value="awaiting_confirmation">Pesanan Baru</option>
-        <option value="pending">Diterima</option>
         <option value="processing">Diproses</option>
         <option value="ready_for_delivery">Siap Diantar</option>
-        <option value="completed">Selesai</option>
       </select>
-
-      <button class="btn btn-green" id="search-btn" type="button">
-        Cari
-      </button>
-    </section>
+    </div>
 
     <section class="orders" id="orders">
       <div class="empty">Sedang memuat pesanan...</div>
     </section>
+  </section>
 
-    <div class="footer">
-      KopiHub · Dashboard operasional kasir
-    </div>
-  </main>
+  <div class="footer">
+    KopiHub · Dashboard operasional kasir
+    <br>
+    <button class="text-button" id="end-shift-btn" type="button"
+      style="margin-top:10px">Akhiri Shift / Keluar</button>
+  </div>
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottom-nav" hidden aria-label="Navigasi pesanan">
+  <div class="nav-inner">
+    <button class="nav-btn active" data-filter="all" type="button">
+      <span class="nav-icon">▦</span>
+      <span>Semua</span>
+    </button>
+    <button class="nav-btn" data-filter="new" type="button">
+      <span class="nav-icon">＋</span>
+      <span>Pesanan Baru</span>
+    </button>
+    <button class="nav-btn" data-filter="mine" type="button">
+      <span class="nav-icon">✓</span>
+      <span>Tugas Saya</span>
+    </button>
+    <button class="nav-btn" data-filter="payment" type="button">
+      <span class="nav-icon">Rp</span>
+      <span>Pembayaran</span>
+    </button>
+  </div>
+</nav>
 
-  <script>
-    "use strict";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    /*
-      PENTING:
-      Pertahankan URL dan publishable key Supabase milikmu.
-      Jangan pernah menggunakan service_role key di browser.
-    */
-    const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+<script>
+"use strict";
 
-    const db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
+/*
+  KopiHub Cashier Dashboard
+  Backend: cashier-access / individual-cashier-v3-rpc
+
+  Browser hanya menggunakan publishable key.
+  PIN, sesi, otorisasi dan perubahan pesanan diverifikasi oleh Edge Function.
+*/
+
+const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+const SUPABASE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+const CASHIER_FUNCTION_URL =
+  SUPABASE_URL + "/functions/v1/cashier-access";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
+);
+
+const SESSION_STORAGE_KEY = "kopihubCashierSession";
+
+const STATUS_LABELS = {
+  awaiting_confirmation: "Pesanan Baru",
+  processing: "Diproses",
+  ready_for_delivery: "Siap Diantar",
+  completed: "Selesai",
+  cancelled: "Dibatalkan"
+};
+
+const NEXT_STATUS = {
+  awaiting_confirmation: "processing",
+  processing: "ready_for_delivery",
+  ready_for_delivery: "completed"
+};
+
+const STATUS_BUTTON_LABELS = {
+  awaiting_confirmation: "Mulai Proses",
+  processing: "Tandai Siap Diantar",
+  ready_for_delivery: "Selesaikan Pesanan"
+};
+
+let cashierSession = null;
+let allOrders = [];
+let busyOrderIds = new Set();
+let loading = false;
+let activeFilter = "all";
+let refreshTimer = null;
+
+const el = id => document.getElementById(id);
+
+function escapeHTML(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function rupiah(value) {
+  return new Intl.NumberFormat("id-ID",{
+    style:"currency",
+    currency:"IDR",
+    maximumFractionDigits:0
+  }).format(Number(value)||0);
+}
+
+function readableDate(value) {
+  if(!value) return "Waktu tidak tersedia";
+  const date = new Date(value);
+  if(Number.isNaN(date.getTime())) return "Waktu tidak tersedia";
+  return date.toLocaleString("id-ID",{
+    dateStyle:"medium",
+    timeStyle:"short"
+  });
+}
+
+function showNotice(message,isError=false) {
+  const notice = el("notice");
+  notice.textContent = message;
+  notice.className = isError ? "notice error" : "notice";
+}
+
+function showAuthNotice(id,message,isError=false) {
+  const notice = el(id);
+  notice.hidden = false;
+  notice.textContent = message;
+  notice.className = isError ? "notice error" : "notice";
+}
+
+function setBusy(buttonId,busy,label) {
+  const button = el(buttonId);
+  if(!button) return;
+  button.disabled = busy;
+  if(busy) {
+    button.dataset.originalText = button.textContent;
+    button.textContent = label || "Memproses...";
+  } else {
+    button.textContent = button.dataset.originalText || button.textContent;
+  }
+}
+
+/* Semua permintaan kasir melalui Edge Function. */
+async function cashierAPI(action,payload={}) {
+  const response = await fetch(CASHIER_FUNCTION_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey":SUPABASE_KEY
+    },
+    body:JSON.stringify({
+      action,
+      ...payload
+    })
+  });
+
+  let result;
+  try {
+    result = await response.json();
+  } catch(error) {
+    throw new Error("Respons server tidak dapat dibaca.");
+  }
+
+  if(!response.ok || result.success === false) {
+    throw new Error(
+      result.message ||
+      result.error ||
+      "Permintaan ke sistem kasir gagal."
     );
+  }
 
-    const STATUS_LABELS = {
-      awaiting_confirmation: "Pesanan Baru",
-      pending: "Diterima",
-      processing: "Diproses",
-      ready_for_delivery: "Siap Diantar",
-      completed: "Selesai"
-    };
+  return result;
+}
 
-    const NEXT_STATUS = {
-      awaiting_confirmation: "pending",
-      pending: "processing",
-      processing: "ready_for_delivery",
-      ready_for_delivery: "completed"
-    };
-
-    const STATUS_BUTTON_LABELS = {
-      awaiting_confirmation: "Terima Pesanan",
-      pending: "Mulai Proses",
-      processing: "Tandai Siap Diantar",
-      ready_for_delivery: "Selesaikan"
-    };
-
-    const PAYMENT_WAITING = [
-      "awaiting_cashier",
-      "awaiting",
-      "pending"
-    ];
-
-    let currentUser = null;
-    let activeShop = null;
-    let allOrders = [];
-    let busyOrderIds = new Set();
-    let loading = false;
-
-    const el = (id) => document.getElementById(id);
-
-    function escapeHTML(value) {
-      return String(value == null ? "" : value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function rupiah(value) {
-      return new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        maximumFractionDigits: 0
-      }).format(Number(value) || 0);
-    }
-
-    function readableDate(value) {
-      if (!value) return "Waktu tidak tersedia";
-
-      const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return "Waktu tidak tersedia";
-
-      return date.toLocaleString("id-ID", {
-        dateStyle: "medium",
-        timeStyle: "short"
-      });
-    }
-
-    function showNotice(message, isError) {
-      const notice = el("notice");
-      notice.textContent = message;
-      notice.className = isError ? "notice error" : "notice";
-    }
-
-    function normalizeStatus(order) {
-      const orderStatus = String(order.order_status || "")
-        .trim().toLowerCase();
-
-      const legacyStatus = String(order.status || "")
-        .trim().toLowerCase();
-
-      /*
-        order_status menjadi sumber status utama setelah pembaruan.
-        Bila belum tersedia, gunakan status lama.
-      */
-      return orderStatus || legacyStatus || "pending";
-    }
-
-    function normalizeOrder(order) {
-      return {
-        ...order,
-        order_status: normalizeStatus(order),
-        items: normalizeItems(order.items)
-      };
-    }
-
-    function normalizeItems(items) {
-      if (Array.isArray(items)) return items;
-
-      if (typeof items === "string") {
-        try {
-          const parsed = JSON.parse(items);
-          return Array.isArray(parsed) ? parsed : [];
-        } catch (error) {
-          return [];
-        }
-      }
-
+function normalizeItems(items) {
+  if(Array.isArray(items)) return items;
+  if(typeof items === "string") {
+    try {
+      const parsed = JSON.parse(items);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch(error) {
       return [];
     }
+  }
+  return [];
+}
 
-    function itemName(item) {
-      return item.name || item.product_name || item.title || "Menu";
-    }
+function itemName(item) {
+  return item.name || item.product_name || item.title || "Menu";
+}
 
-    function itemQty(item) {
-      return Number(item.qty || item.quantity || 1);
-    }
+function itemQty(item) {
+  return Number(item.qty || item.quantity || 1);
+}
 
-    function itemPrice(item) {
-      return Number(item.price || item.unit_price || 0);
-    }
+function itemPrice(item) {
+  return Number(item.price || item.unit_price || 0);
+}
 
-    function isCashOrder(order) {
-      const method = String(order.payment_method || "").toLowerCase();
-      return ["cashier", "cash", "tunai", "pay_at_counter"].includes(method);
-    }
+function orderNumber(order) {
+  return order.order_code ||
+    order.order_number ||
+    String(order.id || "").slice(0,8);
+}
 
-    function isWaitingPayment(order) {
-      const status = String(order.payment_status || "").toLowerCase();
+function orderTotal(order) {
+  return Number(
+    order.total_amount != null
+      ? order.total_amount
+      : order.total
+  ) || 0;
+}
 
-      return isCashOrder(order) &&
-        PAYMENT_WAITING.includes(status);
-    }
+function getOrderNote(order) {
+  return order.order_note || order.notes || "";
+}
 
-    function paymentLabel(order) {
-      const status = String(order.payment_status || "").toLowerCase();
+function isCashOrder(order) {
+  const method = String(order.payment_method || "").toLowerCase();
+  return ["cashier","cash","tunai","pay_at_counter"].includes(method);
+}
 
-      if (["paid", "success", "succeeded", "lunas"].includes(status)) {
-        return "Sudah Dibayar";
+function isPaid(order) {
+  const status = String(order.payment_status || "").toLowerCase();
+  return ["paid","success","succeeded","lunas"].includes(status);
+}
+
+function isWaitingPayment(order) {
+  const status = String(order.payment_status || "").toLowerCase();
+  return isCashOrder(order) &&
+    ["awaiting_cashier","awaiting","pending"].includes(status);
+}
+
+/*
+  order_status merupakan status utama.
+  Pemetaan legacy hanya untuk kompatibilitas data lama.
+*/
+function normalizeStatus(order) {
+  const current = String(order.order_status || "").toLowerCase().trim();
+  if(current) return current;
+
+  const legacy = String(order.status || "").toLowerCase().trim();
+  const mapping = {
+    pending:"awaiting_confirmation",
+    confirmed:"awaiting_confirmation",
+    preparing:"processing",
+    ready:"ready_for_delivery",
+    completed:"completed",
+    cancelled:"cancelled"
+  };
+  return mapping[legacy] || "awaiting_confirmation";
+}
+
+function normalizeOrder(order) {
+  return {
+    ...order,
+    order_status:normalizeStatus(order),
+    items:normalizeItems(order.items)
+  };
+}
+
+function assignmentOf(order) {
+  return order.cashierAssignment ||
+    order.cashier_assignment ||
+    null;
+}
+
+function isMine(order) {
+  const assignment = assignmentOf(order);
+  return Boolean(assignment && assignment.isMine);
+}
+
+function orderAssignmentLabel(order) {
+  const assignment = assignmentOf(order);
+  if(!assignment) {
+    return "Belum diterima oleh kasir";
+  }
+  if(assignment.isMine) {
+    return "Pesanan ditangani oleh kamu";
+  }
+  return "Sedang ditangani kasir lain";
+}
+
+function orderVisibleByFilter(order) {
+  if(activeFilter === "new") {
+    return order.order_status === "awaiting_confirmation";
+  }
+  if(activeFilter === "mine") {
+    return isMine(order);
+  }
+  if(activeFilter === "payment") {
+    return isWaitingPayment(order);
+  }
+  return true;
+}
+
+function showView(view) {
+  el("login-view").hidden = view !== "login";
+  el("activation-view").hidden = view !== "activation";
+  el("dashboard-view").hidden = view !== "dashboard";
+  el("bottom-nav").hidden = view !== "dashboard";
+  el("header-refresh").hidden = view !== "dashboard";
+  el("header-staff").textContent =
+    view === "dashboard" && cashierSession
+      ? cashierSession.session.staff_name || ""
+      : "";
+}
+
+function saveSession(session) {
+  cashierSession = session;
+  sessionStorage.setItem(
+    SESSION_STORAGE_KEY,
+    JSON.stringify(session)
+  );
+}
+
+function clearSession() {
+  cashierSession = null;
+  sessionStorage.removeItem(SESSION_STORAGE_KEY);
+  allOrders = [];
+  if(refreshTimer) {
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+  }
+}
+
+function restoreSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(!parsed.sessionToken || !parsed.shop || !parsed.session) return null;
+
+    if(parsed.session.expires_at) {
+      const expiry = new Date(parsed.session.expires_at).getTime();
+      if(!Number.isNaN(expiry) && expiry <= Date.now()) {
+        sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        return null;
       }
+    }
+    return parsed;
+  } catch(error) {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    return null;
+  }
+}
 
-      if (isWaitingPayment(order)) {
-        return "Menunggu Kasir";
-      }
+/* AKTIVASI KASIR */
+el("show-activation").addEventListener("click",()=>{
+  el("activation-notice").hidden = true;
+  showView("activation");
+});
 
-      if (status === "failed") return "Pembayaran Gagal";
+el("show-login").addEventListener("click",()=>{
+  el("login-notice").hidden = true;
+  showView("login");
+});
 
-      if (isCashOrder(order)) return "Pembayaran Tunai";
+el("activation-form").addEventListener("submit",async event=>{
+  event.preventDefault();
 
-      return order.payment_status || "Status pembayaran belum tersedia";
+  const shopName = el("activation-shop").value.trim();
+  const staffName = el("activation-name").value.trim();
+  const staffCode = el("activation-code").value.trim();
+  const setupCode = el("setup-code").value.trim();
+  const pin = el("new-pin").value;
+  const pinConfirmation = el("confirm-pin").value;
+
+  if(!/^[0-9]{6,8}$/.test(pin)) {
+    showAuthNotice(
+      "activation-notice",
+      "PIN harus terdiri dari 6–8 angka.",
+      true
+    );
+    return;
+  }
+
+  if(pin !== pinConfirmation) {
+    showAuthNotice(
+      "activation-notice",
+      "Konfirmasi PIN tidak sama.",
+      true
+    );
+    return;
+  }
+
+  setBusy("activation-submit",true,"Mengaktifkan...");
+
+  try {
+    const result = await cashierAPI("set_pin",{
+      shopName,
+      staffName,
+      staffCode,
+      setupCode,
+      pin,
+      pinConfirmation
+    });
+
+    showAuthNotice(
+      "activation-notice",
+      result.message || "Aktivasi berhasil. Silakan login menggunakan PIN pribadi."
+    );
+
+    el("login-shop").value = shopName;
+    el("login-name").value = staffName;
+    el("login-code").value = staffCode;
+    el("login-pin").value = "";
+
+    el("activation-form").reset();
+    setTimeout(()=>showView("login"),1200);
+
+  } catch(error) {
+    showAuthNotice(
+      "activation-notice",
+      error.message || "Aktivasi gagal.",
+      true
+    );
+  } finally {
+    setBusy("activation-submit",false);
+  }
+});
+
+/* LOGIN KASIR */
+el("login-form").addEventListener("submit",async event=>{
+  event.preventDefault();
+
+  const shopName = el("login-shop").value.trim();
+  const staffName = el("login-name").value.trim();
+  const staffCode = el("login-code").value.trim();
+  const pin = el("login-pin").value;
+
+  if(!/^[0-9]{6,8}$/.test(pin)) {
+    showAuthNotice(
+      "login-notice",
+      "PIN harus terdiri dari 6–8 angka.",
+      true
+    );
+    return;
+  }
+
+  setBusy("login-submit",true,"Memverifikasi...");
+
+  try {
+    const result = await cashierAPI("start_shift",{
+      shopName,
+      staffName,
+      staffCode,
+      pin
+    });
+
+    if(!result.sessionToken || !result.session || !result.shop) {
+      throw new Error("Respons login tidak lengkap dari server.");
     }
 
-    function orderNumber(order) {
-      return order.order_code ||
-        order.order_number ||
-        String(order.id || "").slice(0, 8);
+    saveSession({
+      sessionToken:result.sessionToken,
+      session:result.session,
+      shop:result.shop
+    });
+
+    el("login-pin").value = "";
+    await enterDashboard();
+
+  } catch(error) {
+    showAuthNotice(
+      "login-notice",
+      error.message || "Login gagal. Periksa data kasir.",
+      true
+    );
+  } finally {
+    setBusy("login-submit",false);
+  }
+});
+
+/* DASHBOARD */
+async function enterDashboard() {
+  if(!cashierSession) {
+    showView("login");
+    return;
+  }
+
+  showView("dashboard");
+
+  el("shop-name").textContent =
+    "Kedai aktif: " + (cashierSession.shop.name || "Kedai");
+
+  el("cashier-name").textContent =
+    "Kasir: " +
+    (cashierSession.session.staff_name || "Kasir");
+
+  showNotice("Memverifikasi sesi kasir dan memuat pesanan...");
+
+  await loadOrders();
+
+  if(refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(()=>{
+    if(cashierSession && !loading) loadOrders(true);
+  },30000);
+}
+
+/* MEMUAT PESANAN MELALUI EDGE FUNCTION */
+async function loadOrders(silent=false) {
+  if(!cashierSession || loading) return;
+
+  loading = true;
+  el("refresh-btn").disabled = true;
+  el("header-refresh").disabled = true;
+
+  try {
+    const result = await cashierAPI("list_orders",{
+      sessionToken:cashierSession.sessionToken
+    });
+
+    if(!Array.isArray(result.orders)) {
+      throw new Error("Data pesanan dari server tidak sesuai format.");
     }
 
-    function orderTotal(order) {
-      const value = order.total_amount != null
-        ? order.total_amount
-        : order.total;
+    allOrders = result.orders.map(normalizeOrder);
+    updateStats();
+    renderOrders();
 
-      return Number(value) || 0;
-    }
-
-    function getOrderNote(order) {
-      return order.order_note || order.notes || "";
-    }
-
-    async function loadShop() {
-      const { data, error } = await db
-        .from("kh_shop_members")
-        .select("shop_id, role, kh_shops(id, name, slug)")
-        .eq("user_id", currentUser.id);
-
-      if (error) {
-        throw new Error(
-          "Tidak bisa membaca keanggotaan kedai: " + error.message
-        );
-      }
-
-      const memberships = (data || []).filter(function (membership) {
-        const role = String(membership.role || "").toLowerCase();
-        return ["owner", "manager", "cashier", "kasir"].includes(role) &&
-          membership.kh_shops;
-      });
-
-      if (!memberships.length) {
-        throw new Error(
-          "Akun ini belum terhubung ke kedai. Periksa data kh_shop_members."
-        );
-      }
-
-      /*
-        Jika akun memiliki beberapa kedai, versi ini menggunakan
-        kedai pertama yang ditemukan.
-      */
-      activeShop = memberships[0].kh_shops;
-      el("shop-name").textContent =
-        "Kedai aktif: " + activeShop.name;
-    }
-
-    async function loadOrders() {
-      if (loading) return;
-      loading = true;
-
-      el("refresh-btn").disabled = true;
-
-      try {
-        const { data, error } = await db
-          .from("kh_orders")
-          .select(
-            "id, shop_id, order_code, order_number, customer_name, " +
-            "customer_phone, order_type, table_label, table_number, " +
-            "status, subtotal, total_amount, created_at, items, " +
-            "payment_method, payment_status, order_status, " +
-            "order_note, notes, tax, total"
-          )
-          .eq("shop_id", activeShop.id)
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          throw new Error("Gagal memuat pesanan: " + error.message);
-        }
-
-        allOrders = (data || []).map(normalizeOrder);
-        updateStats();
-        renderOrders();
-
-        showNotice(
-          "Terhubung ke Supabase. " +
-          allOrders.length + " pesanan ditemukan.",
-          false
-        );
-      } catch (error) {
-        showNotice(error.message || "Gagal memuat pesanan.", true);
-        el("orders").innerHTML =
-          '<div class="empty">Pesanan gagal dimuat. Periksa pesan di atas.</div>';
-      } finally {
-        loading = false;
-        el("refresh-btn").disabled = false;
-      }
-    }
-
-    function updateStats() {
-      const activeCount = allOrders.filter(function (order) {
-        return order.order_status !== "completed";
-      }).length;
-
-      const paymentCount = allOrders.filter(isWaitingPayment).length;
-
-      const completedCount = allOrders.filter(function (order) {
-        return order.order_status === "completed";
-      }).length;
-
-      el("stat-active").textContent = activeCount;
-      el("stat-payment").textContent = paymentCount;
-      el("stat-completed").textContent = completedCount;
-    }
-
-    function renderItems(items) {
-      if (!items.length) {
-        return '<div class="item-row"><span>Rincian menu tidak tersedia</span></div>';
-      }
-
-      return items.map(function (item) {
-        const name = escapeHTML(itemName(item));
-        const qty = itemQty(item);
-        const price = itemPrice(item);
-
-        return (
-          '<div class="item-row">' +
-            '<span>' + name + ' × ' + qty + '</span>' +
-            '<span>' + rupiah(price * qty) + '</span>' +
-          '</div>'
-        );
-      }).join("");
-    }
-
-    function renderOrder(order) {
-      const status = order.order_status;
-      const nextStatus = NEXT_STATUS[status];
-      const statusLabel = STATUS_LABELS[status] || status;
-      const isBusy = busyOrderIds.has(String(order.id));
-      const note = getOrderNote(order);
-
-      const paymentStatus = String(
-        order.payment_status || ""
-      ).toLowerCase();
-
-      const isPaid = [
-        "paid", "success", "succeeded", "lunas"
-      ].includes(paymentStatus);
-
-      const statusButton = nextStatus
-        ? '<button class="btn btn-green" data-status="' +
-          escapeHTML(order.id) + '"' +
-          (isBusy ? " disabled" : "") + '>' +
-          escapeHTML(STATUS_BUTTON_LABELS[status] || "Ubah Status") +
-          '</button>'
-        : "";
-
-      const paymentButton = isWaitingPayment(order)
-        ? '<button class="btn btn-orange" data-payment="' +
-          escapeHTML(order.id) + '"' +
-          (isBusy ? " disabled" : "") + '>' +
-          'Konfirmasi Tunai</button>'
-        : "";
-
-      const table = order.table_label ||
-        order.table_number ||
-        "—";
-
-      const customer = order.customer_name || "Pelanggan";
-      const phone = order.customer_phone || "—";
-
-      return (
-        '<article class="order-card">' +
-          '<div class="order-head">' +
-            '<div>' +
-              '<div class="order-number">#' +
-                escapeHTML(orderNumber(order)) +
-              '</div>' +
-              '<div class="order-time">' +
-                escapeHTML(readableDate(order.created_at)) +
-              '</div>' +
-            '</div>' +
-            '<span class="badge ' + escapeHTML(status) + '">' +
-              escapeHTML(statusLabel) +
-            '</span>' +
-          '</div>' +
-
-          '<div class="info-grid">' +
-            '<div>' +
-              '<div class="info-label">Pelanggan</div>' +
-              '<div class="info-value">' + escapeHTML(customer) + '</div>' +
-            '</div>' +
-            '<div>' +
-              '<div class="info-label">Nomor telepon</div>' +
-              '<div class="info-value">' + escapeHTML(phone) + '</div>' +
-            '</div>' +
-            '<div>' +
-              '<div class="info-label">Meja</div>' +
-              '<div class="info-value">' + escapeHTML(table) + '</div>' +
-            '</div>' +
-            '<div>' +
-              '<div class="info-label">Jenis pesanan</div>' +
-              '<div class="info-value">' +
-                escapeHTML(order.order_type || "—") +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-
-          '<div class="items">' +
-            '<div class="items-title">Rincian Pesanan</div>' +
-            renderItems(order.items) +
-          '</div>' +
-
-          (note
-            ? '<div class="order-note"><strong>Catatan:</strong> ' +
-              escapeHTML(note) + '</div>'
-            : '') +
-
-          '<div class="total-row">' +
-            '<span class="total-label">Total</span>' +
-            '<span class="total-price">' +
-              rupiah(orderTotal(order)) +
-            '</span>' +
-          '</div>' +
-
-          '<div class="payment-line">' +
-            'Pembayaran: <span class="' +
-              (isPaid ? "payment-paid" : "payment-unpaid") + '">' +
-              escapeHTML(paymentLabel(order)) +
-            '</span>' +
-          '</div>' +
-
-          '<div class="order-actions">' +
-            statusButton +
-            paymentButton +
-          '</div>' +
-        '</article>'
+    if(!silent) {
+      showNotice(
+        "Terhubung ke sistem kasir. " +
+        allOrders.length + " pesanan diterima dari server."
       );
     }
 
-    function renderOrders() {
-      const search = el("search").value.trim().toLowerCase();
-      const filter = el("status-filter").value;
-
-      const visibleOrders = allOrders.filter(function (order) {
-        const matchesSearch = [
-          orderNumber(order),
-          order.customer_name,
-          order.customer_phone,
-          order.table_label,
-          order.table_number
-        ].some(function (value) {
-          return String(value || "").toLowerCase().includes(search);
-        });
-
-        const matchesStatus = filter === "all" ||
-          order.order_status === filter;
-
-        return matchesSearch && matchesStatus;
-      });
-
-      if (!visibleOrders.length) {
-        el("orders").innerHTML =
-          '<div class="empty">' +
-            'Tidak ada pesanan yang cocok dengan pencarian atau filter ini.' +
-          '</div>';
-        return;
-      }
-
-      el("orders").innerHTML = visibleOrders
-        .map(renderOrder)
-        .join("");
-    }
-
-    async function changeOrderStatus(orderId) {
-      const order = allOrders.find(function (item) {
-        return String(item.id) === String(orderId);
-      });
-
-      if (!order) {
-        showNotice("Pesanan tidak ditemukan. Muat ulang dashboard.", true);
-        return;
-      }
-
-      const currentStatus = order.order_status;
-      const nextStatus = NEXT_STATUS[currentStatus];
-
-      if (!nextStatus) {
-        showNotice("Pesanan ini tidak memiliki status berikutnya.", true);
-        return;
-      }
-
-      if (busyOrderIds.has(String(orderId))) return;
-
-      busyOrderIds.add(String(orderId));
-      renderOrders();
-
-      try {
-        /*
-          Kolom order_status diperbarui sesuai struktur yang sudah
-          digunakan dashboard. Kolom status lama tidak diubah di sini.
-        */
-        const { data, error } = await db
-          .from("kh_orders")
-          .update({ order_status: nextStatus })
-          .eq("id", order.id)
-          .eq("shop_id", activeShop.id)
-          .select("id, order_status")
-          .maybeSingle();
-
-        if (error) {
-          throw new Error(
-            "Status gagal diperbarui: " + error.message
-          );
-        }
-
-        if (!data) {
-          throw new Error(
-            "Tidak ada pesanan yang diperbarui. Periksa izin RLS Supabase " +
-            "dan pastikan akun kasir memiliki akses ke kedai ini."
-          );
-        }
-
-        showNotice(
-          "Status pesanan #" + orderNumber(order) +
-          " berhasil diubah menjadi " +
-          (STATUS_LABELS[data.order_status] || data.order_status) + ".",
-          false
-        );
-
-        await loadOrders();
-      } catch (error) {
-        showNotice(error.message || "Gagal mengubah status pesanan.", true);
-      } finally {
-        busyOrderIds.delete(String(orderId));
-        renderOrders();
-      }
-    }
-
-    async function confirmCashPayment(orderId) {
-      const order = allOrders.find(function (item) {
-        return String(item.id) === String(orderId);
-      });
-
-      if (!order) {
-        showNotice("Pesanan tidak ditemukan.", true);
-        return;
-      }
-
-      if (!isWaitingPayment(order)) {
-        showNotice(
-          "Pesanan ini tidak lagi menunggu konfirmasi pembayaran tunai.",
-          true
-        );
-        return;
-      }
-
-      const confirmed = window.confirm(
-        "Pastikan uang tunai benar-benar sudah diterima.\n\n" +
-        "Pesanan: #" + orderNumber(order) + "\n" +
-        "Total: " + rupiah(orderTotal(order)) + "\n\n" +
-        "Konfirmasi pembayaran sekarang?"
+  } catch(error) {
+    if(
+      /session|expired|sesi|kasir tidak aktif|unauthorized/i.test(error.message)
+    ) {
+      showNotice(
+        "Sesi kasir tidak lagi aktif. Silakan login kembali.",
+        true
       );
-
-      if (!confirmed) return;
-      if (busyOrderIds.has(String(orderId))) return;
-
-      busyOrderIds.add(String(orderId));
-      renderOrders();
-
-      try {
-        const { data, error } = await db
-          .from("kh_orders")
-          .update({ payment_status: "paid" })
-          .eq("id", order.id)
-          .eq("shop_id", activeShop.id)
-          .in("payment_status", PAYMENT_WAITING)
-          .select("id, payment_status")
-          .maybeSingle();
-
-        if (error) {
-          throw new Error(
-            "Konfirmasi pembayaran gagal: " + error.message
-          );
-        }
-
-        if (!data) {
-          throw new Error(
-            "Pembayaran tidak diperbarui. Periksa izin UPDATE payment_status, " +
-            "kebijakan RLS, dan status pembayaran pesanan."
-          );
-        }
-
-        showNotice(
-          "Pembayaran tunai pesanan #" + orderNumber(order) +
-          " berhasil dikonfirmasi.",
-          false
-        );
-
-        await loadOrders();
-      } catch (error) {
-        showNotice(error.message || "Gagal mengonfirmasi pembayaran.", true);
-      } finally {
-        busyOrderIds.delete(String(orderId));
-        renderOrders();
-      }
-    }
-
-    async function startDashboard() {
-      try {
-        if (!window.supabase) {
-          throw new Error(
-            "Library Supabase gagal dimuat. Periksa koneksi internet lalu muat ulang."
-          );
-        }
-
-        const { data, error } = await db.auth.getSession();
-
-        if (error) throw error;
-
-        currentUser = data.session ? data.session.user : null;
-
-        if (!currentUser) {
-          showNotice(
-            "Kamu belum login. Tekan Keluar untuk kembali atau buka halaman login.",
-            true
-          );
-
-          el("orders").innerHTML =
-            '<div class="empty">' +
-              'Sesi login tidak ditemukan. Silakan login terlebih dahulu.' +
-              '<br><br><a href="akun.html">Buka halaman login</a>' +
-            '</div>';
-
-          return;
-        }
-
-        await loadShop();
-        await loadOrders();
-      } catch (error) {
-        showNotice(error.message || "Dashboard gagal dimulai.", true);
+      clearSession();
+      showView("login");
+    } else {
+      showNotice(
+        error.message || "Gagal memuat pesanan.",
+        true
+      );
+      if(!allOrders.length) {
         el("orders").innerHTML =
-          '<div class="empty">Dashboard belum dapat digunakan. Periksa pesan di atas.</div>';
+          '<div class="empty">Pesanan belum dapat dimuat. Periksa koneksi dan status sesi.</div>';
       }
     }
+  } finally {
+    loading = false;
+    el("refresh-btn").disabled = false;
+    el("header-refresh").disabled = false;
+  }
+}
 
-    el("orders").addEventListener("click", function (event) {
-      const statusButton = event.target.closest("[data-status]");
-      const paymentButton = event.target.closest("[data-payment]");
+function updateStats() {
+  const active = allOrders.filter(order=>
+    !["completed","cancelled"].includes(order.order_status)
+  ).length;
 
-      if (statusButton) {
-        changeOrderStatus(statusButton.dataset.status);
-      } else if (paymentButton) {
-        confirmCashPayment(paymentButton.dataset.payment);
-      }
+  const payment = allOrders.filter(order=>
+    isWaitingPayment(order) && isMine(order)
+  ).length;
+
+  const mine = allOrders.filter(order=>
+    isMine(order) &&
+    !["completed","cancelled"].includes(order.order_status)
+  ).length;
+
+  el("stat-active").textContent = active;
+  el("stat-payment").textContent = payment;
+  el("stat-mine").textContent = mine;
+}
+
+/* TAMPILAN PESANAN */
+function renderItems(items) {
+  if(!items.length) {
+    return '<div class="item-row"><span>Rincian menu tidak tersedia</span></div>';
+  }
+
+  return items.map(item=>{
+    const name = escapeHTML(itemName(item));
+    const qty = itemQty(item);
+    const price = itemPrice(item);
+
+    return (
+      '<div class="item-row">' +
+        '<span>' + name + ' × ' + qty + '</span>' +
+        '<span>' + rupiah(price * qty) + '</span>' +
+      '</div>'
+    );
+  }).join("");
+}
+
+function renderOrder(order) {
+  const status = order.order_status;
+  const mine = isMine(order);
+  const assignment = assignmentOf(order);
+  const busy = busyOrderIds.has(String(order.id));
+  const note = getOrderNote(order);
+
+  let actions = "";
+
+  if(status === "awaiting_confirmation" && !assignment) {
+    actions +=
+      '<button class="btn btn-green" data-accept="' +
+      escapeHTML(order.id) + '"' +
+      (busy ? " disabled" : "") +
+      '>Terima Pesanan</button>';
+  }
+
+  if(mine && NEXT_STATUS[status]) {
+    actions +=
+      '<button class="btn btn-green" data-status="' +
+      escapeHTML(order.id) + '"' +
+      (busy ? " disabled" : "") +
+      '>' +
+      escapeHTML(STATUS_BUTTON_LABELS[status]) +
+      '</button>';
+  }
+
+  if(mine && isWaitingPayment(order)) {
+    actions +=
+      '<button class="btn btn-orange" data-payment="' +
+      escapeHTML(order.id) + '"' +
+      (busy ? " disabled" : "") +
+      '>Konfirmasi Tunai</button>';
+  }
+
+  if(mine && !["completed","cancelled"].includes(status)) {
+    actions +=
+      '<button class="btn btn-light" data-handover="' +
+      escapeHTML(order.id) + '"' +
+      (busy ? " disabled" : "") +
+      '>Serah Terima</button>';
+  }
+
+  const assignmentClass = mine ? "assignment mine" : "assignment";
+  const paymentText = isPaid(order)
+    ? "Sudah Dibayar"
+    : isWaitingPayment(order)
+      ? "Menunggu Konfirmasi Kasir"
+      : (order.payment_status || "Belum tersedia");
+
+  const paymentClass = isPaid(order)
+    ? "payment-paid"
+    : "payment-unpaid";
+
+  const table = order.table_label || order.table_number || "—";
+
+  return (
+    '<article class="order-card">' +
+      '<div class="order-head">' +
+        '<div>' +
+          '<div class="order-number">#' +
+            escapeHTML(orderNumber(order)) +
+          '</div>' +
+          '<div class="order-time">' +
+            escapeHTML(readableDate(order.created_at)) +
+          '</div>' +
+        '</div>' +
+        '<span class="badge ' + escapeHTML(status) + '">' +
+          escapeHTML(STATUS_LABELS[status] || status) +
+        '</span>' +
+      '</div>' +
+
+      '<div class="' + assignmentClass + '">' +
+        escapeHTML(orderAssignmentLabel(order)) +
+      '</div>' +
+
+      '<div class="info-grid">' +
+        '<div>' +
+          '<div class="info-label">Meja</div>' +
+          '<div class="info-value">' + escapeHTML(table) + '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div class="info-label">Jenis Pesanan</div>' +
+          '<div class="info-value">' +
+            escapeHTML(order.order_type || "—") +
+          '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div class="info-label">Nomor Pesanan</div>' +
+          '<div class="info-value">' +
+            escapeHTML(orderNumber(order)) +
+          '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div class="info-label">Pembayaran</div>' +
+          '<div class="info-value">' +
+            escapeHTML(order.payment_method || "—") +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="items">' +
+        '<div class="items-title">Rincian Pesanan</div>' +
+        renderItems(order.items) +
+      '</div>' +
+
+      (note
+        ? '<div class="order-note"><strong>Catatan:</strong> ' +
+          escapeHTML(note) + '</div>'
+        : '') +
+
+      '<div class="total-row">' +
+        '<span class="total-label">Total Pesanan</span>' +
+        '<span class="total-price">' +
+          rupiah(orderTotal(order)) +
+        '</span>' +
+      '</div>' +
+
+      '<div class="payment-line">' +
+        'Status pembayaran: <span class="' + paymentClass + '">' +
+          escapeHTML(paymentText) +
+        '</span>' +
+      '</div>' +
+
+      (actions
+        ? '<div class="order-actions">' + actions + '</div>'
+        : '') +
+    '</article>'
+  );
+}
+
+function renderOrders() {
+  if(!cashierSession) return;
+
+  const search = el("search").value.trim().toLowerCase();
+  const statusFilter = el("status-filter").value;
+
+  const visible = allOrders.filter(order=>{
+    const matchesSearch = [
+      orderNumber(order),
+      order.table_label,
+      order.table_number,
+      order.order_type
+    ].some(value=>
+      String(value || "").toLowerCase().includes(search)
+    );
+
+    const matchesStatus =
+      statusFilter === "all" ||
+      order.order_status === statusFilter;
+
+    return matchesSearch &&
+      matchesStatus &&
+      orderVisibleByFilter(order);
+  });
+
+  el("order-count").textContent =
+    visible.length + " pesanan";
+
+  if(!visible.length) {
+    el("orders").innerHTML =
+      '<div class="empty">' +
+      'Tidak ada pesanan pada kategori ini.' +
+      '</div>';
+    return;
+  }
+
+  el("orders").innerHTML = visible.map(renderOrder).join("");
+}
+
+/* MENERIMA PESANAN */
+async function acceptOrder(orderId) {
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+  if(!order || busyOrderIds.has(String(orderId))) return;
+
+  busyOrderIds.add(String(orderId));
+  renderOrders();
+
+  try {
+    await cashierAPI("accept_order",{
+      sessionToken:cashierSession.sessionToken,
+      orderId:order.id
     });
 
-    el("refresh-btn").addEventListener("click", loadOrders);
+    showNotice(
+      "Pesanan #" + orderNumber(order) +
+      " berhasil diterima dan menjadi tanggung jawab kamu."
+    );
 
-    el("search-btn").addEventListener("click", renderOrders);
-    el("search").addEventListener("input", renderOrders);
-    el("status-filter").addEventListener("change", renderOrders);
+    await loadOrders(true);
 
-    el("logout-btn").addEventListener("click", async function () {
-      const { error } = await db.auth.signOut();
+  } catch(error) {
+    showNotice(error.message || "Gagal menerima pesanan.",true);
+  } finally {
+    busyOrderIds.delete(String(orderId));
+    renderOrders();
+  }
+}
 
-      if (error) {
-        showNotice("Gagal keluar: " + error.message, true);
-        return;
-      }
+/* PERUBAHAN STATUS */
+async function changeOrderStatus(orderId) {
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+  if(!order || !isMine(order)) {
+    showNotice(
+      "Pesanan ini bukan tanggung jawab kasir yang sedang login.",
+      true
+    );
+    return;
+  }
 
-      window.location.href = "akun.html";
+  const nextStatus = NEXT_STATUS[order.order_status];
+  if(!nextStatus) return;
+
+  let confirmation = true;
+
+  if(nextStatus === "completed") {
+    confirmation = window.confirm(
+      "Selesaikan pesanan #" + orderNumber(order) + "?"
+    );
+  }
+
+  if(!confirmation || busyOrderIds.has(String(orderId))) return;
+
+  busyOrderIds.add(String(orderId));
+  renderOrders();
+
+  try {
+    await cashierAPI("update_order_status",{
+      sessionToken:cashierSession.sessionToken,
+      orderId:order.id,
+      orderStatus:nextStatus
     });
 
-    db.auth.onAuthStateChange(function (event, session) {
-      if (event === "SIGNED_OUT") {
-        window.location.href = "akun.html";
-      }
+    showNotice(
+      "Status pesanan #" + orderNumber(order) +
+      " berhasil diperbarui menjadi " +
+      (STATUS_LABELS[nextStatus] || nextStatus) + "."
+    );
+
+    await loadOrders(true);
+
+  } catch(error) {
+    showNotice(error.message || "Gagal mengubah status.",true);
+  } finally {
+    busyOrderIds.delete(String(orderId));
+    renderOrders();
+  }
+}
+
+/* KONFIRMASI PEMBAYARAN TUNAI */
+async function confirmCashPayment(orderId) {
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+
+  if(!order || !isMine(order)) {
+    showNotice("Pesanan ini bukan tanggung jawab kamu.",true);
+    return;
+  }
+
+  if(!isWaitingPayment(order)) {
+    showNotice(
+      "Pesanan ini tidak lagi menunggu pembayaran tunai.",
+      true
+    );
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Pastikan uang tunai benar-benar sudah diterima.\n\n" +
+    "Pesanan: #" + orderNumber(order) + "\n" +
+    "Total: " + rupiah(orderTotal(order)) + "\n\n" +
+    "Konfirmasi pembayaran sekarang?"
+  );
+
+  if(!confirmed || busyOrderIds.has(String(orderId))) return;
+
+  busyOrderIds.add(String(orderId));
+  renderOrders();
+
+  try {
+    await cashierAPI("confirm_cash_payment",{
+      sessionToken:cashierSession.sessionToken,
+      orderId:order.id
     });
 
-    startDashboard();
+    showNotice(
+      "Pembayaran pesanan #" + orderNumber(order) +
+      " berhasil dikonfirmasi."
+    );
 
-    window.setInterval(function () {
-      if (currentUser && activeShop && !loading) {
-        loadOrders();
-      }
-    }, 30000);
-  </script>
+    await loadOrders(true);
+
+  } catch(error) {
+    showNotice(error.message || "Gagal mengonfirmasi pembayaran.",true);
+  } finally {
+    busyOrderIds.delete(String(orderId));
+    renderOrders();
+  }
+}
+
+/* SERAH TERIMA PESANAN */
+async function handoverOrder(orderId) {
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+
+  if(!order || !isMine(order)) {
+    showNotice("Hanya pemilik tugas pesanan yang dapat menyerahkan.",true);
+    return;
+  }
+
+  const targetCashierId = window.prompt(
+    "Masukkan Cashier ID kasir penerima:"
+  );
+  if(!targetCashierId || !targetCashierId.trim()) return;
+
+  const reason = window.prompt(
+    "Masukkan alasan serah terima (minimal 3 karakter):"
+  );
+  if(!reason || reason.trim().length < 3) {
+    showNotice("Alasan serah terima minimal 3 karakter.",true);
+    return;
+  }
+
+  if(busyOrderIds.has(String(orderId))) return;
+
+  busyOrderIds.add(String(orderId));
+  renderOrders();
+
+  try {
+    await cashierAPI("handover_order",{
+      sessionToken:cashierSession.sessionToken,
+      orderId:order.id,
+      targetCashierId:targetCashierId.trim(),
+      reason:reason.trim()
+    });
+
+    showNotice(
+      "Serah terima pesanan #" + orderNumber(order) +
+      " berhasil dicatat oleh sistem."
+    );
+
+    await loadOrders(true);
+
+  } catch(error) {
+    showNotice(error.message || "Serah terima gagal.",true);
+  } finally {
+    busyOrderIds.delete(String(orderId));
+    renderOrders();
+  }
+}
+
+/* AKHIRI SHIFT */
+async function endShift() {
+  if(!cashierSession) {
+    clearSession();
+    showView("login");
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Akhiri shift dan keluar dari Dashboard Kasir?"
+  );
+  if(!confirmed) return;
+
+  el("end-shift-btn").disabled = true;
+
+  try {
+    await cashierAPI("end_shift",{
+      sessionToken:cashierSession.sessionToken
+    });
+
+    clearSession();
+    showView("login");
+    showAuthNotice(
+      "login-notice",
+      "Shift berhasil diakhiri. Silakan login kembali saat mulai bekerja."
+    );
+
+  } catch(error) {
+    showNotice(
+      error.message || "Gagal mengakhiri shift.",
+      true
+    );
+  } finally {
+    el("end-shift-btn").disabled = false;
+  }
+}
+
+/* EVENT PESANAN */
+el("orders").addEventListener("click",event=>{
+  const accept = event.target.closest("[data-accept]");
+  const status = event.target.closest("[data-status]");
+  const payment = event.target.closest("[data-payment]");
+  const handover = event.target.closest("[data-handover]");
+
+  if(accept) {
+    acceptOrder(accept.dataset.accept);
+  } else if(status) {
+    changeOrderStatus(status.dataset.status);
+  } else if(payment) {
+    confirmCashPayment(payment.dataset.payment);
+  } else if(handover) {
+    handoverOrder(handover.dataset.handover);
+  }
+});
+
+el("refresh-btn").addEventListener("click",()=>loadOrders());
+el("header-refresh").addEventListener("click",()=>loadOrders());
+el("search").addEventListener("input",renderOrders);
+el("status-filter").addEventListener("change",renderOrders);
+el("end-shift-btn").addEventListener("click",endShift);
+
+/* NAVIGASI BAWAH */
+document.querySelectorAll(".nav-btn").forEach(button=>{
+  button.addEventListener("click",()=>{
+    activeFilter = button.dataset.filter;
+
+    document.querySelectorAll(".nav-btn").forEach(item=>{
+      item.classList.toggle("active",item === button);
+    });
+
+    const headings = {
+      all:"Daftar Pesanan",
+      new:"Pesanan Baru",
+      mine:"Tugas Saya",
+      payment:"Menunggu Pembayaran"
+    };
+
+    el("list-heading").textContent =
+      headings[activeFilter] || "Daftar Pesanan";
+
+    renderOrders();
+
+    document.querySelector(".section-heading")
+      .scrollIntoView({behavior:"smooth",block:"start"});
+  });
+});
+
+/* HEADER COLLAPSING */
+let lastScrollY = 0;
+
+window.addEventListener("scroll",()=>{
+  const currentY = window.scrollY || 0;
+  const header = el("header-shell");
+
+  header.classList.toggle("collapsed",currentY > 35);
+  lastScrollY = currentY;
+},{passive:true});
+
+/* PEMULIHAN SESI DI TAB YANG SAMA */
+async function initialize() {
+  if(!window.supabase) {
+    showView("login");
+    showAuthNotice(
+      "login-notice",
+      "Library Supabase tidak berhasil dimuat. Periksa koneksi internet.",
+      true
+    );
+    return;
+  }
+
+  const restored = restoreSession();
+
+  if(restored) {
+    cashierSession = restored;
+    await enterDashboard();
+  } else {
+    clearSession();
+    showView("login");
+  }
+}
+
+initialize();
+</script>
 </body>
 </html>

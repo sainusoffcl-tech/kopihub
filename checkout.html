@@ -6,73 +6,261 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#123c2c">
 <title>Checkout | KopiHub</title>
+
 <style>
-:root{--green:#123c2c;--green2:#245b42;--cream:#f7f5ed;--text:#24352c;--muted:#788078;--border:#e5e8df}
+:root{
+  --green:#123c2c;
+  --green2:#245b42;
+  --cream:#f7f5ed;
+  --text:#24352c;
+  --muted:#788078;
+  --border:#e5e8df;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--cream);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
-header{background:var(--green);color:white;padding:20px}
-.header-inner,main{max-width:720px;margin:auto}
-header a{color:white;text-decoration:none}
-.brand{font-size:24px;font-weight:850;margin-top:10px}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
+}
+header{
+  background:var(--green);
+  color:white;
+  padding:20px
+}
+.header-inner,main{
+  max-width:720px;
+  margin:auto
+}
+header a{
+  color:white;
+  text-decoration:none
+}
+.brand{
+  font-size:24px;
+  font-weight:850;
+  margin-top:10px
+}
 .brand span{color:#a8d7b5}
-.subtitle{margin-top:5px;font-size:12px}
+.subtitle{
+  margin-top:5px;
+  font-size:12px
+}
 main{padding:20px 14px 40px}
-h1{color:var(--green);font-size:28px}
-.intro{color:var(--muted);line-height:1.5}
-.card{background:white;border:1px solid var(--border);border-radius:16px;padding:17px;margin:16px 0}
-h2{color:var(--green);font-size:18px;margin-top:0}
+h1{
+  color:var(--green);
+  font-size:28px
+}
+.intro{
+  color:var(--muted);
+  line-height:1.5
+}
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:17px;
+  margin:16px 0
+}
+h2{
+  color:var(--green);
+  font-size:18px;
+  margin-top:0
+}
 .field{margin:14px 0}
-.field label{display:block;font-weight:700;margin-bottom:7px}
-input[type=text],input[type=tel],textarea{width:100%;padding:13px;border:1px solid var(--border);border-radius:10px;font:inherit;background:white}
+.field label{
+  display:block;
+  font-weight:700;
+  margin-bottom:7px
+}
+input[type=text],
+input[type=tel],
+textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font:inherit;
+  background:white
+}
 textarea{min-height:75px}
-.table-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
-.table-option input,.payment-option input{position:absolute;opacity:0}
-.table-option label{display:block;text-align:center;padding:13px 2px;border:1px solid var(--border);border-radius:10px;font-size:12px;font-weight:750;cursor:pointer}
-.table-option input:checked+label{background:var(--green);color:white;border-color:var(--green)}
-.order-item,.total-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0}
+.table-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px
+}
+.table-option input,
+.payment-option input{
+  position:absolute;
+  opacity:0
+}
+.table-option label{
+  display:block;
+  text-align:center;
+  padding:13px 2px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:12px;
+  font-weight:750;
+  cursor:pointer
+}
+.table-option input:checked+label{
+  background:var(--green);
+  color:white;
+  border-color:var(--green)
+}
+.order-item,.total-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 0
+}
 .order-item{border-bottom:1px solid #eef0ea}
 .item-name{font-weight:750}
-.item-sub{color:var(--muted);font-size:12px;margin-top:4px}
-.item-price{font-weight:750;white-space:nowrap}
-.total-row.final{border-top:1px solid var(--border);padding-top:14px;font-size:18px;font-weight:850;color:var(--green)}
-.payment-option{display:block;margin:12px 0;cursor:pointer}
-.payment-box{display:block;padding:14px;border:1px solid var(--border);border-radius:12px}
-.payment-option input:checked+.payment-box{border:2px solid var(--green2);background:#f3f8f2;padding:13px}
+.item-sub{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px
+}
+.item-price{
+  font-weight:750;
+  white-space:nowrap
+}
+.total-row.final{
+  border-top:1px solid var(--border);
+  padding-top:14px;
+  font-size:18px;
+  font-weight:850;
+  color:var(--green)
+}
+.payment-option{
+  display:block;
+  margin:12px 0;
+  cursor:pointer
+}
+.payment-box{
+  display:block;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:12px
+}
+.payment-option input:checked+.payment-box{
+  border:2px solid var(--green2);
+  background:#f3f8f2;
+  padding:13px
+}
+.payment-option input:disabled+.payment-box{
+  opacity:.55;
+  cursor:not-allowed
+}
 .payment-title{font-weight:800}
-.payment-desc{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:5px}
-.notice,.status{padding:13px;border-radius:10px;margin:14px 0;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
-.notice{background:#fff4e6;color:#80521f}
-.status{display:none;background:#e8f4e8;color:var(--green)}
-button{width:100%;border:0;border-radius:12px;padding:16px;background:var(--green);color:white;font-size:15px;font-weight:800;cursor:pointer}
+.payment-desc{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+  margin-top:5px
+}
+.notice,.status{
+  padding:13px;
+  border-radius:10px;
+  margin:14px 0;
+  font-size:13px;
+  line-height:1.6;
+  overflow-wrap:anywhere
+}
+.notice{
+  background:#fff4e6;
+  color:#80521f
+}
+.status{
+  display:none;
+  background:#e8f4e8;
+  color:var(--green)
+}
+.status.error{
+  display:block;
+  background:#fff0ed;
+  color:#a12e24
+}
+button{
+  width:100%;
+  border:0;
+  border-radius:12px;
+  padding:16px;
+  background:var(--green);
+  color:white;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer
+}
 button:disabled{opacity:.55}
-.back-menu{display:block;text-align:center;margin:18px 0;color:var(--green);text-decoration:none;font-weight:750}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 0}
-@media(min-width:540px){.table-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.back-menu{
+  display:block;
+  text-align:center;
+  margin:18px 0;
+  color:var(--green);
+  text-decoration:none;
+  font-weight:750
+}
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  padding:20px 0
+}
+@media(min-width:540px){
+  .table-grid{
+    grid-template-columns:repeat(5,minmax(0,1fr))
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header>
   <div class="header-inner">
     <a id="backTop" href="menu.html">‹ Kembali ke menu</a>
     <div class="brand">Kopi<span>Hub</span></div>
-    <div class="subtitle">CHECKOUT · AROMA COFFEE</div>
+    <div class="subtitle">CHECKOUT · KOPIHUB</div>
   </div>
 </header>
+
 <main>
   <h1>Selesaikan Pesanan</h1>
-  <p class="intro">Isi data pelanggan, pilih meja, periksa pesanan, lalu pilih pembayaran.</p>
+
+  <p class="intro">
+    Isi data pelanggan, pilih meja, periksa pesanan,
+    lalu pilih pembayaran.
+  </p>
+
   <div id="statusBox" class="status" role="status"></div>
 
   <form id="checkoutForm">
+
     <section class="card">
       <h2>01. Data Pelanggan</h2>
+
       <div class="field">
         <label for="customerName">Nama pelanggan *</label>
-        <input id="customerName" type="text" maxlength="80" required placeholder="Nama kamu">
+        <input
+          id="customerName"
+          type="text"
+          maxlength="80"
+          required
+          placeholder="Nama kamu"
+        >
       </div>
+
       <div class="field">
         <label for="customerPhone">Nomor WhatsApp (opsional)</label>
-        <input id="customerPhone" type="tel" maxlength="20" placeholder="08xxxxxxxxxx">
+        <input
+          id="customerPhone"
+          type="tel"
+          maxlength="20"
+          placeholder="08xxxxxxxxxx"
+        >
       </div>
     </section>
 
@@ -84,80 +272,165 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 0}
 
     <section class="card">
       <h2>03. Ringkasan Pesanan</h2>
+
       <div id="orderItems"></div>
+
       <div class="field">
-        <label for="orderNote">Catatan untuk barista (opsional)</label>
-        <textarea id="orderNote" maxlength="300" placeholder="Contoh: es sedikit, gula dikurangi"></textarea>
+        <label for="orderNote">
+          Catatan untuk barista (opsional)
+        </label>
+        <textarea
+          id="orderNote"
+          maxlength="300"
+          placeholder="Contoh: es sedikit, gula dikurangi"
+        ></textarea>
       </div>
-      
-<div class="total-row"><span>Subtotal</span><strong id="subtotal">Rp0</strong></div>
-<div class="total-row"><span>Biaya Layanan KopiHub</span><strong id="serviceFee">Rp3.000</strong></div>
-<div class="total-row"><span>Pajak</span><strong id="tax">Rp0</strong></div>
-<div class="total-row final"><span>Total</span><strong id="grandTotal">Rp0</strong></div>
+
+      <div class="total-row">
+        <span>Subtotal</span>
+        <strong id="subtotal">Rp0</strong>
+      </div>
+
+      <div class="total-row">
+        <span>PPh</span>
+        <strong id="tax">Rp0</strong>
+      </div>
+
+      <div class="total-row final">
+        <span>Total</span>
+        <strong id="grandTotal">Rp0</strong>
+      </div>
 
     </section>
 
     <section class="card">
       <h2>04. Metode Pembayaran</h2>
+
       <label class="payment-option">
-        <input type="radio" name="paymentMethod" value="cashier" required>
-        <span class="payment-box"><span class="payment-title">Bayar di Kasir</span><span class="payment-desc">Bayar langsung kepada staf Aroma Coffee.</span></span>
+        <input
+          type="radio"
+          name="paymentMethod"
+          value="cashier"
+          required
+        >
+        <span class="payment-box">
+          <span class="payment-title">Bayar di Kasir</span>
+          <span class="payment-desc">
+            Bayar langsung kepada staf kedai.
+          </span>
+        </span>
       </label>
+
       <label class="payment-option">
-        <input type="radio" name="paymentMethod" value="online" required>
-        <span class="payment-box"><span class="payment-title">Bayar Online</span><span class="payment-desc">Belum aktif. Pilih Bayar di Kasir untuk saat ini.</span></span>
+        <input
+          type="radio"
+          name="paymentMethod"
+          value="online"
+          disabled
+        >
+        <span class="payment-box">
+          <span class="payment-title">Bayar Online</span>
+          <span class="payment-desc">
+            Belum aktif. Pilih Bayar di Kasir untuk saat ini.
+          </span>
+        </span>
       </label>
-      <div class="notice">Pesanan belum dianggap berhasil sampai server mengonfirmasi penyimpanannya.</div>
+
+      <div class="notice">
+        Pesanan belum dianggap berhasil sampai server
+        mengonfirmasi penyimpanannya.
+      </div>
     </section>
-    <button id="submitBtn" type="submit">Kirim Pesanan</button>
+
+    <button id="submitBtn" type="submit">
+      Kirim Pesanan
+    </button>
+
   </form>
 
-  <a id="backBottom" class="back-menu" href="menu.html">← Kembali memilih menu</a>
-  <footer>KopiHub · Platform Pemesanan Coffee Shop<br>Aroma Coffee</footer>
+  <a id="backBottom" class="back-menu" href="menu.html">
+    ← Kembali memilih menu
+  </a>
+
+  <footer>
+    KopiHub · Platform Pemesanan Coffee Shop
+    <br>
+    Aroma Coffee
+  </footer>
 </main>
 
 <script>
-/*
-PENTING:
-Pertahankan FUNCTION_URL dan SUPABASE_PUBLISHABLE_KEY
-yang benar dari file lama. Jangan gunakan secret/service_role key.
-*/
-const FUNCTION_URL = "https://ozcliasebeydgyvgluht.supabase.co/functions/v1/create-order";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+"use strict";
 
+/* =========================================
+   KONFIGURASI SUPABASE
+========================================= */
+
+const FUNCTION_URL =
+  "https://ozcliasebeydgyvgluht.supabase.co/functions/v1/create-order";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+/* =========================================
+   PENGATURAN PAJAK
+========================================= */
+
+// PPh belum diterapkan.
+// Nominal sementara Rp0.
 const TAX_RATE = 0;
-const SERVICE_FEE = 3000;
+
 const form = document.getElementById("checkoutForm");
 const submitBtn = document.getElementById("submitBtn");
 const statusBox = document.getElementById("statusBox");
+
 const rupiah = n => new Intl.NumberFormat("id-ID", {
-  style:"currency",currency:"IDR",maximumFractionDigits:0
+  style: "currency",
+  currency: "IDR",
+  maximumFractionDigits: 0
 }).format(n);
 
-function showStatus(message) {
+function showStatus(message, isError = false) {
   statusBox.style.display = "block";
   statusBox.textContent = message;
-  statusBox.scrollIntoView({behavior:"smooth",block:"center"});
+
+  statusBox.classList.toggle("error", isError);
+
+  statusBox.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 }
+
 function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
   })[c]);
 }
 
-/* Ambil kedai dari URL atau data keranjang. */
+/* =========================================
+   AMBIL DATA KERANJANG
+========================================= */
+
 const params = new URLSearchParams(location.search);
+
 let checkoutData = null;
 let items = [];
 
 try {
-  checkoutData = JSON.parse(sessionStorage.getItem("kopihubCheckout") || "null");
+  checkoutData = JSON.parse(
+    sessionStorage.getItem("kopihubCheckout") || "null"
+  );
 
-  // Kompatibel dengan format lama (array) dan format menu terbaru (object).
   const savedItems = Array.isArray(checkoutData)
     ? checkoutData
     : checkoutData && Array.isArray(checkoutData.items)
-      ? checkoutData.items : [];
+      ? checkoutData.items
+      : [];
 
   items = savedItems.filter(item =>
     item &&
@@ -167,58 +440,99 @@ try {
     Number.isInteger(Number(item.qty)) &&
     Number(item.qty) > 0
   ).map(item => ({
-    id:item.id || null,
-    name:item.name.slice(0,100),
-    price:Number(item.price),
-    qty:Number(item.qty)
+    id: item.id || null,
+    name: item.name.slice(0, 100),
+    price: Number(item.price),
+    qty: Number(item.qty)
   }));
 
   if (checkoutData && !Array.isArray(checkoutData)) {
     if (checkoutData.shop_slug) {
-      sessionStorage.setItem("kopihubShop", checkoutData.shop_slug);
+      sessionStorage.setItem(
+        "kopihubShop",
+        checkoutData.shop_slug
+      );
     }
   }
+
 } catch (error) {
   checkoutData = null;
   items = [];
 }
 
-const shopSlug = params.get("kedai") ||
+/* =========================================
+   IDENTITAS KEDAI
+========================================= */
+
+const shopSlug =
+  params.get("kedai") ||
   (checkoutData && checkoutData.shop_slug) ||
   sessionStorage.getItem("kopihubShop") ||
   "aroma-coffee";
 
-const menuUrl = "menu.html?kedai=" + encodeURIComponent(shopSlug);
+const menuUrl =
+  "menu.html?kedai=" + encodeURIComponent(shopSlug);
+
 document.getElementById("backTop").href = menuUrl;
 document.getElementById("backBottom").href = menuUrl;
 
-const orderItemsEl = document.getElementById("orderItems");
+/* =========================================
+   PILIHAN MEJA
+========================================= */
+
+const tableGrid = document.getElementById("tableGrid");
+
+tableGrid.innerHTML = Array.from(
+  { length: 20 },
+  (_, i) => {
+    const n = String(i + 1).padStart(2, "0");
+
+    return `
+      <div class="table-option">
+        <input
+          type="radio"
+          name="tableNumber"
+          id="table${n}"
+          value="${n}"
+          required
+        >
+        <label for="table${n}">Meja ${n}</label>
+      </div>
+    `;
+  }
+).join("");
+
+/* =========================================
+   RENDER RINGKASAN PESANAN
+========================================= */
+
+const orderItemsEl =
+  document.getElementById("orderItems");
+
 let subtotal = 0;
-
-document.getElementById("tableGrid").innerHTML =
-  Array.from({length:20},(_,i)=>{
-    const n=String(i+1).padStart(2,"0");
-    return `<div class="table-option">
-      <input type="radio" name="tableNumber" id="table${n}" value="${n}" required>
-      <label for="table${n}">Meja ${n}</label>
-    </div>`;
-  }).join("");
-
+let tax = 0;
+let grandTotal = 0;
 
 function renderOrder() {
+
   if (!items.length) {
-    orderItemsEl.innerHTML =
-      '<p class="intro">Keranjang kosong. Kembali ke menu, pilih minuman, lalu tekan checkout.</p>';
+    orderItemsEl.innerHTML = `
+      <p class="intro">
+        Keranjang kosong. Kembali ke menu, pilih minuman,
+        lalu tekan checkout.
+      </p>
+    `;
 
     submitBtn.disabled = true;
-    document.getElementById("subtotal").textContent = rupiah(0);
-    document.getElementById("tax").textContent = rupiah(0);
-    document.getElementById("grandTotal").textContent = rupiah(0);
 
-    const serviceFeeEl = document.getElementById("serviceFee");
-    if (serviceFeeEl) {
-      serviceFeeEl.textContent = rupiah(0);
-    }
+    document.getElementById("subtotal").textContent =
+      rupiah(0);
+
+    document.getElementById("tax").textContent =
+      rupiah(0);
+
+    document.getElementById("grandTotal").textContent =
+      rupiah(0);
 
     return;
   }
@@ -228,102 +542,224 @@ function renderOrder() {
     0
   );
 
-  const tax = Math.round(subtotal * TAX_RATE);
-  const grandTotal = subtotal + SERVICE_FEE + tax;
+  tax = Math.round(subtotal * TAX_RATE);
+
+  // PENTING:
+  // Total pelanggan hanya subtotal + PPh.
+  // Tidak ada biaya layanan KopiHub di sini.
+  grandTotal = subtotal + tax;
 
   orderItemsEl.innerHTML = items.map(item => `
     <div class="order-item">
       <div>
-        <div class="item-name">${escapeHTML(item.name)}</div>
-        <div class="item-sub">${item.qty} × ${rupiah(item.price)}</div>
+        <div class="item-name">
+          ${escapeHTML(item.name)}
+        </div>
+        <div class="item-sub">
+          ${item.qty} × ${rupiah(item.price)}
+        </div>
       </div>
-      <div class="item-price">${rupiah(item.price * item.qty)}</div>
+
+      <div class="item-price">
+        ${rupiah(item.price * item.qty)}
+      </div>
     </div>
   `).join("");
 
-  document.getElementById("subtotal").textContent = rupiah(subtotal);
-  document.getElementById("tax").textContent = rupiah(tax);
-  document.getElementById("grandTotal").textContent = rupiah(grandTotal);
+  document.getElementById("subtotal").textContent =
+    rupiah(subtotal);
 
-  const serviceFeeEl = document.getElementById("serviceFee");
-  if (serviceFeeEl) {
-    serviceFeeEl.textContent = rupiah(SERVICE_FEE);
-  }
+  document.getElementById("tax").textContent =
+    rupiah(tax);
+
+  document.getElementById("grandTotal").textContent =
+    rupiah(grandTotal);
 }
+
 renderOrder();
 
-form.addEventListener("submit",async event=>{
+/* =========================================
+   KIRIM PESANAN
+========================================= */
+
+form.addEventListener("submit", async event => {
+
   event.preventDefault();
 
   if (!items.length) {
-    showStatus("Keranjang kosong. Kembali ke menu untuk memilih pesanan.");
+    showStatus(
+      "Keranjang kosong. Kembali ke menu untuk memilih pesanan.",
+      true
+    );
     return;
   }
 
-  const payment=document.querySelector('input[name="paymentMethod"]:checked');
-  const table=document.querySelector('input[name="tableNumber"]:checked');
-  const customerName=document.getElementById("customerName").value.trim();
-  const customerPhone=document.getElementById("customerPhone").value.trim();
-  const note=document.getElementById("orderNote").value.trim();
+  const payment = document.querySelector(
+    'input[name="paymentMethod"]:checked'
+  );
+
+  const table = document.querySelector(
+    'input[name="tableNumber"]:checked'
+  );
+
+  const customerName =
+    document.getElementById("customerName").value.trim();
+
+  const customerPhone =
+    document.getElementById("customerPhone").value.trim();
+
+  const note =
+    document.getElementById("orderNote").value.trim();
 
   if (!customerName || !table || !payment) {
-    showStatus("Isi nama pelanggan, pilih meja, dan pilih metode pembayaran.");
-    return;
-  }
-  if (payment.value!=="cashier") {
-    showStatus("Pembayaran online belum aktif. Pilih Bayar di Kasir.");
-    return;
-  }
-
-  if (!FUNCTION_URL || FUNCTION_URL==="SENSOR" ||
-      !SUPABASE_PUBLISHABLE_KEY || SUPABASE_PUBLISHABLE_KEY==="SENSOR") {
-    showStatus("Konfigurasi server belum diisi. Pesanan belum dikirim. URL fungsi dan publishable key perlu dipulihkan dari konfigurasi sebelumnya.");
+    showStatus(
+      "Isi nama pelanggan, pilih meja, dan pilih metode pembayaran.",
+      true
+    );
     return;
   }
 
-  submitBtn.disabled=true;
-  submitBtn.textContent="Mengirim pesanan...";
+  if (payment.value !== "cashier") {
+    showStatus(
+      "Pembayaran online belum aktif. Pilih Bayar di Kasir.",
+      true
+    );
+    return;
+  }
+
+  if (
+    !FUNCTION_URL ||
+    !SUPABASE_PUBLISHABLE_KEY
+  ) {
+    showStatus(
+      "Konfigurasi server belum tersedia.",
+      true
+    );
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Mengirim pesanan...";
 
   try {
-    const response=await fetch(FUNCTION_URL,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "apikey":SUPABASE_PUBLISHABLE_KEY,
-        "Authorization":"Bearer "+SUPABASE_PUBLISHABLE_KEY
+
+    const response = await fetch(FUNCTION_URL, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_PUBLISHABLE_KEY,
+        "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY
       },
-      body:JSON.stringify({
+
+      body: JSON.stringify({
+
+        // QR Ordering
+        orderSource: "qr",
+
+        // Data pelanggan
         customerName,
         customerPhone,
-        table:table.value,
+
+        // Meja dan catatan
+        table: table.value,
         note,
-        shop:shopSlug,
+
+        // Kedai
+        shop: shopSlug,
+
+        // Produk
         items,
-        paymentMethod:"cashier"
+
+        // Pembayaran
+        paymentMethod: "cashier"
       })
     });
 
-    let result={};
-    try { result=await response.json(); } catch (_) {}
+    let result = {};
 
-    if (!response.ok || !result.success || !result.orderCode) {
-      throw new Error(result.error || "Server belum berhasil menyimpan pesanan.");
+    try {
+      result = await response.json();
+    } catch (_) {
+      throw new Error(
+        "Server memberikan respons yang tidak dapat dibaca."
+      );
     }
 
-sessionStorage.removeItem("kopihubCheckout");
-form.style.display="none";
-showStatus(
-  "Pesanan berhasil disimpan. Nomor pesanan: "+result.orderCode+
-  ". Meja "+table.value+". Total "+rupiah(subtotal + SERVICE_FEE)+
-  ". Silakan bayar di kasir."
-);
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.error ||
+        "Server belum berhasil menyimpan pesanan."
+      );
+    }
+
+    /*
+      Kompatibilitas respons:
+
+      Edge Function lama:
+      result.orderCode
+
+      Edge Function baru:
+      result.order_code
+
+      Alternatif:
+      result.order.order_code
+    */
+
+    const orderCode =
+      result.orderCode ||
+      result.order_code ||
+      (result.order && (
+        result.order.order_code ||
+        result.order.orderCode
+      ));
+
+    if (!orderCode) {
+      throw new Error(
+        "Pesanan mendapat respons sukses, tetapi kode pesanan tidak ditemukan. Hubungi kasir sebelum mencoba mengirim ulang."
+      );
+    }
+
+    // Total dari server menjadi acuan utama.
+    const serverTotal = Number.isSafeInteger(
+      Number(result.total_amount)
+    )
+      ? Number(result.total_amount)
+      : grandTotal;
+
+    // Hapus keranjang setelah server mengonfirmasi sukses.
+    sessionStorage.removeItem("kopihubCheckout");
+
+    form.style.display = "none";
+
+    document.getElementById("backTop").style.display = "none";
+
+    showStatus(
+      "Pesanan berhasil disimpan. Nomor pesanan: " +
+      orderCode +
+      ". Meja " +
+      table.value +
+      ". Total pembayaran " +
+      rupiah(serverTotal) +
+      ". Silakan bayar di kasir."
+    );
+
   } catch (error) {
-    console.error("Checkout error:",error);
-    showStatus("Pesanan belum berhasil dikonfirmasi oleh server. "+(error.message||"Periksa koneksi lalu coba lagi."));
-    submitBtn.disabled=false;
-    submitBtn.textContent="Coba Kirim Lagi";
+
+    console.error("Checkout error:", error);
+
+    showStatus(
+      "Pesanan belum berhasil dikonfirmasi oleh server. " +
+      (error.message || "Periksa koneksi lalu coba lagi."),
+      true
+    );
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Coba Kirim Lagi";
   }
+
 });
 </script>
+
 </body>
 </html>

@@ -950,29 +950,38 @@ const pages = {
 function navigateToPage(pageName) {
   if (!pages[pageName]) return;
 
-  Object.entries(pages).forEach(([name,element])=>{
-    element.hidden = name!==pageName;
+  Object.entries(pages).forEach(([name, element]) => {
+    element.hidden = name !== pageName;
   });
 
-  navigationButtons.forEach(button=>{
-    const active = button.dataset.page===pageName;
-    button.classList.toggle("active",active);
-    if(active) button.setAttribute("aria-current","page");
-    else button.removeAttribute("aria-current");
+  navigationButtons.forEach(button => {
+    const active = button.dataset.page === pageName;
+    button.classList.toggle("active", active);
+
+    if (active) {
+      button.setAttribute("aria-current", "page");
+    } else {
+      button.removeAttribute("aria-current");
+    }
   });
 
-  $("app-scroll").scrollTo({top:0,behavior:"instant"});
+  $("app-scroll").scrollTo({ top: 0, behavior: "instant" });
 
-  if(pageName==="laporan"&&currentReport===null&&allOrders.length) updateReport();
-if(pageName==="lainnya"&&selectedShop()){
-  loadCashierStaff();
-  loadOwnerInvoices();
+  if (pageName === "laporan" && currentReport === null && allOrders.length) {
+    updateReport();
+  }
+
+  if (pageName === "lainnya" && selectedShop()) {
+    loadCashierStaff();
+    loadOwnerInvoices();
+  }
 }
 
-navigationButtons.forEach(button=>{
-  button.addEventListener("click",()=>navigateToPage(button.dataset.page));
+navigationButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    navigateToPage(button.dataset.page);
+  });
 });
-
 /* TOMBOL PENGATURAN */
 document.querySelectorAll("[data-settings-target]").forEach(button=>{
   button.addEventListener("click",()=>{

@@ -964,7 +964,9 @@ function navigateToPage(pageName) {
   $("app-scroll").scrollTo({top:0,behavior:"instant"});
 
   if(pageName==="laporan"&&currentReport===null&&allOrders.length) updateReport();
-  if(pageName==="lainnya"&&selectedShop()) loadCashierStaff();
+if(pageName==="lainnya"&&selectedShop()){
+  loadCashierStaff();
+  loadOwnerInvoices();
 }
 
 navigationButtons.forEach(button=>{

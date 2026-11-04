@@ -2136,6 +2136,7 @@ function renderSalesChart(orders, formatter, todayKey) {
 }
 
 
+
 /* DATA PESANAN */
 async function fetchAllShopOrders(shopId) {
   const results = [];
@@ -2145,7 +2146,7 @@ async function fetchAllShopOrders(shopId) {
     const { data, error } = await client
       .from("kh_orders")
       .select(
-        "id,order_number,status,order_status,subtotal,total_amount,created_at,payment_status,items,order_type,payment_method,service_fee,tax_amount"
+        "id,order_number,order_source,status,order_status,subtotal,total_amount,created_at,payment_status,items,order_type,payment_method,service_fee,tax_amount"
       )
       .eq("shop_id", shopId)
       .order("created_at", { ascending: false })
@@ -2159,10 +2160,64 @@ async function fetchAllShopOrders(shopId) {
     if (rows.length < pageSize) break;
   }
 
-  return results;
+  // Ambil rincian produk dari tabel relasional kh_order_items.
+  const itemMap = new Map();
+  const orderIds = results.map(order => order.id);
+  const idChunkSize = 200;
+
+  for (let i = 0; i < orderIds.length; i += idChunkSize) {
+    const ids = orderIds.slice(i, i + idChunkSize);
+
+    for (let offset = 0; ; offset += pageSize) {
+      const { data, error } = await client
+        .from("kh_order_items")
+        .select(
+          "order_id,product_name,quantity,unit_price,line_total"
+        )
+        .eq("shop_id", shopId)
+        .in("order_id", ids)
+        .range(offset, offset + pageSize - 1);
+
+      if (error) throw error;
+
+      const rows = data || [];
+
+      rows.forEach(item => {
+        if (!itemMap.has(item.order_id)) {
+          itemMap.set(item.order_id, []);
+        }
+
+        itemMap.get(item.order_id).push(item);
+      });
+
+      if (rows.length < pageSize) break;
+    }
+  }
+
+  // Gabungkan pesanan dengan rincian produknya.
+  return results.map(order => ({
+    ...order,
+    report_items: itemMap.get(order.id) || []
+  }));
 }
 
 let ownerOrdersRequestVersion = 0;
+
+function getOrderSourceLabel(order) {
+  const source = String(
+    order.order_source || ""
+  ).trim().toLowerCase();
+
+  if (["pos", "cashier"].includes(source)) {
+    return "Kasir";
+  }
+
+  if (["qr", "online", "web"].includes(source)) {
+    return "Online";
+  }
+
+  return "Tidak diketahui";
+}
 
 async function loadOrders() {
   const shop = selectedShop();
@@ -2231,7 +2286,6 @@ async function loadOrders() {
     $("today-sales").textContent = rupiah(paidValue);
 
     // Biaya layanan mengikuti pengaturan terpusat Admin KopiHub.
-    // Tidak menggunakan angka sementara dan tidak ditambahkan ke tagihan pelanggan.
     $("today-service-fee").textContent = "Mengikuti Admin";
 
     $("summary-income").textContent = rupiah(paidValue);
@@ -2257,7 +2311,7 @@ async function loadOrders() {
     const errorMessage = document.createElement("p");
     errorMessage.className = "muted";
     errorMessage.textContent =
-      "Grafik gagal dimuat. Periksa koneksi dan izin akses kh_orders.";
+      "Grafik gagal dimuat. Periksa koneksi dan izin akses data pesanan.";
 
     $("sales-chart").appendChild(errorMessage);
     $("chart-message").textContent = "";

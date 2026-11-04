@@ -2570,71 +2570,129 @@ $("report-end-date").addEventListener("change", () => {
 
 
 
-const summaryRows = [
-  ["LAPORAN PENJUALAN KOPIHUB"],
-  ["Nama Kedai", report.shopName],
-  ["Periode", report.range.label],
-  ["Zona Waktu", report.timezone],
-  [],
-  ["Ringkasan", "Nilai"],
-  ["Nilai Seluruh Pesanan", report.totalValue],
-  ["Omzet Sudah Dibayar", report.paidValue],
-  ["Nilai Belum Dibayar", report.unpaidValue],
-  ["Jumlah Pesanan", report.orders.length],
-  ["Pesanan Lunas", report.paidOrders.length],
-  ["Pesanan Belum Lunas", report.unpaidOrders.length],
-  ["Jumlah Produk Terjual", report.productCount],
-  [],
-  ["Sumber Pesanan", "Jumlah", "Pesanan Lunas", "Omzet Lunas"],
-  [
-    "Online",
-    report.sourceSummary.Online.count,
-    report.sourceSummary.Online.paidCount,
-    report.sourceSummary.Online.paidValue
-  ],
-  [
-    "Kasir",
-    report.sourceSummary.Kasir.count,
-    report.sourceSummary.Kasir.paidCount,
-    report.sourceSummary.Kasir.paidValue
-  ],
-  [
-    "Tidak diketahui",
-    report.sourceSummary["Tidak diketahui"].count,
-    report.sourceSummary["Tidak diketahui"].paidCount,
-    report.sourceSummary["Tidak diketahui"].paidValue
-  ],
-  [],
-  [
-    "Catatan",
-    "Omzet dihitung dari subtotal pesanan berstatus paid."
-  ]
-];
 
-const orderRows = [
-  [
-    "Nomor Pesanan",
-    "Tanggal",
-    "Sumber",
-    "Jenis Pesanan",
-    "Status Pesanan",
-    "Status Pembayaran",
-    "Metode Pembayaran",
-    "Subtotal"
-  ],
-  ...report.orders.map(order => [
-    order.order_number ?? order.id,
-    order.created_at
-      ? new Date(order.created_at).toLocaleString("id-ID")
-      : "",
-    getOrderSourceLabel(order),
-    order.order_type || "",
-    order.order_status || order.status || "",
-    order.payment_status || "Tidak diketahui",
-    order.payment_method || "Tidak diketahui",
-    orderValue(order)
-  ])
-];
+/* DOWNLOAD LAPORAN EXCEL */
+$("download-report-excel").addEventListener("click", function () {
+  if (!currentReport) {
+    alert("Data laporan belum tersedia.");
+    return;
+  }
+
+  if (typeof XLSX === "undefined") {
+    alert("Library Excel belum berhasil dimuat. Muat ulang halaman.");
+    return;
+  }
+
+  const report = currentReport;
+
+  const summaryRows = [
+    ["LAPORAN PENJUALAN KOPIHUB"],
+    ["Nama Kedai", report.shopName],
+    ["Periode", report.range.label],
+    ["Zona Waktu", report.timezone],
+    [],
+    ["Ringkasan", "Nilai"],
+    ["Nilai Seluruh Pesanan", report.totalValue],
+    ["Omzet Sudah Dibayar", report.paidValue],
+    ["Nilai Belum Dibayar", report.unpaidValue],
+    ["Jumlah Pesanan", report.orders.length],
+    ["Pesanan Lunas", report.paidOrders.length],
+    ["Pesanan Belum Lunas", report.unpaidOrders.length],
+    ["Jumlah Produk Terjual", report.productCount],
+    [],
+    ["Sumber Pesanan", "Jumlah", "Pesanan Lunas", "Omzet Lunas"],
+    [
+      "Online",
+      report.sourceSummary.Online.count,
+      report.sourceSummary.Online.paidCount,
+      report.sourceSummary.Online.paidValue
+    ],
+    [
+      "Kasir",
+      report.sourceSummary.Kasir.count,
+      report.sourceSummary.Kasir.paidCount,
+      report.sourceSummary.Kasir.paidValue
+    ],
+    [
+      "Tidak diketahui",
+      report.sourceSummary["Tidak diketahui"].count,
+      report.sourceSummary["Tidak diketahui"].paidCount,
+      report.sourceSummary["Tidak diketahui"].paidValue
+    ],
+    [],
+    ["Catatan", "Omzet dihitung dari subtotal pesanan berstatus paid."]
+  ];
+
+  const orderRows = [
+    [
+      "Nomor Pesanan",
+      "Tanggal",
+      "Sumber",
+      "Jenis Pesanan",
+      "Status Pesanan",
+      "Status Pembayaran",
+      "Metode Pembayaran",
+      "Subtotal"
+    ],
+    ...report.orders.map(order => [
+      order.order_number ?? order.id,
+      order.created_at
+        ? new Date(order.created_at).toLocaleString("id-ID")
+        : "",
+      getOrderSourceLabel(order),
+      order.order_type || "",
+      order.order_status || order.status || "",
+      order.payment_status || "Tidak diketahui",
+      order.payment_method || "Tidak diketahui",
+      orderValue(order)
+    ])
+  ];
+
+  const workbook = XLSX.utils.book_new();
+
+  const summarySheet = XLSX.utils.aoa_to_sheet(summaryRows);
+  const orderSheet = XLSX.utils.aoa_to_sheet(orderRows);
+
+  summarySheet["!cols"] = [
+    { wch: 32 },
+    { wch: 24 },
+    { wch: 20 },
+    { wch: 20 }
+  ];
+
+  orderSheet["!cols"] = [
+    { wch: 20 },
+    { wch: 23 },
+    { wch: 18 },
+    { wch: 16 },
+    { wch: 24 },
+    { wch: 24 },
+    { wch: 22 },
+    { wch: 18 }
+  ];
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    summarySheet,
+    "Ringkasan"
+  );
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    orderSheet,
+    "Detail Pesanan"
+  );
+
+  const safeName = String(report.shopSlug || "kedai")
+    .replace(/[^a-z0-9-]/gi, "-");
+
+  XLSX.writeFile(
+    workbook,
+    "Laporan-KopiHub-" + safeName + "-" +
+    report.range.start + "-sampai-" +
+    report.range.end + ".xlsx"
+  );
+});
 
 /* PDF */
 $("download-report-pdf").addEventListener("click", () => {

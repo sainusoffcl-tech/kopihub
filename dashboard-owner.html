@@ -2303,22 +2303,28 @@ async function loadOrders() {
 
     console.error("Gagal memuat laporan:", error);
 
+    const errorDetails = [
+      error?.message || "Pesan error tidak tersedia",
+      error?.code ? "Kode: " + error.code : "",
+      error?.details ? "Detail: " + error.details : "",
+      error?.hint ? "Petunjuk: " + error.hint : ""
+    ].filter(Boolean).join("\n");
+
     $("report-message").textContent =
-      "Gagal memuat laporan: " + error.message;
+      "Gagal memuat laporan:\n" + errorDetails;
 
     $("sales-chart").replaceChildren();
 
     const errorMessage = document.createElement("p");
     errorMessage.className = "muted";
+    errorMessage.style.whiteSpace = "pre-line";
     errorMessage.textContent =
-      "Grafik gagal dimuat. Periksa koneksi dan izin akses data pesanan.";
+      "Diagnostik grafik:\n" + errorDetails;
 
     $("sales-chart").appendChild(errorMessage);
     $("chart-message").textContent = "";
   }
 }
-
-
 
 /* MEMBACA RINCIAN PRODUK */
 function parseOrderItems(value) {

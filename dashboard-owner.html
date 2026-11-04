@@ -2319,94 +2319,40 @@ async function loadOrders() {
 }
 
 
-/* LAPORAN PENJUALAN */
+
+/* MEMBACA RINCIAN PRODUK */
 function parseOrderItems(value) {
-  if (!value) return [];
+  if (!Array.isArray(value)) return [];
 
-  let items = value;
-
-  if (typeof items === "string") {
-    try {
-      items = JSON.parse(items);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  if (!Array.isArray(items)) return [];
-
-  return items.map(item => {
-    const quantity = Number(item.qty ?? item.quantity ?? 0);
-    const price = Number(item.price ?? item.unit_price ?? 0);
+  return value.map(item => {
+    const quantity = Number(item.quantity ?? item.qty ?? 0);
+    const price = Number(item.unit_price ?? item.price ?? 0);
+    const lineTotal = Number(
+      item.line_total ?? (quantity * price)
+    );
 
     return {
-      name: String(item.name ?? item.product_name ?? "Produk"),
+      name: String(
+        item.product_name ?? item.name ?? "Produk"
+      ),
       quantity: Number.isFinite(quantity) ? quantity : 0,
-      price: Number.isFinite(price) ? price : 0
+      price: Number.isFinite(price) ? price : 0,
+      total: Number.isFinite(lineTotal) ? lineTotal : 0
     };
   }).filter(item =>
-    item.quantity > 0 && item.price >= 0
+    item.quantity > 0 &&
+    item.price >= 0 &&
+    item.total >= 0
   );
 }
 
-function getReportRange() {
-  const shop = selectedShop();
-  const timezone = shop?.timezone || "Asia/Jayapura";
-  const formatter = getDateFormatter(timezone);
-  const today = getDateKey(new Date(), formatter);
-  const period = $("report-period").value;
 
-  if (period === "today") {
-    return {
-      start: today,
-      end: today,
-      label: "Hari Ini"
-    };
-  }
-
-  if (period === "last7") {
-    return {
-      start: addDaysToKey(today, -6),
-      end: today,
-      label: "7 Hari Terakhir"
-    };
-  }
-
-  if (period === "month") {
-    return {
-      start: today.slice(0, 7) + "-01",
-      end: today,
-      label: "Bulan Ini"
-    };
-  }
-
-  const start = $("report-start-date").value;
-  const end = $("report-end-date").value;
-
-  if (!start || !end) {
-    throw new Error(
-      "Silakan isi tanggal mulai dan tanggal akhir."
-    );
-  }
-
-  if (start > end) {
-    throw new Error(
-      "Tanggal mulai tidak boleh melewati tanggal akhir."
-    );
-  }
-
-  return {
-    start,
-    end,
-    label: "Rentang " + start + " sampai " + end
-  };
-}
-
+/* REKAP PRODUK */
 function aggregateProducts(orders) {
   const map = new Map();
 
   orders.forEach(order => {
-    parseOrderItems(order.items).forEach(item => {
+    parseOrderItems(order.report_items).forEach(item => {
       const key = item.name;
 
       if (!map.has(key)) {
@@ -2418,8 +2364,9 @@ function aggregateProducts(orders) {
       }
 
       const product = map.get(key);
+
       product.quantity += item.quantity;
-      product.total += item.quantity * item.price;
+      product.total += item.total;
     });
   });
 
@@ -2428,98 +2375,44 @@ function aggregateProducts(orders) {
   );
 }
 
-function renderProductReport(productsData) {
-  const body = $("report-product-list");
-  body.replaceChildren();
 
-  if (!productsData.length) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-
-    cell.colSpan = 3;
-    cell.textContent =
-      "Belum ada rincian produk dari pesanan lunas pada periode ini.";
-
-    row.appendChild(cell);
-    body.appendChild(row);
-    return;
-  }
-
-  productsData.forEach(product => {
-    const row = document.createElement("tr");
-
-    const name = document.createElement("td");
-    name.textContent = product.name;
-
-    const quantity = document.createElement("td");
-    quantity.textContent = product.quantity;
-
-    const total = document.createElement("td");
-    total.textContent = rupiah(product.total);
-
-    row.append(name, quantity, total);
-    body.appendChild(row);
-  });
-}
-
-function renderPaymentReport(orders) {
-  const body = $("report-payment-methods");
-  body.replaceChildren();
-
-  const paidOrders = orders.filter(isPaid);
-
-  const groups = new Map();
-
-  paidOrders.forEach(order => {
-    const method = String(
-      order.payment_method || ""
-    ).trim();
-
-    if (!method) return;
-
-    if (!groups.has(method)) {
-      groups.set(method, {
-        method,
-        count: 0,
-        total: 0
-      });
+/* REKAP SUMBER PESANAN */
+function aggregateOrderSources(orders) {
+  const result = {
+    Online: {
+      count: 0,
+      paidCount: 0,
+      paidValue: 0
+    },
+    Kasir: {
+      count: 0,
+      paidCount: 0,
+      paidValue: 0
+    },
+    "Tidak diketahui": {
+      count: 0,
+      paidCount: 0,
+      paidValue: 0
     }
+  };
 
-    const group = groups.get(method);
+  orders.forEach(order => {
+    const source = getOrderSourceLabel(order);
+    const group = result[source];
+
     group.count++;
-    group.total += orderValue(order);
+
+    if (isPaid(order)) {
+      group.paidCount++;
+      group.paidValue += orderValue(order);
+    }
   });
 
-  if (!groups.size) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-
-    cell.colSpan = 3;
-    cell.textContent =
-      "Belum tersedia. Data metode pembayaran belum dapat diidentifikasi secara akurat.";
-
-    row.appendChild(cell);
-    body.appendChild(row);
-    return;
-  }
-
-  groups.forEach(group => {
-    const row = document.createElement("tr");
-
-    const method = document.createElement("td");
-    method.textContent = group.method;
-
-    const count = document.createElement("td");
-    count.textContent = group.count;
-
-    const total = document.createElement("td");
-    total.textContent = rupiah(group.total);
-
-    row.append(method, count, total);
-    body.appendChild(row);
-  });
+  return result;
 }
 
+
+/* UPDATE LAPORAN */
 function updateReport() {
   const shop = selectedShop();
 
@@ -2563,6 +2456,8 @@ function updateReport() {
       0
     );
 
+    const sourceSummary = aggregateOrderSources(periodOrders);
+
     currentReport = {
       shopName: shop.name,
       shopSlug: shop.slug,
@@ -2576,6 +2471,7 @@ function updateReport() {
       unpaidValue,
       productData,
       productCount,
+      sourceSummary,
       generatedAt: new Date().toISOString()
     };
 
@@ -2593,11 +2489,17 @@ function updateReport() {
     renderProductReport(productData);
     renderPaymentReport(periodOrders);
 
+    const online = sourceSummary.Online;
+    const cashier = sourceSummary.Kasir;
+    const unknown = sourceSummary["Tidak diketahui"];
+
     $("report-data-note").textContent =
-      "Omzet dihitung dari subtotal pesanan berstatus paid. " +
-      "Rincian produk dihitung dari items pada pesanan lunas. " +
-      "Zona waktu kedai: " + timezone +
-      ". Sumber pesanan Online/Kasir belum ditampilkan karena kolom sumber pesanan belum tersedia.";
+      "Sumber pesanan: Online " + online.count +
+      " pesanan, Kasir " + cashier.count +
+      " pesanan, dan tidak diketahui " + unknown.count +
+      " pesanan. Omzet dihitung dari subtotal pesanan berstatus paid. " +
+      "Rincian produk diambil dari kh_order_items. " +
+      "Zona waktu kedai: " + timezone + ".";
 
     $("report-message").textContent =
       periodOrders.length + " pesanan ditemukan. " +

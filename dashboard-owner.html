@@ -274,7 +274,139 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .owner-only-note{
   font-size:12px;color:var(--muted);margin-top:12px;
 }
-
+/* TAGIHAN KOPIHUB */
+.invoice-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  margin:13px 0;
+  background:#fff;
+}
+.invoice-card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+.invoice-number{
+  font-size:14px;
+  font-weight:800;
+  color:var(--dark);
+  overflow-wrap:anywhere;
+}
+.invoice-period{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+.invoice-status{
+  flex-shrink:0;
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:750;
+  background:#fff3df;
+  color:#93621f;
+}
+.invoice-status.paid{
+  background:#e4f4e9;
+  color:#21683a;
+}
+.invoice-status.rejected{
+  background:#fff0ef;
+  color:#a72d2d;
+}
+.invoice-status.carried{
+  background:#edf1f5;
+  color:#526273;
+}
+.invoice-details{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.invoice-line{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin:8px 0;
+  font-size:13px;
+}
+.invoice-line span:first-child{
+  color:var(--muted);
+}
+.invoice-line strong{
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+.invoice-total{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px dashed #cbd7ce;
+  font-size:15px;
+}
+.invoice-total strong{
+  color:var(--dark);
+  font-size:17px;
+}
+.invoice-payment-history{
+  margin-top:14px;
+  padding:12px;
+  background:#f6f8f5;
+  border-radius:10px;
+}
+.invoice-payment-item{
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+.invoice-payment-item:last-child{
+  border-bottom:0;
+}
+.invoice-payment-item strong{
+  display:block;
+  color:var(--dark);
+  margin-bottom:4px;
+}
+.invoice-proof-link{
+  display:inline-block;
+  margin-top:7px;
+  color:var(--green);
+  font-weight:700;
+  text-decoration:underline;
+}
+.invoice-form{
+  margin-top:14px;
+  padding:13px;
+  border:1px solid #e9c58d;
+  border-radius:12px;
+  background:#fffaf1;
+}
+.invoice-form small{
+  display:block;
+  color:var(--muted);
+  line-height:1.6;
+  margin-top:5px;
+}
+.invoice-message{
+  margin-top:10px;
+  font-size:13px;
+  line-height:1.6;
+}
+.invoice-message.error{color:#b42318}
+.invoice-message.success{color:#21683a}
+.invoice-empty{
+  padding:22px 14px;
+  text-align:center;
+  border:1px dashed #cbd7ce;
+  border-radius:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+.invoice-refresh{
+  margin-bottom:12px;
+}
 /* BOTTOM NAV */
 .bottom-navigation{
   position:fixed;z-index:200;left:0;right:0;bottom:0;
@@ -626,7 +758,31 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
         <p id="profile-message" class="muted" role="status"></p>
       </form>
     </section>
+<!-- TAGIHAN KOPIHUB -->
+<section class="panel" id="tagihan-kopihub">
+  <h2>Tagihan KopiHub</h2>
+  <p class="muted">
+    Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
+    Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
+  </p>
 
+  <button
+    class="secondary invoice-refresh"
+    id="refresh-owner-invoices"
+    type="button">
+    Muat Ulang Tagihan
+  </button>
+
+  <p id="owner-invoice-message" class="invoice-message" role="status">
+    Tagihan belum dimuat.
+  </p>
+
+  <div id="owner-invoice-list">
+    <div class="invoice-empty">
+      Tagihan akan ditampilkan di sini.
+    </div>
+  </div>
+</section>
     <!-- MANAJEMEN KASIR -->
     <section class="panel" id="manajemen-kasir">
       <h2>Manajemen Kasir</h2>

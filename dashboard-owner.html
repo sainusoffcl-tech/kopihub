@@ -2569,98 +2569,72 @@ $("report-end-date").addEventListener("change", () => {
 });
 
 
-/* EXCEL */
-function safeFileName(value) {
-  return String(value || "kopihub")
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
-$("download-report-excel").addEventListener("click", () => {
-  if (!currentReport) {
-    alert("Tampilkan laporan terlebih dahulu.");
-    return;
-  }
+const summaryRows = [
+  ["LAPORAN PENJUALAN KOPIHUB"],
+  ["Nama Kedai", report.shopName],
+  ["Periode", report.range.label],
+  ["Zona Waktu", report.timezone],
+  [],
+  ["Ringkasan", "Nilai"],
+  ["Nilai Seluruh Pesanan", report.totalValue],
+  ["Omzet Sudah Dibayar", report.paidValue],
+  ["Nilai Belum Dibayar", report.unpaidValue],
+  ["Jumlah Pesanan", report.orders.length],
+  ["Pesanan Lunas", report.paidOrders.length],
+  ["Pesanan Belum Lunas", report.unpaidOrders.length],
+  ["Jumlah Produk Terjual", report.productCount],
+  [],
+  ["Sumber Pesanan", "Jumlah", "Pesanan Lunas", "Omzet Lunas"],
+  [
+    "Online",
+    report.sourceSummary.Online.count,
+    report.sourceSummary.Online.paidCount,
+    report.sourceSummary.Online.paidValue
+  ],
+  [
+    "Kasir",
+    report.sourceSummary.Kasir.count,
+    report.sourceSummary.Kasir.paidCount,
+    report.sourceSummary.Kasir.paidValue
+  ],
+  [
+    "Tidak diketahui",
+    report.sourceSummary["Tidak diketahui"].count,
+    report.sourceSummary["Tidak diketahui"].paidCount,
+    report.sourceSummary["Tidak diketahui"].paidValue
+  ],
+  [],
+  [
+    "Catatan",
+    "Omzet dihitung dari subtotal pesanan berstatus paid."
+  ]
+];
 
-  if (!window.XLSX) {
-    alert("Fitur Excel belum termuat. Periksa koneksi internet.");
-    return;
-  }
-
-  const report = currentReport;
-
-  const summaryRows = [
-    ["LAPORAN PENJUALAN KOPIHUB"],
-    ["Nama Kedai", report.shopName],
-    ["Periode", report.range.label],
-    ["Zona Waktu", report.timezone],
-    [],
-    ["Ringkasan", "Nilai"],
-    ["Nilai Seluruh Pesanan", report.totalValue],
-    ["Omzet Sudah Dibayar", report.paidValue],
-    ["Nilai Belum Dibayar", report.unpaidValue],
-    ["Jumlah Pesanan", report.orders.length],
-    ["Pesanan Lunas", report.paidOrders.length],
-    ["Pesanan Belum Lunas", report.unpaidOrders.length],
-    ["Jumlah Produk Terjual", report.productCount],
-    [],
-    [
-      "Catatan",
-      "Omzet dihitung dari subtotal pesanan berstatus paid."
-    ]
-  ];
-
-  const productRows = [
-    ["Nama Produk", "Jumlah Terjual", "Nilai Penjualan"],
-    ...report.productData.map(item => [
-      item.name,
-      item.quantity,
-      item.total
-    ])
-  ];
-
-  const orderRows = [
-    ["Nomor Pesanan", "Tanggal", "Status Pembayaran", "Subtotal"],
-    ...report.orders.map(order => [
-      order.order_number ?? order.id,
-      order.created_at
-        ? new Date(order.created_at).toLocaleString("id-ID")
-        : "",
-      order.payment_status || "Tidak diketahui",
-      orderValue(order)
-    ])
-  ];
-
-  const workbook = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(summaryRows),
-    "Ringkasan"
-  );
-
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(productRows),
-    "Penjualan Produk"
-  );
-
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.aoa_to_sheet(orderRows),
-    "Daftar Pesanan"
-  );
-
-  XLSX.writeFile(
-    workbook,
-    "laporan-penjualan-" +
-    safeFileName(report.shopSlug) +
-    "-" + report.range.start +
-    "-sampai-" + report.range.end + ".xlsx"
-  );
-});
-
+const orderRows = [
+  [
+    "Nomor Pesanan",
+    "Tanggal",
+    "Sumber",
+    "Jenis Pesanan",
+    "Status Pesanan",
+    "Status Pembayaran",
+    "Metode Pembayaran",
+    "Subtotal"
+  ],
+  ...report.orders.map(order => [
+    order.order_number ?? order.id,
+    order.created_at
+      ? new Date(order.created_at).toLocaleString("id-ID")
+      : "",
+    getOrderSourceLabel(order),
+    order.order_type || "",
+    order.order_status || order.status || "",
+    order.payment_status || "Tidak diketahui",
+    order.payment_method || "Tidak diketahui",
+    orderValue(order)
+  ])
+];
 
 /* PDF */
 $("download-report-pdf").addEventListener("click", () => {

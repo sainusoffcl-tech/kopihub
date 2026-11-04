@@ -2368,8 +2368,674 @@ $("header-profile-button").addEventListener("click",()=>{
   $("app-scroll").scrollTo({top:0,behavior:"smooth"});
   $("profile-shop-name").focus({preventScroll:true});
 });
+/* =====================================================
+   KOPIHUB — OWNER INVOICE / TAGIHAN
+   ===================================================== */
 
-/* LOGOUT */
+let ownerInvoices = [];
+let invoiceSubmitBusy = false;
+
+function invoiceRupiah(value) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(Number(value || 0));
+}
+
+function invoiceDate(value) {
+  if (!value) return "-";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return date.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+function invoiceStatus(status) {
+  const statuses = {
+    issued: {
+      label: "Menunggu Pembayaran",
+      className: ""
+    },
+    carried_forward: {
+      label: "Dibawa ke Tagihan Berikutnya",
+      className: "carried"
+    },
+    paid: {
+      label: "Lunas",
+      className: "paid"
+    },
+    void: {
+      label: "Dibatalkan",
+      className: "rejected"
+    }
+  };
+
+  return statuses[status] || {
+    label: status || "Tidak diketahui",
+    className: ""
+  };
+}
+
+function invoicePaymentStatus(status) {
+  const statuses = {
+    submitted: "Menunggu verifikasi Admin",
+    approved: "Pembayaran telah diterima",
+    rejected: "Pembayaran ditolak"
+  };
+
+  return statuses[status] || status || "Tidak diketahui";
+}
+
+function invoiceElement(tag, className, text) {
+  const element = document.createElement(tag);
+
+  if (className) {
+    element.className = className;
+  }
+
+  if (text !== undefined && text !== null) {
+    element.textContent = String(text);
+  }
+
+  return element;
+}
+
+function invoiceLine(label, value, extraClass = "") {
+  const line = invoiceElement(
+    "div",
+    "invoice-line " + extraClass
+  );
+
+  line.appendChild(
+    invoiceElement("span", "", label)
+  );
+
+  line.appendChild(
+    invoiceElement("strong", "", value)
+  );
+
+  return line;
+}
+
+function setOwnerInvoiceMessage(message, type = "") {
+  const target = document.getElementById(
+    "owner-invoice-message"
+  );
+
+  if (!target) return;
+
+  target.textContent = message || "";
+  target.className = "invoice-message " + type;
+}
+
+async function loadOwnerInvoices() {
+  const list = document.getElementById(
+    "owner-invoice-list"
+  );
+
+  if (!list) return;
+
+  if (!client || !selectedShop || !selectedShop.id) {
+    setOwnerInvoiceMessage(
+      "Data kedai belum tersedia. Silakan muat ulang halaman."
+      ,
+      "error"
+    );
+    return;
+  }
+
+  list.replaceChildren(
+    invoiceElement(
+      "div",
+      "invoice-empty",
+      "Memuat tagihan..."
+    )
+  );
+
+  setOwnerInvoiceMessage("Mengambil riwayat tagihan...");
+
+  try {
+    const { data, error } = await client.rpc(
+      "kh_owner_get_invoices"
+    );
+
+    if (error) throw error;
+
+    if (!data || data.success !== true) {
+      throw new Error(
+        data?.message || "Tidak dapat mengambil data tagihan."
+      );
+    }
+
+    ownerInvoices = Array.isArray(data.invoices)
+      ? data.invoices.filter(invoice =>
+          invoice.shop_id === selectedShop.id
+        )
+      : [];
+
+    renderOwnerInvoices();
+
+    setOwnerInvoiceMessage(
+      ownerInvoices.length
+        ? "Riwayat tagihan berhasil dimuat."
+        : "Belum ada tagihan untuk kedai ini."
+    );
+
+  } catch (error) {
+    console.error("Load owner invoices:", error);
+
+    list.replaceChildren(
+      invoiceElement(
+        "div",
+        "invoice-empty",
+        "Tagihan gagal dimuat. Silakan coba lagi."
+      )
+    );
+
+    setOwnerInvoiceMessage(
+      error.message || "Terjadi kesalahan saat memuat tagihan.",
+      "error"
+    );
+  }
+}
+
+async function renderInvoicePaymentHistory(invoice, container) {
+  const payments = Array.isArray(invoice.payments)
+    ? invoice.payments
+    : [];
+
+  if (!payments.length) return;
+
+  const history = invoiceElement(
+    "div",
+    "invoice-payment-history"
+  );
+
+  history.appendChild(
+    invoiceElement(
+      "strong",
+      "",
+      "Riwayat Pembayaran"
+    )
+  );
+
+  for (const payment of payments) {
+    const item = invoiceElement(
+      "div",
+      "invoice-payment-item"
+    );
+
+    item.appendChild(
+      invoiceElement(
+        "strong",
+        "",
+        invoicePaymentStatus(payment.status)
+      )
+    );
+
+    item.appendChild(
+      invoiceElement(
+        "div",
+        "",
+        "Jumlah: " + invoiceRupiah(payment.amount)
+      )
+    );
+
+    item.appendChild(
+      invoiceElement(
+        "div",
+        "",
+        "Dikirim: " + invoiceDate(payment.submitted_at)
+      )
+    );
+
+    if (payment.reviewed_at) {
+      item.appendChild(
+        invoiceElement(
+          "div",
+          "",
+          "Diperiksa: " + invoiceDate(payment.reviewed_at)
+        )
+      );
+    }
+
+    if (payment.status === "rejected" && payment.rejection_reason) {
+      item.appendChild(
+        invoiceElement(
+          "div",
+          "invoice-message error",
+          "Alasan penolakan: " + payment.rejection_reason
+        )
+      );
+    }
+
+    if (payment.proof_path) {
+      try {
+        const { data, error } = await client.storage
+          .from("kh-invoice-proofs")
+          .createSignedUrl(payment.proof_path, 300);
+
+        if (!error && data?.signedUrl) {
+          const link = invoiceElement(
+            "a",
+            "invoice-proof-link",
+            "Lihat bukti transfer"
+          );
+
+          link.href = data.signedUrl;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+
+          item.appendChild(link);
+        }
+      } catch (error) {
+        console.warn(
+          "Tidak dapat membuat tautan bukti:",
+          error
+        );
+      }
+    }
+
+    history.appendChild(item);
+  }
+
+  container.appendChild(history);
+}
+
+function createInvoicePaymentForm(invoice, card) {
+  const form = invoiceElement(
+    "form",
+    "invoice-form"
+  );
+
+  form.appendChild(
+    invoiceElement(
+      "strong",
+      "",
+      "Kirim Bukti Transfer"
+    )
+  );
+
+  form.appendChild(
+    invoiceElement(
+      "p",
+      "",
+      "Nominal pembayaran harus sesuai dengan total tagihan."
+    )
+  );
+
+  form.appendChild(
+    invoiceElement(
+      "div",
+      "",
+      "Total yang harus ditransfer: " +
+      invoiceRupiah(invoice.total_due)
+    )
+  );
+
+  const fileLabel = invoiceElement(
+    "label",
+    "",
+    "Pilih bukti transfer"
+  );
+
+  fileLabel.style.display = "block";
+  fileLabel.style.marginTop = "12px";
+
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept =
+    ".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf";
+  fileInput.required = true;
+  fileInput.style.display = "block";
+  fileInput.style.width = "100%";
+  fileInput.style.marginTop = "7px";
+
+  fileLabel.appendChild(fileInput);
+  form.appendChild(fileLabel);
+
+  form.appendChild(
+    invoiceElement(
+      "small",
+      "",
+      "Format: JPG, PNG, atau PDF. Maksimal 10 MB. " +
+      "Pastikan bukti transfer dapat dibaca."
+    )
+  );
+
+  const message = invoiceElement(
+    "div",
+    "invoice-message"
+  );
+
+  message.setAttribute("role", "status");
+  form.appendChild(message);
+
+  const submit = document.createElement("button");
+  submit.type = "submit";
+  submit.className = "primary";
+  submit.textContent = "Kirim Bukti Pembayaran";
+
+  form.appendChild(submit);
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (invoiceSubmitBusy) return;
+
+    const file = fileInput.files?.[0];
+
+    if (!file) {
+      message.textContent = "Pilih file bukti transfer terlebih dahulu.";
+      message.className = "invoice-message error";
+      return;
+    }
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "application/pdf"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      message.textContent =
+        "Format file tidak didukung. Gunakan JPG, PNG, atau PDF.";
+      message.className = "invoice-message error";
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      message.textContent =
+        "Ukuran file melebihi batas 10 MB.";
+      message.className = "invoice-message error";
+      return;
+    }
+
+    if (file.size === 0) {
+      message.textContent = "File yang dipilih kosong.";
+      message.className = "invoice-message error";
+      return;
+    }
+
+    invoiceSubmitBusy = true;
+    submit.disabled = true;
+    submit.textContent = "Mengirim...";
+
+    try {
+      const randomPart =
+        window.crypto?.randomUUID
+          ? window.crypto.randomUUID()
+          : Math.random().toString(36).slice(2);
+
+      const safeName = file.name
+        .replace(/[^a-zA-Z0-9._-]/g, "-")
+        .slice(-80);
+
+      const filename =
+        Date.now() + "-" + randomPart + "-" + safeName;
+
+      const proofPath =
+        selectedShop.id + "/" +
+        invoice.id + "/" +
+        filename;
+
+      message.textContent = "Mengunggah bukti transfer...";
+      message.className = "invoice-message";
+
+      const { error: uploadError } = await client.storage
+        .from("kh-invoice-proofs")
+        .upload(proofPath, file, {
+          contentType: file.type,
+          cacheControl: "3600",
+          upsert: false
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      message.textContent =
+        "Bukti berhasil diunggah. Mencatat pengajuan pembayaran...";
+
+      const { data, error } = await client.rpc(
+        "kh_owner_submit_invoice_payment",
+        {
+          p_invoice_id: invoice.id,
+          p_amount: Number(invoice.total_due),
+          p_proof_path: proofPath
+        }
+      );
+
+      if (error) {
+        throw new Error(
+          "Bukti sudah terunggah, tetapi pengajuan belum tercatat. " +
+          "Jangan unggah ulang dengan file yang sama. " +
+          "Silakan hubungi Admin KopiHub. Detail: " +
+          error.message
+        );
+      }
+
+      if (!data || data.success !== true) {
+        throw new Error(
+          data?.message ||
+          "Pengajuan pembayaran belum berhasil dicatat."
+        );
+      }
+
+      message.textContent =
+        "Bukti pembayaran berhasil dikirim. " +
+        "Menunggu verifikasi Admin KopiHub.";
+
+      message.className = "invoice-message success";
+
+      fileInput.value = "";
+
+      await loadOwnerInvoices();
+
+    } catch (error) {
+      console.error("Submit invoice payment:", error);
+
+      message.textContent =
+        error.message ||
+        "Terjadi kesalahan saat mengirim bukti pembayaran.";
+
+      message.className = "invoice-message error";
+
+    } finally {
+      invoiceSubmitBusy = false;
+      submit.disabled = false;
+      submit.textContent = "Kirim Bukti Pembayaran";
+    }
+  });
+
+  card.appendChild(form);
+}
+
+function renderOwnerInvoices() {
+  const list = document.getElementById(
+    "owner-invoice-list"
+  );
+
+  if (!list) return;
+
+  list.replaceChildren();
+
+  if (!ownerInvoices.length) {
+    list.appendChild(
+      invoiceElement(
+        "div",
+        "invoice-empty",
+        "Belum ada tagihan. Tagihan akan muncul setelah periode penagihan selesai dan invoice diterbitkan."
+      )
+    );
+    return;
+  }
+
+  const sortedInvoices = [...ownerInvoices].sort(
+    (a, b) =>
+      new Date(b.period_start || 0) -
+      new Date(a.period_start || 0)
+  );
+
+  for (const invoice of sortedInvoices) {
+    const card = invoiceElement(
+      "article",
+      "invoice-card"
+    );
+
+    const top = invoiceElement(
+      "div",
+      "invoice-card-top"
+    );
+
+    const heading = invoiceElement("div");
+
+    heading.appendChild(
+      invoiceElement(
+        "div",
+        "invoice-number",
+        invoice.invoice_number || "Invoice KopiHub"
+      )
+    );
+
+    heading.appendChild(
+      invoiceElement(
+        "div",
+        "invoice-period",
+        "Periode: " +
+        invoiceDate(invoice.period_start) +
+        " – " +
+        invoiceDate(invoice.period_end)
+      )
+    );
+
+    top.appendChild(heading);
+
+    const status = invoiceStatus(invoice.status);
+
+    top.appendChild(
+      invoiceElement(
+        "span",
+        "invoice-status " + status.className,
+        status.label
+      )
+    );
+
+    card.appendChild(top);
+
+    const details = invoiceElement(
+      "div",
+      "invoice-details"
+    );
+
+    details.appendChild(
+      invoiceLine(
+        "Saldo awal",
+        invoiceRupiah(invoice.opening_balance)
+      )
+    );
+
+    details.appendChild(
+      invoiceLine(
+        "Biaya layanan periode ini",
+        invoiceRupiah(invoice.period_fee)
+      )
+    );
+
+    details.appendChild(
+      invoiceLine(
+        "Jatuh tempo",
+        invoiceDate(invoice.due_at)
+      )
+    );
+
+    details.appendChild(
+      invoiceLine(
+        "Total tagihan",
+        invoiceRupiah(invoice.total_due),
+        "invoice-total"
+      )
+    );
+
+    card.appendChild(details);
+
+    const payments = Array.isArray(invoice.payments)
+      ? invoice.payments
+      : [];
+
+    const hasSubmitted = payments.some(
+      payment => payment.status === "submitted"
+    );
+
+    const hasApproved = payments.some(
+      payment => payment.status === "approved"
+    );
+
+    if (invoice.status === "paid") {
+      const paidInfo = invoiceElement(
+        "div",
+        "invoice-message success"
+      );
+
+      paidInfo.textContent =
+        "Pembayaran Telah Diterima. Invoice berstatus Lunas" +
+        (invoice.paid_at
+          ? " pada " + invoiceDate(invoice.paid_at) + "."
+          : ".");
+
+      card.appendChild(paidInfo);
+
+      card.appendChild(
+        invoiceElement(
+          "div",
+          "invoice-message",
+          "Pembayaran telah diverifikasi oleh Admin KopiHub."
+        )
+      );
+
+    } else if (invoice.status === "carried_forward") {
+      card.appendChild(
+        invoiceElement(
+          "div",
+          "invoice-message",
+          "Saldo tagihan ini telah dibawa ke tagihan periode berikutnya. Pembayaran dilakukan melalui invoice terbaru."
+        )
+      );
+
+    } else if (invoice.status === "issued" && hasSubmitted) {
+      card.appendChild(
+        invoiceElement(
+          "div",
+          "invoice-message",
+          "Bukti pembayaran sudah dikirim dan sedang menunggu verifikasi Admin KopiHub."
+        )
+      );
+
+    } else if (
+      invoice.status === "issued" &&
+      !hasApproved
+    ) {
+      createInvoicePaymentForm(invoice, card);
+    }
+
+    renderInvoicePaymentHistory(invoice, card);
+
+    list.appendChild(card);
+  }
+}
+
+/* Tombol muat ulang tagihan */
+document
+  .getElementById("refresh-owner-invoices")
+  ?.addEventListener("click", loadOwnerInvoices);
+
+  /* LOGOUT */
 $("logout").addEventListener("click",async function(){
   const logoutButton=this;
   const originalText=logoutButton.textContent;

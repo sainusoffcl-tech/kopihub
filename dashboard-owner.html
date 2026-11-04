@@ -3642,41 +3642,30 @@ document
   ?.addEventListener("click", loadOwnerInvoices);
 
 /* LOGOUT */
-$("logout").addEventListener("click", async function () {
-  const logoutButton = this;
-  const originalText = logoutButton.textContent;
+const logoutButton = $("logout");
 
-  if (!client) {
-    alert(
-      "Koneksi Supabase belum siap. Muat ulang halaman, lalu coba lagi."
-    );
-    return;
-  }
+console.log("Tombol logout ditemukan:", !!logoutButton);
 
-  if (logoutButton.disabled) return;
+if (logoutButton) {
+  logoutButton.addEventListener("click", async function () {
+    console.log("Tombol logout diklik");
 
-  logoutButton.disabled = true;
-  logoutButton.textContent = "Sedang keluar...";
+    try {
+      const { data, error } = await client.auth.signOut();
 
-  try {
-    const { error } = await client.auth.signOut();
+      console.log("Hasil logout:", data);
+      console.log("Error logout:", error);
 
-    if (error) throw error;
+      if (error) throw error;
 
-    window.location.replace("akun.html");
+      window.location.replace("akun.html");
 
-  } catch (error) {
-    console.error("Gagal keluar dari akun:", error);
-
-    alert(
-      "Gagal keluar dari akun. Periksa koneksi internet, lalu coba lagi."
-    );
-
-    logoutButton.disabled = false;
-    logoutButton.textContent = originalText;
-  }
-});
-
+    } catch (error) {
+      console.error("Gagal logout:", error);
+      alert("Logout gagal: " + error.message);
+    }
+  });
+}
 
 /* MULAI DASHBOARD */
 navigateToPage("home");

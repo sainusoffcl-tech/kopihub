@@ -1313,7 +1313,23 @@
         display: none !important;
       }
     }
+/* ADMIN HEADER — FULL BLEED IPHONE SAFE AREA */
+@media (max-width: 849px) {
+  html,
+  body {
+    background: var(--green) !important;
+  }
 
+  #app,
+  #app main,
+  .header-shell {
+    border-radius: 0 !important;
+  }
+
+  .header-shell {
+    background: var(--green) !important;
+  }
+}
     @media (prefers-reduced-motion: reduce) {
       .topbar,
       .compact-header,

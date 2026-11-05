@@ -3416,8 +3416,26 @@ document.getElementById("back-to-dashboard-shops")
 
     async function initAdmin() {
       try {
-        const { data: authData, error: authError } =
-          await client.auth.getUser();
+        if (!client || !client.auth) {
+  throw new Error(
+    "Koneksi Supabase belum berhasil dibuat. Periksa pemuatan library Supabase."
+  );
+}
+
+const authResult = await Promise.race([
+  client.auth.getUser(),
+  new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(
+        new Error(
+          "Pemeriksaan akun melebihi 15 detik. Periksa koneksi Supabase."
+        )
+      );
+    }, 15000);
+  })
+]);
+
+const { data: authData, error: authError } = authResult;
 
         if (authError || !authData.user) {
           throw new Error("Silakan login terlebih dahulu.");

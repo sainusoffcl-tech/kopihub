@@ -2103,34 +2103,41 @@ function getSafeAreaTop() {
     }
 
     function measureHeader() {
-      if (!isMobileLayout()) {
-        headerShell.style.height = "";
-        expandedHeader.style.transform = "";
-        expandedHeader.style.opacity = "";
-        compactHeader.style.opacity = "";
-        compactHeader.style.visibility = "";
-        compactHeader.style.pointerEvents = "";
-        compactHeader.style.transform = "";
-        return;
-      }
+  if (!isMobileLayout()) {
+    headerShell.style.height = "";
 
-      /*
-       * Ukur tinggi asli header besar.
-       * Nilai ini mempertimbangkan safe area iPhone.
-       */
+    expandedHeader.style.transform = "";
+    expandedHeader.style.opacity = "";
 
-      expandedHeader.style.transform = "none";
-      expandedHeader.style.opacity = "1";
+    compactHeader.style.opacity = "";
+    compactHeader.style.visibility = "";
+    compactHeader.style.pointerEvents = "";
+    compactHeader.style.transform = "";
 
-      const measuredHeight =
-        expandedHeader.getBoundingClientRect().height;
+    topbarContent.style.transform = "";
 
-      if (measuredHeight > 0) {
-        expandedHeight = measuredHeight;
-      }
+    compactHeight = COMPACT_HEIGHT;
 
-      updateCollapsingHeader();
-    }
+    return;
+  }
+
+  /* Hitung tinggi compact termasuk safe area */
+  compactHeight =
+    COMPACT_HEIGHT + getSafeAreaTop();
+
+  /* Ukur header besar */
+  expandedHeader.style.transform = "none";
+  expandedHeader.style.opacity = "1";
+
+  const measuredHeight =
+    expandedHeader.getBoundingClientRect().height;
+
+  if (measuredHeight > 0) {
+    expandedHeight = measuredHeight;
+  }
+
+  updateCollapsingHeader();
+}
 
     function updateCollapsingHeader() {
       if (!isMobileLayout()) return;

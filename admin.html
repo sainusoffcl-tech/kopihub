@@ -2159,12 +2159,10 @@ function getSafeAreaTop() {
        */
 
       const currentHeight =
-        expandedHeight -
-        ((expandedHeight - COMPACT_HEIGHT) * progress);
+  expandedHeight - ((expandedHeight - compactHeight) * progress);
 
-      headerShell.style.height =
-        Math.max(COMPACT_HEIGHT, currentHeight) + "px";
-
+headerShell.style.height =
+  Math.max(compactHeight, currentHeight) + "px";
       /*
        * PARALLAX RINGAN:
        * Konten header bergerak sedikit lebih lambat.

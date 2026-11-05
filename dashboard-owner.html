@@ -1339,7 +1339,21 @@ async function callCashierManagementFunction(body) {
   );
 
   if (error) {
-    throw new Error(error.message || "Gagal menghubungi layanan kasir.");
+    let detail = error.message || "Permintaan ke server gagal.";
+
+    try {
+      if (error.context && typeof error.context.json === "function") {
+        const responseBody = await error.context.json();
+
+        if (responseBody?.error) {
+          detail = responseBody.error;
+        } else if (responseBody?.message) {
+          detail = responseBody.message;
+        }
+      }
+    } catch (_) {}
+
+    throw new Error(detail);
   }
 
   if (!data) {
@@ -1347,7 +1361,7 @@ async function callCashierManagementFunction(body) {
   }
 
   if (data.success === false) {
-    throw new Error(data.error || "Permintaan gagal.");
+    throw new Error(data.error || data.message || "Permintaan gagal.");
   }
 
   return data;

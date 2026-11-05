@@ -1765,6 +1765,221 @@
 
 </section>
 
+<!-- TRANSAKSI PLATFORM -->
+<section id="platform-transactions-section" hidden>
+
+  <div class="pt-page-heading">
+    <div>
+      <h2 class="section-title">Transaksi Platform</h2>
+      <p class="muted">
+        Pantau seluruh uang masuk dan uang keluar KopiHub.
+      </p>
+    </div>
+
+    <button type="button" class="action-button"
+      id="reload-platform-transactions">
+      <i data-lucide="refresh-cw"></i>
+      Muat Ulang
+    </button>
+  </div>
+
+  <!-- RINGKASAN KEUANGAN -->
+  <div class="pt-summary-grid">
+
+    <article class="pt-summary-card pt-income">
+      <div class="pt-summary-icon">
+        <i data-lucide="trending-up"></i>
+      </div>
+      <span>Total Uang Masuk</span>
+      <strong id="pt-total-income">Memuat...</strong>
+      <small>Pembayaran invoice Owner yang disetujui</small>
+    </article>
+
+    <article class="pt-summary-card pt-outflow">
+      <div class="pt-summary-icon">
+        <i data-lucide="trending-down"></i>
+      </div>
+      <span>Total Uang Keluar</span>
+      <strong id="pt-total-outflow">Memuat...</strong>
+      <small>Pengeluaran dan pengembalian dana</small>
+    </article>
+
+    <article class="pt-summary-card pt-balance">
+      <div class="pt-summary-icon">
+        <i data-lucide="wallet"></i>
+      </div>
+      <span>Saldo Bersih</span>
+      <strong id="pt-net-balance">Memuat...</strong>
+      <small>Uang masuk dikurangi uang keluar</small>
+    </article>
+
+  </div>
+
+  <!-- AKSI -->
+  <div class="pt-action-card">
+    <div>
+      <strong>Pencatatan Keuangan</strong>
+      <p>
+        Catat pengeluaran operasional atau pengembalian dana
+        yang dilakukan oleh KopiHub.
+      </p>
+    </div>
+
+    <button type="button" class="pt-primary-button"
+      id="pt-open-outflow-form">
+      <i data-lucide="plus"></i>
+      Catat Uang Keluar
+    </button>
+  </div>
+
+  <!-- FORM UANG KELUAR -->
+  <div class="pt-form-card" id="pt-outflow-form" hidden>
+
+    <div class="pt-form-heading">
+      <div>
+        <strong>Catat Transaksi Keluar</strong>
+        <p>Informasi ini akan disimpan dalam riwayat keuangan platform.</p>
+      </div>
+
+      <button type="button" class="pt-close-button"
+        id="pt-close-outflow-form" aria-label="Tutup formulir">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <label for="pt-outflow-type">Jenis transaksi</label>
+    <select id="pt-outflow-type">
+      <option value="operational_expense">Pengeluaran operasional</option>
+      <option value="refund">Pengembalian dana</option>
+    </select>
+
+    <label for="pt-outflow-category">Kategori</label>
+    <input id="pt-outflow-category" type="text"
+      placeholder="Contoh: Infrastruktur, server, administrasi">
+
+    <label for="pt-outflow-description">Keterangan</label>
+    <textarea id="pt-outflow-description"
+      placeholder="Jelaskan tujuan pengeluaran..."
+      rows="3"></textarea>
+
+    <label for="pt-outflow-amount">Nominal (Rupiah)</label>
+    <input id="pt-outflow-amount" type="number"
+      min="1" step="1" inputmode="numeric"
+      placeholder="Contoh: 150000">
+
+    <label for="pt-outflow-method">Metode pembayaran</label>
+    <input id="pt-outflow-method" type="text"
+      placeholder="Contoh: Transfer bank">
+
+    <label for="pt-outflow-date">Tanggal transaksi</label>
+    <input id="pt-outflow-date" type="datetime-local">
+
+    <label for="pt-outflow-recipient">Penerima</label>
+    <input id="pt-outflow-recipient" type="text"
+      placeholder="Nama penerima (opsional)">
+
+    <label for="pt-outflow-reference">Nomor referensi</label>
+    <input id="pt-outflow-reference" type="text"
+      placeholder="Nomor referensi pembayaran (opsional)">
+
+    <div id="pt-refund-field" hidden>
+      <label for="pt-refund-payment-id">
+        ID Pembayaran Invoice yang Dikembalikan
+      </label>
+      <input id="pt-refund-payment-id" type="text"
+        placeholder="Masukkan ID pembayaran invoice yang disetujui">
+      <small>
+        Pengembalian dana harus terkait pembayaran invoice Owner
+        yang telah disetujui.
+      </small>
+    </div>
+
+    <label for="pt-outflow-attachment">Path lampiran (opsional)</label>
+    <input id="pt-outflow-attachment" type="text"
+      placeholder="Path file bukti jika sudah tersedia">
+
+    <div class="pt-form-actions">
+      <button type="button" class="pt-primary-button"
+        id="pt-save-outflow">
+        Simpan Transaksi
+      </button>
+
+      <button type="button" class="pt-secondary-button"
+        id="pt-cancel-outflow">
+        Batal
+      </button>
+    </div>
+
+    <p id="pt-outflow-message" class="pt-message"
+      aria-live="polite"></p>
+
+  </div>
+
+  <!-- FILTER -->
+  <div class="pt-filter-card">
+
+    <div class="pt-filter-heading">
+      <div>
+        <strong>Riwayat Transaksi</strong>
+        <p>Telusuri arus kas KopiHub berdasarkan kriteria.</p>
+      </div>
+    </div>
+
+    <label for="pt-period">Periode</label>
+    <select id="pt-period">
+      <option value="all">Semua Periode</option>
+      <option value="today">Hari Ini</option>
+      <option value="7days">7 Hari Terakhir</option>
+      <option value="month">Bulan Ini</option>
+      <option value="custom">Rentang Tanggal</option>
+    </select>
+
+    <div class="pt-date-range" id="pt-date-range" hidden>
+      <div>
+        <label for="pt-date-from">Dari tanggal</label>
+        <input type="date" id="pt-date-from">
+      </div>
+      <div>
+        <label for="pt-date-to">Sampai tanggal</label>
+        <input type="date" id="pt-date-to">
+      </div>
+    </div>
+
+    <label for="pt-type">Jenis transaksi</label>
+    <select id="pt-type">
+      <option value="all">Semua Transaksi</option>
+      <option value="income">Uang Masuk</option>
+      <option value="outflow">Uang Keluar</option>
+    </select>
+
+    <label for="pt-search">Pencarian</label>
+    <input id="pt-search" type="search"
+      placeholder="Cari nomor referensi, kedai, atau keterangan...">
+
+    <button type="button" class="pt-primary-button"
+      id="pt-apply-filter">
+      <i data-lucide="search"></i>
+      Terapkan Filter
+    </button>
+
+  </div>
+
+  <!-- DAFTAR TRANSAKSI -->
+  <div class="pt-list-heading">
+    <div>
+      <strong>Daftar Transaksi</strong>
+      <p id="pt-result-count">Menyiapkan data transaksi...</p>
+    </div>
+  </div>
+
+  <div id="pt-transactions-message" class="muted"
+    aria-live="polite">
+    Memuat transaksi platform...
+  </div>
+
+  <div id="pt-transactions-list" class="pt-transactions-list"></div>
+
+</section>
         
 <!-- PENGATURAN PLATFORM -->
 <section id="settings-section" hidden>

@@ -799,7 +799,120 @@
       margin: 0 auto 10px;
       color: #9aa99b;
     }
+/* =====================================
+   PENGATURAN PLATFORM
+===================================== */
 
+.settings-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.settings-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.settings-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--green);
+  background: #edf2e9;
+}
+
+.settings-heading h3 {
+  margin: 0;
+  color: var(--green);
+  font-size: 15px;
+}
+
+.settings-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.settings-rate-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.settings-rate {
+  margin: 0 0 6px;
+  color: var(--green);
+  font-size: 30px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.settings-note {
+  margin: 12px 0 18px;
+  padding: 12px;
+  border-radius: 11px;
+  color: #754719;
+  background: #fff0df;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.settings-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.settings-form label {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.settings-form input {
+  width: 100%;
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  outline: none;
+  color: var(--text);
+  background: #fafbf8;
+  font: inherit;
+  font-size: 16px;
+}
+
+.settings-form input:focus {
+  border-color: var(--green2);
+}
+
+.settings-message {
+  min-height: 20px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.settings-message.success {
+  color: #236338;
+}
+
+.settings-message.error {
+  color: var(--red);
+}
     /* =====================================
        NAVIGASI BAWAH
     ===================================== */
@@ -1291,11 +1404,10 @@
 
       <div class="nav-label">SISTEM</div>
 
-      <button type="button" class="nav-item"
-        data-coming-soon="Pengaturan Platform">
-        <i data-lucide="settings"></i>
-        <span>Pengaturan Platform</span>
-      </button>
+      <button type="button" id="nav-settings" class="nav-item">
+  <i data-lucide="settings"></i>
+  <span>Pengaturan Platform</span>
+</button>
 
       <button type="button" class="nav-item"
         data-coming-soon="Audit Log">

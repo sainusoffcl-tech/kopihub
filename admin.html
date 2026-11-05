@@ -2141,7 +2141,10 @@
       applicationsSection.hidden = page !== "applications";
       commissionSection.hidden = page !== "commission";
       settingsSection.hidden = page !== "settings";
-
+      
+if (page === "settings") {
+  loadPlatformSettings();
+}
       document.getElementById("page-title").textContent =
         pageTitles[page] || "Dashboard Admin";
 

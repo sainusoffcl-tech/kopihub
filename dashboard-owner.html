@@ -2568,7 +2568,83 @@ function getReportRange() {
     "Pilihan periode laporan tidak dikenali."
   );
 }
+/* REKAP METODE PEMBAYARAN */
+function renderPaymentReport(orders) {
+  const tbody = $("report-payment-methods");
 
+  if (!tbody) return;
+
+  const paymentMap = new Map();
+
+  // Hanya transaksi lunas yang dihitung sebagai pembayaran berhasil.
+  orders.filter(isPaid).forEach(order => {
+    const rawMethod = String(
+      order.payment_method || ""
+    ).trim().toLowerCase();
+
+    let method = "Tidak diketahui";
+
+    if (rawMethod === "cash" || rawMethod === "tunai") {
+      method = "Tunai";
+    } else if (rawMethod === "qris") {
+      method = "QRIS";
+    } else if (
+      ["cashier", "pay_at_cashier", "bayar_di_kasir"].includes(rawMethod)
+    ) {
+      method = "Bayar di Kasir";
+    } else if (rawMethod) {
+      method = rawMethod
+        .replace(/[_-]/g, " ")
+        .replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    if (!paymentMap.has(method)) {
+      paymentMap.set(method, {
+        method,
+        count: 0,
+        total: 0
+      });
+    }
+
+    const item = paymentMap.get(method);
+
+    item.count += 1;
+    item.total += orderValue(order);
+  });
+
+  const paymentData = [...paymentMap.values()]
+    .sort((a, b) => b.total - a.total);
+
+  tbody.replaceChildren();
+
+  if (!paymentData.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+
+    cell.colSpan = 3;
+    cell.textContent = "Belum ada transaksi pembayaran lunas.";
+
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    return;
+  }
+
+  paymentData.forEach(item => {
+    const row = document.createElement("tr");
+
+    const methodCell = document.createElement("td");
+    methodCell.textContent = item.method;
+
+    const countCell = document.createElement("td");
+    countCell.textContent = item.count;
+
+    const totalCell = document.createElement("td");
+    totalCell.textContent = rupiah(item.total);
+
+    row.append(methodCell, countCell, totalCell);
+    tbody.appendChild(row);
+  });
+}
 /* UPDATE LAPORAN */
 function updateReport() {
   const shop = selectedShop();

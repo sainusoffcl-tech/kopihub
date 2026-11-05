@@ -1307,7 +1307,7 @@
         display: none !important;
       }
     }
-    /* ADMIN HEADER — FULL BLEED IPHONE SAFE AREA */
+    /* ADMIN HEADER — IPHONE SAFE AREA */
 @media (max-width: 849px) {
   html,
   body {
@@ -1328,18 +1328,14 @@
     background: var(--cream) !important;
   }
 
-  #app.layout {
-    padding-top: 0 !important;
-    box-sizing: border-box;
+  .header-shell {
     background: var(--green) !important;
   }
 
-  .topbar {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
-  }
-
-  .compact-header {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+  #app.layout {
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: border-box;
+    background: var(--green) !important;
   }
 }
   </style>

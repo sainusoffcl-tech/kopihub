@@ -2978,7 +2978,238 @@ document.getElementById("back-to-dashboard-shops")
         reject.disabled = false;
       }
     }
+/* =========================================
+   PENGATURAN BIAYA LAYANAN PLATFORM
+========================================= */
 
+const currentServiceFee =
+  document.getElementById("current-service-fee");
+
+const serviceFeeUpdated =
+  document.getElementById("service-fee-updated");
+
+const serviceFeeForm =
+  document.getElementById("service-fee-form");
+
+const serviceFeeInput =
+  document.getElementById("service-fee-input");
+
+const serviceFeeMessage =
+  document.getElementById("service-fee-message");
+
+const editServiceFeeButton =
+  document.getElementById("edit-service-fee");
+
+const saveServiceFeeButton =
+  document.getElementById("save-service-fee");
+
+const cancelServiceFeeButton =
+  document.getElementById("cancel-service-fee");
+
+let currentServiceFeeValue = null;
+
+function formatRupiah(value) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(Number(value) || 0);
+}
+
+function showServiceFeeMessage(message, type = "") {
+  serviceFeeMessage.textContent = message;
+  serviceFeeMessage.className =
+    "settings-message " + type;
+}
+
+async function loadPlatformSettings() {
+  currentServiceFee.textContent = "Memuat tarif...";
+  serviceFeeUpdated.textContent =
+    "Mengambil data dari database...";
+
+  editServiceFeeButton.disabled = true;
+
+  const { data, error } = await client
+    .from("kh_platform_settings")
+    .select(
+      "id, service_fee_per_paid_order, updated_at, updated_by"
+    )
+    .eq("id", true)
+    .maybeSingle();
+
+  if (error) {
+    currentServiceFee.textContent = "Gagal dimuat";
+    serviceFeeUpdated.textContent =
+      "Pengaturan gagal dibaca: " + error.message;
+
+    editServiceFeeButton.disabled = false;
+    console.error("Gagal membaca tarif platform:", error);
+    return;
+  }
+
+  if (!data) {
+    currentServiceFee.textContent = "Belum tersedia";
+    serviceFeeUpdated.textContent =
+      "Data pengaturan tarif tidak ditemukan.";
+
+    editServiceFeeButton.disabled = true;
+    return;
+  }
+
+  currentServiceFeeValue =
+    Number(data.service_fee_per_paid_order);
+
+  currentServiceFee.textContent =
+    formatRupiah(currentServiceFeeValue) + " / pesanan";
+
+  serviceFeeUpdated.textContent = data.updated_at
+    ? "Terakhir diperbarui: " +
+      new Date(data.updated_at).toLocaleString("id-ID", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      })
+    : "Waktu pembaruan belum tersedia.";
+
+  serviceFeeInput.value = currentServiceFeeValue;
+
+  editServiceFeeButton.disabled = false;
+}
+
+editServiceFeeButton.addEventListener("click", () => {
+  if (currentServiceFeeValue === null) return;
+
+  serviceFeeInput.value = currentServiceFeeValue;
+  serviceFeeForm.hidden = false;
+  editServiceFeeButton.hidden = true;
+
+  showServiceFeeMessage("");
+
+  serviceFeeInput.focus();
+});
+
+cancelServiceFeeButton.addEventListener("click", () => {
+  serviceFeeForm.hidden = true;
+  editServiceFeeButton.hidden = false;
+
+  serviceFeeInput.value = currentServiceFeeValue ?? "";
+  showServiceFeeMessage("");
+});
+
+saveServiceFeeButton.addEventListener("click", async () => {
+  const newFee = Number(serviceFeeInput.value);
+
+  if (
+    !Number.isSafeInteger(newFee) ||
+    newFee <= 0
+  ) {
+    showServiceFeeMessage(
+      "Tarif harus berupa angka bulat lebih besar dari Rp0.",
+      "error"
+    );
+    return;
+  }
+
+  if (newFee === currentServiceFeeValue) {
+    showServiceFeeMessage(
+      "Tarif baru sama dengan tarif yang sedang berlaku.",
+      "error"
+    );
+    return;
+  }
+
+  const confirmed = confirm(
+    "Konfirmasi perubahan tarif layanan KopiHub\n\n" +
+    "Tarif lama: " +
+    formatRupiah(currentServiceFeeValue) +
+    "\nTarif baru: " +
+    formatRupiah(newFee) +
+    "\n\nTarif baru akan digunakan untuk konfirmasi pembayaran berikutnya. " +
+    "Catatan biaya yang sudah tercatat tidak berubah.\n\n" +
+    "Apakah kamu yakin ingin menyimpan perubahan ini?"
+  );
+
+  if (!confirmed) return;
+
+  saveServiceFeeButton.disabled = true;
+  cancelServiceFeeButton.disabled = true;
+
+  showServiceFeeMessage("Menyimpan tarif baru...");
+
+  try {
+    const { data: authData, error: authError } =
+      await client.auth.getUser();
+
+    if (authError || !authData.user) {
+      throw new Error(
+        "Sesi Admin tidak ditemukan. Silakan login kembali."
+      );
+    }
+
+    const { data, error } = await client
+      .from("kh_platform_settings")
+      .update({
+        service_fee_per_paid_order: newFee,
+        updated_by: authData.user.id,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", true)
+      .select(
+        "service_fee_per_paid_order, updated_at"
+      )
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      throw new Error(
+        "Tarif tidak berubah. Periksa kembali hak akses Admin dan data pengaturan."
+      );
+    }
+
+    currentServiceFeeValue =
+      Number(data.service_fee_per_paid_order);
+
+    currentServiceFee.textContent =
+      formatRupiah(currentServiceFeeValue) + " / pesanan";
+
+    serviceFeeUpdated.textContent =
+      "Terakhir diperbarui: " +
+      new Date(data.updated_at).toLocaleString("id-ID", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
+
+    serviceFeeForm.hidden = true;
+    editServiceFeeButton.hidden = false;
+
+    serviceFeeInput.value = currentServiceFeeValue;
+
+    showServiceFeeMessage(
+      "Tarif berhasil diperbarui.",
+      "success"
+    );
+
+    alert(
+      "Tarif layanan KopiHub berhasil diperbarui menjadi " +
+      formatRupiah(currentServiceFeeValue) +
+      " per pesanan."
+    );
+
+  } catch (error) {
+    console.error("Gagal menyimpan tarif:", error);
+
+    showServiceFeeMessage(
+      "Tarif gagal disimpan: " + error.message,
+      "error"
+    );
+
+    await loadPlatformSettings();
+
+  } finally {
+    saveServiceFeeButton.disabled = false;
+    cancelServiceFeeButton.disabled = false;
+  }
+});
     /* =========================================
        EVENT NAVIGASI DESKTOP
     ========================================= */

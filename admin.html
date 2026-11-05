@@ -2507,6 +2507,8 @@ headerShell.style.height =
       ordersSection.hidden = page !== "orders";
       applicationsSection.hidden = page !== "applications";
       commissionSection.hidden = page !== "commission";
+      platformTransactionsSection.hidden =
+  page !== "platformTransactions";
       settingsSection.hidden = page !== "settings";
       
 if (page === "settings") {
@@ -2547,7 +2549,9 @@ if (page === "settings") {
       if (page === "commission") loadCommissionData();
       refreshIcons();
     }
-
+      if (page === "platformTransactions") {
+  loadPlatformTransactions();
+}
 /* =========================================
    RINGKASAN COFFEE SHOP
 ========================================= */

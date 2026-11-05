@@ -2430,7 +2430,15 @@ function aggregateProducts(orders) {
   const map = new Map();
 
   orders.forEach(order => {
-    parseOrderItems(order.report_items).forEach(item => {
+    // Utamakan data relasional jika tersedia.
+    // Jika kosong, baca rincian dari kh_orders.items.
+    const relationalItems = parseOrderItems(order.report_items);
+
+    const items = relationalItems.length
+      ? relationalItems
+      : parseOrderItems(order.items);
+
+    items.forEach(item => {
       const key = item.name;
 
       if (!map.has(key)) {
@@ -2452,7 +2460,6 @@ function aggregateProducts(orders) {
     (a, b) => b.total - a.total
   );
 }
-
 
 /* REKAP SUMBER PESANAN */
 function aggregateOrderSources(orders) {

@@ -1633,7 +1633,102 @@
           </div>
 
         </section>
+<!-- PENGATURAN PLATFORM -->
+<section id="settings-section" hidden>
 
+  <h2 class="section-title">Pengaturan Platform</h2>
+
+  <p class="muted">
+    Kelola ketentuan dan tarif layanan yang berlaku untuk seluruh kedai mitra KopiHub.
+  </p>
+
+  <div class="settings-card">
+
+    <div class="settings-heading">
+      <div class="settings-icon">
+        <i data-lucide="wallet"></i>
+      </div>
+
+      <div>
+        <h3>Biaya Layanan KopiHub</h3>
+        <p>
+          Tarif yang dibebankan kepada Owner untuk setiap pesanan
+          yang berhasil dibayar.
+        </p>
+      </div>
+    </div>
+
+    <span class="settings-rate-label">
+      Tarif aktif per pesanan paid
+    </span>
+
+    <div class="settings-rate" id="current-service-fee">
+      Memuat tarif...
+    </div>
+
+    <p class="muted" id="service-fee-updated">
+      Mengambil data dari database...
+    </p>
+
+    <div class="settings-note">
+      Biaya layanan merupakan kewajiban Owner kedai, bukan biaya
+      tambahan pelanggan. Perubahan tarif hanya berlaku untuk
+      konfirmasi pembayaran berikutnya. Catatan biaya yang sudah
+      tercatat tidak berubah.
+    </div>
+
+    <button type="button" class="action-button" id="edit-service-fee">
+      <i data-lucide="pencil"></i>
+      Ubah Tarif
+    </button>
+
+    <div class="settings-form" id="service-fee-form" hidden>
+
+      <label for="service-fee-input">
+        Tarif baru per pesanan (Rupiah)
+      </label>
+
+      <input
+        type="number"
+        id="service-fee-input"
+        min="1"
+        step="1"
+        inputmode="numeric"
+        placeholder="Contoh: 3000"
+      >
+
+      <p class="muted">
+        Tarif yang sama akan berlaku untuk seluruh kedai mitra.
+      </p>
+
+      <div>
+        <button
+          type="button"
+          class="action-button"
+          id="save-service-fee">
+          <i data-lucide="save"></i>
+          Simpan Tarif
+        </button>
+
+        <button
+          type="button"
+          class="action-button"
+          id="cancel-service-fee">
+          Batal
+        </button>
+      </div>
+
+      <div
+        class="settings-message"
+        id="service-fee-message"
+        aria-live="polite">
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
       </div>
     </main>
 
@@ -1804,6 +1899,9 @@
     const commissionSection =
       document.getElementById("commission-section");
 
+    const settingsSection =
+  document.getElementById("settings-section");
+    
     const shopsList =
       document.getElementById("shops-list");
 
@@ -1998,6 +2096,7 @@
       orders: "Pesanan Platform",
       applications: "Pendaftaran Mitra",
       commission: "Komisi & Pendapatan"
+      settings: "Pengaturan Platform"
     };
 
     function setDesktopActive(page) {

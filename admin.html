@@ -3423,6 +3423,440 @@ saveServiceFeeButton.addEventListener("click", async () => {
     cancelServiceFeeButton.disabled = false;
   }
 });
+    
+/* =========================================================
+   KOPIHUB ADMIN — INTEGRASI KOMISI & PENDAPATAN
+   Menggunakan RPC aman untuk data billing yang RLS-nya aktif.
+========================================================= */
+
+let commissionLoading = false;
+let commissionShopLoaded = false;
+
+function commissionRupiah(value) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(Number(value || 0));
+}
+
+function commissionDate(value) {
+  if (!value) return "-";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Jayapura"
+  }).format(date);
+}
+
+function commissionEscape(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function commissionStatus(value) {
+  const labels = {
+    unpaid: "Belum dibayar",
+    paid: "Lunas",
+    issued: "Menunggu pembayaran",
+    submitted: "Menunggu verifikasi",
+    approved: "Disetujui",
+    rejected: "Ditolak",
+    carried_forward: "Dibawa ke invoice berikutnya",
+    cancelled: "Dibatalkan"
+  };
+
+  return labels[value] || value || "-";
+}
+
+function commissionSetMessage(id, message, isError = false) {
+  const element = document.getElementById(id);
+  if (!element) return;
+
+  element.textContent = message;
+  element.style.color = isError ? "#b42318" : "";
+}
+
+async function loadCommissionShops() {
+  const select = document.getElementById("commission-shop-filter");
+  if (!select || commissionShopLoaded) return;
+
+  const { data, error } = await client
+    .from("kh_shops")
+    .select("id,name")
+    .order("name", { ascending: true });
+
+  if (error) throw error;
+
+  const currentValue = select.value;
+
+  select.innerHTML = '<option value="">Semua Kedai</option>';
+
+  (data || []).forEach(shop => {
+    const option = document.createElement("option");
+    option.value = shop.id;
+    option.textContent = shop.name || "Kedai tanpa nama";
+    select.appendChild(option);
+  });
+
+  select.value = currentValue;
+  commissionShopLoaded = true;
+}
+
+function renderCommissionLedger(rows) {
+  const container = document.getElementById("commission-ledger-list");
+  if (!container) return;
+
+  if (!rows || !rows.length) {
+    container.innerHTML =
+      '<p class="empty-state">Belum ada catatan biaya layanan pada periode ini.</p>';
+    return;
+  }
+
+  container.innerHTML = rows.map(item => `
+    <div class="commission-record">
+      <div class="commission-record-main">
+        <strong>${commissionEscape(item.shop_name || "Kedai")}</strong>
+        <small>No. Pesanan: ${commissionEscape(item.order_id || "-")}</small>
+        <small>${commissionDate(item.confirmed_at)}</small>
+      </div>
+      <div class="commission-record-side">
+        <strong>${commissionRupiah(item.fee_amount)}</strong>
+        <span>${commissionEscape(commissionStatus(item.liability_status))}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderCommissionInvoices(rows) {
+  const container = document.getElementById("commission-invoice-list");
+  if (!container) return;
+
+  if (!rows || !rows.length) {
+    container.innerHTML =
+      '<p class="empty-state">Belum ada invoice yang diterbitkan.</p>';
+    return;
+  }
+
+  container.innerHTML = rows.map(item => `
+    <div class="commission-record">
+      <div class="commission-record-main">
+        <strong>${commissionEscape(item.invoice_number || "Invoice")}</strong>
+        <small>${commissionEscape(item.shop_name || "Kedai")}</small>
+        <small>Periode: ${commissionDate(item.period_start)} – ${commissionDate(item.period_end)}</small>
+        <small>Saldo awal: ${commissionRupiah(item.opening_balance)}</small>
+        <small>Biaya periode: ${commissionRupiah(item.period_fee)}</small>
+      </div>
+      <div class="commission-record-side">
+        <strong>${commissionRupiah(item.total_due)}</strong>
+        <span>${commissionEscape(commissionStatus(item.status))}</span>
+        <small>Jatuh tempo: ${commissionDate(item.due_at)}</small>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function renderCommissionPayments(rows) {
+  const container = document.getElementById("commission-payment-list");
+  if (!container) return;
+
+  if (!rows || !rows.length) {
+    container.innerHTML =
+      '<p class="empty-state">Tidak ada pembayaran yang menunggu verifikasi.</p>';
+    return;
+  }
+
+  const paymentCards = await Promise.all(rows.map(async payment => {
+    let proofUrl = "";
+
+    if (payment.proof_path) {
+      const { data: signedData, error: signedError } =
+        await client.storage
+          .from("kh-invoice-proofs")
+          .createSignedUrl(payment.proof_path, 300);
+
+      if (!signedError && signedData?.signedUrl) {
+        proofUrl = signedData.signedUrl;
+      }
+    }
+
+    return `
+      <div class="commission-record commission-payment-record">
+        <div class="commission-record-main">
+          <strong>${commissionEscape(payment.invoice_number || "Invoice")}</strong>
+          <small>${commissionEscape(payment.shop_name || "Kedai")}</small>
+          <small>Jumlah pembayaran: ${commissionRupiah(payment.payment_amount)}</small>
+          <small>Dikirim: ${commissionDate(payment.submitted_at)}</small>
+          <small>Status: ${commissionEscape(commissionStatus(payment.payment_status))}</small>
+          ${
+            proofUrl
+              ? `<a href="${commissionEscape(proofUrl)}" target="_blank" rel="noopener noreferrer">Lihat bukti pembayaran</a>`
+              : '<small>Bukti pembayaran tidak dapat dibuka.</small>'
+          }
+        </div>
+        <div class="commission-record-actions">
+          <button type="button"
+            class="commission-approve-btn"
+            data-payment-id="${commissionEscape(payment.payment_id)}">
+            Setujui
+          </button>
+          <button type="button"
+            class="commission-reject-btn"
+            data-payment-id="${commissionEscape(payment.payment_id)}">
+            Tolak
+          </button>
+        </div>
+      </div>
+    `;
+  }));
+
+  container.innerHTML = paymentCards.join("");
+}
+
+async function loadCommissionData() {
+  if (commissionLoading) return;
+
+  commissionLoading = true;
+
+  const reloadButton = document.getElementById("reload-commission");
+  if (reloadButton) reloadButton.disabled = true;
+
+  commissionSetMessage("commission-ledger-message", "Memuat catatan biaya layanan...");
+  commissionSetMessage("commission-invoice-message", "Memuat riwayat invoice...");
+  commissionSetMessage("commission-payment-message", "Memuat pembayaran Owner...");
+
+  try {
+    await loadCommissionShops();
+
+    const period =
+      document.getElementById("commission-period")?.value || "all";
+
+    const shopId =
+      document.getElementById("commission-shop-filter")?.value || null;
+
+    const { data, error } = await client.rpc(
+      "kh_admin_get_commission_dashboard",
+      {
+        p_period: period,
+        p_shop_id: shopId
+      }
+    );
+
+    if (error) throw error;
+    if (!data || data.success !== true) {
+      throw new Error(data?.message || "Data komisi tidak berhasil dimuat.");
+    }
+
+    const summary = data.summary || {};
+
+    const totalElement = document.getElementById("commission-total");
+    const paidElement = document.getElementById("commission-paid");
+    const unpaidElement = document.getElementById("commission-unpaid");
+    const noteElement = document.getElementById("commission-summary-note");
+
+    if (totalElement) totalElement.textContent = commissionRupiah(summary.total);
+    if (paidElement) paidElement.textContent = commissionRupiah(summary.paid);
+    if (unpaidElement) unpaidElement.textContent = commissionRupiah(summary.unpaid);
+
+    if (noteElement) {
+      noteElement.textContent =
+        `${Number(summary.count || 0)} catatan biaya layanan pada periode yang dipilih.`;
+    }
+
+    // Ambil tarif aktif dari pengaturan platform.
+    const { data: settings, error: settingsError } = await client
+      .from("kh_platform_settings")
+      .select("service_fee_per_paid_order")
+      .eq("id", true)
+      .maybeSingle();
+
+    if (settingsError) throw settingsError;
+
+    const rateElement = document.getElementById("commission-rate");
+    if (rateElement) {
+      rateElement.textContent = commissionRupiah(
+        settings?.service_fee_per_paid_order || 0
+      );
+    }
+
+    renderCommissionLedger(data.ledger || []);
+    renderCommissionInvoices(data.invoices || []);
+
+    commissionSetMessage(
+      "commission-ledger-message",
+      `${(data.ledger || []).length} catatan ditemukan.`
+    );
+
+    commissionSetMessage(
+      "commission-invoice-message",
+      `${(data.invoices || []).length} invoice ditemukan.`
+    );
+
+    // Pembayaran yang menunggu verifikasi diambil melalui RPC Admin.
+    const { data: paymentData, error: paymentError } = await client.rpc(
+      "kh_admin_get_pending_invoice_payments"
+    );
+
+    if (paymentError) throw paymentError;
+    if (paymentData?.success !== true) {
+      throw new Error(
+        paymentData?.message || "Daftar pembayaran Owner gagal dimuat."
+      );
+    }
+
+    const payments = paymentData.payments || [];
+
+    // Filter kedai mengikuti pilihan Admin.
+    const filteredPayments = shopId
+      ? payments.filter(payment => payment.shop_id === shopId)
+      : payments;
+
+    await renderCommissionPayments(filteredPayments);
+
+    commissionSetMessage(
+      "commission-payment-message",
+      `${filteredPayments.length} pembayaran menunggu verifikasi.`
+    );
+
+  } catch (error) {
+    console.error("Komisi KopiHub:", error);
+
+    commissionSetMessage(
+      "commission-ledger-message",
+      error.message || "Gagal memuat data biaya layanan.",
+      true
+    );
+
+    commissionSetMessage(
+      "commission-invoice-message",
+      "Riwayat invoice gagal dimuat.",
+      true
+    );
+
+    commissionSetMessage(
+      "commission-payment-message",
+      "Daftar pembayaran gagal dimuat.",
+      true
+    );
+  } finally {
+    commissionLoading = false;
+    if (reloadButton) reloadButton.disabled = false;
+  }
+}
+
+async function approveCommissionPayment(paymentId) {
+  if (!paymentId) return;
+
+  const confirmed = confirm(
+    "Setujui pembayaran invoice ini? Pastikan bukti dan jumlah pembayaran sudah benar."
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const { data, error } = await client.rpc(
+      "kh_admin_approve_invoice_payment",
+      { p_payment_id: paymentId }
+    );
+
+    if (error) throw error;
+    if (data?.success !== true) {
+      throw new Error(data?.message || "Pembayaran gagal disetujui.");
+    }
+
+    alert("Pembayaran berhasil disetujui dan alokasi biaya layanan telah dicatat.");
+    await loadCommissionData();
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "Terjadi kesalahan saat menyetujui pembayaran.");
+  }
+}
+
+async function rejectCommissionPayment(paymentId) {
+  if (!paymentId) return;
+
+  const reason = prompt(
+    "Masukkan alasan penolakan pembayaran invoice:"
+  );
+
+  if (reason === null) return;
+
+  const cleanReason = reason.trim();
+
+  if (!cleanReason) {
+    alert("Alasan penolakan wajib diisi.");
+    return;
+  }
+
+  if (cleanReason.length > 1000) {
+    alert("Alasan penolakan maksimal 1.000 karakter.");
+    return;
+  }
+
+  try {
+    const { data, error } = await client.rpc(
+      "kh_admin_reject_invoice_payment",
+      {
+        p_payment_id: paymentId,
+        p_reason: cleanReason
+      }
+    );
+
+    if (error) throw error;
+    if (data?.success !== true) {
+      throw new Error(data?.message || "Pembayaran gagal ditolak.");
+    }
+
+    alert("Pembayaran berhasil ditolak.");
+    await loadCommissionData();
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "Terjadi kesalahan saat menolak pembayaran.");
+  }
+}
+
+/* Event tombol dan filter Komisi */
+document.getElementById("reload-commission")
+  ?.addEventListener("click", loadCommissionData);
+
+document.getElementById("filter-commission")
+  ?.addEventListener("click", loadCommissionData);
+
+document.getElementById("commission-period")
+  ?.addEventListener("change", loadCommissionData);
+
+document.getElementById("commission-shop-filter")
+  ?.addEventListener("change", loadCommissionData);
+
+/* Event tombol Setujui/Tolak pada daftar pembayaran */
+document.getElementById("commission-payment-list")
+  ?.addEventListener("click", event => {
+    const approveButton = event.target.closest(".commission-approve-btn");
+    const rejectButton = event.target.closest(".commission-reject-btn");
+
+    if (approveButton) {
+      approveCommissionPayment(approveButton.dataset.paymentId);
+    }
+
+    if (rejectButton) {
+      rejectCommissionPayment(rejectButton.dataset.paymentId);
+    }
+  });
+
     /* =========================================
        EVENT NAVIGASI DESKTOP
     ========================================= */
@@ -3467,6 +3901,9 @@ document.getElementById("nav-settings")
 
     document.getElementById("reload-applications")
       .addEventListener("click", loadApplications);
+
+    document.getElementById("reload-commission")
+  ?.addEventListener("click", loadCommissionData);
 
     /* =========================================
        LOGOUT

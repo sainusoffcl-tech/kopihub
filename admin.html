@@ -2455,27 +2455,28 @@ headerShell.style.height =
        NAVIGASI HALAMAN
     ========================================= */
 
-    const pageTitles = {
-      dashboard: "Dashboard Admin",
-      shops: "Kedai Mitra",
-      orders: "Pesanan Platform",
-      applications: "Pendaftaran Mitra",
-      commission: "Komisi & Pendapatan",
-      settings: "Pengaturan Platform"
-    };
+  const pageTitles = {
+  dashboard: "Dashboard Admin",
+  shops: "Kedai Mitra",
+  orders: "Pesanan Platform",
+  applications: "Pendaftaran Mitra",
+  commission: "Komisi & Pendapatan",
+  platformTransactions: "Transaksi Platform",
+  settings: "Pengaturan Platform"
+};
 
     function setDesktopActive(page) {
       document.querySelectorAll("aside .nav-item")
         .forEach(button => button.classList.remove("active"));
 
-      const map = {
-        dashboard: "nav-dashboard",
-        shops: "nav-shops",
-        orders: "nav-orders",
-        applications: "nav-applications",
-        commission: "nav-commission"
-      };
-
+     const map = {
+  dashboard: "nav-dashboard",
+  shops: "nav-shops",
+  orders: "nav-orders",
+  applications: "nav-applications",
+  commission: "nav-commission",
+  platformTransactions: "nav-platform-transactions"
+};
       if (map[page]) {
         document.getElementById(map[page])
           ?.classList.add("active");

@@ -2568,7 +2568,43 @@ function getReportRange() {
     "Pilihan periode laporan tidak dikenali."
   );
 }
-/* REKAP METODE PEMBAYARAN */
+/* TAMPILKAN RINCIAN PRODUK */
+function renderProductReport(products) {
+  const tbody = $("report-product-list");
+
+  if (!tbody) return;
+
+  tbody.replaceChildren();
+
+  if (!products || products.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+
+    cell.colSpan = 3;
+    cell.textContent = "Belum ada rincian produk terjual.";
+
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    return;
+  }
+
+  products.forEach(product => {
+    const row = document.createElement("tr");
+
+    const nameCell = document.createElement("td");
+    nameCell.textContent = product.name;
+
+    const quantityCell = document.createElement("td");
+    quantityCell.textContent = product.quantity;
+
+    const totalCell = document.createElement("td");
+    totalCell.textContent = rupiah(product.total);
+
+    row.append(nameCell, quantityCell, totalCell);
+    tbody.appendChild(row);
+  });
+}
+  /* REKAP METODE PEMBAYARAN */
 function renderPaymentReport(orders) {
   const tbody = $("report-payment-methods");
 

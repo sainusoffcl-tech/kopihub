@@ -1616,23 +1616,140 @@
 
         </section>
 
-        <!-- KOMISI -->
-        <section id="commission-section" hidden>
 
-          <h2 class="section-title">Komisi &amp; Pendapatan</h2>
+<!-- KOMISI & PENDAPATAN -->
+<section id="commission-section" hidden>
 
-          <div class="panel">
-            <p>
-              <strong>Pengelolaan Komisi KopiHub</strong>
-            </p>
+  <h2 class="section-title">Komisi &amp; Pendapatan</h2>
 
-            <p class="muted">
-              Halaman perhitungan komisi akan diintegrasikan setelah
-              struktur transaksi dan pencatatan biaya layanan ditetapkan.
-            </p>
-          </div>
+  <!-- RINGKASAN PENDAPATAN -->
+  <div class="panel">
+    <div class="settings-heading">
+      <div>
+        <strong>Ringkasan Pendapatan KopiHub</strong>
+        <p class="muted">
+          Rekap biaya layanan dari seluruh kedai mitra.
+        </p>
+      </div>
+      <button type="button" class="action-button"
+        id="reload-commission">
+        <i data-lucide="refresh-cw"></i>
+        Muat Ulang
+      </button>
+    </div>
 
-        </section>
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <span>Total Biaya Layanan</span>
+        <strong id="commission-total">Memuat...</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Sudah Dibayar</span>
+        <strong id="commission-paid">Memuat...</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Belum Dibayar</span>
+        <strong id="commission-unpaid">Memuat...</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Tarif per Pesanan</span>
+        <strong id="commission-rate">Memuat...</strong>
+      </div>
+
+    </div>
+
+    <p class="muted" id="commission-summary-note">
+      Mengambil ringkasan pencatatan biaya layanan.
+    </p>
+  </div>
+
+  <!-- FILTER -->
+  <div class="panel">
+    <strong>Filter Pendapatan</strong>
+
+    <div class="settings-form">
+
+      <label for="commission-period">
+        Periode
+      </label>
+
+      <select id="commission-period">
+        <option value="all">Semua Periode</option>
+        <option value="today">Hari Ini</option>
+        <option value="7days">7 Hari Terakhir</option>
+        <option value="month">Bulan Ini</option>
+      </select>
+
+      <label for="commission-shop-filter">
+        Kedai Mitra
+      </label>
+
+      <select id="commission-shop-filter">
+        <option value="all">Semua Kedai</option>
+      </select>
+
+      <button type="button" class="action-button"
+        id="filter-commission">
+        Terapkan Filter
+      </button>
+    </div>
+  </div>
+
+  <!-- RIWAYAT BIAYA LAYANAN -->
+  <div class="panel">
+    <strong>Riwayat Biaya Layanan</strong>
+
+    <p class="muted">
+      Catatan biaya dari pesanan yang telah dikonfirmasi
+      pembayarannya.
+    </p>
+
+    <div id="commission-ledger-message" class="muted">
+      Memuat riwayat biaya layanan...
+    </div>
+
+    <div id="commission-ledger-list"></div>
+  </div>
+
+  <!-- TAGIHAN BULANAN -->
+  <div class="panel">
+    <strong>Tagihan Bulanan Kedai</strong>
+
+    <p class="muted">
+      Riwayat invoice, saldo awal tunggakan,
+      biaya periode berjalan, dan status pelunasan.
+    </p>
+
+    <div id="commission-invoice-message" class="muted">
+      Memuat data invoice...
+    </div>
+
+    <div id="commission-invoice-list"></div>
+  </div>
+
+  <!-- PEMBAYARAN MENUNGGU VERIFIKASI -->
+  <div class="panel">
+    <strong>Pembayaran Menunggu Verifikasi</strong>
+
+    <p class="muted">
+      Periksa bukti pembayaran yang dikirim oleh Owner
+      sebelum menyetujui atau menolaknya.
+    </p>
+
+    <div id="commission-payment-message" class="muted">
+      Memuat pembayaran...
+    </div>
+
+    <div id="commission-payment-list"></div>
+  </div>
+
+</section>
+
+        
 <!-- PENGATURAN PLATFORM -->
 <section id="settings-section" hidden>
 

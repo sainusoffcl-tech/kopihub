@@ -993,6 +993,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 const CASHIER_FUNCTION = "cashier-access";
+const CASHIER_MANAGEMENT_FUNCTION = "cashier-management-v2";
 const TEMPORARY_SERVICE_FEE = 3000;
 
 const $ = id => document.getElementById(id);
@@ -1327,7 +1328,30 @@ async function callCashierFunction(body) {
 
   return data;
 }
+async function callCashierManagementFunction(body) {
+  if (!client) {
+    throw new Error("Koneksi Supabase belum siap.");
+  }
 
+  const { data, error } = await client.functions.invoke(
+    CASHIER_MANAGEMENT_FUNCTION,
+    { body }
+  );
+
+  if (error) {
+    throw new Error(error.message || "Gagal menghubungi layanan kasir.");
+  }
+
+  if (!data) {
+    throw new Error("Server tidak mengirimkan respons.");
+  }
+
+  if (data.success === false) {
+    throw new Error(data.error || "Permintaan gagal.");
+  }
+
+  return data;
+}
 async function loadCashierStaff() {
   const shop = selectedShop();
 
@@ -1347,7 +1371,7 @@ async function loadCashierStaff() {
     '<div class="cashier-empty">Mengambil data kasir dari server...</div>';
 
   try {
-    const data = await callCashierFunction({
+    const data = await callCashierManagementFunction({
       action: "list_staff",
       shopId: shop.id
     });

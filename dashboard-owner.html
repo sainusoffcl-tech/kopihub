@@ -1659,7 +1659,7 @@ async function disableCashier(staff) {
   setCashierMessage("Memproses penonaktifan kasir...");
 
   try {
-    await callCashierFunction({
+    await callCashierManagementFunction({
       action: "disable_staff",
       shopId: shop.id,
       cashierId: staff.id

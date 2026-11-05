@@ -616,44 +616,116 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </section>
   </section>
 
-  <!-- TRANSAKSI -->
-  <section class="page" id="page-transaksi" hidden>
-    <h1 class="page-heading">Transaksi</h1>
-    <p class="page-description">Ringkasan transaksi dan aktivitas pembayaran kedai.</p>
-    <section class="panel">
-      <h2>Informasi Transaksi</h2>
-      <p class="muted">Pengelolaan pesanan, perubahan status pesanan, dan konfirmasi pembayaran merupakan tugas Dashboard Kasir.</p>
-      <div class="settings-item">
-        <div class="settings-icon">🧾</div>
-        <div class="settings-info">
-          <strong>Jumlah Pesanan Hari Ini</strong>
-          <span>Seluruh pesanan kedai</span>
-        </div>
-        <strong id="transaction-order-count">—</strong>
+
+<!-- TRANSAKSI -->
+<section class="page" id="page-transaksi" hidden>
+  <h1 class="page-heading">Transaksi</h1>
+  <p class="page-description">
+    Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
+  </p>
+
+  <section class="panel">
+    <h2>Informasi Transaksi</h2>
+    <p class="muted">
+      Riwayat transaksi hanya dapat dilihat oleh Owner.
+      Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
+    </p>
+
+    <div class="settings-item">
+      <div class="settings-icon">🧾</div>
+      <div class="settings-info">
+        <strong>Jumlah Pesanan Hari Ini</strong>
+        <span>Seluruh pesanan kedai</span>
       </div>
-      <div class="settings-item">
-        <div class="settings-icon">💳</div>
-        <div class="settings-info">
-          <strong>Transaksi Lunas</strong>
-          <span>Pesanan dengan pembayaran lunas</span>
-        </div>
-        <strong id="transaction-paid-count">—</strong>
+      <strong id="transaction-order-count">—</strong>
+    </div>
+
+    <div class="settings-item">
+      <div class="settings-icon">💳</div>
+      <div class="settings-info">
+        <strong>Transaksi Lunas</strong>
+        <span>Pesanan dengan pembayaran lunas</span>
       </div>
-      <div class="settings-item">
-        <div class="settings-icon">⏳</div>
-        <div class="settings-info">
-          <strong>Belum Dibayar</strong>
-          <span>Pesanan menunggu pembayaran</span>
-        </div>
-        <strong id="transaction-unpaid-count">—</strong>
+      <strong id="transaction-paid-count">—</strong>
+    </div>
+
+    <div class="settings-item">
+      <div class="settings-icon">⏳</div>
+      <div class="settings-info">
+        <strong>Belum Dibayar</strong>
+        <span>Pesanan menunggu pembayaran</span>
       </div>
-    </section>
-    <section class="panel">
-      <h2>Dashboard Kasir</h2>
-      <p class="muted">Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.</p>
-      <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
-    </section>
+      <strong id="transaction-unpaid-count">—</strong>
+    </div>
   </section>
+
+  <section class="panel">
+    <h2>Riwayat Transaksi</h2>
+    <p class="muted">
+      Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.
+    </p>
+
+    <div class="transaction-filters">
+      <label for="transaction-search">Cari transaksi</label>
+      <input
+        type="search"
+        id="transaction-search"
+        placeholder="Cari nomor pesanan..."
+      >
+
+      <label for="transaction-start-date">Dari tanggal</label>
+      <input type="date" id="transaction-start-date">
+
+      <label for="transaction-end-date">Sampai tanggal</label>
+      <input type="date" id="transaction-end-date">
+
+      <label for="transaction-payment-filter">Status pembayaran</label>
+      <select id="transaction-payment-filter">
+        <option value="all">Semua status</option>
+        <option value="paid">Lunas</option>
+        <option value="unpaid">Belum dibayar</option>
+      </select>
+
+      <label for="transaction-source-filter">Sumber pesanan</label>
+      <select id="transaction-source-filter">
+        <option value="all">Semua sumber</option>
+        <option value="online">Online</option>
+        <option value="kasir">Kasir</option>
+        <option value="unknown">Tidak diketahui</option>
+      </select>
+
+      <button
+        type="button"
+        class="action-link"
+        id="transaction-reset-filter"
+      >
+        Reset Filter
+      </button>
+    </div>
+
+    <p
+      class="muted"
+      id="transaction-result-count"
+      aria-live="polite"
+    >
+      Memuat riwayat transaksi...
+    </p>
+
+    <div id="transaction-list">
+      <p class="muted">Memuat riwayat transaksi...</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Dashboard Kasir</h2>
+    <p class="muted">
+      Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.
+    </p>
+    <a href="kasir.html" class="action-link primary">
+      Buka Dashboard Kasir
+    </a>
+  </section>
+</section>
 
   <!-- LAPORAN -->
   <section class="page" id="page-laporan" hidden>

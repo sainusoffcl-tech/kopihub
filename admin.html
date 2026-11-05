@@ -2076,10 +2076,27 @@
       document.getElementById("admin-content-scroll");
 
     const COLLAPSE_DISTANCE = 120;
-    const COMPACT_HEIGHT = 56;
+const COMPACT_HEIGHT = 56;
 
-    let expandedHeight = 0;
-    let headerAnimationFrame = null;
+let expandedHeight = 0;
+let compactHeight = COMPACT_HEIGHT;
+let headerAnimationFrame = null;
+
+function getSafeAreaTop() {
+  if (!isMobileLayout()) return 0;
+
+  const probe = document.createElement("div");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);";
+
+  document.body.appendChild(probe);
+
+  const safeArea =
+    parseFloat(getComputedStyle(probe).paddingTop) || 0;
+
+  probe.remove();
+  return safeArea;
+}
 
     function isMobileLayout() {
       return window.matchMedia("(max-width: 849px)").matches;

@@ -2490,6 +2490,85 @@ function aggregateOrderSources(orders) {
 }
 
 
+/* RENTANG PERIODE LAPORAN */
+function getReportRange() {
+  const shop = selectedShop();
+
+  const timezone = shop?.timezone || "Asia/Jayapura";
+  const formatter = getDateFormatter(timezone);
+  const today = getDateKey(new Date(), formatter);
+  const period = $("report-period").value;
+
+  // Menggeser tanggal kalender tanpa terpengaruh zona waktu perangkat.
+  function shiftDate(dateKey, days) {
+    const date = new Date(dateKey + "T12:00:00Z");
+    date.setUTCDate(date.getUTCDate() + days);
+
+    return [
+      date.getUTCFullYear(),
+      String(date.getUTCMonth() + 1).padStart(2, "0"),
+      String(date.getUTCDate()).padStart(2, "0")
+    ].join("-");
+  }
+
+  if (period === "today") {
+    return {
+      start: today,
+      end: today,
+      label: "Hari Ini"
+    };
+  }
+
+  if (period === "last7") {
+    return {
+      start: shiftDate(today, -6),
+      end: today,
+      label: "7 Hari Terakhir"
+    };
+  }
+
+  if (period === "month") {
+    return {
+      start: today.slice(0, 7) + "-01",
+      end: today,
+      label: "Bulan Ini"
+    };
+  }
+
+  if (period === "custom") {
+    const start = $("report-start-date").value;
+    const end = $("report-end-date").value;
+
+    if (!start || !end) {
+      throw new Error(
+        "Tanggal awal dan tanggal akhir wajib dipilih."
+      );
+    }
+
+    if (start > end) {
+      throw new Error(
+        "Tanggal awal tidak boleh melewati tanggal akhir."
+      );
+    }
+
+    if (end > today) {
+      throw new Error(
+        "Tanggal akhir tidak boleh melebihi hari ini."
+      );
+    }
+
+    return {
+      start,
+      end,
+      label: start + " sampai " + end
+    };
+  }
+
+  throw new Error(
+    "Pilihan periode laporan tidak dikenali."
+  );
+}
+
 /* UPDATE LAPORAN */
 function updateReport() {
   const shop = selectedShop();

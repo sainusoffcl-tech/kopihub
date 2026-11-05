@@ -2877,75 +2877,80 @@ headerShell.style.height =
       }
     }
 
-    function setMobileActive(page) {
-      const map = {
-        dashboard: "mobile-nav-dashboard",
-        shops: "mobile-nav-shops",
-        orders: "mobile-nav-orders",
-        commission: "mobile-nav-commission"
-        platformTransactions: "mobile-menu-platform-transactions"
-      };
+    
+function setMobileActive(page) {
+  const map = {
+    dashboard: "mobile-nav-dashboard",
+    shops: "mobile-nav-shops",
+    orders: "mobile-nav-orders",
+    commission: "mobile-nav-commission"
+  };
 
-      document.querySelectorAll(".bottom-nav-item")
-        .forEach(button => button.classList.remove("active"));
+  document.querySelectorAll(".bottom-nav-item")
+    .forEach(button => button.classList.remove("active"));
 
-      if (map[page]) {
-        document.getElementById(map[page])
-          ?.classList.add("active");
-      }
-    }
-
-    function showPage(page) {
-      dashboardView.hidden = page !== "dashboard";
-      shopsSection.hidden = page !== "shops";
-      ordersSection.hidden = page !== "orders";
-      applicationsSection.hidden = page !== "applications";
-      commissionSection.hidden = page !== "commission";
-      platformTransactionsSection.hidden =
-  page !== "platformTransactions";
-      settingsSection.hidden = page !== "settings";
-      
-if (page === "settings") {
-  loadPlatformSettings();
+  if (map[page]) {
+    document.getElementById(map[page])
+      ?.classList.add("active");
+  }
 }
-      document.getElementById("page-title").textContent =
-        pageTitles[page] || "Dashboard Admin";
 
-      setDesktopActive(page);
-      setMobileActive(page);
+function showPage(page) {
+  dashboardView.hidden = page !== "dashboard";
+  shopsSection.hidden = page !== "shops";
+  ordersSection.hidden = page !== "orders";
+  applicationsSection.hidden = page !== "applications";
+  commissionSection.hidden = page !== "commission";
 
-      if (contentScroll) {
-        contentScroll.scrollTop = 0;
-      }
+  platformTransactionsSection.hidden =
+    page !== "platformTransactions";
 
-      /*
-       * Kembalikan header ke posisi besar
-       * ketika berpindah halaman.
-       */
+  settingsSection.hidden = page !== "settings";
 
-      requestAnimationFrame(measureHeader);
+  if (page === "settings") {
+    loadPlatformSettings();
+  }
 
-      if (page === "dashboard") {
-  showDashboardShopList();
-  loadDashboardShops();
+  document.getElementById("page-title").textContent =
+    pageTitles[page] || "Dashboard Admin";
+
+  setDesktopActive(page);
+  setMobileActive(page);
+
+  if (contentScroll) {
+    contentScroll.scrollTop = 0;
+  }
+
+  requestAnimationFrame(measureHeader);
+
+  if (page === "dashboard") {
+    showDashboardShopList();
+    loadDashboardShops();
+  }
+
+  if (page === "shops") {
+    loadPartnerShops();
+  }
+
+  if (page === "orders") {
+    loadOrders();
+  }
+
+  if (page === "applications") {
+    loadApplications();
+  }
+
+  if (page === "commission") {
+    loadCommissionData();
+  }
+
+  if (page === "platformTransactions") {
+    loadPlatformTransactions();
+  }
+
+  refreshIcons();
 }
-      if (page === "shops") {
-        loadPartnerShops();
-      }
 
-      if (page === "orders") {
-        loadOrders();
-      }
-
-      if (page === "applications") {
-        loadApplications();
-      }
-      if (page === "commission") loadCommissionData();
-      refreshIcons();
-    }
-      if (page === "platformTransactions") {
-  loadPlatformTransactions();
-}
 /* =========================================
    RINGKASAN COFFEE SHOP
 ========================================= */

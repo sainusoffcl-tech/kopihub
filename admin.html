@@ -1337,6 +1337,400 @@
     box-sizing: border-box;
     background: var(--green) !important;
   }
+
+/* =====================================================
+   KOPIHUB ADMIN — TRANSAKSI PLATFORM
+===================================================== */
+
+.pt-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  color: var(--text, #26352d);
+}
+
+.pt-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pt-heading h2 {
+  margin: 0;
+  color: var(--green, #173d2e);
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.pt-heading p {
+  margin: 5px 0 0;
+  color: var(--muted, #718078);
+  font-size: 13px;
+}
+
+.pt-button {
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--green, #173d2e);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pt-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.pt-button.secondary {
+  background: #edf1ed;
+  color: var(--green, #173d2e);
+}
+
+.pt-button.orange {
+  background: var(--orange, #e99a48);
+  color: #fff;
+}
+
+/* RINGKASAN KEUANGAN */
+
+.pt-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.pt-summary-card {
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid var(--line, #e8e9e3);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.pt-summary-label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--muted, #718078);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pt-summary-value {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--green, #173d2e);
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.pt-summary-card.income {
+  border-top: 4px solid #39865c;
+}
+
+.pt-summary-card.outflow {
+  border-top: 4px solid #d98252;
+}
+
+.pt-summary-card.balance {
+  border-top: 4px solid var(--orange, #e99a48);
+}
+
+/* FORM PENCATATAN */
+
+.pt-panel {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line, #e8e9e3);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.pt-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.pt-panel-header h3 {
+  margin: 0;
+  color: var(--green, #173d2e);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.pt-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.pt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.pt-field.full {
+  grid-column: 1 / -1;
+}
+
+.pt-field label {
+  color: #43534a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pt-field input,
+.pt-field select,
+.pt-field textarea {
+  width: 100%;
+  min-height: 43px;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #dfe5df;
+  border-radius: 10px;
+  background: #fff;
+  color: #26352d;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.pt-field textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+.pt-field input:focus,
+.pt-field select:focus,
+.pt-field textarea:focus {
+  border-color: var(--green, #173d2e);
+  box-shadow: 0 0 0 3px rgba(23, 61, 46, .08);
+}
+
+.pt-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 17px;
+}
+
+.pt-message {
+  margin-top: 12px;
+  color: var(--muted, #718078);
+  font-size: 12px;
+}
+
+.pt-refund-field[hidden],
+#pt-outflow-form[hidden],
+#pt-refund-field[hidden] {
+  display: none !important;
+}
+
+/* FILTER TRANSAKSI */
+
+.pt-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.pt-filter-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+}
+
+.pt-date-range {
+  display: none;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.pt-date-range.active {
+  display: grid;
+}
+
+/* DAFTAR TRANSAKSI */
+
+.pt-result-count {
+  color: var(--muted, #718078);
+  font-size: 12px;
+}
+
+.pt-transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+}
+
+.pt-transaction-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line, #e8e9e3);
+  border-radius: 13px;
+  background: #fff;
+}
+
+.pt-transaction-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pt-transaction-main strong {
+  color: var(--green, #173d2e);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.pt-transaction-main small {
+  color: var(--muted, #718078);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.pt-transaction-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.pt-transaction-amount {
+  color: var(--green, #173d2e);
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pt-transaction-amount.outflow {
+  color: #b45336;
+}
+
+.pt-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: #edf3ed;
+  color: #286441;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.pt-status.voided {
+  background: #fcebea;
+  color: #a52c2c;
+}
+
+.pt-detail-button {
+  padding: 7px 11px;
+  border: 1px solid #dfe5df;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--green, #173d2e);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pt-empty {
+  padding: 30px 16px;
+  border: 1px dashed #d8dfd8;
+  border-radius: 13px;
+  color: var(--muted, #718078);
+  text-align: center;
+  font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 760px) {
+  .pt-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .pt-summary-card {
+    padding: 16px;
+  }
+
+  .pt-summary-value {
+    font-size: 21px;
+  }
+
+  .pt-filter-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pt-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pt-field.full {
+    grid-column: auto;
+  }
+
+  .pt-panel {
+    padding: 15px;
+  }
+
+  .pt-heading h2 {
+    font-size: 20px;
+  }
+
+  .pt-transaction-card {
+    align-items: flex-start;
+    padding: 13px;
+  }
+
+  .pt-transaction-amount {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .pt-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pt-date-range {
+    grid-template-columns: 1fr;
+  }
+
+  .pt-transaction-card {
+    flex-direction: column;
+  }
+
+  .pt-transaction-side {
+    width: 100%;
+    align-items: flex-start;
+  }
+}
+
 }
   </style>
 </head>

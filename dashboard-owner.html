@@ -712,6 +712,18 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   .report-actions{grid-template-columns:1fr}
   .nav-button{font-size:9px}
 }
+/* PETUNJUK DETAIL PADA KARTU PESANAN OWNER */
+.owner-order-detail-hint {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(23, 76, 56, 0.12);
+  color: #174c38;
+  font-size: 13px;
+  font-weight: 700;
+}
 </style>
 </head>
 
@@ -2782,7 +2794,12 @@ function renderOwnerOrderList() {
     }
 
     card.append(top, dateTime, source);
+/* PETUNJUK BUKA DETAIL PESANAN */
+const detailHint = document.createElement("div");
+detailHint.className = "owner-order-detail-hint";
+detailHint.textContent = "Detail →";
 
+card.appendChild(detailHint);
     /* KARTU PESANAN DAPAT DIBUKA */
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");

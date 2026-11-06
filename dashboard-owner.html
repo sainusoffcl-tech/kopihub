@@ -3123,7 +3123,21 @@ $("report-end-date").addEventListener("change", () => {
   }
 });
 
+/* FILTER TANGGAL DAFTAR PESANAN */
+$("transaction-start-date").addEventListener("change", () => {
+  renderOwnerOrderList();
+});
 
+$("transaction-end-date").addEventListener("change", () => {
+  renderOwnerOrderList();
+});
+
+$("transaction-reset-filter").addEventListener("click", () => {
+  $("transaction-start-date").value = "";
+  $("transaction-end-date").value = "";
+
+  renderOwnerOrderList();
+});
 
 
 /* DOWNLOAD LAPORAN EXCEL */

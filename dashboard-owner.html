@@ -240,7 +240,202 @@ button:disabled{opacity:.55;cursor:not-allowed}
   text-align:center;
   font-size:13px;
 }
-/* REPORT */
+/* INTERAKSI KARTU PESANAN */
+.owner-order-card {
+  cursor:pointer;
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+
+.owner-order-card:active {
+  border-color:var(--green);
+  box-shadow:0 3px 12px rgba(18,59,44,.10);
+}
+
+.owner-order-card:focus-visible {
+  outline:2px solid var(--green);
+  outline-offset:3px;
+}
+
+/* DETAIL PESANAN OWNER */
+.owner-order-detail-header {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.owner-order-detail-header h2 {
+  margin:0;
+}
+
+.owner-order-back-button {
+  width:auto;
+  padding:10px 14px;
+}
+
+.owner-order-detail-section {
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.owner-order-detail-section:last-child {
+  border-bottom:0;
+}
+
+.owner-order-detail-section h3 {
+  margin:0 0 12px;
+  font-size:15px;
+}
+
+.owner-order-detail-line {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  margin:9px 0;
+  font-size:13px;
+}
+
+.owner-order-detail-line span {
+  color:var(--muted);
+  flex:1;
+  min-width:0;
+}
+
+.owner-order-detail-line strong {
+  color:var(--text);
+  text-align:right;
+  max-width:65%;
+  overflow-wrap:anywhere;
+}
+
+.owner-order-detail-code {
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+}
+
+.owner-order-detail-code strong {
+  flex:1;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+
+.owner-order-copy-button {
+  width:auto;
+  flex:0 0 auto;
+  padding:7px 10px;
+  font-size:11px;
+}
+
+.owner-order-product {
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.owner-order-product:last-child {
+  border-bottom:0;
+}
+
+.owner-order-product-name {
+  font-size:14px;
+  font-weight:750;
+  color:var(--dark);
+}
+
+.owner-order-product-meta {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:6px;
+  font-size:12px;
+}
+
+.owner-order-product-meta span:first-child {
+  color:var(--muted);
+}
+
+.owner-order-product-note {
+  margin-top:6px;
+  color:var(--muted);
+  font-size:12px;
+  font-style:italic;
+}
+
+.owner-order-payment-total {
+  padding-top:12px;
+  margin-top:12px;
+  border-top:1px dashed var(--border);
+}
+
+.owner-order-payment-total strong {
+  color:var(--green);
+  font-size:17px;
+}
+
+.owner-order-payment-status {
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#fff3df;
+  color:#93621f;
+  font-size:11px;
+  font-weight:750;
+}
+
+.owner-order-payment-status.paid {
+  background:#e4f4e9;
+  color:#21683a;
+}
+
+.owner-order-status-list {
+  display:grid;
+  gap:10px;
+}
+
+.owner-order-status-step {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.owner-order-status-dot {
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--border);
+  border-radius:50%;
+  font-size:11px;
+}
+
+.owner-order-status-step.is-done {
+  color:var(--green);
+  font-weight:700;
+}
+
+.owner-order-status-step.is-done .owner-order-status-dot {
+  background:var(--light);
+  border-color:var(--green);
+}
+
+.owner-order-status-step.is-current {
+  color:var(--dark);
+  font-weight:800;
+}
+
+.owner-order-detail-empty {
+  padding:12px;
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+}
+  /* REPORT */
 .report-filter{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}
 .report-filter .field{margin:0}
 .report-filter input,.report-filter select{margin-bottom:5px}
@@ -681,7 +876,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
 <!-- TRANSAKSI -->
 <section class="page" id="page-transaksi" hidden>
-  <h1 class="page-heading">Transaksi</h1>
+  <h1 class="page-heading" id="transaction-page-heading">Pesanan</h1>
   <p class="page-description">
     Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
   </p>
@@ -2296,7 +2491,7 @@ async function fetchAllShopOrders(shopId) {
     const { data, error } = await client
       .from("kh_orders")
       .select(
-       "id,order_number,order_code,order_source,status,order_status,subtotal,total_amount,created_at,payment_status,items,order_type,payment_method,service_fee,tax_amount"
+        "id,order_number,order_code,order_source,status,order_status,subtotal,total_amount,created_at,payment_status,items,order_type,table_label,table_number,customer_name,customer_phone,notes,order_note,payment_method,service_fee,tax_amount"
       )
       .eq("shop_id", shopId)
       .order("created_at", { ascending: false })
@@ -2310,11 +2505,12 @@ async function fetchAllShopOrders(shopId) {
     if (rows.length < pageSize) break;
   }
 
-  // Ambil rincian produk dari tabel relasional kh_order_items.
-  const itemMap = new Map();
   const orderIds = results.map(order => order.id);
+  const itemMap = new Map();
+  const paymentMap = new Map();
   const idChunkSize = 200;
 
+  // Mengambil rincian produk.
   for (let i = 0; i < orderIds.length; i += idChunkSize) {
     const ids = orderIds.slice(i, i + idChunkSize);
 
@@ -2322,7 +2518,7 @@ async function fetchAllShopOrders(shopId) {
       const { data, error } = await client
         .from("kh_order_items")
         .select(
-          "order_id,product_name,quantity,unit_price,line_total"
+          "order_id,product_name,quantity,unit_price,line_total,notes"
         )
         .eq("shop_id", shopId)
         .in("order_id", ids)
@@ -2344,29 +2540,52 @@ async function fetchAllShopOrders(shopId) {
     }
   }
 
-  // Gabungkan pesanan dengan rincian produknya.
+  // Mengambil informasi pembayaran.
+  // Jika tabel pembayaran gagal dibaca, daftar pesanan
+  // tetap dapat dimuat tanpa informasi waktu pembayaran.
+  for (let i = 0; i < orderIds.length; i += idChunkSize) {
+    const ids = orderIds.slice(i, i + idChunkSize);
+
+    try {
+      for (let offset = 0; ; offset += pageSize) {
+        const { data, error } = await client
+          .from("kh_payments")
+          .select(
+            "order_id,method,status,amount,reference_number,paid_at,created_at"
+          )
+          .eq("shop_id", shopId)
+          .in("order_id", ids)
+          .order("created_at", { ascending: false })
+          .range(offset, offset + pageSize - 1);
+
+        if (error) throw error;
+
+        const rows = data || [];
+
+        rows.forEach(payment => {
+          if (!paymentMap.has(payment.order_id)) {
+            paymentMap.set(payment.order_id, []);
+          }
+
+          paymentMap.get(payment.order_id).push(payment);
+        });
+
+        if (rows.length < pageSize) break;
+      }
+    } catch (paymentError) {
+      console.warn(
+        "Informasi pembayaran tidak dapat dimuat:",
+        paymentError
+      );
+      break;
+    }
+  }
+
   return results.map(order => ({
     ...order,
-    report_items: itemMap.get(order.id) || []
+    report_items: itemMap.get(order.id) || [],
+    payment_records: paymentMap.get(order.id) || []
   }));
-}
-
-let ownerOrdersRequestVersion = 0;
-
-function getOrderSourceLabel(order) {
-  const source = String(
-    order.order_source || ""
-  ).trim().toLowerCase();
-
-  if (["pos", "cashier"].includes(source)) {
-    return "Kasir";
-  }
-
-  if (["qr", "online", "web"].includes(source)) {
-    return "Online";
-  }
-
-  return "Tidak diketahui";
 }
 /* PENUGASAN KASIR UNTUK DAFTAR PESANAN OWNER */
 async function loadOwnerOrderCashierAssignments(shopId, orders) {
@@ -2677,6 +2896,7 @@ function parseOrderItems(value) {
   return value.map(item => {
     const quantity = Number(item.quantity ?? item.qty ?? 0);
     const price = Number(item.unit_price ?? item.price ?? 0);
+
     const lineTotal = Number(
       item.line_total ?? (quantity * price)
     );
@@ -2687,7 +2907,8 @@ function parseOrderItems(value) {
       ),
       quantity: Number.isFinite(quantity) ? quantity : 0,
       price: Number.isFinite(price) ? price : 0,
-      total: Number.isFinite(lineTotal) ? lineTotal : 0
+      total: Number.isFinite(lineTotal) ? lineTotal : 0,
+      notes: String(item.notes ?? item.note ?? "").trim()
     };
   }).filter(item =>
     item.quantity > 0 &&
@@ -2695,7 +2916,6 @@ function parseOrderItems(value) {
     item.total >= 0
   );
 }
-
 
 /* REKAP PRODUK */
 function aggregateProducts(orders) {

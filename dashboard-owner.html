@@ -950,7 +950,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </div>
   </section>
 
-  <section class="panel">
+   <section class="panel" id="transaction-cashier-panel">
     <h2>Dashboard Kasir</h2>
     <p class="muted">
       Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.
@@ -959,6 +959,27 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
       Buka Dashboard Kasir
     </a>
   </section>
+
+  <!-- DETAIL PESANAN OWNER -->
+  <section class="panel owner-order-detail-panel"
+           id="owner-order-detail-panel"
+           hidden>
+
+    <div class="owner-order-detail-header">
+      <button
+        type="button"
+        class="secondary owner-order-back-button"
+        id="owner-order-detail-back">
+        ← Kembali
+      </button>
+
+      <h2>Detail Pesanan</h2>
+    </div>
+
+    <div id="owner-order-detail-content"></div>
+
+  </section>
+
 </section>
 
   <!-- LAPORAN -->

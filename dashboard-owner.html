@@ -3556,7 +3556,26 @@ function aggregateProducts(orders) {
     (a, b) => b.total - a.total
   );
 }
+/* LABEL SUMBER PESANAN */
+function getOrderSourceLabel(order) {
+  const source = String(order?.order_source || "")
+    .trim()
+    .toLowerCase();
 
+  if (
+    ["online", "qr", "web", "customer"].includes(source)
+  ) {
+    return "Online";
+  }
+
+  if (
+    ["pos", "cashier", "kasir"].includes(source)
+  ) {
+    return "Kasir";
+  }
+
+  return "Tidak diketahui";
+}
 /* REKAP SUMBER PESANAN */
 function aggregateOrderSources(orders) {
   const result = {

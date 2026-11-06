@@ -2296,7 +2296,7 @@ async function fetchAllShopOrders(shopId) {
     const { data, error } = await client
       .from("kh_orders")
       .select(
-        "id,order_number,order_source,status,order_status,subtotal,total_amount,created_at,payment_status,items,order_type,payment_method,service_fee,tax_amount"
+       "id,order_number,order_code,order_source,status,order_status,subtotal,total_amount,created_at,payment_status,items,order_type,payment_method,service_fee,tax_amount"
       )
       .eq("shop_id", shopId)
       .order("created_at", { ascending: false })
@@ -2498,20 +2498,13 @@ function renderOwnerOrderList() {
     number.className = "owner-order-number";
 
     if (
-      order.order_number !== null &&
-      order.order_number !== undefined
-    ) {
-      const shopCode = String(shop.shop_code || "")
-        .trim()
-        .toUpperCase();
-
-      number.textContent =
-        "KH-" +
-        String(order.order_number).padStart(6, "0") +
-        (shopCode ? "-" + shopCode : "");
-    } else {
-      number.textContent = "Nomor pesanan belum tersedia";
-    }
+  typeof order.order_code === "string" &&
+  order.order_code.trim() !== ""
+) {
+  number.textContent = order.order_code.trim();
+} else {
+  number.textContent = "Nomor pesanan belum tersedia";
+}
 
     const total = document.createElement("strong");
     total.className = "owner-order-total";
@@ -3204,7 +3197,7 @@ $("download-report-excel").addEventListener("click", function () {
       "Subtotal"
     ],
     ...report.orders.map(order => [
-      order.order_number ?? order.id,
+      order.order_code || "Nomor pesanan belum tersedia",
       order.created_at
         ? new Date(order.created_at).toLocaleString("id-ID")
         : "",

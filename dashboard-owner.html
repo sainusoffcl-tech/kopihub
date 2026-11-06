@@ -2767,6 +2767,28 @@ function renderOwnerOrderList() {
 
   container.appendChild(list);
 }
+  card.append(top, dateTime, source);
+
+card.setAttribute("role", "button");
+card.setAttribute("tabindex", "0");
+card.setAttribute(
+  "aria-label",
+  "Lihat detail pesanan " +
+  (order.order_code || "tanpa nomor pesanan")
+);
+
+card.addEventListener("click", () => {
+  openOwnerOrderDetail(order.id);
+});
+
+card.addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openOwnerOrderDetail(order.id);
+  }
+});
+
+list.appendChild(card);
 /* =====================================================
    DETAIL PESANAN OWNER
    ===================================================== */

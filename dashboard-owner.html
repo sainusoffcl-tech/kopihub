@@ -1041,6 +1041,7 @@ let shops = [];
 let categories = [];
 let products = [];
 let allOrders = [];
+let ownerOrderCashierAssignments = new Map();
 let currentReport = null;
 let editingProductId = null;
 let requestVersion = 0;
@@ -2367,7 +2368,193 @@ function getOrderSourceLabel(order) {
 
   return "Tidak diketahui";
 }
+/* PENUGASAN KASIR UNTUK DAFTAR PESANAN OWNER */
+async function loadOwnerOrderCashierAssignments(shopId, orders) {
+  const cashierOrders = orders.filter(order => {
+    const source = String(order.order_source || "")
+      .trim()
+      .toLowerCase();
 
+    return ["pos", "cashier"].includes(source);
+  });
+
+  const assignments = [];
+
+  if (!cashierOrders.length) {
+    return new Map();
+  }
+
+  const orderIds = cashierOrders.map(order => order.id);
+  const chunkSize = 200;
+
+  for (let i = 0; i < orderIds.length; i += chunkSize) {
+    const ids = orderIds.slice(i, i + chunkSize);
+
+    const { data, error } = await client
+      .from("kh_order_cashier_assignments")
+      .select("order_id,cashier_id,assigned_at")
+      .eq("shop_id", shopId)
+      .in("order_id", ids)
+      .order("assigned_at", { ascending: false });
+
+    if (error) throw error;
+
+    assignments.push(...(data || []));
+  }
+
+  assignments.sort((a, b) =>
+    new Date(b.assigned_at).getTime() -
+    new Date(a.assigned_at).getTime()
+  );
+
+  const result = new Map();
+
+  assignments.forEach(assignment => {
+    if (!result.has(assignment.order_id)) {
+      result.set(
+        assignment.order_id,
+        assignment.cashier_id
+      );
+    }
+  });
+
+  return result;
+}
+
+
+/* MENAMPILKAN DAFTAR PESANAN OWNER */
+function renderOwnerOrderList() {
+  const container = $("transaction-list");
+  const resultCount = $("transaction-result-count");
+  const shop = selectedShop();
+
+  if (!container || !resultCount) return;
+
+  if (!shop) {
+    container.textContent = "Pilih kedai terlebih dahulu.";
+    resultCount.textContent = "";
+    return;
+  }
+
+  const timezone = shop.timezone || "Asia/Jayapura";
+  const formatter = getDateFormatter(timezone);
+
+  const startDate = $("transaction-start-date").value;
+  const endDate = $("transaction-end-date").value;
+
+  const visibleOrders = allOrders
+    .filter(order => {
+      const dateKey = getDateKey(order.created_at, formatter);
+
+      if (!dateKey) return false;
+      if (startDate && dateKey < startDate) return false;
+      if (endDate && dateKey > endDate) return false;
+
+      return true;
+    })
+    .sort((a, b) =>
+      new Date(b.created_at).getTime() -
+      new Date(a.created_at).getTime()
+    );
+
+  container.replaceChildren();
+
+  resultCount.textContent =
+    visibleOrders.length + " dari " +
+    allOrders.length + " pesanan";
+
+  if (!visibleOrders.length) {
+    const empty = document.createElement("div");
+    empty.className = "owner-order-empty";
+    empty.textContent = allOrders.length
+      ? "Tidak ada pesanan pada rentang tanggal tersebut."
+      : "Belum ada pesanan.";
+
+    container.appendChild(empty);
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "owner-order-list";
+
+  const dateTimeFormatter = new Intl.DateTimeFormat("id-ID", {
+    timeZone: timezone,
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  });
+
+  visibleOrders.forEach(order => {
+    const card = document.createElement("article");
+    card.className = "owner-order-card";
+
+    const top = document.createElement("div");
+    top.className = "owner-order-top";
+
+    const number = document.createElement("strong");
+    number.className = "owner-order-number";
+
+    if (
+      order.order_number !== null &&
+      order.order_number !== undefined
+    ) {
+      const shopCode = String(shop.shop_code || "")
+        .trim()
+        .toUpperCase();
+
+      number.textContent =
+        "KH-" +
+        String(order.order_number).padStart(6, "0") +
+        (shopCode ? "-" + shopCode : "");
+    } else {
+      number.textContent = "Nomor pesanan belum tersedia";
+    }
+
+    const total = document.createElement("strong");
+    total.className = "owner-order-total";
+    total.textContent = rupiah(
+      order.total_amount ?? order.subtotal ?? 0
+    );
+
+    top.append(number, total);
+
+    const dateTime = document.createElement("p");
+    dateTime.className = "owner-order-datetime";
+    dateTime.textContent = dateTimeFormatter.format(
+      new Date(order.created_at)
+    );
+
+    const source = document.createElement("p");
+    source.className = "owner-order-source";
+
+    const sourceLabel = getOrderSourceLabel(order);
+
+    if (sourceLabel === "Online") {
+      source.textContent = "Pesanan Online";
+    } else if (sourceLabel === "Kasir") {
+      const cashierId =
+        ownerOrderCashierAssignments.get(order.id);
+
+      const cashier = cashierStaff.find(staff =>
+        String(staff.id) === String(cashierId)
+      );
+
+      source.textContent = cashier?.full_name
+        ? "Kasir: " + cashier.full_name
+        : "Kasir tidak diketahui";
+    } else {
+      source.textContent = "Sumber pesanan tidak diketahui";
+    }
+
+    card.append(top, dateTime, source);
+    list.appendChild(card);
+  });
+
+  container.appendChild(list);
+}
 async function loadOrders() {
   const shop = selectedShop();
 
@@ -2408,7 +2595,22 @@ async function loadOrders() {
     }
 
     allOrders = orders;
+    try {
+      ownerOrderCashierAssignments =
+        await loadOwnerOrderCashierAssignments(
+          shop.id,
+          orders
+        );
+    } catch (cashierError) {
+      console.error(
+        "Gagal memuat penugasan kasir:",
+        cashierError
+      );
 
+      ownerOrderCashierAssignments = new Map();
+    }
+
+    renderOwnerOrderList();
     const timezone = shop.timezone || "Asia/Jayapura";
     const formatter = getDateFormatter(timezone);
     const todayKey = getDateKey(new Date(), formatter);

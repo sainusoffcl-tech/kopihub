@@ -4474,6 +4474,7 @@ function setOwnerInvoiceMessage(message, type = "") {
   target.className = "invoice-message " + type;
 }
 
+let ownerOrdersRequestVersion = 0;
 let ownerInvoiceRequestVersion = 0;
 
 async function loadOwnerInvoices() {

@@ -668,43 +668,20 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </p>
 
     <div class="transaction-filters">
-      <label for="transaction-search">Cari transaksi</label>
-      <input
-        type="search"
-        id="transaction-search"
-        placeholder="Cari nomor pesanan..."
-      >
+  <label for="transaction-start-date">Dari tanggal</label>
+  <input type="date" id="transaction-start-date">
 
-      <label for="transaction-start-date">Dari tanggal</label>
-      <input type="date" id="transaction-start-date">
+  <label for="transaction-end-date">Sampai tanggal</label>
+  <input type="date" id="transaction-end-date">
 
-      <label for="transaction-end-date">Sampai tanggal</label>
-      <input type="date" id="transaction-end-date">
-
-      <label for="transaction-payment-filter">Status pembayaran</label>
-      <select id="transaction-payment-filter">
-        <option value="all">Semua status</option>
-        <option value="paid">Lunas</option>
-        <option value="unpaid">Belum dibayar</option>
-      </select>
-
-      <label for="transaction-source-filter">Sumber pesanan</label>
-      <select id="transaction-source-filter">
-        <option value="all">Semua sumber</option>
-        <option value="online">Online</option>
-        <option value="kasir">Kasir</option>
-        <option value="unknown">Tidak diketahui</option>
-      </select>
-
-      <button
-        type="button"
-        class="action-link"
-        id="transaction-reset-filter"
-      >
-        Reset Filter
-      </button>
-    </div>
-
+  <button
+    type="button"
+    class="action-link"
+    id="transaction-reset-filter"
+  >
+    Reset Tanggal
+  </button>
+</div>
     <p
       class="muted"
       id="transaction-result-count"

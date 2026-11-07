@@ -2513,8 +2513,6 @@ function renderSalesChart(orders, formatter, todayKey) {
     rupiah(totals[6]) + ".";
 }
 
-
-
 /* DATA PESANAN */
 async function fetchAllShopOrders(shopId) {
   const results = [];
@@ -2541,6 +2539,7 @@ async function fetchAllShopOrders(shopId) {
   const orderIds = results.map(order => order.id);
   const itemMap = new Map();
   const paymentMap = new Map();
+  const activityMap = new Map();
   const idChunkSize = 200;
 
   // Mengambil rincian produk.
@@ -2614,12 +2613,60 @@ async function fetchAllShopOrders(shopId) {
     }
   }
 
+  // Mengambil riwayat aktivitas dan perubahan status pesanan.
+  // Kegagalan membaca aktivitas tidak menggagalkan daftar pesanan.
+  for (let i = 0; i < orderIds.length; i += idChunkSize) {
+    const ids = orderIds.slice(i, i + idChunkSize);
+
+    try {
+      for (let offset = 0; ; offset += pageSize) {
+        const { data, error } = await client
+          .from("kh_cashier_activity")
+          .select(
+            "order_id,action_type,details,created_at,staff_name,cashier_id"
+          )
+          .eq("shop_id", shopId)
+          .in("order_id", ids)
+          .in("action_type", [
+            "order_accepted",
+            "pos_order_created",
+            "order_status_updated"
+          ])
+          .order("created_at", { ascending: true })
+          .range(offset, offset + pageSize - 1);
+
+        if (error) throw error;
+
+        const rows = data || [];
+
+        rows.forEach(activity => {
+          if (!activityMap.has(activity.order_id)) {
+            activityMap.set(activity.order_id, []);
+          }
+
+          activityMap.get(activity.order_id).push(activity);
+        });
+
+        if (rows.length < pageSize) break;
+      }
+    } catch (activityError) {
+      console.warn(
+        "Riwayat aktivitas pesanan tidak dapat dimuat:",
+        activityError
+      );
+      activityMap.clear();
+      break;
+    }
+  }
+
   return results.map(order => ({
     ...order,
     report_items: itemMap.get(order.id) || [],
-    payment_records: paymentMap.get(order.id) || []
+    payment_records: paymentMap.get(order.id) || [],
+    status_history: activityMap.get(order.id) || []
   }));
 }
+
 /* PENUGASAN KASIR UNTUK DAFTAR PESANAN OWNER */
 async function loadOwnerOrderCashierAssignments(shopId, orders) {
   const cashierOrders = orders.filter(order => {

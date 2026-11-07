@@ -3009,6 +3009,7 @@ function ownerOrderStatusInfo(order) {
   };
 }
 
+
 function renderOwnerOrderDetail(order) {
   const content = $("owner-order-detail-content");
   const shop = selectedShop();
@@ -3018,6 +3019,26 @@ function renderOwnerOrderDetail(order) {
   content.replaceChildren();
 
   const timezone = shop.timezone || "Asia/Jayapura";
+
+  const source = String(
+    order.order_source || ""
+  ).trim().toLowerCase();
+
+  const isPOS = ["pos", "cashier"].includes(source);
+
+  const sourceLabel = isPOS ? "POS" : "QRIS";
+
+  const formatDateTime = timestamp => {
+    if (!timestamp) return "Belum tercatat";
+
+    const date = new Date(timestamp);
+
+    if (Number.isNaN(date.getTime())) {
+      return "Belum tercatat";
+    }
+
+    return ownerOrderDateTime(timestamp, timezone);
+  };
 
   /* INFORMASI PESANAN */
   const info = ownerDetailSection("Informasi Pesanan");
@@ -3065,14 +3086,14 @@ function renderOwnerOrderDetail(order) {
   info.appendChild(
     ownerDetailLine(
       "Tanggal dan waktu",
-      ownerOrderDateTime(order.created_at, timezone)
+      formatDateTime(order.created_at)
     )
   );
 
   info.appendChild(
     ownerDetailLine(
       "Sumber pesanan",
-      getOrderSourceLabel(order)
+      sourceLabel
     )
   );
 
@@ -3091,27 +3112,30 @@ function renderOwnerOrderDetail(order) {
     );
   }
 
-  if (order.customer_name || order.customer_phone) {
-    info.appendChild(
-      ownerDetailLine(
-        "Nama pelanggan",
-        order.customer_name || "-"
-      )
-    );
-
-    if (order.customer_phone) {
-      info.appendChild(
-        ownerDetailLine(
-          "Nomor telepon",
-          order.customer_phone
-        )
-      );
-    }
-  }
-
   content.appendChild(info);
 
-  /* RINCIAN PRODUK */
+  /* INFORMASI PELANGGAN */
+  const customerSection = ownerDetailSection(
+    "Informasi Pelanggan"
+  );
+
+  customerSection.appendChild(
+    ownerDetailLine(
+      "Nama pelanggan",
+      order.customer_name || (isPOS ? "Pelanggan Umum" : "Tidak tersedia")
+    )
+  );
+
+  customerSection.appendChild(
+    ownerDetailLine(
+      "Nomor telepon / WhatsApp",
+      order.customer_phone || "Tidak tersedia"
+    )
+  );
+
+  content.appendChild(customerSection);
+
+  /* RINCIAN PESANAN */
   const productSection = ownerDetailSection(
     "Rincian Pesanan"
   );
@@ -3139,28 +3163,43 @@ function renderOwnerOrderDetail(order) {
         "owner-order-product"
       );
 
-      product.appendChild(
+      const firstRow = ownerDetailElement(
+        "div",
+        "owner-order-product-meta"
+      );
+
+      firstRow.appendChild(
         ownerDetailElement(
-          "div",
+          "span",
           "owner-order-product-name",
           item.name
         )
       );
 
-      const meta = ownerDetailElement(
+      firstRow.appendChild(
+        ownerDetailElement(
+          "strong",
+          "",
+          rupiah(item.price)
+        )
+      );
+
+      product.appendChild(firstRow);
+
+      const secondRow = ownerDetailElement(
         "div",
         "owner-order-product-meta"
       );
 
-      meta.appendChild(
+      secondRow.appendChild(
         ownerDetailElement(
           "span",
           "",
-          item.quantity + " × " + rupiah(item.price)
+          "Jumlah: " + item.quantity
         )
       );
 
-      meta.appendChild(
+      secondRow.appendChild(
         ownerDetailElement(
           "strong",
           "",
@@ -3168,7 +3207,7 @@ function renderOwnerOrderDetail(order) {
         )
       );
 
-      product.appendChild(meta);
+      product.appendChild(secondRow);
 
       if (item.notes) {
         product.appendChild(
@@ -3203,7 +3242,7 @@ function renderOwnerOrderDetail(order) {
   if (taxAmount > 0) {
     paymentSection.appendChild(
       ownerDetailLine(
-        "PBJT",
+        "Pajak (PBJT)",
         rupiah(taxAmount)
       )
     );
@@ -3263,31 +3302,74 @@ function renderOwnerOrderDetail(order) {
     paymentSection.appendChild(
       ownerDetailLine(
         "Waktu pembayaran",
-        ownerOrderDateTime(paymentRecord.paid_at, timezone)
+        formatDateTime(paymentRecord.paid_at)
       )
     );
   }
 
   content.appendChild(paymentSection);
 
-  /* STATUS PESANAN */
-  const statusSection = ownerDetailSection("Status Pesanan");
+  /* RIWAYAT STATUS PESANAN */
+  const statusSection = ownerDetailSection(
+    "Riwayat Status Pesanan"
+  );
+
+  const activities = Array.isArray(order.status_history)
+    ? order.status_history
+    : [];
+
+  const findActivityTime = predicate => {
+    const activity = activities.find(predicate);
+    return activity?.created_at || null;
+  };
+
+  const acceptedTime = isPOS
+    ? order.created_at
+    : findActivityTime(activity =>
+        activity.action_type === "order_accepted"
+      );
+
+  const processingTime = findActivityTime(activity =>
+    activity.action_type === "order_status_updated" &&
+    String(activity.details?.to || "").toLowerCase() === "processing"
+  );
+
+  const completedTime = findActivityTime(activity =>
+    activity.action_type === "order_status_updated" &&
+    String(activity.details?.to || "").toLowerCase() === "completed"
+  );
+
   const statusInfo = ownerOrderStatusInfo(order);
+
+  const statusEntries = [
+    {
+      label: "Diterima",
+      time: acceptedTime,
+      index: 0
+    },
+    {
+      label: "Diproses",
+      time: processingTime,
+      index: 1
+    },
+    {
+      label: "Selesai",
+      time: completedTime,
+      index: 2
+    }
+  ];
 
   const statusList = ownerDetailElement(
     "div",
     "owner-order-status-list"
   );
 
-  const statusLabels = [
-    "Diterima",
-    "Diproses",
-    "Selesai"
-  ];
+  statusEntries.forEach(entry => {
+    const done = Boolean(entry.time) ||
+      statusInfo.currentIndex >= entry.index;
 
-  statusLabels.forEach((label, index) => {
-    const done = statusInfo.currentIndex >= index;
-    const current = statusInfo.currentIndex === index;
+    const current =
+      statusInfo.currentIndex === entry.index;
 
     const step = ownerDetailElement(
       "div",
@@ -3300,14 +3382,29 @@ function renderOwnerOrderDetail(order) {
       ownerDetailElement(
         "span",
         "owner-order-status-dot",
-        done ? "✓" : String(index + 1)
+        done ? "✓" : String(entry.index + 1)
       )
     );
 
-    step.appendChild(
-      ownerDetailElement("span", "", label)
+    const detail = ownerDetailElement("div", "");
+
+    detail.appendChild(
+      ownerDetailElement(
+        "strong",
+        "",
+        entry.label
+      )
     );
 
+    detail.appendChild(
+      ownerDetailElement(
+        "div",
+        "muted",
+        formatDateTime(entry.time)
+      )
+    );
+
+    step.appendChild(detail);
     statusList.appendChild(step);
   });
 
@@ -3326,7 +3423,7 @@ function renderOwnerOrderDetail(order) {
   content.appendChild(statusSection);
 
   /* INFORMASI KASIR */
-  if (getOrderSourceLabel(order) === "Kasir") {
+  if (isPOS) {
     const cashierSection = ownerDetailSection(
       "Informasi Kasir"
     );
@@ -3342,6 +3439,13 @@ function renderOwnerOrderDetail(order) {
       ownerDetailLine(
         "Nama kasir",
         cashier?.full_name || "Kasir tidak diketahui"
+      )
+    );
+
+    cashierSection.appendChild(
+      ownerDetailLine(
+        "ID kasir",
+        cashier?.staff_code || "Tidak tersedia"
       )
     );
 
@@ -3367,6 +3471,7 @@ function renderOwnerOrderDetail(order) {
     content.appendChild(noteSection);
   }
 }
+
 
 function openOwnerOrderDetail(orderId) {
   const order = allOrders.find(item =>

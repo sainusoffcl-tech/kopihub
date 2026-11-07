@@ -3422,36 +3422,57 @@ function renderOwnerOrderDetail(order) {
 
   content.appendChild(statusSection);
 
-  /* INFORMASI KASIR */
-  if (isPOS) {
-    const cashierSection = ownerDetailSection(
-      "Informasi Kasir"
-    );
+ /* INFORMASI KASIR */
+{
+  const cashierSection = ownerDetailSection(
+    "Informasi Kasir"
+  );
 
-    const cashierId =
-      ownerOrderCashierAssignments.get(order.id);
+  const cashierId =
+    ownerOrderCashierAssignments.get(order.id) ||
+    [...activities]
+      .reverse()
+      .find(activity => activity.cashier_id)
+      ?.cashier_id ||
+    null;
 
-    const cashier = cashierStaff.find(staff =>
-      String(staff.id) === String(cashierId)
-    );
-
-    cashierSection.appendChild(
-      ownerDetailLine(
-        "Nama kasir",
-        cashier?.full_name || "Kasir tidak diketahui"
+  const cashierActivity = [...activities]
+    .reverse()
+    .find(activity =>
+      activity.staff_name &&
+      (
+        !cashierId ||
+        String(activity.cashier_id) === String(cashierId)
       )
     );
 
-    cashierSection.appendChild(
-      ownerDetailLine(
-        "ID kasir",
-        cashier?.staff_code || "Tidak tersedia"
-      )
-    );
+  const cashier = cashierStaff.find(staff =>
+    String(staff.id) === String(cashierId)
+  );
 
-    content.appendChild(cashierSection);
-  }
+  const cashierName =
+    cashier?.full_name ||
+    cashierActivity?.staff_name ||
+    "Kasir tidak diketahui";
 
+  cashierSection.appendChild(
+    ownerDetailLine(
+      "Nama kasir",
+      cashierName
+    )
+  );
+
+  cashierSection.appendChild(
+    ownerDetailLine(
+      "ID kasir",
+      cashier?.staff_code ||
+      cashierId ||
+      "Tidak tersedia"
+    )
+  );
+
+  content.appendChild(cashierSection);
+}
   /* CATATAN PESANAN */
   const orderNote = order.order_note || order.notes;
 

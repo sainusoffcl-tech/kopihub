@@ -2649,14 +2649,20 @@ async function fetchAllShopOrders(shopId) {
 
         if (rows.length < pageSize) break;
       }
-    } catch (activityError) {
-      console.warn(
-        "Riwayat aktivitas pesanan tidak dapat dimuat:",
-        activityError
-      );
-      activityMap.clear();
-      break;
-    }
+} catch (activityError) {
+  alert(
+    "GAGAL MEMUAT RIWAYAT PESANAN:\n" +
+    (activityError.message || String(activityError))
+  );
+
+  console.error(
+    "Riwayat aktivitas pesanan tidak dapat dimuat:",
+    activityError
+  );
+
+  activityMap.clear();
+  break;
+}
   }
 
   return results.map(order => ({

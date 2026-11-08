@@ -1733,7 +1733,9 @@ async function submitPosOrder(){
       items
     });
 
+    console.log("DIAGNOSTIK HASIL POS:", JSON.stringify(result,null,2));
     posCart.clear();
+   
     el("pos-table-number").value = "";
     el("pos-order-note").value = "";
     renderPosCart();

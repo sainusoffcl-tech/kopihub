@@ -1920,7 +1920,144 @@ $("cashier-create-form").addEventListener("submit", async event => {
     button.textContent = "+ Buat Identitas Kasir";
   }
 });
+/* =========================
+   RESET PIN KASIR OLEH OWNER
+========================= */
 
+async function resetCashierPin(staff, resetButton) {
+  const shop = selectedShop();
+
+  if (!shop || !staff?.id) return;
+
+  if (staff.status !== "active") {
+    setCashierMessage(
+      "Reset PIN hanya tersedia untuk kasir aktif.",
+      "error"
+    );
+    return;
+  }
+
+  if (cashierResetBusyIds.has(staff.id)) return;
+
+  const confirmed = confirm(
+    'Reset PIN kasir "' +
+    (staff.full_name || "Kasir") +
+    '"?\n\nSesi login kasir akan dihentikan. ' +
+    "Kode aktivasi sebelumnya akan dibatalkan."
+  );
+
+  if (!confirmed) return;
+
+  cashierResetBusyIds.add(staff.id);
+
+  if (resetButton) {
+    resetButton.disabled = true;
+    resetButton.textContent = "Memproses...";
+  }
+
+  try {
+    const data = await callCashierFunction({
+      action: "reset_pin_by_owner",
+      shopId: shop.id,
+      cashierId: staff.id
+    });
+
+    if (
+      !data ||
+      data.success !== true ||
+      !/^\d{10}$/.test(String(data.activationCode || "")) ||
+      !data.expiresAt
+    ) {
+      throw new Error(
+        data?.message || "Respons Reset PIN tidak valid."
+      );
+    }
+
+    const card = resetButton?.closest(".cashier-card");
+
+    if (!card) {
+      throw new Error(
+        "Kartu kasir tidak ditemukan. Silakan periksa hasil Reset PIN."
+      );
+    }
+
+    const oldPanel = card.querySelector(".cashier-reset-panel");
+    if (oldPanel) oldPanel.remove();
+
+    const panel = document.createElement("div");
+    panel.className = "cashier-reset-panel";
+    panel.style.cssText =
+      "margin-top:12px;padding:14px;" +
+      "border:1px solid #e99a48;border-radius:10px;" +
+      "background:#fff8ed;";
+
+    const title = document.createElement("strong");
+    title.textContent = "Kode Aktivasi Reset PIN";
+
+    const code = document.createElement("input");
+    code.type = "text";
+    code.value = data.activationCode;
+    code.readOnly = true;
+    code.style.cssText =
+      "display:block;width:100%;box-sizing:border-box;" +
+      "margin:10px 0;padding:12px;text-align:center;" +
+      "font-size:22px;font-weight:bold;letter-spacing:4px;";
+
+    const expiry = document.createElement("p");
+    expiry.textContent =
+      "Berlaku sampai: " +
+      new Date(data.expiresAt).toLocaleString("id-ID");
+
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.textContent = "Salin Kode Aktivasi";
+
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(data.activationCode);
+        copy.textContent = "Kode Berhasil Disalin";
+      } catch (_) {
+        code.focus();
+        code.select();
+        setCashierMessage(
+          "Silakan salin kode yang sudah dipilih.",
+          "error"
+        );
+      }
+    });
+
+    const info = document.createElement("p");
+    info.textContent =
+      "Sesi dihentikan: " +
+      Number(data.sessionsEnded || 0) +
+      ". Penugasan aktif dipertahankan: " +
+      Number(data.activeAssignmentsPreserved || 0) + ".";
+
+    panel.append(title, code, expiry, copy, info);
+    card.appendChild(panel);
+
+    setCashierMessage(
+      "Kode Reset PIN berhasil diterbitkan. Berikan kode kepada kasir yang bersangkutan.",
+      "success"
+    );
+
+  } catch (error) {
+    console.error("Gagal Reset PIN:", error);
+
+    setCashierMessage(
+      "Gagal Reset PIN: " + error.message,
+      "error"
+    );
+
+  } finally {
+    cashierResetBusyIds.delete(staff.id);
+
+    if (resetButton) {
+      resetButton.disabled = false;
+      resetButton.textContent = "Reset PIN";
+    }
+  }
+}
 /* NONAKTIFKAN KASIR */
 
 async function disableCashier(staff) {

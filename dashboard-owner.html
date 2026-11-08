@@ -1800,17 +1800,29 @@ function renderCashierStaff() {
       const actions = document.createElement("div");
       actions.className = "cashier-actions";
 
-      const disable = document.createElement("button");
-      disable.type = "button";
-      disable.className = "danger";
-      disable.textContent = "Nonaktifkan Kasir";
+if (staff.status === "active") {
+  const reset = document.createElement("button");
+  reset.type = "button";
+  reset.textContent = "Reset PIN";
 
-      disable.addEventListener("click", () => {
-        disableCashier(staff);
-      });
+  reset.addEventListener("click", () => {
+    resetCashierPin(staff, reset);
+  });
 
-      actions.appendChild(disable);
-      card.appendChild(actions);
+  actions.appendChild(reset);
+}
+
+const disable = document.createElement("button");
+disable.type = "button";
+disable.className = "danger";
+disable.textContent = "Nonaktifkan Kasir";
+
+disable.addEventListener("click", () => {
+  disableCashier(staff);
+});
+
+actions.appendChild(disable);
+card.appendChild(actions);
     }
 
     container.appendChild(card);

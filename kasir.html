@@ -8,17 +8,25 @@
 
 <style>
 :root{
-  --green:#123b2c;--green2:#174c38;--green3:#216247;
-  --cream:#faf9f5;--orange:#e99a55;--text:#24342c;
-  --muted:#748078;--border:#e8ebe5;--white:#fff;
-  --red:#b83232;--shadow:0 5px 20px rgba(18,59,44,.055)
+  --green:#123b2c;
+  --green2:#174c38;
+  --green3:#216247;
+  --cream:#faf9f5;
+  --orange:#e99a55;
+  --text:#24342c;
+  --muted:#78847c;
+  --border:#e8ebe5;
+  --white:#fff;
+  --red:#b83232;
+  --shadow:0 8px 28px rgba(18,59,44,.065);
+  --radius:18px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--cream);color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  -webkit-font-smoothing:antialiased
+  -webkit-font-smoothing:antialiased;
 }
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
@@ -28,18 +36,18 @@ button:disabled{opacity:.5;cursor:wait}
 /* HEADER */
 .header-shell{
   position:sticky;top:0;z-index:50;background:var(--green);
-  color:white;box-shadow:0 3px 15px rgba(0,0,0,.12)
+  color:white;box-shadow:0 3px 18px rgba(0,0,0,.1);
 }
-.topbar{min-height:76px;padding:13px 18px;transition:min-height .25s,padding .25s}
+.topbar{min-height:76px;padding:13px 18px;transition:.25s}
 .topbar-inner{
   max-width:1100px;margin:auto;display:flex;align-items:center;
   justify-content:space-between;gap:12px
 }
-.brand{min-width:0;font-size:23px;font-weight:900;letter-spacing:-.7px;line-height:1.1}
+.brand{min-width:0;font-size:23px;font-weight:900;letter-spacing:-.8px;line-height:1.1}
 .brand span{color:var(--orange)}
 .brand small{
-  display:block;margin-top:5px;color:rgba(255,255,255,.72);
-  font-size:10px;font-weight:650;letter-spacing:1.2px
+  display:block;margin-top:5px;color:rgba(255,255,255,.7);
+  font-size:9px;font-weight:700;letter-spacing:1.3px
 }
 .header-right{display:flex;align-items:center;gap:8px}
 .header-staff{
@@ -47,13 +55,12 @@ button:disabled{opacity:.5;cursor:wait}
   color:#f3eee3;font-size:12px;font-weight:650
 }
 .header-icon-btn{
-  width:38px;height:38px;border:1px solid rgba(255,255,255,.2);
-  border-radius:12px;background:rgba(255,255,255,.1);color:white;font-size:17px
+  width:39px;height:39px;border:1px solid rgba(255,255,255,.2);
+  border-radius:13px;background:rgba(255,255,255,.1);color:white;font-size:19px
 }
 .header-subline{
   max-width:1100px;margin:auto;padding:0 18px 11px;
-  color:rgba(255,255,255,.65);font-size:10px;letter-spacing:1.15px;
-  transition:opacity .2s,height .2s,padding .2s
+  color:rgba(255,255,255,.6);font-size:9px;letter-spacing:1.3px
 }
 .header-shell.collapsed .topbar{min-height:53px;padding:8px 18px}
 .header-shell.collapsed .brand{font-size:19px}
@@ -61,53 +68,59 @@ button:disabled{opacity:.5;cursor:wait}
 .header-shell.collapsed .header-subline{height:0;padding:0;opacity:0;overflow:hidden}
 
 /* PAGE */
-.container{width:100%;max-width:1100px;margin:auto;padding:22px 16px 110px}
-.welcome{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
-.welcome h1{margin:0 0 5px;font-size:25px;letter-spacing:-.7px}
+.container{width:100%;max-width:1100px;margin:auto;padding:24px 17px 110px}
+.welcome{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:12px;margin-bottom:20px
+}
+.welcome h1{margin:0 0 6px;font-size:25px;letter-spacing:-.8px}
 .welcome p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
 .live-indicator{
-  display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:20px;
+  display:flex;align-items:center;gap:7px;padding:8px 11px;border-radius:30px;
   background:#e8f3eb;color:#216247;font-size:10px;font-weight:800;white-space:nowrap
 }
 .live-dot{width:7px;height:7px;border-radius:50%;background:#36a66a}
 .notice{
-  padding:12px 14px;border:1px solid #d6e8d9;border-radius:13px;
-  background:#edf5ee;color:#285c39;margin-bottom:17px;
-  font-size:13px;line-height:1.5;overflow-wrap:anywhere
+  padding:13px 15px;border:1px solid #d6e8d9;border-radius:14px;
+  background:#edf5ee;color:#285c39;margin-bottom:18px;
+  font-size:12px;line-height:1.55;overflow-wrap:anywhere
 }
 .notice.error{background:#fff0ef;border-color:#f1c7c4;color:#8b2525}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-bottom:22px}
-.stat{min-width:0;padding:16px;background:white;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.stat{
+  min-width:0;padding:17px;background:white;border:1px solid var(--border);
+  border-radius:17px;box-shadow:var(--shadow)
+}
 .stat-top{display:flex;justify-content:space-between;align-items:center;gap:6px}
 .stat-label{color:var(--muted);font-size:11px;line-height:1.4}
 .stat-icon{
-  display:flex;align-items:center;justify-content:center;width:29px;height:29px;
-  border-radius:10px;background:#edf4ef;color:var(--green);font-size:15px
+  display:flex;align-items:center;justify-content:center;width:31px;height:31px;
+  border-radius:11px;background:#edf4ef;color:var(--green);font-size:14px;font-weight:800
 }
-.stat-value{margin-top:9px;font-size:26px;font-weight:900;letter-spacing:-.7px}
+.stat-value{margin-top:10px;font-size:26px;font-weight:900;letter-spacing:-.8px}
 
 /* TOOLBAR */
-.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px}
-.section-heading h2{margin:0;font-size:17px;letter-spacing:-.3px}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 13px}
+.section-heading h2{margin:0;font-size:18px;letter-spacing:-.4px}
 .section-heading span{color:var(--muted);font-size:11px}
-.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px 42px;gap:9px;margin-bottom:16px}
+.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px 43px;gap:9px;margin-bottom:16px}
 .field{
-  width:100%;min-width:0;padding:12px 13px;border:1px solid var(--border);
-  border-radius:12px;outline:none;background:white;color:var(--text);font-size:13px
+  width:100%;min-width:0;padding:12px 14px;border:1px solid var(--border);
+  border-radius:13px;outline:none;background:white;color:var(--text);font-size:13px
 }
-.field:focus,.form-control:focus{
+.field:focus,.form-control:focus,.form-group input:focus{
   border-color:#6b9b7e;box-shadow:0 0 0 3px rgba(33,98,71,.08)
 }
 .refresh-btn{
-  border:1px solid var(--border);border-radius:12px;background:white;
-  color:var(--green);font-size:18px;font-weight:800
+  border:1px solid var(--border);border-radius:13px;background:white;
+  color:var(--green);font-size:19px;font-weight:800
 }
 
 /* BUTTONS */
 .btn{
-  border:0;border-radius:11px;padding:11px 14px;font-size:12px;
+  border:0;border-radius:12px;padding:12px 15px;font-size:12px;
   font-weight:800;transition:transform .15s,opacity .15s
 }
 .btn:active{transform:scale(.98)}
@@ -119,16 +132,16 @@ button:disabled{opacity:.5;cursor:wait}
 .btn-block{width:100%}
 
 /* ORDERS */
-.orders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.orders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .order-card{
-  min-width:0;padding:16px;background:white;border:1px solid var(--border);
-  border-radius:17px;box-shadow:var(--shadow)
+  min-width:0;padding:17px;background:white;border:1px solid var(--border);
+  border-radius:18px;box-shadow:var(--shadow)
 }
-.order-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:13px}
+.order-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
 .order-number{font-size:16px;font-weight:900;overflow-wrap:anywhere}
 .order-time{margin-top:5px;color:var(--muted);font-size:11px}
 .badge{
-  display:inline-flex;align-items:center;padding:6px 9px;border-radius:20px;
+  display:inline-flex;align-items:center;padding:7px 10px;border-radius:20px;
   background:#eef0ed;color:#4c5851;font-size:10px;font-weight:850;white-space:nowrap
 }
 .badge.awaiting_confirmation{background:#fff0d9;color:#87520c}
@@ -136,35 +149,35 @@ button:disabled{opacity:.5;cursor:wait}
 .badge.ready_for_delivery{background:#dff5e6;color:#17683b}
 .badge.completed{background:#e8ece9;color:#3d5045}
 .badge.cancelled{background:#fff0ef;color:#a22d2d}
-.assignment{margin:0 0 12px;padding:9px 10px;border-radius:10px;background:#f5f7f3;color:#526057;font-size:11px;line-height:1.45}
+.assignment{margin:0 0 12px;padding:10px 11px;border-radius:11px;background:#f5f7f3;color:#526057;font-size:11px;line-height:1.45}
 .assignment.mine{background:#eaf4ed;color:#216247}
-.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.info-label{margin-bottom:4px;color:var(--muted);font-size:10px}
+.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:13px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.info-label{margin-bottom:5px;color:var(--muted);font-size:10px}
 .info-value{font-size:12px;font-weight:750;overflow-wrap:anywhere}
-.items{padding:13px 0}
-.items-title{margin-bottom:7px;font-size:12px;font-weight:900}
+.items{padding:14px 0}
+.items-title{margin-bottom:8px;font-size:12px;font-weight:900}
 .item-row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:12px}
 .item-row span:first-child{min-width:0;overflow-wrap:anywhere}
 .item-row span:last-child{white-space:nowrap}
-.order-note{margin-bottom:12px;padding:10px;border-radius:10px;background:#f7f7f2;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-.total-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--border)}
+.order-note{margin-bottom:12px;padding:11px;border-radius:11px;background:#f7f7f2;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.total-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:13px;border-top:1px solid var(--border)}
 .total-label{font-size:12px;font-weight:800}
 .total-price{color:var(--green);font-size:19px;font-weight:950;white-space:nowrap}
 .payment-line{margin-top:10px;font-size:11px;line-height:1.5}
 .payment-paid{color:#17683b;font-weight:850}
 .payment-unpaid{color:#87520c;font-weight:850}
-.order-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.order-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
 .order-actions .btn{flex:1 1 125px}
 .source-tag{
-  display:inline-block;margin-top:7px;padding:4px 7px;border-radius:7px;
+  display:inline-block;margin-top:7px;padding:5px 8px;border-radius:8px;
   background:#f1f3ef;color:#647168;font-size:9px;font-weight:800
 }
 .empty{
-  grid-column:1/-1;padding:38px 20px;border:1px dashed #ccd4cc;
-  border-radius:16px;background:white;color:var(--muted);
+  grid-column:1/-1;padding:40px 20px;border:1px dashed #ccd4cc;
+  border-radius:17px;background:white;color:var(--muted);
   text-align:center;font-size:13px;line-height:1.6
 }
-.footer{padding:25px 10px 8px;color:var(--muted);text-align:center;font-size:11px}
+.footer{padding:26px 10px 8px;color:var(--muted);text-align:center;font-size:11px}
 
 /* BOTTOM NAV */
 .bottom-nav{
@@ -176,115 +189,103 @@ button:disabled{opacity:.5;cursor:wait}
 .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:650px;margin:auto;gap:4px}
 .nav-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;min-height:48px;border:0;border-radius:12px;background:transparent;
+  gap:4px;min-height:49px;border:0;border-radius:13px;background:transparent;
   color:#7a857d;font-size:10px;font-weight:750
 }
 .nav-btn .nav-icon{font-size:18px;line-height:1}
 .nav-btn.active{background:#edf4ef;color:var(--green)}
 
-/* LOGIN / ACTIVATION */
-.auth-wrap{width:100%;max-width:430px;margin:26px auto;padding:0 16px}
-.auth-card{padding:22px;border:1px solid var(--border);border-radius:20px;background:white;box-shadow:var(--shadow)}
-.auth-brand{margin-bottom:20px;text-align:center}
-.auth-brand strong{color:var(--green);font-size:25px;font-weight:950}
+/* LOGIN / ACTIVATION / RESET */
+.auth-wrap{width:100%;max-width:440px;margin:30px auto;padding:0 17px}
+.auth-card{
+  padding:25px;border:1px solid var(--border);border-radius:22px;
+  background:white;box-shadow:0 12px 38px rgba(18,59,44,.075)
+}
+.auth-brand{margin-bottom:23px;text-align:center}
+.auth-brand strong{color:var(--green);font-size:28px;font-weight:950;letter-spacing:-1px}
 .auth-brand strong span{color:var(--orange)}
 .auth-brand p{margin:7px 0 0;color:var(--muted);font-size:12px}
-.auth-card h1{margin:0 0 6px;font-size:21px;letter-spacing:-.5px}
-.auth-desc{margin:0 0 19px;color:var(--muted);font-size:12px;line-height:1.5}
-.form-group{margin-bottom:13px}
-.form-group label{display:block;margin-bottom:6px;font-size:11px;font-weight:800}
+.auth-card h1{margin:0 0 7px;font-size:22px;letter-spacing:-.6px}
+.auth-desc{margin:0 0 20px;color:var(--muted);font-size:12px;line-height:1.6}
+.form-group{margin-bottom:15px}
+.form-group label{display:block;margin-bottom:7px;font-size:11px;font-weight:800}
 .form-group input{
-  width:100%;padding:13px;border:1px solid var(--border);border-radius:11px;
-  outline:none;background:#fff;font-size:14px
+  width:100%;padding:14px;border:1px solid var(--border);border-radius:12px;
+  outline:none;background:#fff;font-size:14px;color:var(--text)
 }
-.form-group input:focus{border-color:#6b9b7e;box-shadow:0 0 0 3px rgba(33,98,71,.08)}
-.auth-switch{margin-top:16px;color:var(--muted);text-align:center;font-size:12px;line-height:1.7}
+.auth-switch{margin-top:18px;color:var(--muted);text-align:center;font-size:12px;line-height:1.8}
 .text-button{padding:0;border:0;background:none;color:var(--green);font-weight:850;text-decoration:underline}
-.pin-hint{margin-top:6px;color:var(--muted);font-size:10px}
-.auth-footer{margin-top:20px;color:var(--muted);text-align:center;font-size:10px}
+.pin-hint{margin-top:7px;color:var(--muted);font-size:10px;line-height:1.5}
+.auth-footer{margin-top:21px;color:var(--muted);text-align:center;font-size:10px}
+.auth-back{
+  display:inline-flex;align-items:center;gap:6px;margin-bottom:18px;
+  padding:0;border:0;background:none;color:var(--green);font-size:12px;font-weight:800
+}
 
 /* POS */
 .pos-open-btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;margin:0 0 20px;padding:14px;border:0;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;margin:0 0 22px;padding:15px;border:0;border-radius:15px;
   background:var(--green);color:white;font-size:14px;font-weight:850;
-  box-shadow:0 5px 15px rgba(18,59,44,.13)
+  box-shadow:0 6px 18px rgba(18,59,44,.14)
 }
-.pos-open-btn span{font-size:20px;line-height:1}
+.pos-open-btn span{font-size:21px;line-height:1}
 .pos-overlay{
   position:fixed;inset:0;z-index:100;background:rgba(10,25,17,.55);
-  display:flex;align-items:flex-end;justify-content:center;
-  padding:0
+  display:flex;align-items:flex-end;justify-content:center;padding:0
 }
 .pos-panel{
   width:100%;max-width:760px;max-height:94dvh;overflow-y:auto;
   overscroll-behavior:contain;background:var(--cream);
-  border-radius:20px 20px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom));
+  border-radius:22px 22px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom));
   box-shadow:0 -10px 35px rgba(0,0,0,.18)
 }
 .pos-panel-head{
   position:sticky;top:-18px;z-index:2;display:flex;align-items:center;
-  justify-content:space-between;gap:12px;margin:-18px -16px 16px;
-  padding:16px;border-bottom:1px solid var(--border);
+  justify-content:space-between;gap:12px;margin:-18px -16px 17px;
+  padding:17px;border-bottom:1px solid var(--border);
   background:rgba(250,249,245,.97);backdrop-filter:blur(12px)
 }
 .pos-panel-head h2{margin:0;font-size:19px}
 .pos-panel-head p{margin:4px 0 0;color:var(--muted);font-size:11px}
 .pos-close{
-  width:36px;height:36px;border:1px solid var(--border);
-  border-radius:11px;background:white;color:var(--green);font-size:20px
+  width:38px;height:38px;border:1px solid var(--border);
+  border-radius:12px;background:white;color:var(--green);font-size:20px
 }
-.pos-section{margin-bottom:17px}
-.pos-label{display:block;margin-bottom:8px;font-size:12px;font-weight:850}
+.pos-section{margin-bottom:18px}
+.pos-label{display:block;margin-bottom:9px;font-size:12px;font-weight:850}
 .pos-type-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .pos-type{
-  padding:12px;border:1px solid var(--border);border-radius:12px;
+  padding:13px;border:1px solid var(--border);border-radius:13px;
   background:white;color:var(--text);font-size:12px;font-weight:800
 }
 .pos-type.active{border-color:var(--green);background:#eaf2ec;color:var(--green)}
 .form-control{
-  width:100%;min-width:0;padding:12px;border:1px solid var(--border);
-  border-radius:11px;background:white;color:var(--text);outline:none;font-size:13px
+  width:100%;min-width:0;padding:13px;border:1px solid var(--border);
+  border-radius:12px;background:white;color:var(--text);outline:none;font-size:13px
 }
-.pos-category-list{
-  display:flex;gap:7px;overflow-x:auto;padding:2px 0 9px;
-  scrollbar-width:thin
-}
+.pos-category-list{display:flex;gap:7px;overflow-x:auto;padding:2px 0 9px;scrollbar-width:thin}
 .pos-category{
-  flex:0 0 auto;padding:8px 12px;border:1px solid var(--border);
-  border-radius:20px;background:white;color:#526057;font-size:11px;font-weight:800
+  flex:0 0 auto;padding:9px 13px;border:1px solid var(--border);
+  border-radius:22px;background:white;color:#526057;font-size:11px;font-weight:800
 }
 .pos-category.active{border-color:var(--green);background:var(--green);color:white}
-.pos-product-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.pos-product{
-  min-width:0;padding:12px;border:1px solid var(--border);
-  border-radius:13px;background:white
-}
+.pos-product-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pos-product{min-width:0;padding:13px;border:1px solid var(--border);border-radius:14px;background:white}
 .pos-product-name{font-size:12px;font-weight:850;line-height:1.4;overflow-wrap:anywhere}
 .pos-product-price{margin-top:5px;color:var(--green);font-size:13px;font-weight:900}
 .pos-product-stock{margin-top:4px;color:var(--muted);font-size:10px}
 .pos-product-actions{display:flex;justify-content:flex-end;margin-top:9px}
-.pos-add{
-  width:34px;height:32px;border:0;border-radius:9px;
-  background:var(--green);color:white;font-size:20px;font-weight:800
-}
+.pos-add{width:35px;height:33px;border:0;border-radius:10px;background:var(--green);color:white;font-size:20px;font-weight:800}
 .pos-add:disabled{background:#d7ddd7;color:#758078}
-.pos-cart{
-  padding:12px;border:1px solid var(--border);border-radius:14px;background:white
-}
-.pos-cart-empty{padding:15px 5px;color:var(--muted);text-align:center;font-size:12px}
-.pos-cart-row{
-  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;
-  padding:10px 0;border-bottom:1px solid #eff0eb
-}
+.pos-cart{padding:13px;border:1px solid var(--border);border-radius:15px;background:white}
+.pos-cart-empty{padding:16px 5px;color:var(--muted);text-align:center;font-size:12px}
+.pos-cart-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;padding:11px 0;border-bottom:1px solid #eff0eb}
 .pos-cart-row:last-child{border-bottom:0}
 .pos-cart-name{font-size:12px;font-weight:800;overflow-wrap:anywhere}
 .pos-cart-price{margin-top:4px;color:var(--muted);font-size:11px}
 .qty-control{display:flex;align-items:center;gap:8px}
-.qty-btn{
-  width:29px;height:29px;border:1px solid var(--border);
-  border-radius:8px;background:#f8f9f6;color:var(--green);font-weight:900
-}
+.qty-btn{width:30px;height:30px;border:1px solid var(--border);border-radius:9px;background:#f8f9f6;color:var(--green);font-weight:900}
 .qty-number{min-width:14px;text-align:center;font-size:12px;font-weight:850}
 .pos-summary{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 .pos-summary-row{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:12px}
@@ -296,21 +297,23 @@ button:disabled{opacity:.5;cursor:wait}
 
 /* RESPONSIVE */
 @media(max-width:760px){
-  .container{padding:18px 13px 105px}
+  .container{padding:19px 13px 105px}
   .stats{gap:8px}
-  .stat{padding:12px 11px;border-radius:14px}
+  .stat{padding:13px 11px;border-radius:15px}
   .stat-label{font-size:10px}
   .stat-value{font-size:22px}
-  .stat-icon{width:25px;height:25px;font-size:13px}
+  .stat-icon{width:26px;height:26px;font-size:12px}
   .orders{grid-template-columns:1fr}
-  .toolbar{grid-template-columns:minmax(0,1fr) 42px}
+  .toolbar{grid-template-columns:minmax(0,1fr) 43px}
   .toolbar select{grid-column:1/-1;grid-row:2}
-  .welcome h1{font-size:22px}
+  .welcome h1{font-size:23px}
   .order-card{padding:15px}
   .pos-panel{max-height:95dvh}
+  .auth-wrap{margin:22px auto}
+  .auth-card{padding:22px}
 }
 @media(min-width:761px){
-  .auth-wrap{margin-top:45px}
+  .auth-wrap{margin-top:48px}
   .pos-overlay{align-items:center;padding:20px}
   .pos-panel{border-radius:20px;max-height:90dvh}
 }
@@ -371,11 +374,67 @@ button:disabled{opacity:.5;cursor:wait}
       <button class="btn btn-green btn-block" id="login-submit" type="submit">Masuk ke Dashboard</button>
     </form>
     <div class="auth-switch">
+      <button class="text-button" id="show-reset" type="button">Lupa PIN?</button>
+      <br><br>
       Belum mengaktifkan identitas kasir?<br>
       <button class="text-button" id="show-activation" type="button">Aktivasi Kasir Pertama Kali</button>
     </div>
   </div>
   <div class="auth-footer">KopiHub · Sistem operasional mitra</div>
+</section>
+
+<!-- RESET PIN -->
+<section class="auth-wrap" id="reset-view" hidden>
+  <div class="auth-card">
+    <button class="auth-back" id="reset-back" type="button">← Kembali ke Login</button>
+    <div class="auth-brand">
+      <strong>Kopi<span>Hub</span></strong>
+      <p>Pemulihan PIN Kasir</p>
+    </div>
+    <h1>Reset PIN</h1>
+    <p class="auth-desc">
+      Hubungi Owner kedai untuk meminta kode reset PIN. Setelah menerima kode,
+      masukkan informasi kasir dan buat PIN baru.
+    </p>
+    <div id="reset-notice" class="notice" hidden></div>
+    <form id="reset-form">
+      <div class="form-group">
+        <label for="reset-shop">Nama Kedai</label>
+        <input id="reset-shop" required autocomplete="organization" placeholder="Nama kedai">
+      </div>
+      <div class="form-group">
+        <label for="reset-name">Nama Kasir</label>
+        <input id="reset-name" required autocomplete="name" placeholder="Nama sesuai data Owner">
+      </div>
+      <div class="form-group">
+        <label for="reset-staff-code">Cashier ID</label>
+        <input id="reset-staff-code" required autocomplete="username" placeholder="Masukkan Cashier ID">
+      </div>
+      <div class="form-group">
+        <label for="reset-activation-code">Kode Reset dari Owner</label>
+        <input id="reset-activation-code" required inputmode="numeric"
+          pattern="[0-9]{10}" minlength="10" maxlength="10"
+          autocomplete="one-time-code" placeholder="Masukkan kode 10 digit">
+        <div class="pin-hint">Kode reset hanya berlaku 30 menit dan hanya dapat digunakan satu kali.</div>
+      </div>
+      <div class="form-group">
+        <label for="reset-new-pin">PIN Baru</label>
+        <input id="reset-new-pin" required type="password" inputmode="numeric"
+          pattern="[0-9]{6,8}" minlength="6" maxlength="8"
+          autocomplete="new-password" placeholder="Buat PIN baru 6–8 digit">
+      </div>
+      <div class="form-group">
+        <label for="reset-confirm-pin">Ulangi PIN Baru</label>
+        <input id="reset-confirm-pin" required type="password" inputmode="numeric"
+          pattern="[0-9]{6,8}" minlength="6" maxlength="8"
+          autocomplete="new-password" placeholder="Ulangi PIN baru">
+      </div>
+      <button class="btn btn-green btn-block" id="reset-submit" type="submit">Simpan PIN Baru</button>
+    </form>
+    <div class="auth-footer">
+      Jangan bagikan kode reset maupun PIN pribadi kepada orang lain.
+    </div>
+  </div>
 </section>
 
 <!-- AKTIVASI -->
@@ -571,8 +630,8 @@ button:disabled{opacity:.5;cursor:wait}
 "use strict";
 
 /*
-  KopiHub Cashier Dashboard V6
-  Backend: cashier-access / individual-cashier-v6
+  KopiHub Cashier Dashboard V8
+  Backend: cashier-access / individual-cashier-v8
 
   Semua autentikasi, PIN, sesi, validasi produk, harga,
   pembuatan pesanan, assignment dan perubahan status
@@ -816,6 +875,7 @@ function orderVisibleByFilter(order){
 
 function showView(view){
   el("login-view").hidden = view !== "login";
+  el("reset-view").hidden = view !== "reset";
   el("activation-view").hidden = view !== "activation";
   el("dashboard-view").hidden = view !== "dashboard";
   el("bottom-nav").hidden = view !== "dashboard";
@@ -867,7 +927,7 @@ function restoreSession(){
   }
 }
 
-/* AKTIVASI KASIR */
+/* NAVIGASI AUTENTIKASI */
 el("show-activation").addEventListener("click",()=>{
   el("activation-notice").hidden = true;
   showView("activation");
@@ -878,6 +938,23 @@ el("show-login").addEventListener("click",()=>{
   showView("login");
 });
 
+el("show-reset").addEventListener("click",()=>{
+  el("reset-notice").hidden = true;
+
+  // Isi otomatis data yang sudah dimasukkan pada form login.
+  el("reset-shop").value = el("login-shop").value.trim();
+  el("reset-name").value = el("login-name").value.trim();
+  el("reset-staff-code").value = el("login-code").value.trim();
+
+  showView("reset");
+});
+
+el("reset-back").addEventListener("click",()=>{
+  el("reset-notice").hidden = true;
+  showView("login");
+});
+
+/* AKTIVASI KASIR */
 el("activation-form").addEventListener("submit",async event=>{
   event.preventDefault();
 
@@ -918,6 +995,62 @@ el("activation-form").addEventListener("submit",async event=>{
     showAuthNotice("activation-notice",error.message || "Aktivasi gagal.",true);
   }finally{
     setBusy("activation-submit",false);
+  }
+});
+
+/* RESET PIN DENGAN KODE DARI OWNER */
+el("reset-form").addEventListener("submit",async event=>{
+  event.preventDefault();
+
+  const shopName = el("reset-shop").value.trim();
+  const staffName = el("reset-name").value.trim();
+  const staffCode = el("reset-staff-code").value.trim();
+  const activationCode = el("reset-activation-code").value.trim();
+  const newPin = el("reset-new-pin").value;
+  const pinConfirmation = el("reset-confirm-pin").value;
+
+  if(!/^[0-9]{10}$/.test(activationCode)){
+    showAuthNotice("reset-notice","Kode reset harus terdiri dari tepat 10 angka.",true);
+    return;
+  }
+
+  if(!/^[0-9]{6,8}$/.test(newPin)){
+    showAuthNotice("reset-notice","PIN baru harus terdiri dari 6–8 angka.",true);
+    return;
+  }
+
+  if(newPin !== pinConfirmation){
+    showAuthNotice("reset-notice","Konfirmasi PIN baru tidak sama.",true);
+    return;
+  }
+
+  setBusy("reset-submit",true,"Memproses reset...");
+  try{
+    const result = await cashierAPI("reset_pin",{
+      shopName,
+      staffCode,
+      staffName,
+      activationCode,
+      newPin,
+      pinConfirmation
+    });
+
+    el("reset-form").reset();
+
+    el("login-shop").value = shopName;
+    el("login-name").value = staffName;
+    el("login-code").value = staffCode;
+    el("login-pin").value = "";
+
+    showView("login");
+    showAuthNotice(
+      "login-notice",
+      result.message || "PIN berhasil diperbarui. Silakan login menggunakan PIN baru."
+    );
+  }catch(error){
+    showAuthNotice("reset-notice",error.message || "Reset PIN gagal.",true);
+  }finally{
+    setBusy("reset-submit",false);
   }
 });
 
@@ -1304,10 +1437,7 @@ async function handoverOrder(orderId){
   }
 }
 
-/* ================================
-   POS: MEMBUKA DAN MEMUAT PRODUK
-================================ */
-
+/* POS: MEMBUKA DAN MEMUAT PRODUK */
 function openPos(){
   if(!cashierSession) return;
 
@@ -1318,7 +1448,6 @@ function openPos(){
   posOrderType = "dine_in";
   el("pos-table-number").value = "";
   el("pos-order-note").value = "";
-  el("pos-type-buttons");
   updatePosTypeUI();
   renderPosCart();
   hidePosNotice();
@@ -1350,7 +1479,6 @@ async function loadPosProducts(){
     posProducts = result.products;
     posCategories = Array.isArray(result.categories) ? result.categories : [];
 
-    // Keranjang hanya mempertahankan produk yang masih tersedia.
     for(const [id] of posCart){
       if(!posProducts.some(product=>String(product.id) === String(id))){
         posCart.delete(id);

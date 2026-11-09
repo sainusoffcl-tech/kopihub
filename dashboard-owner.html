@@ -4749,6 +4749,86 @@ $("shop-profile-form").addEventListener("submit", async event => {
   }
 });
 
+/* PENGATURAN WAKTU PEMBAYARAN OWNER */
+$("owner-payment-timing").addEventListener(
+  "change",
+  async function () {
+    const shop = selectedShop();
+    const message = $("owner-payment-timing-message");
+    const select = $("owner-payment-timing");
+
+    if (!client || !shop) {
+      message.textContent = "Pilih kedai terlebih dahulu.";
+      return;
+    }
+
+    const shopId = String(shop.id);
+    const previousValue = String(
+      shop.preparation_before_payment === true
+    );
+
+    const newValue = select.value === "true";
+
+    select.disabled = true;
+    message.textContent = "Menyimpan pengaturan...";
+
+    try {
+      const { data, error } = await client
+        .from("kh_shops")
+        .update({
+          preparation_before_payment: newValue
+        })
+        .eq("id", shopId)
+        .select("id, preparation_before_payment")
+        .single();
+
+      if (error) throw error;
+
+      if (!data) {
+        throw new Error("Pengaturan kedai tidak berhasil diperbarui.");
+      }
+
+      const updatedShop = shops.find(
+        item => String(item.id) === shopId
+      );
+
+      if (updatedShop) {
+        updatedShop.preparation_before_payment =
+          data.preparation_before_payment;
+      }
+
+      const currentShop = selectedShop();
+
+      if (currentShop && String(currentShop.id) === shopId) {
+        select.value = String(
+          data.preparation_before_payment === true
+        );
+
+        message.textContent =
+          data.preparation_before_payment === true
+            ? "Berhasil disimpan. Pesanan dapat dipersiapkan sebelum pembayaran dikonfirmasi."
+            : "Berhasil disimpan. Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
+      }
+
+    } catch (error) {
+      console.error(
+        "Gagal menyimpan waktu pembayaran:",
+        error
+      );
+
+      const currentShop = selectedShop();
+
+      if (currentShop && String(currentShop.id) === shopId) {
+        select.value = previousValue;
+        message.textContent =
+          "Gagal menyimpan pengaturan: " + error.message;
+      }
+
+    } finally {
+      select.disabled = false;
+    }
+  }
+);
 
 /* HEADER PROFILE */
 $("header-profile-button").addEventListener("click", () => {

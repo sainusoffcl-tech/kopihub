@@ -1179,7 +1179,41 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
         Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
       </p>
     </section>
+    
+<!-- PENGATURAN WAKTU PEMBAYARAN -->
+<div class="settings-item" style="display:block;">
+  <div class="settings-info">
+    <strong>Waktu Pembayaran</strong>
+    <span>
+      Tentukan kapan pelanggan harus membayar pesanannya.
+    </span>
+  </div>
 
+  <select
+    id="owner-payment-timing"
+    style="
+      width:100%;
+      margin-top:12px;
+      padding:12px;
+      border:1px solid #d8ded8;
+      border-radius:10px;
+      background:#faf9f5;
+      color:#123b2c;
+      font-size:14px;
+    "
+  >
+    <option value="false">Bayar di Awal</option>
+    <option value="true">Bayar di Akhir</option>
+  </select>
+
+  <p
+    id="owner-payment-timing-message"
+    class="muted"
+    style="margin:8px 0 0;font-size:12px;"
+  >
+    Pengaturan mengikuti kebijakan pembayaran kedai.
+  </p>
+</div>
     <!-- PENGATURAN -->
     <section class="panel">
       <h2>Pengaturan Kedai</h2>

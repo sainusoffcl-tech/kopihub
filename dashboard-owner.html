@@ -1549,7 +1549,7 @@ async function loadShops() {
 
     const shopId=uniqueShopIds[0];
     const {data:shop,error:shopError}=await client.from("kh_shops")
-      .select("id,name,slug,is_active,timezone,logo_url,description")
+      .select("id,name,slug,is_active,timezone,logo_url,description,preparation_before_payment")
       .eq("id",shopId).maybeSingle();
 
     if(shopError) throw shopError;

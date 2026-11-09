@@ -1461,6 +1461,24 @@ function formatExpiry(value) {
 /* PROFIL HEADER */
 function renderSelectedShop() {
   const shop=selectedShop();
+
+  /* PENGATURAN WAKTU PEMBAYARAN OWNER */
+  const paymentTiming = $("owner-payment-timing");
+  const paymentTimingMessage = $("owner-payment-timing-message");
+
+  if (paymentTiming) {
+    paymentTiming.value = String(
+      shop?.preparation_before_payment === true
+    );
+  }
+
+  if (paymentTimingMessage) {
+    paymentTimingMessage.textContent =
+      shop?.preparation_before_payment === true
+        ? "Pesanan dapat dipersiapkan sebelum pembayaran dikonfirmasi."
+        : "Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
+  }
+
   $("header-shop-name").textContent=shop?shop.name:"Dashboard Owner";
 
   const headerLogo=$("header-shop-logo");
@@ -1503,7 +1521,6 @@ function renderSelectedShop() {
 
   $("save-shop-profile").disabled=!shop;
 }
-
 /* LOAD SUPABASE */
 async function loadShops() {
   try{

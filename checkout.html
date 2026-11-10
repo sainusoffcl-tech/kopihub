@@ -1352,8 +1352,9 @@ document.getElementById("printReceiptBtn").addEventListener("click",()=>{
   window.print();
 });
 
+
 /* =========================================
-   SIMPAN SEBAGAI FOTO
+   SIMPAN SEBAGAI FOTO - FORMAT STRUK DIGITAL
 ========================================= */
 
 const savePhotoBtn=document.getElementById("savePhotoBtn");
@@ -1387,9 +1388,14 @@ savePhotoBtn.addEventListener("click",async()=>{
   const originalText=savePhotoBtn.textContent;
 
   savePhotoBtn.disabled=true;
-  savePhotoBtn.textContent="Membuat foto...";
+  savePhotoBtn.textContent="Membuat struk...";
 
   try{
+
+    const receiptWidth=Math.min(
+      360,
+      Math.max(280,window.innerWidth-32)
+    );
 
     const canvas=await window.html2canvas(receiptCard,{
       scale:2,
@@ -1402,17 +1408,161 @@ savePhotoBtn.addEventListener("click",async()=>{
         document.documentElement.clientWidth,
         receiptCard.scrollWidth
       ),
+
       onclone:clonedDocument=>{
-        const clonedCard=clonedDocument.getElementById("receiptCard");
-        if(clonedCard){
-          clonedCard.querySelectorAll(".no-print").forEach(element=>{
-            element.style.display="none";
-          });
-        }
+
+        const clonedCard=
+          clonedDocument.getElementById("receiptCard");
+
+        if(!clonedCard)return;
+
+        /* Sembunyikan tombol dari hasil foto */
+        clonedCard.querySelectorAll(".no-print").forEach(element=>{
+          element.style.display="none";
+        });
+
+        /* Terapkan format struk digital */
+        const compactStyle=
+          clonedDocument.createElement("style");
+
+        compactStyle.textContent=`
+
+          #receiptCard{
+            width:${receiptWidth}px !important;
+            max-width:${receiptWidth}px !important;
+            min-width:0 !important;
+            margin:0 !important;
+            padding:17px 15px !important;
+            box-sizing:border-box !important;
+            border:1px solid #e5e8df !important;
+            border-radius:9px !important;
+            box-shadow:none !important;
+            background:#ffffff !important;
+            color:#24352c !important;
+            font-family:Arial,sans-serif !important;
+          }
+
+          #receiptCard .receipt-top{
+            padding:0 0 10px !important;
+            margin:0 0 10px !important;
+          }
+
+          #receiptCard .receipt-mark{
+            font-size:9px !important;
+            padding:5px 9px !important;
+            margin-bottom:7px !important;
+          }
+
+          #receiptCard .receipt-top h2{
+            font-size:17px !important;
+            margin:0 0 4px !important;
+          }
+
+          #receiptCard .receipt-top p{
+            font-size:10px !important;
+          }
+
+          #receiptCard .receipt-code{
+            padding:9px !important;
+            margin:9px 0 !important;
+            border-radius:7px !important;
+          }
+
+          #receiptCard .receipt-code small{
+            font-size:9px !important;
+            margin-bottom:3px !important;
+          }
+
+          #receiptCard .receipt-code strong{
+            font-size:14px !important;
+          }
+
+          #receiptCard .receipt-info{
+            gap:8px 12px !important;
+            margin:10px 0 !important;
+          }
+
+          #receiptCard .receipt-info small{
+            font-size:9px !important;
+            margin-bottom:3px !important;
+          }
+
+          #receiptCard .receipt-info strong{
+            font-size:10px !important;
+            line-height:1.35 !important;
+          }
+
+          #receiptCard .receipt-divider{
+            margin:10px 0 !important;
+          }
+
+          #receiptCard h2{
+            font-size:14px !important;
+          }
+
+          #receiptCard .order-item{
+            padding:7px 0 !important;
+            gap:8px !important;
+          }
+
+          #receiptCard .item-name,
+          #receiptCard .item-price{
+            font-size:11px !important;
+          }
+
+          #receiptCard .item-sub{
+            font-size:9px !important;
+            margin-top:3px !important;
+          }
+
+          #receiptCard .total-row{
+            padding:6px 0 !important;
+            font-size:11px !important;
+          }
+
+          #receiptCard .total-row.final{
+            padding-top:10px !important;
+            margin-top:3px !important;
+            font-size:14px !important;
+          }
+
+          #receiptCard .receipt-tax-note{
+            font-size:9px !important;
+            line-height:1.4 !important;
+          }
+
+          #receiptCard .receipt-status{
+            padding:9px !important;
+            margin-top:9px !important;
+            border-radius:7px !important;
+          }
+
+          #receiptCard .receipt-status small{
+            font-size:9px !important;
+            margin-bottom:3px !important;
+          }
+
+          #receiptCard .receipt-status strong{
+            font-size:11px !important;
+          }
+
+          #receiptCard .receipt-note{
+            font-size:9px !important;
+            line-height:1.4 !important;
+            margin-top:10px !important;
+          }
+
+        `;
+
+        clonedDocument.head.appendChild(compactStyle);
       }
     });
 
-    const blob=await canvasToBlob(canvas,"image/jpeg",0.92);
+    const blob=await canvasToBlob(
+      canvas,
+      "image/jpeg",
+      0.92
+    );
 
     const orderCode=
       document.getElementById("receiptOrderCode").textContent;
@@ -1426,15 +1576,12 @@ savePhotoBtn.addEventListener("click",async()=>{
       {type:"image/jpeg"}
     );
 
-    /*
-      Pada iPhone dan browser yang mendukung berbagi file,
-      buka menu berbagi agar pelanggan dapat menyimpan gambar.
-    */
     if(
       navigator.share &&
       navigator.canShare &&
       navigator.canShare({files:[photoFile]})
     ){
+
       await navigator.share({
         files:[photoFile],
         title:"Bukti Pesanan KopiHub",
@@ -1443,11 +1590,6 @@ savePhotoBtn.addEventListener("click",async()=>{
 
     }else{
 
-      /*
-        Alternatif browser tanpa dukungan berbagi file:
-        buka gambar agar pelanggan dapat menyimpan gambar
-        melalui menu browser/perangkat.
-      */
       const imageUrl=URL.createObjectURL(blob);
       const newWindow=window.open(imageUrl,"_blank");
 
@@ -1468,20 +1610,24 @@ savePhotoBtn.addEventListener("click",async()=>{
   }catch(error){
 
     if(error && error.name==="AbortError"){
-      /* Pengguna menutup menu berbagi; tidak perlu pesan error. */
+      /* Pengguna membatalkan menu berbagi. */
     }else{
       console.error("Save photo error:",error);
+
       showStatus(
-        "Foto belum berhasil disimpan. Silakan coba kembali atau gunakan Simpan sebagai PDF."
+        "Foto belum berhasil dibuat. Silakan coba kembali atau gunakan Simpan sebagai PDF."
       );
     }
 
   }finally{
+
     savePhotoBtn.disabled=false;
     savePhotoBtn.textContent=originalText;
+
   }
 
 });
+
 
 </script>
 </body>

@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#123b2c">
 <title>Checkout | KopiHub</title>
 
@@ -20,14 +20,24 @@
   --white:#fff;
   --danger:#a12e24;
   --shadow:0 8px 28px rgba(18,59,44,.055);
+
+  /* Sama persis dengan tinggi header menu */
   --header-height:68px;
 }
+
 *{box-sizing:border-box}
+
 html,body{
   margin:0;
   min-height:100%;
   overflow-x:clip;
 }
+
+html{
+  width:100%;
+  background:var(--cream);
+}
+
 body{
   background:var(--cream);
   color:var(--text);
@@ -35,7 +45,7 @@ body{
   padding-top:var(--header-height);
 }
 
-/* HEADER APLIKASI FIXED */
+/* HEADER FIXED - MENGIKUTI MENU.HTML */
 header{
   position:fixed;
   top:0;
@@ -43,75 +53,66 @@ header{
   right:0;
   z-index:1000;
   height:var(--header-height);
-  background:linear-gradient(135deg,#123b2c,#245b42);
+  background:var(--green);
   color:white;
-  box-shadow:0 3px 14px rgba(18,59,44,.15);
-}
-.header-inner{
-  width:100%;
-  max-width:720px;
-  height:100%;
-  margin:0 auto;
-  padding:0 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.brand-group{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  min-width:0;
-}
-.brand{
-  font-size:23px;
-  font-weight:900;
-  letter-spacing:-1px;
-  line-height:1.05;
-  white-space:nowrap;
-}
-.brand span{color:var(--orange)}
-.subtitle{
-  margin-top:4px;
-  font-size:8px;
-  letter-spacing:1.5px;
-  opacity:.82;
-  white-space:nowrap;
-}
-header a{
-  color:white;
-  text-decoration:none;
-  font-size:12px;
-  font-weight:750;
-  padding:9px 12px;
-  border:1px solid rgba(255,255,255,.28);
-  border-radius:9px;
-  white-space:nowrap;
-  transition:background .2s;
-}
-header a:active{
-  background:rgba(255,255,255,.13);
+  padding:0 20px;
+  box-shadow:0 3px 15px rgba(0,0,0,.12);
 }
 
+.header-inner{
+  width:100%;
+  height:100%;
+  max-width:1150px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  color:white;
+  text-decoration:none;
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:-1.3px;
+  white-space:nowrap;
+}
+
+.logo span{color:var(--orange)}
+
+.back-link{
+  color:white;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:650;
+  opacity:.92;
+  white-space:nowrap;
+}
+
+/* KONTEN */
 main{
   max-width:720px;
   margin:0 auto;
   padding:23px 15px 38px;
 }
+
 .page-heading{margin-bottom:20px}
+
 h1{
   color:var(--green);
   font-size:27px;
   letter-spacing:-.7px;
   margin:0 0 8px;
 }
+
 .intro{
   color:var(--muted);
   line-height:1.6;
   font-size:13px;
   margin:0;
 }
+
 .card{
   background:var(--white);
   border:1px solid var(--border);
@@ -120,12 +121,14 @@ h1{
   margin:14px 0;
   box-shadow:var(--shadow);
 }
+
 .section-heading{
   display:flex;
   align-items:center;
   gap:10px;
   margin-bottom:17px;
 }
+
 .section-number{
   width:30px;
   height:30px;
@@ -139,19 +142,23 @@ h1{
   font-weight:900;
   flex-shrink:0;
 }
+
 h2{
   color:var(--green);
   font-size:16px;
   margin:0;
 }
+
 .field{margin:15px 0}
 .field:last-child{margin-bottom:0}
+
 .field label{
   display:block;
   font-weight:750;
   font-size:13px;
   margin-bottom:8px;
 }
+
 input[type=text],
 input[type=tel],
 textarea{
@@ -166,22 +173,28 @@ textarea{
   outline:none;
   transition:border .2s,box-shadow .2s;
 }
+
 input:focus,textarea:focus{
   border-color:var(--green2);
   box-shadow:0 0 0 3px rgba(36,91,66,.09);
 }
+
 textarea{min-height:78px;resize:vertical}
+
 .table-help{
   color:var(--muted);
   font-size:12px;
   margin:-8px 0 15px;
 }
+
 .table-grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:9px;
 }
+
 .table-option{position:relative}
+
 .table-option input,
 .payment-option input{
   position:absolute;
@@ -189,6 +202,7 @@ textarea{min-height:78px;resize:vertical}
   width:1px;
   height:1px;
 }
+
 .table-option label{
   display:block;
   text-align:center;
@@ -201,17 +215,20 @@ textarea{min-height:78px;resize:vertical}
   background:#fff;
   transition:.15s;
 }
+
 .table-option input:checked+label{
   background:var(--green);
   color:white;
   border-color:var(--green);
   box-shadow:0 4px 12px rgba(18,59,44,.16);
 }
+
 .table-option input:focus-visible+label,
 .payment-option input:focus-visible+.payment-box{
   outline:3px solid rgba(233,154,72,.55);
   outline-offset:2px;
 }
+
 .order-item{
   display:flex;
   justify-content:space-between;
@@ -219,10 +236,12 @@ textarea{min-height:78px;resize:vertical}
   padding:13px 0;
   border-bottom:1px solid #eef0ea;
 }
+
 .order-item:first-child{padding-top:0}
 .item-name{font-weight:800;font-size:13px}
 .item-sub{color:var(--muted);font-size:11px;margin-top:5px}
 .item-price{font-weight:800;font-size:13px;white-space:nowrap}
+
 .total-row{
   display:flex;
   justify-content:space-between;
@@ -230,8 +249,10 @@ textarea{min-height:78px;resize:vertical}
   padding:10px 0;
   font-size:13px;
 }
+
 .total-row strong{white-space:nowrap}
 .total-row.muted{color:var(--muted)}
+
 .total-row.final{
   border-top:1px solid var(--border);
   margin-top:5px;
@@ -240,6 +261,7 @@ textarea{min-height:78px;resize:vertical}
   font-weight:900;
   color:var(--green);
 }
+
 .tax-note{
   background:#f6f7f2;
   color:var(--muted);
@@ -249,12 +271,14 @@ textarea{min-height:78px;resize:vertical}
   line-height:1.5;
   margin-top:8px;
 }
+
 .payment-option{
   display:block;
   margin:10px 0;
   cursor:pointer;
   position:relative;
 }
+
 .payment-box{
   display:block;
   padding:15px;
@@ -262,16 +286,20 @@ textarea{min-height:78px;resize:vertical}
   border-radius:12px;
   transition:.15s;
 }
+
 .payment-option input:checked+.payment-box{
   border:2px solid var(--green2);
   background:var(--green-light);
   padding:14px;
 }
+
 .payment-option input:disabled+.payment-box{
   opacity:.5;
   cursor:not-allowed;
 }
+
 .payment-title{display:block;font-weight:850;font-size:13px}
+
 .payment-desc{
   display:block;
   color:var(--muted);
@@ -279,6 +307,7 @@ textarea{min-height:78px;resize:vertical}
   line-height:1.5;
   margin-top:5px;
 }
+
 .notice{
   background:#fff5e9;
   color:#80521f;
@@ -289,6 +318,7 @@ textarea{min-height:78px;resize:vertical}
   font-size:11px;
   line-height:1.6;
 }
+
 .status{
   display:none;
   padding:14px;
@@ -298,18 +328,21 @@ textarea{min-height:78px;resize:vertical}
   line-height:1.6;
   overflow-wrap:anywhere;
 }
+
 .status.success{
   display:block;
   background:#eaf5eb;
   color:var(--green);
   border:1px solid #d5e9d7;
 }
+
 .status.error{
   display:block;
   background:#fff0ed;
   color:var(--danger);
   border:1px solid #f2d6d1;
 }
+
 .submit-btn,.action-btn{
   width:100%;
   border:0;
@@ -326,24 +359,29 @@ textarea{min-height:78px;resize:vertical}
   text-decoration:none;
   display:block;
 }
+
 .submit-btn:active,.action-btn:active{transform:scale(.99)}
 .submit-btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+
 .action-btn.secondary{
   background:#fff;
   color:var(--green);
   border:1px solid var(--green);
   box-shadow:none;
 }
+
 .action-btn:disabled{
   opacity:.55;
   cursor:wait;
 }
+
 .action-group{
   display:grid;
   grid-template-columns:1fr;
   gap:10px;
   margin-top:17px;
 }
+
 .back-menu{
   display:block;
   text-align:center;
@@ -353,6 +391,7 @@ textarea{min-height:78px;resize:vertical}
   font-size:13px;
   font-weight:800;
 }
+
 footer{
   text-align:center;
   color:var(--muted);
@@ -360,16 +399,19 @@ footer{
   line-height:1.8;
   padding:20px 0 5px;
 }
+
 .footer-brand{color:var(--green);font-weight:850}
 
 /* BUKTI PESANAN */
 #receiptSection{display:none}
+
 .receipt-top{
   text-align:center;
   padding:8px 0 18px;
   border-bottom:1px dashed var(--border);
   margin-bottom:15px;
 }
+
 .receipt-mark{
   display:inline-block;
   background:var(--green-light);
@@ -381,12 +423,15 @@ footer{
   border-radius:20px;
   margin-bottom:12px;
 }
+
 .receipt-top h2{font-size:21px;margin-bottom:7px}
+
 .receipt-top p{
   color:var(--muted);
   font-size:12px;
   margin:0;
 }
+
 .receipt-code{
   background:#f6f7f2;
   border-radius:11px;
@@ -394,57 +439,68 @@ footer{
   margin:15px 0;
   text-align:center;
 }
+
 .receipt-code small{
   display:block;
   color:var(--muted);
   font-size:10px;
   margin-bottom:5px;
 }
+
 .receipt-code strong{
   display:block;
   color:var(--green);
   font-size:17px;
   overflow-wrap:anywhere;
 }
+
 .receipt-info{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:13px;
   margin:15px 0;
 }
+
 .receipt-info div{min-width:0}
+
 .receipt-info small{
   display:block;
   color:var(--muted);
   font-size:10px;
   margin-bottom:4px;
 }
+
 .receipt-info strong{
   display:block;
   font-size:12px;
   overflow-wrap:anywhere;
 }
+
 .receipt-divider{
   border:0;
   border-top:1px dashed var(--border);
   margin:16px 0;
 }
+
 .receipt-status{
   background:var(--green-light);
   border-radius:11px;
   padding:13px;
   margin-top:15px;
 }
+
 .receipt-status small{
   color:var(--muted);
   font-size:10px;
   display:block;
   margin-bottom:5px;
 }
+
 .receipt-status strong{
   color:var(--green);
   font-size:13px;
 }
+
 .receipt-note{
   color:var(--muted);
   font-size:11px;
@@ -452,6 +508,7 @@ footer{
   text-align:center;
   margin-top:17px;
 }
+
 .receipt-tax-note{
   color:var(--muted);
   font-size:11px;
@@ -459,37 +516,68 @@ footer{
   margin-top:3px;
 }
 
-@media(max-width:539px){
-  :root{--header-height:60px}
-  .header-inner{padding:0 15px}
-  .brand{font-size:21px}
-  .subtitle{font-size:7px;letter-spacing:1.25px}
-  header a{font-size:11px;padding:8px 10px}
+/* MOBILE - SAMA DENGAN MENU.HTML */
+@media(max-width:760px){
+  :root{
+    --header-height:60px;
+  }
+
+  header{
+    padding:0 20px;
+  }
+
+  .logo{font-size:23px}
+  .back-link{font-size:12px}
+
   main{padding-top:21px}
 }
+
+@media(max-width:539px){
+  .header-inner{padding:0}
+  main{padding-top:21px}
+}
+
 @media(min-width:540px){
   main{padding-top:28px}
   .table-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
   .card{padding:21px}
   .action-group{grid-template-columns:1fr 1fr}
 }
+
+/* LAYAR KECIL - SAMA DENGAN MENU.HTML */
+@media(max-width:390px){
+  header{
+    padding-left:15px;
+    padding-right:15px;
+  }
+
+  .back-link{font-size:11px}
+}
+
 @media print{
+  html{background:#fff}
+
   body{
     background:#fff;
     padding-top:0;
   }
+
   header,#checkoutForm,#backTop,#backBottom,footer,
   .page-heading,#statusBox,.no-print{display:none!important}
+
   main{max-width:100%;padding:0}
   #receiptSection{display:block!important}
+
   #receiptSection .card{
     box-shadow:none;
     border:0;
     padding:0;
     margin:0;
   }
+
   .receipt-card{border:0!important}
   .action-group{display:none!important}
+
   .receipt-top,.receipt-code,.receipt-status{
     print-color-adjust:exact;
     -webkit-print-color-adjust:exact;
@@ -502,11 +590,8 @@ footer{
 
 <header>
   <div class="header-inner">
-    <div class="brand-group">
-      <div class="brand">Kopi<span>Hub</span></div>
-      <div class="subtitle">SATU PLATFORM, BANYAK CERITA</div>
-    </div>
-    <a id="backTop" href="menu.html">‹ Kembali ke menu</a>
+    <a class="logo" href="index.html">Kopi<span>Hub</span></a>
+    <a id="backTop" class="back-link" href="menu.html">← Kembali ke menu</a>
   </div>
 </header>
 

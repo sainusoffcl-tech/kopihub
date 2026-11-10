@@ -62,9 +62,7 @@ header a{
   opacity:.8;
 }
 main{padding:23px 15px 38px}
-.page-heading{
-  margin-bottom:20px;
-}
+.page-heading{margin-bottom:20px}
 h1{
   color:var(--green);
   font-size:27px;
@@ -135,10 +133,7 @@ input:focus,textarea:focus{
   border-color:var(--green2);
   box-shadow:0 0 0 3px rgba(36,91,66,.09);
 }
-textarea{
-  min-height:78px;
-  resize:vertical;
-}
+textarea{min-height:78px;resize:vertical}
 .table-help{
   color:var(--muted);
   font-size:12px;
@@ -188,20 +183,9 @@ textarea{
   border-bottom:1px solid #eef0ea;
 }
 .order-item:first-child{padding-top:0}
-.item-name{
-  font-weight:800;
-  font-size:13px;
-}
-.item-sub{
-  color:var(--muted);
-  font-size:11px;
-  margin-top:5px;
-}
-.item-price{
-  font-weight:800;
-  font-size:13px;
-  white-space:nowrap;
-}
+.item-name{font-weight:800;font-size:13px}
+.item-sub{color:var(--muted);font-size:11px;margin-top:5px}
+.item-price{font-weight:800;font-size:13px;white-space:nowrap}
 .total-row{
   display:flex;
   justify-content:space-between;
@@ -250,11 +234,7 @@ textarea{
   opacity:.5;
   cursor:not-allowed;
 }
-.payment-title{
-  display:block;
-  font-weight:850;
-  font-size:13px;
-}
+.payment-title{display:block;font-weight:850;font-size:13px}
 .payment-desc{
   display:block;
   color:var(--muted);
@@ -293,11 +273,11 @@ textarea{
   color:var(--danger);
   border:1px solid #f2d6d1;
 }
-.submit-btn{
+.submit-btn,.action-btn{
   width:100%;
   border:0;
   border-radius:13px;
-  padding:17px;
+  padding:16px;
   background:var(--green);
   color:white;
   font-size:14px;
@@ -305,12 +285,23 @@ textarea{
   cursor:pointer;
   box-shadow:0 7px 18px rgba(18,59,44,.17);
   transition:opacity .2s,transform .2s;
+  text-align:center;
+  text-decoration:none;
+  display:block;
 }
-.submit-btn:active{transform:scale(.99)}
-.submit-btn:disabled{
-  opacity:.55;
-  cursor:not-allowed;
+.submit-btn:active,.action-btn:active{transform:scale(.99)}
+.submit-btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.action-btn.secondary{
+  background:#fff;
+  color:var(--green);
+  border:1px solid var(--green);
   box-shadow:none;
+}
+.action-group{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:17px;
 }
 .back-menu{
   display:block;
@@ -328,14 +319,122 @@ footer{
   line-height:1.8;
   padding:20px 0 5px;
 }
-.footer-brand{
+.footer-brand{color:var(--green);font-weight:850}
+
+/* BUKTI PESANAN */
+#receiptSection{display:none}
+.receipt-top{
+  text-align:center;
+  padding:8px 0 18px;
+  border-bottom:1px dashed var(--border);
+  margin-bottom:15px;
+}
+.receipt-mark{
+  display:inline-block;
+  background:var(--green-light);
   color:var(--green);
-  font-weight:850;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+  padding:7px 12px;
+  border-radius:20px;
+  margin-bottom:12px;
+}
+.receipt-top h2{font-size:21px;margin-bottom:7px}
+.receipt-top p{
+  color:var(--muted);
+  font-size:12px;
+  margin:0;
+}
+.receipt-code{
+  background:#f6f7f2;
+  border-radius:11px;
+  padding:13px;
+  margin:15px 0;
+  text-align:center;
+}
+.receipt-code small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:5px;
+}
+.receipt-code strong{
+  display:block;
+  color:var(--green);
+  font-size:17px;
+  overflow-wrap:anywhere;
+}
+.receipt-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+  margin:15px 0;
+}
+.receipt-info div{min-width:0}
+.receipt-info small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:4px;
+}
+.receipt-info strong{
+  display:block;
+  font-size:12px;
+  overflow-wrap:anywhere;
+}
+.receipt-divider{
+  border:0;
+  border-top:1px dashed var(--border);
+  margin:16px 0;
+}
+.receipt-status{
+  background:var(--green-light);
+  border-radius:11px;
+  padding:13px;
+  margin-top:15px;
+}
+.receipt-status small{
+  color:var(--muted);
+  font-size:10px;
+  display:block;
+  margin-bottom:5px;
+}
+.receipt-status strong{
+  color:var(--green);
+  font-size:13px;
+}
+.receipt-note{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+  text-align:center;
+  margin-top:17px;
 }
 @media(min-width:540px){
   main{padding-top:28px}
   .table-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
   .card{padding:21px}
+  .action-group{grid-template-columns:1fr 1fr}
+}
+@media print{
+  body{background:#fff}
+  header,#checkoutForm,#backTop,#backBottom,footer,
+  .page-heading,#statusBox,.no-print{display:none!important}
+  main{max-width:100%;padding:0}
+  #receiptSection{display:block!important}
+  #receiptSection .card{
+    box-shadow:none;
+    border:0;
+    padding:0;
+    margin:0;
+  }
+  .receipt-card{border:0!important}
+  .action-group{display:none!important}
+  .receipt-top,.receipt-code,.receipt-status{
+    print-color-adjust:exact;
+    -webkit-print-color-adjust:exact;
+  }
 }
 </style>
 </head>
@@ -354,7 +453,7 @@ footer{
 </header>
 
 <main>
-  <div class="page-heading">
+  <div class="page-heading" id="pageHeading">
     <h1>Selesaikan Pesanan</h1>
     <p class="intro">
       Periksa pesananmu, lengkapi data pelanggan,
@@ -374,25 +473,14 @@ footer{
 
       <div class="field">
         <label for="customerName">Nama pelanggan *</label>
-        <input
-          id="customerName"
-          type="text"
-          maxlength="80"
-          required
-          autocomplete="name"
-          placeholder="Masukkan nama kamu"
-        >
+        <input id="customerName" type="text" maxlength="80"
+          required autocomplete="name" placeholder="Masukkan nama kamu">
       </div>
 
       <div class="field">
         <label for="customerPhone">Nomor WhatsApp (opsional)</label>
-        <input
-          id="customerPhone"
-          type="tel"
-          maxlength="20"
-          autocomplete="tel"
-          placeholder="08xxxxxxxxxx"
-        >
+        <input id="customerPhone" type="tel" maxlength="20"
+          autocomplete="tel" placeholder="08xxxxxxxxxx">
       </div>
     </section>
 
@@ -401,7 +489,6 @@ footer{
         <div class="section-number">02</div>
         <h2>Pilih Meja</h2>
       </div>
-
       <p class="table-help">Pilih nomor meja tempat kamu duduk.</p>
       <div id="tableGrid" class="table-grid"></div>
     </section>
@@ -416,11 +503,8 @@ footer{
 
       <div class="field">
         <label for="orderNote">Catatan untuk barista (opsional)</label>
-        <textarea
-          id="orderNote"
-          maxlength="300"
-          placeholder="Contoh: es sedikit, gula dikurangi"
-        ></textarea>
+        <textarea id="orderNote" maxlength="300"
+          placeholder="Contoh: es sedikit, gula dikurangi"></textarea>
       </div>
 
       <div class="total-row">
@@ -430,17 +514,18 @@ footer{
 
       <div class="total-row muted">
         <span>PBJT</span>
-        <strong id="tax">Dihitung kedai</strong>
+        <strong id="tax">Dikonfirmasi server</strong>
       </div>
 
       <div class="tax-note">
-        Pajak PBJT mengikuti pengaturan kedai dan dihitung oleh server.
+        PBJT mengikuti pengaturan kedai dan dihitung oleh server.
+        Nominal final ditampilkan setelah server menerima pesanan.
         Biaya layanan KopiHub tidak dibebankan kepada pelanggan.
       </div>
 
       <div class="total-row final">
         <span>Total akhir</span>
-        <strong id="grandTotal">Dihitung saat dikirim</strong>
+        <strong id="grandTotal">Dikonfirmasi server</strong>
       </div>
     </section>
 
@@ -451,12 +536,7 @@ footer{
       </div>
 
       <label class="payment-option">
-        <input
-          type="radio"
-          name="paymentMethod"
-          value="cashier"
-          required
-        >
+        <input type="radio" name="paymentMethod" value="cashier" required>
         <span class="payment-box">
           <span class="payment-title">Bayar di Kasir</span>
           <span class="payment-desc">
@@ -466,12 +546,7 @@ footer{
       </label>
 
       <label class="payment-option">
-        <input
-          type="radio"
-          name="paymentMethod"
-          value="online"
-          disabled
-        >
+        <input type="radio" name="paymentMethod" value="online" disabled>
         <span class="payment-box">
           <span class="payment-title">Bayar Online</span>
           <span class="payment-desc">
@@ -489,8 +564,102 @@ footer{
     <button id="submitBtn" class="submit-btn" type="submit">
       Kirim Pesanan
     </button>
-
   </form>
+
+  <!-- BUKTI PESANAN SETELAH BERHASIL -->
+  <section id="receiptSection">
+    <div class="card receipt-card">
+      <div class="receipt-top">
+        <div class="receipt-mark">KOPIHUB · BUKTI PESANAN</div>
+        <h2 id="receiptShop">Kedai</h2>
+        <p>Terima kasih telah memesan</p>
+      </div>
+
+      <div class="receipt-code">
+        <small>NOMOR PESANAN</small>
+        <strong id="receiptOrderCode">-</strong>
+      </div>
+
+      <div class="receipt-info">
+        <div>
+          <small>Tanggal dan waktu</small>
+          <strong id="receiptDate">-</strong>
+        </div>
+        <div>
+          <small>Sumber pesanan</small>
+          <strong>Menu QR</strong>
+        </div>
+        <div>
+          <small>Nama pelanggan</small>
+          <strong id="receiptCustomer">-</strong>
+        </div>
+        <div>
+          <small>Nomor WhatsApp</small>
+          <strong id="receiptPhone">-</strong>
+        </div>
+        <div>
+          <small>Jenis pesanan</small>
+          <strong>Makan di tempat</strong>
+        </div>
+        <div>
+          <small>Nomor meja</small>
+          <strong id="receiptTable">-</strong>
+        </div>
+      </div>
+
+      <hr class="receipt-divider">
+
+      <h2 style="margin-bottom:8px">Rincian Pesanan</h2>
+      <div id="receiptItems"></div>
+
+      <hr class="receipt-divider">
+
+      <div class="total-row">
+        <span>Subtotal</span>
+        <strong id="receiptSubtotal">-</strong>
+      </div>
+      <div class="total-row">
+        <span>PBJT</span>
+        <strong id="receiptTax">-</strong>
+      </div>
+      <div class="total-row final">
+        <span>Total pembayaran</span>
+        <strong id="receiptTotal">-</strong>
+      </div>
+
+      <hr class="receipt-divider">
+
+      <div class="receipt-info">
+        <div>
+          <small>Metode pembayaran</small>
+          <strong>Bayar di Kasir</strong>
+        </div>
+        <div>
+          <small>Status pembayaran</small>
+          <strong id="receiptPaymentStatus">Menunggu konfirmasi kasir</strong>
+        </div>
+      </div>
+
+      <div class="receipt-status">
+        <small>STATUS PESANAN</small>
+        <strong id="receiptOrderStatus">Menunggu konfirmasi kedai</strong>
+      </div>
+
+      <p class="receipt-note">
+        Pembayaran dilakukan langsung kepada kedai.
+        Simpan nomor pesanan ini untuk keperluan konfirmasi dan pelacakan.
+      </p>
+
+      <div class="action-group no-print">
+        <button id="printReceiptBtn" class="action-btn secondary" type="button">
+          Cetak / Simpan PDF
+        </button>
+        <a id="trackOrderBtn" class="action-btn" href="#">
+          Lacak Pesanan
+        </a>
+      </div>
+    </div>
+  </section>
 
   <a id="backBottom" class="back-menu" href="menu.html">
     ← Kembali memilih menu
@@ -532,19 +701,12 @@ function showStatus(message,type="error"){
   statusBox.style.display="block";
   statusBox.className="status "+type;
   statusBox.textContent=message;
-  statusBox.scrollIntoView({
-    behavior:"smooth",
-    block:"center"
-  });
+  statusBox.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
 function escapeHTML(value){
   return String(value).replace(/[&<>"']/g,c=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 }
 
@@ -552,10 +714,36 @@ function makeIdempotencyKey(){
   if(window.crypto && typeof window.crypto.randomUUID==="function"){
     return window.crypto.randomUUID();
   }
-
   throw new Error(
     "Perangkat tidak mendukung pembuatan kode transaksi aman. Silakan buka checkout melalui Safari atau Chrome terbaru."
   );
+}
+
+function validMoney(value){
+  const n=Number(value);
+  return Number.isSafeInteger(n) && n>=0 ? n : null;
+}
+
+function getResponseValue(result,keys){
+  for(const key of keys){
+    if(result && result[key]!==undefined && result[key]!==null){
+      return result[key];
+    }
+    if(result && result.order && result.order[key]!==undefined &&
+       result.order[key]!==null){
+      return result.order[key];
+    }
+  }
+  return null;
+}
+
+function formatDate(value){
+  const date=value ? new Date(value) : new Date();
+  if(Number.isNaN(date.getTime())) return "-";
+  return new Intl.DateTimeFormat("id-ID",{
+    dateStyle:"long",
+    timeStyle:"short"
+  }).format(date);
 }
 
 /* =========================================
@@ -590,7 +778,6 @@ try{
     const name=typeof item.name==="string"
       ? item.name.trim().slice(0,100)
       : "";
-
     const price=Number(item.price);
     const qty=Number(item.qty);
 
@@ -613,17 +800,11 @@ try{
     return {id,name,price,qty};
   });
 
-  if(items.some(item=>item===null)){
-    items=[];
-  }
+  if(items.some(item=>item===null)) items=[];
 
-  if(checkoutData && !Array.isArray(checkoutData)){
-    if(checkoutData.shop_slug){
-      sessionStorage.setItem(
-        "kopihubShop",
-        checkoutData.shop_slug
-      );
-    }
+  if(checkoutData && !Array.isArray(checkoutData) &&
+     checkoutData.shop_slug){
+    sessionStorage.setItem("kopihubShop",checkoutData.shop_slug);
   }
 
 }catch(error){
@@ -644,16 +825,16 @@ const shopSlug=(
   "aroma-coffee"
 ).trim().toLowerCase();
 
-const menuUrl=
-  "menu.html?kedai="+encodeURIComponent(shopSlug);
+const menuUrl="menu.html?kedai="+encodeURIComponent(shopSlug);
 
 document.getElementById("backTop").href=menuUrl;
 document.getElementById("backBottom").href=menuUrl;
 
-document.getElementById("shopFooter").textContent=
-  shopSlug==="aroma-coffee"
-    ? "Aroma Coffee"
-    : "Kedai "+shopSlug.replace(/-/g," ");
+const shopName=shopSlug==="aroma-coffee"
+  ? "Aroma Coffee"
+  : shopSlug.replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+
+document.getElementById("shopFooter").textContent=shopName;
 
 /* =========================================
    PILIHAN MEJA
@@ -661,44 +842,33 @@ document.getElementById("shopFooter").textContent=
 
 const tableGrid=document.getElementById("tableGrid");
 
-tableGrid.innerHTML=Array.from(
-  {length:20},
-  (_,i)=>{
-    const n=String(i+1).padStart(2,"0");
-
-    return `
-      <div class="table-option">
-        <input
-          type="radio"
-          name="tableNumber"
-          id="table${n}"
-          value="${n}"
-          required
-        >
-        <label for="table${n}">Meja ${n}</label>
-      </div>
-    `;
-  }
-).join("");
+tableGrid.innerHTML=Array.from({length:20},(_,i)=>{
+  const n=String(i+1).padStart(2,"0");
+  return `
+    <div class="table-option">
+      <input type="radio" name="tableNumber" id="table${n}"
+        value="${n}" required>
+      <label for="table${n}">Meja ${n}</label>
+    </div>
+  `;
+}).join("");
 
 /* =========================================
    RENDER PESANAN
 ========================================= */
 
 const orderItemsEl=document.getElementById("orderItems");
-
 let subtotal=0;
 
 function renderOrder(){
 
-  if(invalidCart){
+  if(invalidCart || !items.length){
     orderItemsEl.innerHTML=`
       <p class="intro">
-        Data keranjang tidak valid. Silakan kembali ke menu
-        dan masukkan kembali produk ke keranjang.
+        Keranjang tidak valid atau masih kosong.
+        Silakan kembali ke menu dan pilih produk kembali.
       </p>
     `;
-
     submitBtn.disabled=true;
     document.getElementById("subtotal").textContent=rupiah(0);
     document.getElementById("tax").textContent="Belum dihitung";
@@ -706,24 +876,7 @@ function renderOrder(){
     return;
   }
 
-  if(!items.length){
-    orderItemsEl.innerHTML=`
-      <p class="intro">
-        Keranjang masih kosong. Kembali ke menu untuk memilih produk.
-      </p>
-    `;
-
-    submitBtn.disabled=true;
-    document.getElementById("subtotal").textContent=rupiah(0);
-    document.getElementById("tax").textContent="Belum dihitung";
-    document.getElementById("grandTotal").textContent="Belum dihitung";
-    return;
-  }
-
-  subtotal=items.reduce(
-    (sum,item)=>sum+item.price*item.qty,
-    0
-  );
+  subtotal=items.reduce((sum,item)=>sum+item.price*item.qty,0);
 
   if(!Number.isSafeInteger(subtotal)){
     invalidCart=true;
@@ -735,39 +888,27 @@ function renderOrder(){
     <div class="order-item">
       <div>
         <div class="item-name">${escapeHTML(item.name)}</div>
-        <div class="item-sub">
-          ${item.qty} × ${rupiah(item.price)}
-        </div>
+        <div class="item-sub">${item.qty} × ${rupiah(item.price)}</div>
       </div>
-      <div class="item-price">
-        ${rupiah(item.price*item.qty)}
-      </div>
+      <div class="item-price">${rupiah(item.price*item.qty)}</div>
     </div>
   `).join("");
 
-  document.getElementById("subtotal").textContent=
-    rupiah(subtotal);
-
-  document.getElementById("tax").textContent=
-    "Dihitung kedai";
-
-  document.getElementById("grandTotal").textContent=
-    "Dihitung saat dikirim";
+  document.getElementById("subtotal").textContent=rupiah(subtotal);
+  document.getElementById("tax").textContent="Dikonfirmasi server";
+  document.getElementById("grandTotal").textContent="Dikonfirmasi server";
 }
 
 renderOrder();
 
 /* =========================================
    KUNCI IDEMPOTENSI
-   Key dipakai ulang untuk payload yang sama.
-   Jika data pesanan berubah, key baru dibuat.
 ========================================= */
 
 const IDEMPOTENCY_STORAGE_KEY=
   "kopihubCheckoutIdempotency:"+shopSlug;
 
 function getIdempotencyKey(payloadFingerprint){
-
   let saved=null;
 
   try{
@@ -778,11 +919,8 @@ function getIdempotencyKey(payloadFingerprint){
     saved=null;
   }
 
-  if(
-    saved &&
-    saved.key &&
-    saved.fingerprint===payloadFingerprint
-  ){
+  if(saved && saved.key &&
+     saved.fingerprint===payloadFingerprint){
     return saved.key;
   }
 
@@ -800,6 +938,62 @@ function getIdempotencyKey(payloadFingerprint){
 }
 
 /* =========================================
+   TAMPILKAN BUKTI PESANAN
+========================================= */
+
+function showReceipt(data){
+
+  document.getElementById("receiptShop").textContent=data.shopName;
+  document.getElementById("receiptOrderCode").textContent=data.orderCode;
+  document.getElementById("receiptDate").textContent=data.date;
+  document.getElementById("receiptCustomer").textContent=data.customerName;
+  document.getElementById("receiptPhone").textContent=data.customerPhone||"-";
+  document.getElementById("receiptTable").textContent=data.tableNumber;
+
+  document.getElementById("receiptItems").innerHTML=data.items.map(item=>`
+    <div class="order-item">
+      <div>
+        <div class="item-name">${escapeHTML(item.name)}</div>
+        <div class="item-sub">${item.qty} × ${rupiah(item.price)}</div>
+      </div>
+      <div class="item-price">${rupiah(item.price*item.qty)}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("receiptSubtotal").textContent=
+    data.subtotal!==null ? rupiah(data.subtotal) : "Tidak tersedia";
+
+  document.getElementById("receiptTax").textContent=
+    data.tax!==null ? rupiah(data.tax) : "Tidak tersedia";
+
+  document.getElementById("receiptTotal").textContent=
+    data.total!==null ? rupiah(data.total) : "Tidak tersedia";
+
+  document.getElementById("receiptPaymentStatus").textContent=
+    "Menunggu konfirmasi kasir";
+
+  document.getElementById("receiptOrderStatus").textContent=
+    "Menunggu konfirmasi kedai";
+
+  /*
+    Halaman pelacakan akan dibuat pada tahap berikutnya.
+    Link membawa nomor pesanan, bukan membuka data pesanan secara publik.
+  */
+  document.getElementById("trackOrderBtn").href=
+    "lacak-pesanan.html?kode="+encodeURIComponent(data.orderCode);
+
+  document.getElementById("checkoutForm").style.display="none";
+  document.getElementById("pageHeading").style.display="none";
+  document.getElementById("backTop").style.display="none";
+  document.getElementById("backBottom").style.display="none";
+
+  statusBox.style.display="none";
+  document.getElementById("receiptSection").style.display="block";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* =========================================
    KIRIM PESANAN
 ========================================= */
 
@@ -810,45 +1004,31 @@ form.addEventListener("submit",async event=>{
   if(submitBtn.disabled)return;
 
   if(!items.length || invalidCart){
-    showStatus(
-      "Keranjang tidak valid. Kembali ke menu dan pilih produk kembali."
-    );
+    showStatus("Keranjang tidak valid. Kembali ke menu dan pilih produk kembali.");
     return;
   }
 
   const payment=document.querySelector(
     'input[name="paymentMethod"]:checked'
   );
-
   const table=document.querySelector(
     'input[name="tableNumber"]:checked'
   );
 
   const customerName=
     document.getElementById("customerName").value.trim();
-
   const customerPhone=
     document.getElementById("customerPhone").value.trim();
-
   const orderNote=
     document.getElementById("orderNote").value.trim();
 
   if(!customerName || !table || !payment){
-    showStatus(
-      "Lengkapi nama pelanggan, pilih meja, dan pilih metode pembayaran."
-    );
+    showStatus("Lengkapi nama pelanggan, pilih meja, dan pilih metode pembayaran.");
     return;
   }
 
   if(payment.value!=="cashier"){
-    showStatus(
-      "Pembayaran online belum aktif. Pilih Bayar di Kasir."
-    );
-    return;
-  }
-
-  if(!FUNCTION_URL || !SUPABASE_PUBLISHABLE_KEY){
-    showStatus("Konfigurasi server belum tersedia.");
+    showStatus("Pembayaran online belum aktif. Pilih Bayar di Kasir.");
     return;
   }
 
@@ -868,7 +1048,6 @@ form.addEventListener("submit",async event=>{
   };
 
   const payloadFingerprint=JSON.stringify(payload);
-
   let idempotencyKey;
 
   try{
@@ -910,24 +1089,17 @@ form.addEventListener("submit",async event=>{
       result=await response.json();
     }catch(_){
       throw new Error(
-        "Server memberikan respons yang tidak dapat dibaca. Kamu dapat mencoba kembali dengan aman."
+        "Server memberikan respons yang tidak dapat dibaca. Coba kembali dengan data yang sama."
       );
     }
 
     if(!response.ok || !result.success){
-      throw new Error(
-        result.error||
-        "Server belum berhasil menyimpan pesanan."
-      );
+      throw new Error(result.error||"Server belum berhasil menyimpan pesanan.");
     }
 
-    const orderCode=
-      result.orderCode||
-      result.order_code||
-      (result.order && (
-        result.order.order_code||
-        result.order.orderCode
-      ));
+    const orderCode=getResponseValue(result,[
+      "orderCode","order_code"
+    ]);
 
     if(!orderCode){
       throw new Error(
@@ -935,49 +1107,55 @@ form.addEventListener("submit",async event=>{
       );
     }
 
-    const serverTotal=Number(result.total_amount);
-    const finalTotal=Number.isSafeInteger(serverTotal)
-      ? serverTotal
-      : null;
+    const serverSubtotal=validMoney(
+      getResponseValue(result,["subtotal"])
+    );
 
-    const serverSubtotal=Number(result.subtotal);
+    const serverTotal=validMoney(
+      getResponseValue(result,["total_amount","totalAmount"])
+    );
+
+    let serverTax=validMoney(
+      getResponseValue(result,["tax_amount","taxAmount"])
+    );
+
+    if(serverTax===null &&
+       serverSubtotal!==null &&
+       serverTotal!==null &&
+       serverTotal>=serverSubtotal){
+      serverTax=serverTotal-serverSubtotal;
+    }
+
+    const serverDate=getResponseValue(result,[
+      "created_at","createdAt"
+    ]);
+
+    const receiptData={
+      orderCode:String(orderCode),
+      shopName,
+      date:formatDate(serverDate),
+      customerName,
+      customerPhone,
+      tableNumber:table.value,
+      items,
+      subtotal:serverSubtotal,
+      tax:serverTax,
+      total:serverTotal
+    };
+
+    /*
+      Simpan salinan bukti di tab saat ini.
+      Keranjang dan kunci idempotensi dibersihkan setelah sukses.
+    */
+    sessionStorage.setItem(
+      "kopihubLastReceipt",
+      JSON.stringify(receiptData)
+    );
 
     sessionStorage.removeItem("kopihubCheckout");
     sessionStorage.removeItem(IDEMPOTENCY_STORAGE_KEY);
 
-    form.style.display="none";
-    document.getElementById("backTop").style.display="none";
-    document.getElementById("backBottom").style.display="none";
-
-    const detailTotal=finalTotal!==null
-      ? "Total pembayaran "+rupiah(finalTotal)+". "
-      : "";
-
-    showStatus(
-      "Pesanan berhasil disimpan! Nomor pesanan: "+
-      orderCode+
-      ". Meja "+
-      table.value+
-      ". "+
-      detailTotal+
-      "Silakan menuju kasir untuk pembayaran.",
-      "success"
-    );
-
-    if(Number.isSafeInteger(serverSubtotal)){
-      document.getElementById("subtotal").textContent=
-        rupiah(serverSubtotal);
-    }
-
-    if(finalTotal!==null){
-      document.getElementById("grandTotal").textContent=
-        rupiah(finalTotal);
-    }
-
-    if(finalTotal!==null && Number.isSafeInteger(serverSubtotal)){
-      document.getElementById("tax").textContent=
-        rupiah(finalTotal-serverSubtotal);
-    }
+    showReceipt(receiptData);
 
   }catch(error){
 
@@ -993,7 +1171,15 @@ form.addEventListener("submit",async event=>{
   }
 
 });
-</script>
 
+/* =========================================
+   CETAK / SIMPAN PDF
+========================================= */
+
+document.getElementById("printReceiptBtn").addEventListener("click",()=>{
+  window.print();
+});
+
+</script>
 </body>
 </html>

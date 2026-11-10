@@ -20,48 +20,85 @@
   --white:#fff;
   --danger:#a12e24;
   --shadow:0 8px 28px rgba(18,59,44,.055);
+  --header-height:68px;
 }
 *{box-sizing:border-box}
-body{
+html,body{
   margin:0;
+  min-height:100%;
+  overflow-x:clip;
+}
+body{
   background:var(--cream);
   color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  padding-top:var(--header-height);
 }
+
+/* HEADER APLIKASI FIXED */
 header{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:1000;
+  height:var(--header-height);
   background:linear-gradient(135deg,#123b2c,#245b42);
   color:white;
-  padding:18px 18px 25px;
+  box-shadow:0 3px 14px rgba(18,59,44,.15);
 }
-.header-inner,main{
+.header-inner{
+  width:100%;
   max-width:720px;
-  margin:auto;
-}
-.header-top{
+  height:100%;
+  margin:0 auto;
+  padding:0 18px;
   display:flex;
   align-items:center;
   justify-content:space-between;
+  gap:12px;
+}
+.brand-group{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+}
+.brand{
+  font-size:23px;
+  font-weight:900;
+  letter-spacing:-1px;
+  line-height:1.05;
+  white-space:nowrap;
+}
+.brand span{color:var(--orange)}
+.subtitle{
+  margin-top:4px;
+  font-size:8px;
+  letter-spacing:1.5px;
+  opacity:.82;
+  white-space:nowrap;
 }
 header a{
   color:white;
   text-decoration:none;
-  font-size:13px;
-  font-weight:650;
+  font-size:12px;
+  font-weight:750;
+  padding:9px 12px;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:9px;
+  white-space:nowrap;
+  transition:background .2s;
 }
-.brand{
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:-1px;
-  margin-top:20px;
+header a:active{
+  background:rgba(255,255,255,.13);
 }
-.brand span{color:var(--orange)}
-.subtitle{
-  margin-top:5px;
-  font-size:10px;
-  letter-spacing:2px;
-  opacity:.8;
+
+main{
+  max-width:720px;
+  margin:0 auto;
+  padding:23px 15px 38px;
 }
-main{padding:23px 15px 38px}
 .page-heading{margin-bottom:20px}
 h1{
   color:var(--green);
@@ -297,6 +334,10 @@ textarea{min-height:78px;resize:vertical}
   border:1px solid var(--green);
   box-shadow:none;
 }
+.action-btn:disabled{
+  opacity:.55;
+  cursor:wait;
+}
 .action-group{
   display:grid;
   grid-template-columns:1fr;
@@ -411,6 +452,21 @@ footer{
   text-align:center;
   margin-top:17px;
 }
+.receipt-tax-note{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+  margin-top:3px;
+}
+
+@media(max-width:539px){
+  :root{--header-height:60px}
+  .header-inner{padding:0 15px}
+  .brand{font-size:21px}
+  .subtitle{font-size:7px;letter-spacing:1.25px}
+  header a{font-size:11px;padding:8px 10px}
+  main{padding-top:21px}
+}
 @media(min-width:540px){
   main{padding-top:28px}
   .table-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
@@ -418,7 +474,10 @@ footer{
   .action-group{grid-template-columns:1fr 1fr}
 }
 @media print{
-  body{background:#fff}
+  body{
+    background:#fff;
+    padding-top:0;
+  }
   header,#checkoutForm,#backTop,#backBottom,footer,
   .page-heading,#statusBox,.no-print{display:none!important}
   main{max-width:100%;padding:0}
@@ -443,12 +502,11 @@ footer{
 
 <header>
   <div class="header-inner">
-    <div class="header-top">
-      <a id="backTop" href="menu.html">‹ Kembali ke menu</a>
-      <span style="font-size:10px;letter-spacing:1px;opacity:.8">KOPIHUB</span>
+    <div class="brand-group">
+      <div class="brand">Kopi<span>Hub</span></div>
+      <div class="subtitle">SATU PLATFORM, BANYAK CERITA</div>
     </div>
-    <div class="brand">Kopi<span>Hub</span></div>
-    <div class="subtitle">SATU PLATFORM, BANYAK CERITA</div>
+    <a id="backTop" href="menu.html">‹ Kembali ke menu</a>
   </div>
 </header>
 
@@ -514,18 +572,17 @@ footer{
 
       <div class="total-row muted">
         <span>PBJT</span>
-        <strong id="tax">Dikonfirmasi server</strong>
+        <strong id="tax">Dihitung saat pesanan dikirim</strong>
       </div>
 
       <div class="tax-note">
-        PBJT mengikuti pengaturan kedai dan dihitung oleh server.
-        Nominal final ditampilkan setelah server menerima pesanan.
-        Biaya layanan KopiHub tidak dibebankan kepada pelanggan.
+        PBJT adalah Pajak Barang dan Jasa Tertentu atas makanan dan minuman.
+        Nominalnya dihitung oleh server berdasarkan pengaturan kedai.
       </div>
 
       <div class="total-row final">
-        <span>Total akhir</span>
-        <strong id="grandTotal">Dikonfirmasi server</strong>
+        <span>Total</span>
+        <strong id="grandTotal">Dihitung server</strong>
       </div>
     </section>
 
@@ -568,7 +625,7 @@ footer{
 
   <!-- BUKTI PESANAN SETELAH BERHASIL -->
   <section id="receiptSection">
-    <div class="card receipt-card">
+    <div class="card receipt-card" id="receiptCard">
       <div class="receipt-top">
         <div class="receipt-mark">KOPIHUB · BUKTI PESANAN</div>
         <h2 id="receiptShop">Kedai</h2>
@@ -619,8 +676,11 @@ footer{
         <strong id="receiptSubtotal">-</strong>
       </div>
       <div class="total-row">
-        <span>PBJT</span>
+        <span id="receiptTaxLabel">PBJT</span>
         <strong id="receiptTax">-</strong>
+      </div>
+      <div class="receipt-tax-note">
+        PBJT adalah Pajak Barang dan Jasa Tertentu atas makanan dan minuman.
       </div>
       <div class="total-row final">
         <span>Total pembayaran</span>
@@ -652,7 +712,10 @@ footer{
 
       <div class="action-group no-print">
         <button id="printReceiptBtn" class="action-btn secondary" type="button">
-          Cetak / Simpan PDF
+          Simpan sebagai PDF
+        </button>
+        <button id="savePhotoBtn" class="action-btn secondary" type="button">
+          Simpan sebagai Foto
         </button>
         <a id="trackOrderBtn" class="action-btn" href="#">
           Lacak Pesanan
@@ -673,6 +736,10 @@ footer{
     <span id="shopFooter">Aroma Coffee</span>
   </footer>
 </main>
+
+<!-- Library untuk membuat gambar bukti pesanan -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+  referrerpolicy="no-referrer"></script>
 
 <script>
 "use strict";
@@ -722,6 +789,12 @@ function makeIdempotencyKey(){
 function validMoney(value){
   const n=Number(value);
   return Number.isSafeInteger(n) && n>=0 ? n : null;
+}
+
+function validPercent(value){
+  if(value===null || value===undefined || value==="") return null;
+  const n=Number(value);
+  return Number.isFinite(n) && n>=0 && n<=100 ? n : null;
 }
 
 function getResponseValue(result,keys){
@@ -895,8 +968,8 @@ function renderOrder(){
   `).join("");
 
   document.getElementById("subtotal").textContent=rupiah(subtotal);
-  document.getElementById("tax").textContent="Dikonfirmasi server";
-  document.getElementById("grandTotal").textContent="Dikonfirmasi server";
+  document.getElementById("tax").textContent="Dihitung saat pesanan dikirim";
+  document.getElementById("grandTotal").textContent="Dihitung server";
 }
 
 renderOrder();
@@ -968,6 +1041,13 @@ function showReceipt(data){
 
   document.getElementById("receiptTotal").textContent=
     data.total!==null ? rupiah(data.total) : "Tidak tersedia";
+
+  if(data.taxPercent!==null){
+    document.getElementById("receiptTaxLabel").textContent=
+      "PBJT ("+data.taxPercent+"%)";
+  }else{
+    document.getElementById("receiptTaxLabel").textContent="PBJT";
+  }
 
   document.getElementById("receiptPaymentStatus").textContent=
     "Menunggu konfirmasi kasir";
@@ -1126,6 +1206,12 @@ form.addEventListener("submit",async event=>{
       serverTax=serverTotal-serverSubtotal;
     }
 
+    const serverTaxPercent=validPercent(
+      getResponseValue(result,[
+        "pbjt_percent","pbjtPercent","tax_percent","taxPercent"
+      ])
+    );
+
     const serverDate=getResponseValue(result,[
       "created_at","createdAt"
     ]);
@@ -1140,6 +1226,7 @@ form.addEventListener("submit",async event=>{
       items,
       subtotal:serverSubtotal,
       tax:serverTax,
+      taxPercent:serverTaxPercent,
       total:serverTotal
     };
 
@@ -1173,11 +1260,142 @@ form.addEventListener("submit",async event=>{
 });
 
 /* =========================================
-   CETAK / SIMPAN PDF
+   SIMPAN SEBAGAI PDF
 ========================================= */
 
 document.getElementById("printReceiptBtn").addEventListener("click",()=>{
   window.print();
+});
+
+/* =========================================
+   SIMPAN SEBAGAI FOTO
+========================================= */
+
+const savePhotoBtn=document.getElementById("savePhotoBtn");
+
+function canvasToBlob(canvas,type,quality){
+  return new Promise((resolve,reject)=>{
+    canvas.toBlob(blob=>{
+      if(blob) resolve(blob);
+      else reject(new Error("Gagal membuat file gambar."));
+    },type,quality);
+  });
+}
+
+function safeFileName(value){
+  return String(value||"bukti-pesanan")
+    .replace(/[^a-z0-9_-]/gi,"-")
+    .replace(/-+/g,"-")
+    .slice(0,70);
+}
+
+savePhotoBtn.addEventListener("click",async()=>{
+
+  if(typeof window.html2canvas!=="function"){
+    showStatus(
+      "Fitur gambar belum berhasil dimuat. Periksa koneksi internet lalu muat ulang halaman."
+    );
+    return;
+  }
+
+  const receiptCard=document.getElementById("receiptCard");
+  const originalText=savePhotoBtn.textContent;
+
+  savePhotoBtn.disabled=true;
+  savePhotoBtn.textContent="Membuat foto...";
+
+  try{
+
+    const canvas=await window.html2canvas(receiptCard,{
+      scale:2,
+      backgroundColor:"#ffffff",
+      useCORS:true,
+      logging:false,
+      scrollX:0,
+      scrollY:0,
+      windowWidth:Math.max(
+        document.documentElement.clientWidth,
+        receiptCard.scrollWidth
+      ),
+      onclone:clonedDocument=>{
+        const clonedCard=clonedDocument.getElementById("receiptCard");
+        if(clonedCard){
+          clonedCard.querySelectorAll(".no-print").forEach(element=>{
+            element.style.display="none";
+          });
+        }
+      }
+    });
+
+    const blob=await canvasToBlob(canvas,"image/jpeg",0.92);
+
+    const orderCode=
+      document.getElementById("receiptOrderCode").textContent;
+
+    const fileName=
+      "KopiHub-"+safeFileName(orderCode)+".jpg";
+
+    const photoFile=new File(
+      [blob],
+      fileName,
+      {type:"image/jpeg"}
+    );
+
+    /*
+      Pada iPhone dan browser yang mendukung berbagi file,
+      buka menu berbagi agar pelanggan dapat menyimpan gambar.
+    */
+    if(
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({files:[photoFile]})
+    ){
+      await navigator.share({
+        files:[photoFile],
+        title:"Bukti Pesanan KopiHub",
+        text:"Bukti pesanan "+orderCode
+      });
+
+    }else{
+
+      /*
+        Alternatif browser tanpa dukungan berbagi file:
+        buka gambar agar pelanggan dapat menyimpan gambar
+        melalui menu browser/perangkat.
+      */
+      const imageUrl=URL.createObjectURL(blob);
+      const newWindow=window.open(imageUrl,"_blank");
+
+      if(!newWindow){
+        const link=document.createElement("a");
+        link.href=imageUrl;
+        link.download=fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
+
+      setTimeout(()=>{
+        URL.revokeObjectURL(imageUrl);
+      },60000);
+    }
+
+  }catch(error){
+
+    if(error && error.name==="AbortError"){
+      /* Pengguna menutup menu berbagi; tidak perlu pesan error. */
+    }else{
+      console.error("Save photo error:",error);
+      showStatus(
+        "Foto belum berhasil disimpan. Silakan coba kembali atau gunakan Simpan sebagai PDF."
+      );
+    }
+
+  }finally{
+    savePhotoBtn.disabled=false;
+    savePhotoBtn.textContent=originalText;
+  }
+
 });
 
 </script>

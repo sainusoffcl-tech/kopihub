@@ -2529,23 +2529,69 @@ function renderProducts() {
   });
 }
 
-/* TOMBOL TAMBAH MENU */
 
+/* =========================
+   NAVIGASI HALAMAN MENU
+========================= */
+
+async function showMenuPanel(panelId) {
+  const panels = [
+    "menu-home-panel",
+    "menu-form-panel",
+    "menu-list-panel",
+    "menu-qr-panel"
+  ];
+
+  panels.forEach(id => {
+    const panel = $(id);
+    if (panel) {
+      panel.hidden = id !== panelId;
+    }
+  });
+
+  if (
+    panelId === "menu-list-panel" ||
+    panelId === "menu-form-panel"
+  ) {
+    await refreshMenu();
+  }
+
+  if (panelId === "menu-form-panel") {
+    $("menu-name").focus({ preventScroll: true });
+  }
+
+  $("app-scroll").scrollTo({
+    top: $("page-menu").offsetTop,
+    behavior: "smooth"
+  });
+}
+
+/* HALAMAN AWAL MENU */
+function showMenuHome() {
+  showMenuPanel("menu-home-panel");
+}
+
+/* TAMBAH MENU */
 $("show-add-menu").addEventListener("click", () => {
   resetMenuForm();
-  $("menu-form-panel").hidden = false;
-  $("menu-name").focus();
+  showMenuPanel("menu-form-panel");
 });
 
-/* BUKA/TUTUP DAFTAR MENU */
-
+/* DAFTAR MENU */
 $("toggle-menu-list").addEventListener("click", () => {
-  const panel = $("menu-list-panel");
+  showMenuPanel("menu-list-panel");
+});
 
-  panel.hidden = !panel.hidden;
+/* QR MENU */
+$("open-menu-qr").addEventListener("click", () => {
+  showMenuPanel("menu-qr-panel");
+});
 
-  $("toggle-menu-list").textContent =
-    panel.hidden ? "Daftar Menu" : "Tutup Daftar Menu";
+/* TOMBOL KEMBALI */
+document.querySelectorAll(".menu-back-home").forEach(button => {
+  button.addEventListener("click", () => {
+    showMenuHome();
+  });
 });
 
 /* RESET FORM MENU */

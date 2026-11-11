@@ -3361,9 +3361,7 @@ const { data: authData, error: authError } = authResult;
          * Ukur header setelah aplikasi ditampilkan.
          */
 
-        requestAnimationFrame(measureHeader);
-
-        await loadDashboardStats();
+         await loadDashboardStats();
 
       } catch (error) {
         loading.style.display = "none";

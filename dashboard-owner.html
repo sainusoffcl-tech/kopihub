@@ -2635,14 +2635,8 @@ function startEdit(id) {
 
   $("save-menu").textContent = "Simpan Perubahan";
   $("cancel-edit").hidden = false;
-
-  $("menu-form-panel").hidden = false;
   $("menu-form-title").textContent = "Edit Menu";
-
-  $("app-scroll").scrollTo({
-    top: $("kelola-menu").offsetTop,
-    behavior: "smooth"
-  });
+  showMenuPanel("menu-form-panel");
 }
 
 /* SIMPAN MENU */

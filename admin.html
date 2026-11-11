@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>Admin KopiHub</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2666,183 +2666,64 @@
       }
     }
 
-    /* =========================================
-       COLLAPSING HEADER + PARALLAX
-    ========================================= */
 
-    const headerShell =
-      document.getElementById("header-shell");
+/* =========================================
+   ADMIN HEADER — FIXED, EDGE-TO-EDGE
+   Tidak mengecil dan tidak berubah saat scroll
+========================================= */
 
-    const expandedHeader =
-      document.getElementById("expanded-header");
+const headerShell =
+  document.getElementById("header-shell");
 
-    const compactHeader =
-      document.getElementById("compact-header");
+const expandedHeader =
+  document.getElementById("expanded-header");
 
-    const topbarContent =
-      document.getElementById("topbar-content");
+const compactHeader =
+  document.getElementById("compact-header");
 
-    const contentScroll =
-      document.getElementById("admin-content-scroll");
+const topbarContent =
+  document.getElementById("topbar-content");
 
-    const COLLAPSE_DISTANCE = 120;
-const COMPACT_HEIGHT = 56;
+const contentScroll =
+  document.getElementById("admin-content-scroll");
 
-let expandedHeight = 0;
-let compactHeight = COMPACT_HEIGHT;
-let headerAnimationFrame = null;
-
-function getSafeAreaTop() {
-  if (!isMobileLayout()) return 0;
-
-  const probe = document.createElement("div");
-  probe.style.cssText =
-    "position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);";
-
-  document.body.appendChild(probe);
-
-  const safeArea =
-    parseFloat(getComputedStyle(probe).paddingTop) || 0;
-
-  probe.remove();
-  return safeArea;
-}
-
-    function isMobileLayout() {
-      return window.matchMedia("(max-width: 849px)").matches;
-    }
-
-    function measureHeader() {
-  if (!isMobileLayout()) {
+function configureFixedAdminHeader() {
+  if (headerShell) {
     headerShell.style.height = "";
-
-    expandedHeader.style.transform = "";
-    expandedHeader.style.opacity = "";
-
-    compactHeader.style.opacity = "";
-    compactHeader.style.visibility = "";
-    compactHeader.style.pointerEvents = "";
-    compactHeader.style.transform = "";
-
-    topbarContent.style.transform = "";
-
-    compactHeight = COMPACT_HEIGHT;
-
-    return;
+    headerShell.style.minHeight = "";
   }
 
-  /* Hitung tinggi compact termasuk safe area */
-  compactHeight =
-    COMPACT_HEIGHT + getSafeAreaTop();
-
-  /* Ukur header besar */
-  expandedHeader.style.transform = "none";
-  expandedHeader.style.opacity = "1";
-
-  const measuredHeight =
-    expandedHeader.getBoundingClientRect().height;
-
-  if (measuredHeight > 0) {
-    expandedHeight = measuredHeight;
+  if (expandedHeader) {
+    expandedHeader.style.transform = "none";
+    expandedHeader.style.opacity = "1";
+    expandedHeader.style.visibility = "visible";
+    expandedHeader.style.pointerEvents = "auto";
   }
 
-  updateCollapsingHeader();
+  if (compactHeader) {
+    compactHeader.style.opacity = "0";
+    compactHeader.style.visibility = "hidden";
+    compactHeader.style.pointerEvents = "none";
+    compactHeader.style.transform = "none";
+    compactHeader.style.display = "none";
+  }
+
+  if (topbarContent) {
+    topbarContent.style.transform = "none";
+  }
 }
 
-    function updateCollapsingHeader() {
-      if (!isMobileLayout()) return;
+window.addEventListener(
+  "resize",
+  configureFixedAdminHeader
+);
 
-      const scrollPosition = contentScroll.scrollTop;
+window.addEventListener(
+  "orientationchange",
+  configureFixedAdminHeader
+);
 
-      /*
-       * Progress 0 = header besar.
-       * Progress 1 = header ringkas.
-       */
-
-      const progress = Math.min(
-        Math.max(scrollPosition / COLLAPSE_DISTANCE, 0),
-        1
-      );
-
-      /*
-       * Mengubah tinggi ruang header secara bertahap.
-       */
-
-      const currentHeight =
-  expandedHeight - ((expandedHeight - compactHeight) * progress);
-
-headerShell.style.height =
-  Math.max(compactHeight, currentHeight) + "px";
-      /*
-       * PARALLAX RINGAN:
-       * Konten header bergerak sedikit lebih lambat.
-       */
-
-      const parallaxY = -14 * progress;
-      const scale = 1 - (0.025 * progress);
-
-      topbarContent.style.transform =
-        `translateY(${parallaxY}px)`;
-
-      /*
-       * Header besar memudar dan mengecil.
-       */
-
-      expandedHeader.style.transform =
-        `translateY(${-22 * progress}px) scale(${scale})`;
-
-      expandedHeader.style.opacity =
-        String(1 - progress);
-
-      /*
-       * Header ringkas muncul di atas.
-       */
-
-      compactHeader.style.opacity =
-        String(progress);
-
-      compactHeader.style.visibility =
-        progress > 0.02 ? "visible" : "hidden";
-
-      compactHeader.style.pointerEvents =
-        progress > 0.8 ? "auto" : "none";
-
-      compactHeader.style.transform =
-        `translateY(${-8 + (8 * progress)}px)`;
-    }
-
-    /*
-     * Membatasi update animasi agar mengikuti
-     * frame layar dan tidak membebani scroll.
-     */
-
-    contentScroll.addEventListener("scroll", () => {
-      if (headerAnimationFrame !== null) return;
-
-      headerAnimationFrame = requestAnimationFrame(() => {
-        updateCollapsingHeader();
-        headerAnimationFrame = null;
-      });
-    }, { passive: true });
-
-    /*
-     * Ukur ulang ketika orientasi atau ukuran
-     * layar berubah.
-     */
-
-    window.addEventListener("resize", () => {
-      requestAnimationFrame(measureHeader);
-    });
-
-    window.addEventListener("orientationchange", () => {
-      setTimeout(measureHeader, 150);
-    });
-
-    /*
-     * Pengukuran awal setelah halaman siap.
-     */
-
-    requestAnimationFrame(measureHeader);
+configureFixedAdminHeader();
 
     /* =========================================
        NAVIGASI HALAMAN

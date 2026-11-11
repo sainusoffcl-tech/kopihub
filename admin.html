@@ -2514,80 +2514,12 @@
       }
     }
 
-    /* =========================================
-       HEADER TETAP — TANPA COLLAPSING / PARALLAX
-    ========================================= */
+/* =========================================
+   AREA KONTEN ADMIN
+========================================= */
 
-    const headerShell =
-      document.getElementById("header-shell");
-
-    const expandedHeader =
-      document.getElementById("expanded-header");
-
-    const compactHeader =
-      document.getElementById("compact-header");
-
-    const topbarContent =
-      document.getElementById("topbar-content");
-
-    const contentScroll =
-      document.getElementById("admin-content-scroll");
-
-    function isMobileLayout() {
-      return window.matchMedia("(max-width: 849px)").matches;
-    }
-
-    function measureHeader() {
-      if (!headerShell || !expandedHeader ||
-          !compactHeader || !topbarContent) {
-        return;
-      }
-
-      if (isMobileLayout()) {
-        /* Header tetap pada ukuran normal */
-        headerShell.style.height = "auto";
-
-        expandedHeader.style.transform = "none";
-        expandedHeader.style.opacity = "1";
-        expandedHeader.style.visibility = "visible";
-
-        topbarContent.style.transform = "none";
-
-        /* Nonaktifkan header ringkas */
-        compactHeader.style.display = "none";
-        compactHeader.style.opacity = "0";
-        compactHeader.style.visibility = "hidden";
-        compactHeader.style.pointerEvents = "none";
-        compactHeader.style.transform = "none";
-
-      } else {
-        /* Kembalikan pengaturan desktop */
-        headerShell.style.height = "";
-
-        expandedHeader.style.transform = "";
-        expandedHeader.style.opacity = "";
-        expandedHeader.style.visibility = "";
-
-        topbarContent.style.transform = "";
-
-        compactHeader.style.display = "";
-        compactHeader.style.opacity = "";
-        compactHeader.style.visibility = "";
-        compactHeader.style.pointerEvents = "";
-        compactHeader.style.transform = "";
-      }
-    }
-
-    /* Sesuaikan jika ukuran layar berubah */
-    window.addEventListener("resize", measureHeader);
-
-    window.addEventListener(
-      "orientationchange",
-      measureHeader
-    );
-
-    /* Pengaturan awal */
-    requestAnimationFrame(measureHeader);
+const contentScroll =
+  document.getElementById("admin-content-scroll");
 
     /* =========================================
        NAVIGASI HALAMAN

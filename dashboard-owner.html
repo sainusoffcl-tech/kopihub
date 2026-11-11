@@ -4836,6 +4836,92 @@ $("shop-profile-form").addEventListener("submit", async event => {
   }
 });
 
+
+/* SIMPAN PENGATURAN PAJAK PBJT OWNER */
+$("shop-pbjt-form").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const shop = selectedShop();
+  const input = $("shop-pbjt-percent");
+  const message = $("shop-pbjt-message");
+  const saveButton = $("save-shop-pbjt");
+
+  if (!client || !shop) {
+    message.textContent = "Pilih kedai terlebih dahulu.";
+    return;
+  }
+
+  const shopId = String(shop.id);
+  const rawRate = input.value.trim();
+  const rate = Number(rawRate);
+
+  if (
+    rawRate === "" ||
+    !Number.isFinite(rate) ||
+    rate < 0 ||
+    rate > 100 ||
+    Math.round(rate * 100) !== rate * 100
+  ) {
+    message.textContent =
+      "Tarif PBJT harus antara 0 sampai 100, maksimal 2 angka desimal.";
+    return;
+  }
+
+  const previousRate = Number(shop.tax_percent ?? 0);
+
+  saveButton.disabled = true;
+  message.textContent = "Menyimpan tarif PBJT...";
+
+  try {
+    const { data, error } = await client
+      .from("kh_shops")
+      .update({ tax_percent: rate })
+      .eq("id", shopId)
+      .select("id,tax_percent")
+      .single();
+
+    if (error) throw error;
+
+    if (!data || String(data.id) !== shopId) {
+      throw new Error("Tarif PBJT tidak berhasil diperbarui.");
+    }
+
+    const updatedShop = shops.find(
+      item => String(item.id) === shopId
+    );
+
+    if (updatedShop) {
+      updatedShop.tax_percent = Number(data.tax_percent);
+    }
+
+    const currentShop = selectedShop();
+
+    if (currentShop && String(currentShop.id) === shopId) {
+      input.value = Number(data.tax_percent).toString();
+
+      message.textContent =
+        "Tarif PBJT berhasil disimpan: " +
+        Number(data.tax_percent).toLocaleString("id-ID") + "%.";
+    }
+
+  } catch (error) {
+    console.error("Gagal menyimpan tarif PBJT:", error);
+
+    const currentShop = selectedShop();
+
+    if (currentShop && String(currentShop.id) === shopId) {
+      input.value = previousRate.toString();
+
+      message.textContent =
+        "Gagal menyimpan tarif PBJT: " + error.message;
+    }
+
+  } finally {
+    saveButton.disabled = false;
+  }
+});
+
+  
 /* PENGATURAN WAKTU PEMBAYARAN OWNER */
 $("owner-payment-timing").addEventListener(
   "change",

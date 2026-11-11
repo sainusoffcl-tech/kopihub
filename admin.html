@@ -1307,12 +1307,23 @@
         display: none !important;
       }
     }
-    /* ADMIN HEADER — IPHONE SAFE AREA + EDGE TO EDGE */
+ 
+/* =========================================
+   KOPIHUB ADMIN — EDGE TO EDGE STICKY HEADER
+   MENGIKUTI DEMO HEADER
+========================================= */
 
 @media (max-width: 849px) {
 
   html,
   body {
+    background: var(--green) !important;
+  }
+
+  /* Root tidak menambahkan safe area lagi */
+  #app.layout {
+    padding-top: 0 !important;
+    box-sizing: border-box;
     background: var(--green) !important;
   }
 
@@ -1326,54 +1337,74 @@
     background: var(--green) !important;
   }
 
-  .admin-content-scroll {
-    background: var(--cream) !important;
-  }
-
-  #app.layout {
-    padding-top: env(safe-area-inset-top, 0px) !important;
-    box-sizing: border-box;
-    background: var(--green) !important;
-  }
-
+  /* HEADER TETAP DI ATAS AREA SCROLL */
   .header-shell {
     position: relative !important;
     z-index: 30 !important;
+    flex: 0 0 auto !important;
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
+    margin: 0 !important;
+    padding-top: env(safe-area-inset-top, 0px) !important;
     overflow: visible !important;
     background: var(--green) !important;
     border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
   }
 
+  /* HEADER UTAMA — UKURAN TETAP */
   #expanded-header,
   .topbar {
     position: relative !important;
     inset: auto !important;
+    width: 100% !important;
     height: auto !important;
+    min-height: 68px !important;
+    margin: 0 !important;
+    padding: 6px 16px 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    background: var(--green) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     transform: none !important;
+    transform-origin: initial !important;
     opacity: 1 !important;
     visibility: visible !important;
-    background: var(--green) !important;
+    transition: none !important;
+    will-change: auto !important;
   }
 
   #topbar-content {
     transform: none !important;
   }
 
+  .topbar-divider {
+    margin: 4px 0 3px !important;
+  }
+
+  /* HEADER RINGKAS TIDAK DIGUNAKAN */
   #compact-header,
   .compact-header {
     display: none !important;
   }
 
+  /* SATU-SATUNYA AREA YANG BOLEH SCROLL */
   .admin-content-scroll {
+    flex: 1 1 0% !important;
     min-height: 0 !important;
-    overflow-y: auto !important;
+    width: 100% !important;
     overflow-x: hidden !important;
+    overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    background: var(--cream) !important;
   }
 }
+
 /* =====================================================
    KOPIHUB ADMIN — TRANSAKSI PLATFORM
 ===================================================== */

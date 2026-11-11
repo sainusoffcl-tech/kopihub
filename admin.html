@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Admin KopiHub</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1732,94 +1732,6 @@
 }
 
 }
-  
-/* =========================================
-   KOPIHUB ADMIN — FIXED EDGE-TO-EDGE HEADER
-========================================= */
-
-@media (max-width: 849px) {
-
-  html,
-  body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    overscroll-behavior: none;
-  }
-
-  body {
-    background: var(--green, #123b2c);
-  }
-
-  #app.layout {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    padding-top: 0 !important;
-    background: var(--cream, #faf9f5);
-  }
-
-  #app main {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .header-shell {
-    position: relative;
-    z-index: 30;
-    display: block;
-    flex: 0 0 auto;
-    width: 100%;
-    min-height: 56px;
-    height: auto;
-    padding-top: env(safe-area-inset-top, 0px);
-    overflow: visible;
-    background: var(--green, #123b2c);
-  }
-
-  .topbar {
-    position: relative;
-    inset: auto;
-    display: flex;
-    width: 100%;
-    min-height: 56px;
-    height: auto;
-    padding: 10px 16px 12px;
-    transform: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    background: var(--green, #123b2c);
-    border-radius: 0 0 18px 18px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    will-change: auto;
-  }
-
-  .compact-header {
-    display: none !important;
-  }
-
-  .admin-content-scroll {
-    position: relative;
-    flex: 1 1 auto;
-    min-height: 0;
-    width: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-  }
-
-}
-
   </style>
 </head>
 
@@ -2754,64 +2666,183 @@
       }
     }
 
+    /* =========================================
+       COLLAPSING HEADER + PARALLAX
+    ========================================= */
 
-/* =========================================
-   ADMIN HEADER — FIXED, EDGE-TO-EDGE
-   Tidak mengecil dan tidak berubah saat scroll
-========================================= */
+    const headerShell =
+      document.getElementById("header-shell");
 
-const headerShell =
-  document.getElementById("header-shell");
+    const expandedHeader =
+      document.getElementById("expanded-header");
 
-const expandedHeader =
-  document.getElementById("expanded-header");
+    const compactHeader =
+      document.getElementById("compact-header");
 
-const compactHeader =
-  document.getElementById("compact-header");
+    const topbarContent =
+      document.getElementById("topbar-content");
 
-const topbarContent =
-  document.getElementById("topbar-content");
+    const contentScroll =
+      document.getElementById("admin-content-scroll");
 
-const contentScroll =
-  document.getElementById("admin-content-scroll");
+    const COLLAPSE_DISTANCE = 120;
+const COMPACT_HEIGHT = 56;
 
-function configureFixedAdminHeader() {
-  if (headerShell) {
-    headerShell.style.height = "";
-    headerShell.style.minHeight = "";
-  }
+let expandedHeight = 0;
+let compactHeight = COMPACT_HEIGHT;
+let headerAnimationFrame = null;
 
-  if (expandedHeader) {
-    expandedHeader.style.transform = "none";
-    expandedHeader.style.opacity = "1";
-    expandedHeader.style.visibility = "visible";
-    expandedHeader.style.pointerEvents = "auto";
-  }
+function getSafeAreaTop() {
+  if (!isMobileLayout()) return 0;
 
-  if (compactHeader) {
-    compactHeader.style.opacity = "0";
-    compactHeader.style.visibility = "hidden";
-    compactHeader.style.pointerEvents = "none";
-    compactHeader.style.transform = "none";
-    compactHeader.style.display = "none";
-  }
+  const probe = document.createElement("div");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);";
 
-  if (topbarContent) {
-    topbarContent.style.transform = "none";
-  }
+  document.body.appendChild(probe);
+
+  const safeArea =
+    parseFloat(getComputedStyle(probe).paddingTop) || 0;
+
+  probe.remove();
+  return safeArea;
 }
 
-window.addEventListener(
-  "resize",
-  configureFixedAdminHeader
-);
+    function isMobileLayout() {
+      return window.matchMedia("(max-width: 849px)").matches;
+    }
 
-window.addEventListener(
-  "orientationchange",
-  configureFixedAdminHeader
-);
+    function measureHeader() {
+  if (!isMobileLayout()) {
+    headerShell.style.height = "";
 
-configureFixedAdminHeader();
+    expandedHeader.style.transform = "";
+    expandedHeader.style.opacity = "";
+
+    compactHeader.style.opacity = "";
+    compactHeader.style.visibility = "";
+    compactHeader.style.pointerEvents = "";
+    compactHeader.style.transform = "";
+
+    topbarContent.style.transform = "";
+
+    compactHeight = COMPACT_HEIGHT;
+
+    return;
+  }
+
+  /* Hitung tinggi compact termasuk safe area */
+  compactHeight =
+    COMPACT_HEIGHT + getSafeAreaTop();
+
+  /* Ukur header besar */
+  expandedHeader.style.transform = "none";
+  expandedHeader.style.opacity = "1";
+
+  const measuredHeight =
+    expandedHeader.getBoundingClientRect().height;
+
+  if (measuredHeight > 0) {
+    expandedHeight = measuredHeight;
+  }
+
+  updateCollapsingHeader();
+}
+
+    function updateCollapsingHeader() {
+      if (!isMobileLayout()) return;
+
+      const scrollPosition = contentScroll.scrollTop;
+
+      /*
+       * Progress 0 = header besar.
+       * Progress 1 = header ringkas.
+       */
+
+      const progress = Math.min(
+        Math.max(scrollPosition / COLLAPSE_DISTANCE, 0),
+        1
+      );
+
+      /*
+       * Mengubah tinggi ruang header secara bertahap.
+       */
+
+      const currentHeight =
+  expandedHeight - ((expandedHeight - compactHeight) * progress);
+
+headerShell.style.height =
+  Math.max(compactHeight, currentHeight) + "px";
+      /*
+       * PARALLAX RINGAN:
+       * Konten header bergerak sedikit lebih lambat.
+       */
+
+      const parallaxY = -14 * progress;
+      const scale = 1 - (0.025 * progress);
+
+      topbarContent.style.transform =
+        `translateY(${parallaxY}px)`;
+
+      /*
+       * Header besar memudar dan mengecil.
+       */
+
+      expandedHeader.style.transform =
+        `translateY(${-22 * progress}px) scale(${scale})`;
+
+      expandedHeader.style.opacity =
+        String(1 - progress);
+
+      /*
+       * Header ringkas muncul di atas.
+       */
+
+      compactHeader.style.opacity =
+        String(progress);
+
+      compactHeader.style.visibility =
+        progress > 0.02 ? "visible" : "hidden";
+
+      compactHeader.style.pointerEvents =
+        progress > 0.8 ? "auto" : "none";
+
+      compactHeader.style.transform =
+        `translateY(${-8 + (8 * progress)}px)`;
+    }
+
+    /*
+     * Membatasi update animasi agar mengikuti
+     * frame layar dan tidak membebani scroll.
+     */
+
+    contentScroll.addEventListener("scroll", () => {
+      if (headerAnimationFrame !== null) return;
+
+      headerAnimationFrame = requestAnimationFrame(() => {
+        updateCollapsingHeader();
+        headerAnimationFrame = null;
+      });
+    }, { passive: true });
+
+    /*
+     * Ukur ulang ketika orientasi atau ukuran
+     * layar berubah.
+     */
+
+    window.addEventListener("resize", () => {
+      requestAnimationFrame(measureHeader);
+    });
+
+    window.addEventListener("orientationchange", () => {
+      setTimeout(measureHeader, 150);
+    });
+
+    /*
+     * Pengukuran awal setelah halaman siap.
+     */
+
+    requestAnimationFrame(measureHeader);
 
     /* =========================================
        NAVIGASI HALAMAN
@@ -3449,7 +3480,9 @@ const { data: authData, error: authError } = authResult;
          * Ukur header setelah aplikasi ditampilkan.
          */
 
-         await loadDashboardStats();
+        requestAnimationFrame(measureHeader);
+
+        await loadDashboardStats();
 
       } catch (error) {
         loading.style.display = "none";

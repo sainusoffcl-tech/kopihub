@@ -1518,6 +1518,20 @@ function formatExpiry(value) {
 function renderSelectedShop() {
   const shop=selectedShop();
 
+  /* PENGATURAN PAJAK PBJT OWNER */
+  const pbjtInput = $("shop-pbjt-percent");
+  const pbjtMessage = $("shop-pbjt-message");
+
+  if (pbjtInput) {
+    pbjtInput.value = Number(shop?.tax_percent ?? 0).toString();
+  }
+
+  if (pbjtMessage) {
+    pbjtMessage.textContent = shop
+      ? "Tarif PBJT kedai saat ini: " +
+        Number(shop.tax_percent ?? 0).toLocaleString("id-ID") + "%"
+      : "Pilih kedai terlebih dahulu.";
+  }
   /* PENGATURAN WAKTU PEMBAYARAN OWNER */
   const paymentTiming = $("owner-payment-timing");
   const paymentTimingMessage = $("owner-payment-timing-message");

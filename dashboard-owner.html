@@ -1414,6 +1414,7 @@ navigationButtons.forEach(button => {
     navigateToPage(button.dataset.page);
   });
 });
+
 /* TOMBOL PENGATURAN */
 document.querySelectorAll("[data-settings-target]").forEach(button=>{
   button.addEventListener("click",()=>{
@@ -1438,12 +1439,14 @@ document.querySelectorAll("[data-settings-target]").forEach(button=>{
         $("cashier-name").focus({preventScroll:true});
       }else if(target==="profil-kedai"){
         $("profile-shop-name").focus({preventScroll:true});
+      }else if(target==="pengaturan-pbjt"){
+        $("shop-pbjt-percent").focus({preventScroll:true});
       }
     });
   });
 });
 
-/* COLLAPSING HEADER */
+  /* COLLAPSING HEADER */
 const header = $("owner-header");
 const appScroll = $("app-scroll");
 let headerCollapsed = false;

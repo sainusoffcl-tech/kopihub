@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>Admin KopiHub</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1307,8 +1307,10 @@
         display: none !important;
       }
     }
-    /* ADMIN HEADER — IPHONE SAFE AREA */
+    /* ADMIN HEADER — IPHONE SAFE AREA + EDGE TO EDGE */
+
 @media (max-width: 849px) {
+
   html,
   body {
     background: var(--green) !important;
@@ -1328,16 +1330,50 @@
     background: var(--cream) !important;
   }
 
-  .header-shell {
-    background: var(--green) !important;
-  }
-
   #app.layout {
-    padding-top: env(safe-area-inset-top, 0px);
+    padding-top: env(safe-area-inset-top, 0px) !important;
     box-sizing: border-box;
     background: var(--green) !important;
   }
 
+  .header-shell {
+    position: relative !important;
+    z-index: 30 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: var(--green) !important;
+    border-radius: 0 !important;
+  }
+
+  #expanded-header,
+  .topbar {
+    position: relative !important;
+    inset: auto !important;
+    height: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: var(--green) !important;
+  }
+
+  #topbar-content {
+    transform: none !important;
+  }
+
+  #compact-header,
+  .compact-header {
+    display: none !important;
+  }
+
+  .admin-content-scroll {
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
 /* =====================================================
    KOPIHUB ADMIN — TRANSAKSI PLATFORM
 ===================================================== */
@@ -2667,7 +2703,7 @@
     }
 
     /* =========================================
-       COLLAPSING HEADER + PARALLAX
+       HEADER TETAP — TANPA COLLAPSING / PARALLAX
     ========================================= */
 
     const headerShell =
@@ -2685,163 +2721,60 @@
     const contentScroll =
       document.getElementById("admin-content-scroll");
 
-    const COLLAPSE_DISTANCE = 120;
-const COMPACT_HEIGHT = 56;
-
-let expandedHeight = 0;
-let compactHeight = COMPACT_HEIGHT;
-let headerAnimationFrame = null;
-
-function getSafeAreaTop() {
-  if (!isMobileLayout()) return 0;
-
-  const probe = document.createElement("div");
-  probe.style.cssText =
-    "position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);";
-
-  document.body.appendChild(probe);
-
-  const safeArea =
-    parseFloat(getComputedStyle(probe).paddingTop) || 0;
-
-  probe.remove();
-  return safeArea;
-}
-
     function isMobileLayout() {
       return window.matchMedia("(max-width: 849px)").matches;
     }
 
     function measureHeader() {
-  if (!isMobileLayout()) {
-    headerShell.style.height = "";
+      if (!headerShell || !expandedHeader ||
+          !compactHeader || !topbarContent) {
+        return;
+      }
 
-    expandedHeader.style.transform = "";
-    expandedHeader.style.opacity = "";
+      if (isMobileLayout()) {
+        /* Header tetap pada ukuran normal */
+        headerShell.style.height = "auto";
 
-    compactHeader.style.opacity = "";
-    compactHeader.style.visibility = "";
-    compactHeader.style.pointerEvents = "";
-    compactHeader.style.transform = "";
+        expandedHeader.style.transform = "none";
+        expandedHeader.style.opacity = "1";
+        expandedHeader.style.visibility = "visible";
 
-    topbarContent.style.transform = "";
+        topbarContent.style.transform = "none";
 
-    compactHeight = COMPACT_HEIGHT;
+        /* Nonaktifkan header ringkas */
+        compactHeader.style.display = "none";
+        compactHeader.style.opacity = "0";
+        compactHeader.style.visibility = "hidden";
+        compactHeader.style.pointerEvents = "none";
+        compactHeader.style.transform = "none";
 
-    return;
-  }
+      } else {
+        /* Kembalikan pengaturan desktop */
+        headerShell.style.height = "";
 
-  /* Hitung tinggi compact termasuk safe area */
-  compactHeight =
-    COMPACT_HEIGHT + getSafeAreaTop();
+        expandedHeader.style.transform = "";
+        expandedHeader.style.opacity = "";
+        expandedHeader.style.visibility = "";
 
-  /* Ukur header besar */
-  expandedHeader.style.transform = "none";
-  expandedHeader.style.opacity = "1";
+        topbarContent.style.transform = "";
 
-  const measuredHeight =
-    expandedHeader.getBoundingClientRect().height;
-
-  if (measuredHeight > 0) {
-    expandedHeight = measuredHeight;
-  }
-
-  updateCollapsingHeader();
-}
-
-    function updateCollapsingHeader() {
-      if (!isMobileLayout()) return;
-
-      const scrollPosition = contentScroll.scrollTop;
-
-      /*
-       * Progress 0 = header besar.
-       * Progress 1 = header ringkas.
-       */
-
-      const progress = Math.min(
-        Math.max(scrollPosition / COLLAPSE_DISTANCE, 0),
-        1
-      );
-
-      /*
-       * Mengubah tinggi ruang header secara bertahap.
-       */
-
-      const currentHeight =
-  expandedHeight - ((expandedHeight - compactHeight) * progress);
-
-headerShell.style.height =
-  Math.max(compactHeight, currentHeight) + "px";
-      /*
-       * PARALLAX RINGAN:
-       * Konten header bergerak sedikit lebih lambat.
-       */
-
-      const parallaxY = -14 * progress;
-      const scale = 1 - (0.025 * progress);
-
-      topbarContent.style.transform =
-        `translateY(${parallaxY}px)`;
-
-      /*
-       * Header besar memudar dan mengecil.
-       */
-
-      expandedHeader.style.transform =
-        `translateY(${-22 * progress}px) scale(${scale})`;
-
-      expandedHeader.style.opacity =
-        String(1 - progress);
-
-      /*
-       * Header ringkas muncul di atas.
-       */
-
-      compactHeader.style.opacity =
-        String(progress);
-
-      compactHeader.style.visibility =
-        progress > 0.02 ? "visible" : "hidden";
-
-      compactHeader.style.pointerEvents =
-        progress > 0.8 ? "auto" : "none";
-
-      compactHeader.style.transform =
-        `translateY(${-8 + (8 * progress)}px)`;
+        compactHeader.style.display = "";
+        compactHeader.style.opacity = "";
+        compactHeader.style.visibility = "";
+        compactHeader.style.pointerEvents = "";
+        compactHeader.style.transform = "";
+      }
     }
 
-    /*
-     * Membatasi update animasi agar mengikuti
-     * frame layar dan tidak membebani scroll.
-     */
+    /* Sesuaikan jika ukuran layar berubah */
+    window.addEventListener("resize", measureHeader);
 
-    contentScroll.addEventListener("scroll", () => {
-      if (headerAnimationFrame !== null) return;
+    window.addEventListener(
+      "orientationchange",
+      measureHeader
+    );
 
-      headerAnimationFrame = requestAnimationFrame(() => {
-        updateCollapsingHeader();
-        headerAnimationFrame = null;
-      });
-    }, { passive: true });
-
-    /*
-     * Ukur ulang ketika orientasi atau ukuran
-     * layar berubah.
-     */
-
-    window.addEventListener("resize", () => {
-      requestAnimationFrame(measureHeader);
-    });
-
-    window.addEventListener("orientationchange", () => {
-      setTimeout(measureHeader, 150);
-    });
-
-    /*
-     * Pengukuran awal setelah halaman siap.
-     */
-
+    /* Pengaturan awal */
     requestAnimationFrame(measureHeader);
 
     /* =========================================

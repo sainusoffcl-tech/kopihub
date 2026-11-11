@@ -2549,9 +2549,12 @@ async function showMenuPanel(panelId) {
     }
   });
 
-  if (
-    panelId === "menu-list-panel" ||
-    panelId === "menu-form-panel"
+    if (
+    refreshData &&
+    (
+      panelId === "menu-list-panel" ||
+      panelId === "menu-form-panel"
+    )
   ) {
     await refreshMenu();
   }

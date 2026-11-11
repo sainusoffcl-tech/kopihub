@@ -4876,17 +4876,27 @@ $("shop-pbjt-form").addEventListener("submit", async event => {
   message.textContent = "Menyimpan tarif PBJT...";
 
   try {
-    const { data, error } = await client
-      .from("kh_shops")
-      .update({ tax_percent: rate })
-      .eq("id", shopId)
-      .select("id,tax_percent")
-      .single();
+    const { data, error } = await client.rpc(
+      "kh_owner_update_shop_tax_percent",
+      {
+        p_shop_id: shopId,
+        p_tax_percent: rate
+      }
+    );
 
     if (error) throw error;
 
-    if (!data || String(data.id) !== shopId) {
-      throw new Error("Tarif PBJT tidak berhasil diperbarui.");
+    const savedRate = Number(data);
+
+    if (
+      data === null ||
+      !Number.isFinite(savedRate) ||
+      savedRate < 0 ||
+      savedRate > 100
+    ) {
+      throw new Error(
+        "Database tidak mengembalikan tarif PBJT yang valid."
+      );
     }
 
     const updatedShop = shops.find(
@@ -4894,17 +4904,19 @@ $("shop-pbjt-form").addEventListener("submit", async event => {
     );
 
     if (updatedShop) {
-      updatedShop.tax_percent = Number(data.tax_percent);
+      updatedShop.tax_percent = savedRate;
     }
+
+    shop.tax_percent = savedRate;
 
     const currentShop = selectedShop();
 
     if (currentShop && String(currentShop.id) === shopId) {
-      input.value = Number(data.tax_percent).toString();
+      input.value = savedRate.toString();
 
       message.textContent =
         "Tarif PBJT berhasil disimpan: " +
-        Number(data.tax_percent).toLocaleString("id-ID") + "%.";
+        savedRate.toLocaleString("id-ID") + "%.";
     }
 
   } catch (error) {
@@ -4920,7 +4932,7 @@ $("shop-pbjt-form").addEventListener("submit", async event => {
     }
 
   } finally {
-    saveButton.disabled = false;
+    saveButton.disabled = !selectedShop();
   }
 });
 

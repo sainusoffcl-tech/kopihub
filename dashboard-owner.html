@@ -2750,17 +2750,15 @@ showMenuHome();
   }
 });
 
-/* BATAL EDIT */
+/* BATAL TAMBAH / EDIT MENU */
 
 $("cancel-edit").addEventListener("click", () => {
   resetMenuForm();
-
-  $("menu-form-panel").hidden = true;
-
+  showMenuHome();
   showMenuMessage("Formulir ditutup.");
 });
 
-/* HAPUS MENU */
+  /* HAPUS MENU */
 
 async function deleteProduct(id) {
   const shop = selectedShop();

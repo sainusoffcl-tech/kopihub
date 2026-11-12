@@ -241,150 +241,127 @@
     background: var(--cream);
   }
 
-  /* =========================================
-     KOPIHUB ADMIN — HEADER EDGE TO EDGE
-     MENGIKUTI DESAIN DEMO
-  ========================================= */
+/* =========================================
+   KOPIHUB ADMIN — HEADER EDGE TO EDGE
+   ========================================= */
 
+.header-shell {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: #123B2C;
+}
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 68px;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 18px;
+  color: #ffffff;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+}
+
+.topbar-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-size: 27px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.brand-kopi {
+  color: #ffffff;
+}
+
+.topbar-brand .hub {
+  color: #E99A48;
+}
+
+.topbar-label {
+  margin: 0;
+  color: #E6EAE4;
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 1.15px;
+}
+
+.topbar-divider {
+  display: none;
+}
+
+.topbar-panel-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.profile-button {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #285441;
+}
+
+.profile-button svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 1.8;
+}
+
+/* HEADER MENJADI BAGIAN TETAP LAYOUT MOBILE */
+@media (max-width: 849px) {
   .header-shell {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-    z-index: 1000;
+    position: relative;
+    top: auto;
     flex: 0 0 auto;
     width: 100%;
-    min-width: 0;
     padding-top: env(safe-area-inset-top, 0px);
     background: #123B2C;
   }
 
   .topbar {
-    position: relative;
-    z-index: 1;
-    width: 100%;
     height: 68px;
     min-height: 68px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
     padding: 0 18px;
-    color: #ffffff;
-    background: #123B2C;
-    border-radius: 0;
-    box-shadow: none;
-    transform: none;
-    transform-origin: initial;
-    opacity: 1;
-    visibility: visible;
-    transition: none;
-    will-change: auto;
-  }
-
-  /* LOGO DAN IDENTITAS */
-
-  .topbar-content {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2px;
-    transform: none;
-  }
-
-  .topbar-brand {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    font-size: 27px;
-    line-height: 1.1;
-    font-weight: 800;
-    letter-spacing: -1px;
-  }
-
-  .brand-kopi {
-    color: #ffffff;
-  }
-
-  .topbar-brand .hub {
-    color: #E99A48;
-  }
-
-  /* TAGLINE */
-
-  .topbar-label {
-    margin: 0;
-    color: #E6EAE4;
-    font-size: 9px;
-    line-height: 1.2;
-    font-weight: 600;
-    letter-spacing: 1.15px;
-  }
-
-  /* PEMISAH HEADER LAMA TIDAK DIPAKAI */
-
-  .topbar-divider {
-    display: none;
-  }
-
-  /* JUDUL HALAMAN ADMIN */
-
-  .topbar-panel-title {
-    margin: 0;
-    color: #ffffff;
-    font-size: 11px;
-    line-height: 1.2;
-    font-weight: 600;
-  }
-
-  /* TOMBOL PROFIL */
-
-  .profile-button {
-    width: 40px;
-    height: 40px;
-    flex: 0 0 40px;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    color: #ffffff;
-    background: #285441;
-  }
-
-  .profile-button svg {
-    width: 21px;
-    height: 21px;
-    stroke-width: 1.8;
-  }
-
-  /* HEADER TIDAK BERUBAH SAAT SCROLL */
-
-@media (max-width: 849px) {
-  .header-shell {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    flex: 0 0 auto;
-    height: auto;
-    min-height: 0;
-    padding-top: env(safe-area-inset-top, 0px);
-    overflow: visible;
-    background: #123B2C;
+    background: transparent;
   }
 }
-
-    .topbar {
-      height: 68px;
-      min-height: 68px;
-      padding: 0 18px;
-      border-radius: 0;
-      box-shadow: none;
-      transform: none;
-    }
-  }
-
   /* =====================================
      AREA TENGAH YANG SCROLL
   ===================================== */

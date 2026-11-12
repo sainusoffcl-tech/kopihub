@@ -873,13 +873,22 @@
     color: var(--red);
   }
 
-  /* =====================================
-     NAVIGASI BAWAH
-  ===================================== */
+/* NAVIGASI BAWAH TETAP */
+.mobile-bottom-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
+  background: var(--green);
+  box-shadow: 0 -4px 18px rgba(0,0,0,.13);
+}
 
-  .mobile-bottom-nav {
-    display: none;
-  }
 
   /* =====================================
      MENU HAMBURGER

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -31,10 +30,12 @@
 
     * {
       box-sizing: border-box;
+      min-width: 0;
     }
 
     html {
       width: 100%;
+      max-width: 100%;
       min-width: 0;
       min-height: 100%;
       overflow-x: clip;
@@ -44,7 +45,9 @@
     }
 
     body {
+      position: relative;
       width: 100%;
+      max-width: 100%;
       min-width: 0;
       min-height: 100vh;
       margin: 0;
@@ -70,6 +73,10 @@
       text-decoration: none;
     }
 
+    img {
+      max-width: 100%;
+    }
+
     /* HEADER GLOBAL KOPIHUB */
     header {
       position: fixed;
@@ -78,6 +85,7 @@
       right: 0;
       z-index: 1000;
       width: 100%;
+      max-width: 100%;
       height: var(--header-total-height);
       background-color: var(--green);
       color: var(--white);
@@ -128,11 +136,14 @@
 
     /* HERO / IDENTITAS KEDAI */
     .hero {
+      width: 100%;
+      max-width: 100%;
       background: #e9eee7;
       padding: 39px 20px 42px;
     }
 
     .hero-inner {
+      width: 100%;
       max-width: 1150px;
       margin: auto;
     }
@@ -162,12 +173,14 @@
       color: #58665c;
       line-height: 1.65;
       font-size: 15px;
+      overflow-wrap: anywhere;
     }
 
     /* MAIN */
     main {
       width: 100%;
       max-width: 1150px;
+      min-width: 0;
       margin: auto;
       padding: 27px 20px 48px;
     }
@@ -195,10 +208,13 @@
       gap: 27px;
       align-items: start;
       min-width: 0;
+      width: 100%;
+      max-width: 100%;
     }
 
     .menu-section {
       min-width: 0;
+      max-width: 100%;
       align-self: start;
     }
 
@@ -219,6 +235,7 @@
       z-index: 900;
 
       width: 100%;
+      max-width: 100%;
       background: var(--cream);
 
       padding-top: 10px;
@@ -233,6 +250,7 @@
       display: flex;
       align-items: center;
       width: 100%;
+      max-width: 100%;
       min-width: 0;
       height: 48px;
       background: #ffffff;
@@ -254,6 +272,7 @@
     #search-input {
       flex: 1;
       width: 100%;
+      max-width: 100%;
       min-width: 0;
       height: 100%;
       border: 0;
@@ -280,6 +299,8 @@
 
     #filters {
       display: flex;
+      width: 100%;
+      max-width: 100%;
       gap: 9px;
       overflow-x: auto;
       overflow-y: hidden;
@@ -321,12 +342,15 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
       min-width: 0;
+      width: 100%;
+      max-width: 100%;
     }
 
     .product {
       display: flex;
       flex-direction: column;
       min-width: 0;
+      max-width: 100%;
       background: white;
       border: 1px solid var(--border);
       border-radius: 18px;
@@ -337,6 +361,7 @@
 
     .product-image {
       width: 100%;
+      max-width: 100%;
       height: 145px;
       border-radius: 13px;
       background: #edf1eb;
@@ -387,6 +412,7 @@
       justify-content: space-between;
       gap: 8px;
       margin-top: auto;
+      min-width: 0;
     }
 
     .price {
@@ -426,6 +452,9 @@
 
     /* KERANJANG */
     .cart-box {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
       background: white;
       border: 1px solid var(--border);
       border-radius: 19px;
@@ -433,7 +462,6 @@
       position: sticky;
       top: calc(var(--header-total-height) + 18px);
       box-shadow: var(--shadow);
-      min-width: 0;
     }
 
     .cart-heading {
@@ -528,6 +556,7 @@
 
     .checkout-button {
       width: 100%;
+      max-width: 100%;
       padding: 14px 15px;
       border: 0;
       border-radius: 12px;
@@ -556,6 +585,8 @@
     }
 
     .empty {
+      width: 100%;
+      max-width: 100%;
       padding: 23px 13px;
       text-align: center;
       color: var(--muted);
@@ -564,10 +595,13 @@
       border-radius: 12px;
       font-size: 13px;
       line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
     /* FOOTER */
     footer {
+      width: 100%;
+      max-width: 100%;
       background: var(--green);
       color: #e5ece6;
       padding: 25px 20px;

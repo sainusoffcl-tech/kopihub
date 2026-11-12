@@ -783,9 +783,8 @@
   </section>
 
   <main>
-    <div id="status" class="status" role="status" aria-live="polite">
-      Menghubungkan ke database dan memuat menu...
-    </div>
+    <!-- STATUS HANYA MUNCUL JIKA TERJADI KESALAHAN -->
+    <div id="status" class="status" role="status" aria-live="polite" hidden></div>
 
     <div class="layout">
       <section class="menu-section">
@@ -885,10 +884,19 @@
       }).format(Number(value) || 0);
     }
 
+    // PESAN KEBERHASILAN TIDAK DITAMPILKAN KEPADA PELANGGAN.
+    // KARTU STATUS HANYA DITAMPILKAN UNTUK KESALAHAN.
     function showStatus(message, isError = false) {
+      if (!isError) {
+        statusBox.hidden = true;
+        statusBox.textContent = "";
+        statusBox.classList.remove("error");
+        return;
+      }
+
       statusBox.textContent = message;
-      statusBox.classList.toggle("error", isError);
-      statusBox.hidden = !message;
+      statusBox.classList.add("error");
+      statusBox.hidden = false;
     }
 
     function makeElement(tag, className, text) {
@@ -1367,21 +1375,9 @@
         renderProducts();
         renderCart();
 
-        if (products.length === 0) {
-          showStatus(
-            "Kedai " +
-            shop.name +
-            " berhasil dibaca, tetapi belum ada produk tersedia. Tambahkan produk melalui dashboard."
-          );
-        } else {
-          showStatus(
-            "Menu " +
-            shop.name +
-            " berhasil dimuat: " +
-            products.length +
-            " produk."
-          );
-        }
+        // TIDAK MENAMPILKAN PESAN KEBERHASILAN PEMUATAN MENU.
+        // JIKA PRODUK KOSONG, INFORMASI DITAMPILKAN DI AREA DAFTAR MENU.
+        showStatus("");
 
       } catch (error) {
         console.error(

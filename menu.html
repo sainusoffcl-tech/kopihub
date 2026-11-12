@@ -24,7 +24,6 @@
       --border: #e8eae3;
       --shadow: 0 8px 28px rgba(18, 59, 44, .055);
 
-      /* HEADER EDGE-TO-EDGE */
       --header-height: 68px;
       --safe-top: env(safe-area-inset-top, 0px);
       --header-total-height: calc(var(--header-height) + var(--safe-top));
@@ -38,7 +37,7 @@
       width: 100%;
       min-width: 0;
       min-height: 100%;
-      overflow-x: hidden;
+      overflow-x: clip;
       overscroll-behavior-x: none;
       scroll-behavior: smooth;
       background: var(--green);
@@ -50,7 +49,7 @@
       min-height: 100vh;
       margin: 0;
       padding-top: var(--header-total-height);
-      overflow-x: hidden;
+      overflow-x: clip;
       overscroll-behavior-x: none;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
@@ -71,29 +70,20 @@
       text-decoration: none;
     }
 
-    /* ==========================================
-       HEADER TUNGGAL
-       HIJAU MENYATU DARI STATUS BAR SAMPAI LOGO
-    ========================================== */
-
+    /* HEADER GLOBAL KOPIHUB */
     header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 1000;
-
       width: 100%;
       height: var(--header-total-height);
-
       background-color: var(--green);
       color: var(--white);
-
       padding-top: var(--safe-top);
-
       display: flex;
       flex-direction: column;
-
       border: 0;
       box-shadow: none;
       isolation: isolate;
@@ -105,15 +95,12 @@
       height: var(--header-height);
       min-height: var(--header-height);
       flex: 0 0 var(--header-height);
-
       margin: 0 auto;
       padding: 0 20px;
-
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-
       background: transparent;
       border: 0;
       box-shadow: none;
@@ -140,7 +127,6 @@
     }
 
     /* HERO / IDENTITAS KEDAI */
-
     .hero {
       background: #e9eee7;
       padding: 39px 20px 42px;
@@ -179,7 +165,6 @@
     }
 
     /* MAIN */
-
     main {
       width: 100%;
       max-width: 1150px;
@@ -214,6 +199,7 @@
 
     .menu-section {
       min-width: 0;
+      align-self: start;
     }
 
     .section-title {
@@ -225,13 +211,9 @@
       font-weight: 900;
     }
 
-    /* ==========================================
-       AREA PENCARIAN + KATEGORI STICKY
-       KEDUANYA MENETAP DI BAWAH HEADER
-       SETELAH IDENTITAS KEDAI TERGULIR
-    ========================================== */
-
+    /* AREA PENCARIAN + KATEGORI STICKY */
     .filters-sticky {
+      position: -webkit-sticky;
       position: sticky;
       top: var(--header-total-height);
       z-index: 900;
@@ -250,18 +232,14 @@
       position: relative;
       display: flex;
       align-items: center;
-
       width: 100%;
       min-width: 0;
       height: 48px;
-
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 13px;
-
       padding: 0 13px;
       margin-bottom: 12px;
-
       box-shadow: 0 3px 12px rgba(18, 59, 44, .035);
     }
 
@@ -278,11 +256,9 @@
       width: 100%;
       min-width: 0;
       height: 100%;
-
       border: 0;
       outline: none;
       background: transparent;
-
       color: var(--text);
       font-size: 14px;
       font-weight: 550;
@@ -305,14 +281,11 @@
     #filters {
       display: flex;
       gap: 9px;
-
       overflow-x: auto;
       overflow-y: hidden;
       overscroll-behavior-x: contain;
-
       padding: 2px 1px 13px;
       margin: 0;
-
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
@@ -323,15 +296,12 @@
 
     .filter {
       flex: 0 0 auto;
-
       border: 1px solid var(--border);
       background: white;
       border-radius: 30px;
-
       padding: 11px 17px;
       white-space: nowrap;
       cursor: pointer;
-
       color: var(--text);
       font-size: 13px;
       font-weight: 700;
@@ -346,7 +316,6 @@
     }
 
     /* PRODUK */
-
     .products {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -358,12 +327,10 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
-
       background: white;
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 13px;
-
       box-shadow: 0 3px 12px rgba(18, 59, 44, .025);
       transition: transform .18s ease, box-shadow .18s ease;
     }
@@ -373,10 +340,8 @@
       height: 145px;
       border-radius: 13px;
       background: #edf1eb;
-
       display: grid;
       place-items: center;
-
       font-size: 39px;
       margin-bottom: 14px;
       overflow: hidden;
@@ -434,23 +399,18 @@
 
     .add-button {
       flex: 0 0 auto;
-
       display: grid;
       place-items: center;
-
       width: 40px;
       height: 40px;
-
       background: var(--orange);
       color: #2d251c;
       border: 0;
       border-radius: 11px;
-
       font-size: 23px;
       line-height: 1;
       font-weight: 800;
       cursor: pointer;
-
       transition: transform .15s ease, opacity .15s ease;
     }
 
@@ -465,16 +425,13 @@
     }
 
     /* KERANJANG */
-
     .cart-box {
       background: white;
       border: 1px solid var(--border);
       border-radius: 19px;
       padding: 20px;
-
       position: sticky;
       top: calc(var(--header-total-height) + 18px);
-
       box-shadow: var(--shadow);
       min-width: 0;
     }
@@ -531,15 +488,12 @@
     .quantity button {
       display: grid;
       place-items: center;
-
       border: 1px solid var(--border);
       background: var(--cream);
       color: var(--green);
-
       border-radius: 8px;
       width: 31px;
       height: 31px;
-
       font-weight: 800;
       cursor: pointer;
     }
@@ -560,10 +514,8 @@
       display: flex;
       justify-content: space-between;
       gap: 10px;
-
       padding: 17px 0;
       margin-top: 3px;
-
       color: var(--green);
       font-size: 15px;
       font-weight: 900;
@@ -577,17 +529,13 @@
     .checkout-button {
       width: 100%;
       padding: 14px 15px;
-
       border: 0;
       border-radius: 12px;
-
       color: white;
       background: var(--green);
-
       font-size: 14px;
       font-weight: 850;
       cursor: pointer;
-
       transition: opacity .15s ease, transform .15s ease;
     }
 
@@ -610,18 +558,15 @@
     .empty {
       padding: 23px 13px;
       text-align: center;
-
       color: var(--muted);
       background: #f8f9f6;
       border: 1px dashed var(--border);
       border-radius: 12px;
-
       font-size: 13px;
       line-height: 1.6;
     }
 
     /* FOOTER */
-
     footer {
       background: var(--green);
       color: #e5ece6;
@@ -638,7 +583,6 @@
     }
 
     /* TABLET */
-
     @media (max-width: 1000px) {
       .layout {
         grid-template-columns: minmax(0, 1fr) 285px;
@@ -655,7 +599,6 @@
     }
 
     /* MOBILE */
-
     @media (max-width: 760px) {
       :root {
         --header-height: 60px;
@@ -696,7 +639,6 @@
         display: grid;
         grid-template-columns: 112px minmax(0, 1fr);
         grid-template-rows: auto auto 1fr auto;
-
         column-gap: 14px;
         padding: 12px;
         border-radius: 16px;
@@ -705,7 +647,6 @@
       .product-image {
         grid-column: 1;
         grid-row: 1 / 5;
-
         height: 112px;
         margin: 0;
         align-self: start;
@@ -752,8 +693,10 @@
       }
 
       .filters-sticky {
+        top: var(--header-total-height);
         padding-top: 8px;
         padding-bottom: 2px;
+        margin-bottom: 9px;
       }
 
       .search-box {
@@ -848,12 +791,10 @@
       <section class="menu-section">
         <h2 class="section-title">Menu Favorit</h2>
 
-        <!-- PENCARIAN DAN KATEGORI STICKY -->
+        <!-- SATU-SATUNYA BAR PENCARIAN + KATEGORI -->
         <div class="filters-sticky">
-
           <div class="search-box">
             <span class="search-icon" aria-hidden="true">⌕</span>
-
             <input
               id="search-input"
               type="search"
@@ -866,7 +807,6 @@
           <div id="filters"></div>
         </div>
 
-        <!-- DAFTAR PRODUK -->
         <div id="menu-container" class="products">
           <div class="empty">Sedang memuat menu...</div>
         </div>
@@ -935,7 +875,6 @@
     let categories = [];
     let activeCategory = "all";
 
-    // KERANJANG MENGGUNAKAN ID PRODUK
     const cart = new Map();
 
     function rupiah(value) {
@@ -978,10 +917,7 @@
       return category ? category.name : "Lainnya";
     }
 
-    /* ==========================================
-       RENDER KATEGORI
-    ========================================== */
-
+    /* RENDER KATEGORI */
     function renderFilters() {
       filtersContainer.replaceChildren();
 
@@ -1024,10 +960,7 @@
       });
     }
 
-    /* ==========================================
-       PENCARIAN + FILTER PRODUK
-    ========================================== */
-
+    /* PENCARIAN + FILTER PRODUK */
     function renderProducts() {
       menuContainer.replaceChildren();
 
@@ -1166,10 +1099,7 @@
       });
     }
 
-    /* ==========================================
-       RENDER KERANJANG
-    ========================================== */
-
+    /* RENDER KERANJANG */
     function renderCart() {
       cartItemsContainer.replaceChildren();
 
@@ -1275,10 +1205,7 @@
         : "Lanjut ke Checkout";
     }
 
-    /* ==========================================
-       TAMBAH PRODUK KE KERANJANG
-    ========================================== */
-
+    /* TAMBAH PRODUK KE KERANJANG */
     function addToCart(productId) {
       const product = products.find(
         item => item.id === productId
@@ -1317,10 +1244,7 @@
       renderCart();
     }
 
-    /* ==========================================
-       UBAH JUMLAH PRODUK
-    ========================================== */
-
+    /* UBAH JUMLAH PRODUK */
     function changeQuantity(productId, change) {
       const item = cart.get(productId);
 
@@ -1346,10 +1270,7 @@
       renderCart();
     }
 
-    /* ==========================================
-       MEMUAT KEDAI DAN MENU DARI SUPABASE
-    ========================================== */
-
+    /* MEMUAT KEDAI DAN MENU DARI SUPABASE */
     async function loadShopAndMenu() {
       try {
         if (
@@ -1488,10 +1409,7 @@
       }
     }
 
-    /* ==========================================
-       EVENT KATEGORI
-    ========================================== */
-
+    /* EVENT KATEGORI */
     filtersContainer.addEventListener("click", event => {
       const button = event.target.closest(
         "button[data-category]"
@@ -1505,18 +1423,12 @@
       renderProducts();
     });
 
-    /* ==========================================
-       EVENT PENCARIAN
-    ========================================== */
-
+    /* EVENT PENCARIAN */
     searchInput.addEventListener("input", () => {
       renderProducts();
     });
 
-    /* ==========================================
-       LANJUT KE CHECKOUT
-    ========================================== */
-
+    /* LANJUT KE CHECKOUT */
     checkoutButton.addEventListener("click", () => {
       if (!currentShop || cart.size === 0) {
         showStatus(
@@ -1564,7 +1476,6 @@
     });
 
     /* MULAI MEMUAT MENU */
-
     loadShopAndMenu();
   </script>
 </body>

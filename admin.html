@@ -2535,27 +2535,25 @@ const contentScroll =
   platformTransactions: "Transaksi Platform",
   settings: "Pengaturan Platform"
 };
-
     function setDesktopActive(page) {
       document.querySelectorAll("aside .nav-item")
         .forEach(button => button.classList.remove("active"));
 
-     const map = {
-  dashboard: "nav-dashboard",
-  shops: "nav-shops",
-  orders: "nav-orders",
-  applications: "nav-applications",
-  commission: "nav-commission",
-  platformTransactions: "nav-platform-transactions"
-  settings: "nav-settings",
-     };
+      const map = {
+        dashboard: "nav-dashboard",
+        shops: "nav-shops",
+        orders: "nav-orders",
+        applications: "nav-applications",
+        commission: "nav-commission",
+        platformTransactions: "nav-platform-transactions",
+        settings: "nav-settings"
+      };
+
       if (map[page]) {
         document.getElementById(map[page])
           ?.classList.add("active");
       }
     }
-
-    
 
 function setMobileActive(page) {
   const map = {
@@ -4210,6 +4208,717 @@ document.getElementById("commission-payment-list")
       rejectCommissionPayment(rejectButton.dataset.paymentId);
     }
   });
+
+/* =========================================================
+   KOPIHUB ADMIN — INTEGRASI TRANSAKSI PLATFORM
+   Menggunakan RPC Supabase yang sudah tersedia.
+========================================================= */
+
+let platformTransactionsLoading = false;
+let platformTransactionsCache = [];
+let platformOutflowSaving = false;
+
+function ptRupiah(value) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(Number(value || 0));
+}
+
+function ptEscape(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function ptDate(value) {
+  if (!value) return "-";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
+function ptMessage(id, message, isError = false) {
+  const element = document.getElementById(id);
+  if (!element) return;
+
+  element.textContent = message;
+  element.style.color = isError ? "#b42318" : "";
+}
+
+function ptLocalDateTimeValue(date = new Date()) {
+  const pad = number => String(number).padStart(2, "0");
+
+  return (
+    date.getFullYear() + "-" +
+    pad(date.getMonth() + 1) + "-" +
+    pad(date.getDate()) + "T" +
+    pad(date.getHours()) + ":" +
+    pad(date.getMinutes())
+  );
+}
+
+function ptGetDateRange() {
+  const period =
+    document.getElementById("pt-period")?.value || "all";
+
+  const now = new Date();
+
+  let from = null;
+  let to = null;
+
+  if (period === "today") {
+    from = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0, 0, 0, 0
+    );
+
+    to = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23, 59, 59, 999
+    );
+  }
+
+  if (period === "7days") {
+    from = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - 6,
+      0, 0, 0, 0
+    );
+
+    to = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23, 59, 59, 999
+    );
+  }
+
+  if (period === "month") {
+    from = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1,
+      0, 0, 0, 0
+    );
+
+    to = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23, 59, 59, 999
+    );
+  }
+
+  if (period === "custom") {
+    const dateFrom =
+      document.getElementById("pt-date-from")?.value;
+
+    const dateTo =
+      document.getElementById("pt-date-to")?.value;
+
+    if (!dateFrom || !dateTo) {
+      throw new Error(
+        "Silakan pilih tanggal awal dan tanggal akhir."
+      );
+    }
+
+    const [yearFrom, monthFrom, dayFrom] =
+      dateFrom.split("-").map(Number);
+
+    const [yearTo, monthTo, dayTo] =
+      dateTo.split("-").map(Number);
+
+    from = new Date(
+      yearFrom, monthFrom - 1, dayFrom,
+      0, 0, 0, 0
+    );
+
+    to = new Date(
+      yearTo, monthTo - 1, dayTo,
+      23, 59, 59, 999
+    );
+
+    if (from > to) {
+      throw new Error(
+        "Tanggal awal tidak boleh melewati tanggal akhir."
+      );
+    }
+  }
+
+  return {
+    from: from ? from.toISOString() : null,
+    to: to ? to.toISOString() : null
+  };
+}
+
+/* =========================================
+   TAMPILKAN RINGKASAN KEUANGAN
+========================================= */
+
+function renderPlatformTransactionSummary(summary = {}) {
+  const income =
+    Number(summary.total_income || 0);
+
+  const outflow =
+    Number(summary.total_outflow || 0);
+
+  const balance =
+    Number(summary.net_balance || income - outflow);
+
+  document.getElementById("pt-total-income").textContent =
+    ptRupiah(income);
+
+  document.getElementById("pt-total-outflow").textContent =
+    ptRupiah(outflow);
+
+  document.getElementById("pt-net-balance").textContent =
+    ptRupiah(balance);
+}
+
+/* =========================================
+   TAMPILKAN DAFTAR TRANSAKSI
+========================================= */
+
+function renderPlatformTransactions(rows = []) {
+  const container =
+    document.getElementById("pt-transactions-list");
+
+  const countElement =
+    document.getElementById("pt-result-count");
+
+  if (!container) return;
+
+  platformTransactionsCache = rows;
+
+  if (countElement) {
+    countElement.textContent =
+      rows.length + " transaksi ditemukan.";
+  }
+
+  if (!rows.length) {
+    container.innerHTML = `
+      <div class="pt-empty">
+        Belum ada transaksi pada periode ini.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = rows.map((item, index) => {
+    const isIncome = item.direction === "income";
+
+    const directionLabel = isIncome
+      ? "Uang Masuk"
+      : "Uang Keluar";
+
+    const typeLabel = {
+      invoice_payment: "Pembayaran Invoice Owner",
+      operational_expense: "Pengeluaran Operasional",
+      refund: "Pengembalian Dana"
+    }[item.transaction_type] || item.transaction_type || "-";
+
+    const amountPrefix = isIncome ? "+ " : "- ";
+
+    const statusLabel = {
+      approved: "Disetujui",
+      recorded: "Tercatat",
+      rejected: "Ditolak",
+      voided: "Dibatalkan"
+    }[item.status] || item.status || "-";
+
+    const shopInfo = item.shop_name
+      ? "Kedai: " + item.shop_name
+      : "";
+
+    return `
+      <div class="pt-transaction-card">
+        <div class="pt-transaction-main">
+          <strong>${ptEscape(item.description || typeLabel)}</strong>
+
+          <small>
+            ${ptEscape(directionLabel)} ·
+            ${ptEscape(typeLabel)}
+          </small>
+
+          <small>
+            ${ptEscape(ptDate(item.transaction_date))}
+          </small>
+
+          <small>
+            ${ptEscape(shopInfo)}
+          </small>
+
+          <small>
+            Referensi:
+            ${ptEscape(item.reference_number || "-")}
+          </small>
+
+          <button
+            type="button"
+            class="pt-detail-button"
+            data-pt-detail="${index}">
+            Lihat Detail
+          </button>
+        </div>
+
+        <div class="pt-transaction-side">
+          <strong class="pt-transaction-amount ${isIncome ? "" : "outflow"}">
+            ${amountPrefix}${ptRupiah(item.amount)}
+          </strong>
+
+          <span class="pt-status ${item.status === "voided" ? "voided" : ""}">
+            ${ptEscape(statusLabel)}
+          </span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* =========================================
+   MUAT TRANSAKSI DARI SUPABASE
+========================================= */
+
+async function loadPlatformTransactions() {
+  if (platformTransactionsLoading) return;
+
+  platformTransactionsLoading = true;
+
+  const reloadButton =
+    document.getElementById("reload-platform-transactions");
+
+  const filterButton =
+    document.getElementById("pt-apply-filter");
+
+  if (reloadButton) reloadButton.disabled = true;
+  if (filterButton) filterButton.disabled = true;
+
+  ptMessage(
+    "pt-transactions-message",
+    "Memuat transaksi platform..."
+  );
+
+  try {
+    const range = ptGetDateRange();
+
+    const transactionType =
+      document.getElementById("pt-type")?.value || "all";
+
+    const search =
+      document.getElementById("pt-search")?.value.trim() || "";
+
+    const { data, error } = await client.rpc(
+      "kh_admin_get_platform_transactions",
+      {
+        p_date_from: range.from,
+        p_date_to: range.to,
+        p_type: transactionType,
+        p_search: search || null
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || typeof data !== "object") {
+      throw new Error(
+        "Respons transaksi dari Supabase tidak valid."
+      );
+    }
+
+    const summary = data.summary || {};
+    const transactions = data.transactions || [];
+
+    renderPlatformTransactionSummary(summary);
+    renderPlatformTransactions(transactions);
+
+    ptMessage(
+      "pt-transactions-message",
+      "Data transaksi berhasil dimuat."
+    );
+
+  } catch (error) {
+    console.error(
+      "Transaksi Platform KopiHub:",
+      error
+    );
+
+    ptMessage(
+      "pt-transactions-message",
+      error.message || "Gagal memuat transaksi platform.",
+      true
+    );
+
+    const container =
+      document.getElementById("pt-transactions-list");
+
+    if (container) {
+      container.innerHTML = `
+        <div class="pt-empty">
+          Gagal memuat data transaksi.
+          Silakan coba muat ulang.
+        </div>
+      `;
+    }
+
+  } finally {
+    platformTransactionsLoading = false;
+
+    if (reloadButton) reloadButton.disabled = false;
+    if (filterButton) filterButton.disabled = false;
+  }
+}
+
+/* =========================================
+   DETAIL TRANSAKSI
+========================================= */
+
+document.getElementById("pt-transactions-list")
+  ?.addEventListener("click", event => {
+
+    const button = event.target.closest("[data-pt-detail]");
+
+    if (!button) return;
+
+    const index = Number(button.dataset.ptDetail);
+
+    const item = platformTransactionsCache[index];
+
+    if (!item) return;
+
+    const audit = Array.isArray(item.audit_history)
+      ? item.audit_history
+      : [];
+
+    const auditText = audit.length
+      ? audit.map(entry =>
+          "- " +
+          (entry.action || "-") +
+          " | " +
+          ptDate(entry.created_at)
+        ).join("\n")
+      : "Belum ada riwayat audit.";
+
+    alert(
+      "DETAIL TRANSAKSI KOPIHUB\n\n" +
+      "Keterangan: " + (item.description || "-") + "\n" +
+      "Jenis: " + (item.transaction_type || "-") + "\n" +
+      "Kategori: " + (item.category || "-") + "\n" +
+      "Nominal: " + ptRupiah(item.amount) + "\n" +
+      "Metode: " + (item.payment_method || "-") + "\n" +
+      "Penerima: " + (item.recipient || "-") + "\n" +
+      "Kedai: " + (item.shop_name || "-") + "\n" +
+      "Referensi: " + (item.reference_number || "-") + "\n" +
+      "Tanggal: " + ptDate(item.transaction_date) + "\n" +
+      "Status: " + (item.status || "-") + "\n\n" +
+      "RIWAYAT AUDIT\n" +
+      auditText
+    );
+  });
+
+/* =========================================
+   BUKA DAN TUTUP FORM PENGELUARAN
+========================================= */
+
+const ptOutflowForm =
+  document.getElementById("pt-outflow-form");
+
+const ptOpenOutflowButton =
+  document.getElementById("pt-open-outflow-form");
+
+const ptCloseOutflowButton =
+  document.getElementById("pt-close-outflow-form");
+
+const ptCancelOutflowButton =
+  document.getElementById("pt-cancel-outflow");
+
+const ptSaveOutflowButton =
+  document.getElementById("pt-save-outflow");
+
+const ptOutflowType =
+  document.getElementById("pt-outflow-type");
+
+const ptRefundField =
+  document.getElementById("pt-refund-field");
+
+function togglePtRefundField() {
+  if (!ptRefundField || !ptOutflowType) return;
+
+  const isRefund = ptOutflowType.value === "refund";
+
+  ptRefundField.hidden = !isRefund;
+}
+
+function closePtOutflowForm() {
+  if (!ptOutflowForm) return;
+
+  ptOutflowForm.hidden = true;
+
+  ptMessage("pt-outflow-message", "");
+}
+
+ptOpenOutflowButton?.addEventListener("click", () => {
+  ptOutflowForm.hidden = false;
+
+  togglePtRefundField();
+
+  document.getElementById("pt-outflow-date").value =
+    ptLocalDateTimeValue();
+
+  ptMessage("pt-outflow-message", "");
+
+  ptOutflowForm.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
+ptCloseOutflowButton?.addEventListener(
+  "click",
+  closePtOutflowForm
+);
+
+ptCancelOutflowButton?.addEventListener(
+  "click",
+  closePtOutflowForm
+);
+
+ptOutflowType?.addEventListener(
+  "change",
+  togglePtRefundField
+);
+
+/* =========================================
+   SIMPAN PENGELUARAN / REFUND
+========================================= */
+
+ptSaveOutflowButton?.addEventListener("click", async () => {
+  if (platformOutflowSaving) return;
+
+  const transactionType =
+    document.getElementById("pt-outflow-type").value;
+
+  const category =
+    document.getElementById("pt-outflow-category").value.trim();
+
+  const description =
+    document.getElementById("pt-outflow-description").value.trim();
+
+  const amount =
+    Number(document.getElementById("pt-outflow-amount").value);
+
+  const paymentMethod =
+    document.getElementById("pt-outflow-method").value.trim();
+
+  const dateValue =
+    document.getElementById("pt-outflow-date").value;
+
+  const recipient =
+    document.getElementById("pt-outflow-recipient").value.trim();
+
+  const referenceNumber =
+    document.getElementById("pt-outflow-reference").value.trim();
+
+  const attachmentPath =
+    document.getElementById("pt-outflow-attachment").value.trim();
+
+  const relatedPaymentValue =
+    document.getElementById("pt-refund-payment-id").value.trim();
+
+  if (!category || !description || !paymentMethod) {
+    ptMessage(
+      "pt-outflow-message",
+      "Kategori, keterangan, dan metode pembayaran wajib diisi.",
+      true
+    );
+    return;
+  }
+
+  if (
+    !Number.isSafeInteger(amount) ||
+    amount <= 0
+  ) {
+    ptMessage(
+      "pt-outflow-message",
+      "Nominal harus berupa angka bulat lebih besar dari nol.",
+      true
+    );
+    return;
+  }
+
+  if (!dateValue) {
+    ptMessage(
+      "pt-outflow-message",
+      "Tanggal transaksi wajib diisi.",
+      true
+    );
+    return;
+  }
+
+  if (
+    transactionType === "refund" &&
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(relatedPaymentValue)
+  ) {
+    ptMessage(
+      "pt-outflow-message",
+      "ID pembayaran invoice harus berupa UUID yang valid.",
+      true
+    );
+    return;
+  }
+
+  if (
+    transactionType === "operational_expense" &&
+    relatedPaymentValue
+  ) {
+    ptMessage(
+      "pt-outflow-message",
+      "ID pembayaran hanya boleh diisi untuk transaksi refund.",
+      true
+    );
+    return;
+  }
+
+  const confirmation = confirm(
+    "KONFIRMASI TRANSAKSI KELUAR\n\n" +
+    "Jenis: " +
+    (transactionType === "refund"
+      ? "Pengembalian Dana"
+      : "Pengeluaran Operasional") +
+    "\nKategori: " + category +
+    "\nKeterangan: " + description +
+    "\nNominal: " + ptRupiah(amount) +
+    "\nMetode: " + paymentMethod +
+    "\n\nApakah data ini sudah benar?"
+  );
+
+  if (!confirmation) return;
+
+  platformOutflowSaving = true;
+  ptSaveOutflowButton.disabled = true;
+
+  ptMessage(
+    "pt-outflow-message",
+    "Menyimpan transaksi..."
+  );
+
+  try {
+    const transactionDate =
+      new Date(dateValue);
+
+    if (Number.isNaN(transactionDate.getTime())) {
+      throw new Error("Tanggal transaksi tidak valid.");
+    }
+
+    const { data, error } = await client.rpc(
+      "kh_admin_record_platform_cash_outflow",
+      {
+        p_transaction_type: transactionType,
+        p_category: category,
+        p_description: description,
+        p_amount: amount,
+        p_payment_method: paymentMethod,
+        p_transaction_date: transactionDate.toISOString(),
+        p_recipient: recipient || null,
+        p_reference_number: referenceNumber || null,
+        p_related_payment_id:
+          transactionType === "refund"
+            ? relatedPaymentValue
+            : null,
+        p_attachment_path: attachmentPath || null
+      }
+    );
+
+    if (error) throw error;
+
+    if (data?.success !== true) {
+      throw new Error(
+        data?.message || "Transaksi gagal disimpan."
+      );
+    }
+
+    document.getElementById("pt-outflow-category").value = "";
+    document.getElementById("pt-outflow-description").value = "";
+    document.getElementById("pt-outflow-amount").value = "";
+    document.getElementById("pt-outflow-method").value = "";
+    document.getElementById("pt-outflow-recipient").value = "";
+    document.getElementById("pt-outflow-reference").value = "";
+    document.getElementById("pt-outflow-attachment").value = "";
+    document.getElementById("pt-refund-payment-id").value = "";
+
+    closePtOutflowForm();
+
+    alert(
+      data.message ||
+      "Transaksi uang keluar berhasil dicatat."
+    );
+
+    await loadPlatformTransactions();
+
+  } catch (error) {
+    console.error(
+      "Gagal mencatat transaksi platform:",
+      error
+    );
+
+    ptMessage(
+      "pt-outflow-message",
+      error.message || "Transaksi gagal disimpan.",
+      true
+    );
+
+  } finally {
+    platformOutflowSaving = false;
+    ptSaveOutflowButton.disabled = false;
+  }
+});
+
+/* =========================================
+   FILTER TRANSAKSI
+========================================= */
+
+const ptPeriodSelect =
+  document.getElementById("pt-period");
+
+const ptDateRange =
+  document.getElementById("pt-date-range");
+
+ptPeriodSelect?.addEventListener("change", () => {
+  const isCustom = ptPeriodSelect.value === "custom";
+
+  if (ptDateRange) {
+    ptDateRange.hidden = !isCustom;
+    ptDateRange.classList.toggle("active", isCustom);
+  }
+});
+
+document.getElementById("pt-apply-filter")
+  ?.addEventListener("click", loadPlatformTransactions);
+
+document.getElementById("reload-platform-transactions")
+  ?.addEventListener("click", loadPlatformTransactions);
+
+/* Muat data saat menu Transaksi Platform dibuka. */
+togglePtRefundField();
 
     /* =========================================
        EVENT NAVIGASI DESKTOP

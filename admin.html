@@ -4399,7 +4399,7 @@ function renderPlatformTransactionSummary(summary = {}) {
    TAMPILKAN DAFTAR TRANSAKSI
 ========================================= */
 
-function renderPlatformTransactions(rows = []) {
+function renderPlatformTransactions(rows = [], totalCount = rows.length) {
   const container =
     document.getElementById("pt-transactions-list");
 
@@ -4410,10 +4410,17 @@ function renderPlatformTransactions(rows = []) {
 
   platformTransactionsCache = rows;
 
-  if (countElement) {
-    countElement.textContent =
-      rows.length + " transaksi ditemukan.";
-  }
+ if (countElement) {
+  const total = Number(totalCount);
+  const safeTotal = Number.isFinite(total)
+    ? Math.max(0, total)
+    : rows.length;
+
+  countElement.textContent =
+    safeTotal > rows.length
+      ? `Menampilkan ${rows.length} dari ${safeTotal} transaksi.`
+      : `${safeTotal} transaksi ditemukan.`;
+}
 
   if (!rows.length) {
     container.innerHTML = `

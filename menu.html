@@ -34,29 +34,34 @@
       box-sizing: border-box;
     }
 
-    html {
-      width: 100%;
-      min-height: 100%;
-      overflow-x: clip;
-      scroll-behavior: smooth;
+html {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  background: var(--green);
+}
 
-      /* Warna dasar area paling atas iPhone */
-      background: var(--green);
-    }
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  margin: 0;
+  padding-top: var(--header-total-height);
+  overflow-x: clip;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
 
-    body {
-      width: 100%;
-      min-width: 0;
-      min-height: 100vh;
-      margin: 0;
-      padding-top: var(--header-total-height);
-      overflow-x: clip;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background: var(--cream);
-      -webkit-font-smoothing: antialiased;
-    }
+  background: linear-gradient(
+    to bottom,
+    var(--green) 0,
+    var(--green) var(--header-total-height),
+    var(--cream) var(--header-total-height)
+  );
+  background-attachment: fixed;
 
+  -webkit-font-smoothing: antialiased;
+}
     button, input {
       font: inherit;
     }
@@ -75,57 +80,47 @@
        HIJAU MENYATU DARI STATUS BAR SAMPAI LOGO
     ========================================== */
 
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 
-      width: 100%;
-      height: var(--header-total-height);
+  width: 100%;
+  height: var(--header-total-height);
 
-      /* Satu-satunya bidang background header */
-      background-color: var(--green);
-      color: var(--white);
+  /* Transparan: tidak membuat bidang hijau kedua */
+  background: transparent;
+  color: var(--white);
 
-      /* Safe Area menjadi bagian dari header yang sama */
-      padding-top: var(--safe-top);
+  padding-top: var(--safe-top);
 
-      display: flex;
-      flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-      /* Tidak ada garis atau bayangan pemisah */
-      border: 0;
-      box-shadow: none;
-
-      /* Mencegah lapisan header terpecah */
-      isolation: isolate;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-    }
-
+  border: 0;
+  box-shadow: none;
+}
     .header-inner {
-      width: 100%;
-      max-width: 1150px;
-      height: var(--header-height);
-      min-height: var(--header-height);
-      flex: 0 0 var(--header-height);
+  width: 100%;
+  max-width: 1150px;
+  height: var(--header-height);
+  min-height: var(--header-height);
+  flex: 0 0 var(--header-height);
 
-      margin: 0 auto;
-      padding: 0 20px;
+  margin: 0 auto;
+  padding: 0 20px;
 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 
-      /* Transparan, bukan background kedua */
-      background: transparent;
-      border: 0;
-      box-shadow: none;
-    }
-
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
     .logo {
       font-size: 25px;
       font-weight: 900;

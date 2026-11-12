@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#123b2c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Menu Kedai - KopiHub</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -22,7 +24,7 @@
       --border: #e8eae3;
       --shadow: 0 8px 28px rgba(18, 59, 44, .055);
 
-      /* STICKY EDGE-TO-EDGE HEADER */
+      /* SATU HEADER EDGE-TO-EDGE */
       --header-height: 68px;
       --safe-top: env(safe-area-inset-top, 0px);
       --header-total-height: calc(var(--header-height) + var(--safe-top));
@@ -34,13 +36,18 @@
 
     html {
       width: 100%;
+      min-height: 100%;
       overflow-x: clip;
       scroll-behavior: smooth;
+
+      /* Warna dasar area paling atas iPhone */
+      background: var(--green);
     }
 
     body {
       width: 100%;
       min-width: 0;
+      min-height: 100vh;
       margin: 0;
       padding-top: var(--header-total-height);
       overflow-x: clip;
@@ -63,9 +70,10 @@
       text-decoration: none;
     }
 
-    /* =====================================
-       SATU LAPISAN STICKY EDGE-TO-EDGE HEADER
-    ===================================== */
+    /* ==========================================
+       HEADER TUNGGAL
+       HIJAU MENYATU DARI STATUS BAR SAMPAI LOGO
+    ========================================== */
 
     header {
       position: fixed;
@@ -77,22 +85,33 @@
       width: 100%;
       height: var(--header-total-height);
 
-      /* Satu background untuk Status Bar dan header */
-      background: var(--green);
+      /* Satu-satunya bidang background header */
+      background-color: var(--green);
       color: var(--white);
 
-      /* Safe Area berada di dalam header yang sama */
+      /* Safe Area menjadi bagian dari header yang sama */
       padding-top: var(--safe-top);
-      padding-left: 0;
-      padding-right: 0;
 
-      box-shadow: 0 3px 15px rgba(0, 0, 0, .12);
+      display: flex;
+      flex-direction: column;
+
+      /* Tidak ada garis atau bayangan pemisah */
+      border: 0;
+      box-shadow: none;
+
+      /* Mencegah lapisan header terpecah */
+      isolation: isolate;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
     .header-inner {
       width: 100%;
-      height: var(--header-height);
       max-width: 1150px;
+      height: var(--header-height);
+      min-height: var(--header-height);
+      flex: 0 0 var(--header-height);
+
       margin: 0 auto;
       padding: 0 20px;
 
@@ -101,8 +120,10 @@
       align-items: center;
       gap: 12px;
 
-      /* Tidak membuat background kedua */
+      /* Transparan, bukan background kedua */
       background: transparent;
+      border: 0;
+      box-shadow: none;
     }
 
     .logo {
@@ -110,6 +131,7 @@
       font-weight: 900;
       letter-spacing: -1.3px;
       white-space: nowrap;
+      color: #ffffff;
     }
 
     .logo span {
@@ -119,6 +141,7 @@
     .back-link {
       font-size: 13px;
       font-weight: 650;
+      color: #ffffff;
       opacity: .92;
       white-space: nowrap;
     }

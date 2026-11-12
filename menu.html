@@ -42,6 +42,11 @@
       overscroll-behavior-x: none;
       scroll-behavior: smooth;
       background: var(--green);
+
+      /* PENGUNCI GESTURE ZOOM */
+      touch-action: pan-y;
+      -ms-touch-action: pan-y;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
@@ -58,6 +63,10 @@
       color: var(--text);
       background: var(--cream);
       -webkit-font-smoothing: antialiased;
+
+      /* HANYA IZINKAN SCROLL VERTIKAL */
+      touch-action: pan-y;
+      -ms-touch-action: pan-y;
     }
 
     button, input {
@@ -66,11 +75,13 @@
 
     button {
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     a {
       color: inherit;
       text-decoration: none;
+      touch-action: manipulation;
     }
 
     img {
@@ -279,8 +290,11 @@
       outline: none;
       background: transparent;
       color: var(--text);
-      font-size: 14px;
+
+      /* MENCEGAH AUTO-ZOOM SAAT INPUT DIFOKUSKAN DI IPHONE */
+      font-size: 16px;
       font-weight: 550;
+      touch-action: manipulation;
     }
 
     #search-input::placeholder {
@@ -305,10 +319,14 @@
       overflow-x: auto;
       overflow-y: hidden;
       overscroll-behavior-x: contain;
+
+      /* KATEGORI TETAP BISA DIGESER SENDIRI */
+      touch-action: pan-x;
+      -webkit-overflow-scrolling: touch;
+
       padding: 2px 1px 13px;
       margin: 0;
       scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
     }
 
     #filters::-webkit-scrollbar {
@@ -884,6 +902,51 @@
 
   <script>
     "use strict";
+
+    /*
+      PENGUNCI ZOOM KHUSUS PERANGKAT SENTUH
+
+      - Mencegah pinch-to-zoom.
+      - Mencegah gesture zoom bawaan Safari iOS.
+      - Mencegah double-tap zoom.
+      - Tidak mematikan scroll vertikal.
+      - Area kategori tetap bisa digeser ke samping.
+    */
+
+    document.addEventListener("gesturestart", function(event) {
+      event.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("gesturechange", function(event) {
+      event.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("gestureend", function(event) {
+      event.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("touchmove", function(event) {
+      if (event.touches && event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    // MENCEGAH DOUBLE-TAP ZOOM PADA AREA HALAMAN.
+    let lastTouchEnd = 0;
+
+    document.addEventListener("touchend", function(event) {
+      const now = Date.now();
+      const target = event.target;
+
+      const isCategoryArea =
+        target.closest && target.closest("#filters");
+
+      if (!isCategoryArea && now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+
+      lastTouchEnd = now;
+    }, { passive: false });
 
     // KONFIGURASI SUPABASE
     const SUPABASE_URL =

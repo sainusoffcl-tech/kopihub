@@ -1,18 +1,13 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Admin KopiHub</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-
 
   <style>
     :root {
@@ -246,138 +241,169 @@
       background: var(--cream);
     }
 
-/* =====================================
-   KOPIHUB ADMIN — PERMANENT EDGE-TO-EDGE HEADER
-   Standar sama dengan Menu Pelanggan dan Checkout
-===================================== */
+    /* =====================================
+       HEADER SHELL
+       DUA LAPISAN HEADER
+    ===================================== */
 
-.header-shell {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  flex: 0 0 auto;
-  width: 100%;
-  min-width: 0;
-  padding-top: env(safe-area-inset-top);
-  background: #123B2C;
-}
+    .header-shell {
+      position: relative;
+      z-index: 30;
+      flex: 0 0 auto;
+      width: 100%;
+      min-width: 0;
+      background: var(--green);
+    }
 
-/* Satu header permanen */
-.topbar {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+    /* LAPISAN PERTAMA: HEADER BESAR */
 
-  width: 100%;
-  min-width: 0;
-  min-height: 76px;
-  padding: 12px 22px;
+    .topbar {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 22px;
+      color: white;
+      background: var(--green);
+      border-radius: 0 0 18px 18px;
+      box-shadow: 0 4px 15px rgba(15,45,29,.08);
 
-  color: #FFFFFF;
-  background: #123B2C;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
+      transform-origin: top center;
+      will-change: transform, opacity;
+    }
 
-  transform: none;
-  opacity: 1;
-  visibility: visible;
-  transition: none;
-  animation: none;
-  will-change: auto;
-}
+    .topbar-content {
+      flex: 1;
+      min-width: 0;
+    }
 
-/* Isi header */
-.topbar-content {
-  flex: 1 1 auto;
-  min-width: 0;
-}
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3px;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
 
-.topbar-brand {
-  display: flex;
-  align-items: center;
-  margin-bottom: 3px;
+    .brand-kopi {
+      color: #fff;
+    }
 
-  color: #FFFFFF;
-  font-size: 25px;
-  line-height: 1;
-  font-weight: 850;
-  letter-spacing: -1px;
-}
+    .brand-i {
+      position: relative;
+    }
 
-.brand-kopi {
-  color: #FFFFFF;
-}
+    .coffee-bean {
+      position: absolute;
+      width: 8px;
+      height: 11px;
+      top: -3px;
+      left: 50%;
+      border-radius: 70% 35% 70% 35%;
+      background: #a66b3d;
+      transform: translateX(-50%) rotate(35deg);
+    }
 
-.brand-i {
-  position: relative;
-}
+    .topbar-brand .hub {
+      color: var(--orange);
+    }
 
-.coffee-bean {
-  position: absolute;
-  top: -3px;
-  left: 50%;
-  width: 8px;
-  height: 11px;
-  border-radius: 70% 35% 70% 35%;
-  background: #A66B3D;
-  transform: translateX(-50%) rotate(35deg);
-}
+    .topbar-label {
+      margin: 0;
+      color: #c5d9c9;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+    }
 
-.topbar-brand .hub {
-  color: #E99A48;
-}
+    .topbar-divider {
+      width: 100%;
+      height: 1px;
+      margin: 7px 0 6px;
+      background: rgba(255,255,255,.22);
+    }
 
-.topbar-label {
-  margin: 0;
-  color: #C5D9C9;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-}
+    .topbar-panel-title {
+      margin: 0;
+      color: white;
+      font-size: 15px;
+      line-height: 1.2;
+      font-weight: 650;
+    }
 
-.topbar-divider {
-  width: 100%;
-  height: 1px;
-  margin: 7px 0 6px;
-  background: rgba(255,255,255,.22);
-}
+    .profile-button {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #c5d9c9;
+      border-radius: 50%;
+      color: white;
+      background: var(--green2);
+    }
 
-.topbar-panel-title {
-  margin: 0;
-  color: #FFFFFF;
-  font-size: 15px;
-  line-height: 1.2;
-  font-weight: 650;
-}
+    .profile-button svg {
+      width: 21px;
+      height: 21px;
+      stroke-width: 1.8;
+    }
 
-/* Tombol profil */
-.profile-button {
-  display: grid;
-  place-items: center;
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
+    /* LAPISAN KEDUA: HEADER RINGKAS */
 
-  border: 1.5px solid #C5D9C9;
-  border-radius: 50%;
-  color: #FFFFFF;
-  background: #24543E;
-}
+    .compact-header {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 16px;
+      color: white;
+      background: var(--green);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      will-change: opacity, transform;
+    }
 
-.profile-button svg {
-  width: 21px;
-  height: 21px;
-  stroke-width: 1.8;
-}
+    .compact-brand {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
 
-/* Header ringkas tidak digunakan lagi */
-.compact-header {
-  display: none !important;
-}
+    .compact-brand .hub {
+      color: var(--orange);
+    }
+
+    .compact-profile {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #c5d9c9;
+      border-radius: 50%;
+      color: white;
+      background: var(--green2);
+    }
+
+    .compact-profile svg {
+      width: 19px;
+      height: 19px;
+    }
 
     /* =====================================
        AREA TENGAH YANG SCROLL
@@ -1769,10 +1795,11 @@
 
       <div class="nav-label">KEUANGAN</div>
 
-      <button type="button" id="nav-platform-transactions" class="nav-item">
-  <i data-lucide="credit-card"></i>
-  <span>Transaksi Platform</span>
-</button>
+      <button type="button" class="nav-item"
+        data-coming-soon="Transaksi Platform">
+        <i data-lucide="credit-card"></i>
+        <span>Transaksi Platform</span>
+      </button>
 
       <button type="button" id="nav-commission" class="nav-item">
         <i data-lucide="wallet"></i>
@@ -3390,26 +3417,8 @@ document.getElementById("back-to-dashboard-shops")
 
     async function initAdmin() {
       try {
-        if (!client || !client.auth) {
-  throw new Error(
-    "Koneksi Supabase belum berhasil dibuat. Periksa pemuatan library Supabase."
-  );
-}
-
-const authResult = await Promise.race([
-  client.auth.getUser(),
-  new Promise((_, reject) => {
-    setTimeout(() => {
-      reject(
-        new Error(
-          "Pemeriksaan akun melebihi 15 detik. Periksa koneksi Supabase."
-        )
-      );
-    }, 15000);
-  })
-]);
-
-const { data: authData, error: authError } = authResult;
+        const { data: authData, error: authError } =
+          await client.auth.getUser();
 
         if (authError || !authData.user) {
           throw new Error("Silakan login terlebih dahulu.");

@@ -2125,16 +2125,19 @@
       placeholder="Nomor referensi pembayaran (opsional)">
 
     <div id="pt-refund-field" hidden>
-      <label for="pt-refund-payment-id">
-        ID Pembayaran Invoice yang Dikembalikan
-      </label>
-      <input id="pt-refund-payment-id" type="text"
-        placeholder="Masukkan ID pembayaran invoice yang disetujui">
-      <small>
-        Pengembalian dana harus terkait pembayaran invoice Owner
-        yang telah disetujui.
-      </small>
-    </div>
+  <label for="pt-refund-payment-id">
+    Pilih Pembayaran Invoice yang Dikembalikan
+  </label>
+
+  <select id="pt-refund-payment-id">
+    <option value="">Memuat daftar pembayaran...</option>
+  </select>
+
+  <small>
+    Pilih pembayaran invoice Owner yang telah disetujui
+    dan menjadi sumber pengembalian dana.
+  </small>
+</div>
 
     <label for="pt-outflow-attachment">Path lampiran (opsional)</label>
     <input id="pt-outflow-attachment" type="text"
@@ -4556,8 +4559,11 @@ async function loadPlatformTransactions() {
     const transactions = data.transactions || [];
 
     renderPlatformTransactionSummary(summary);
-    renderPlatformTransactions(transactions);
 
+renderPlatformTransactions(
+  transactions,
+  summary.transaction_count ?? transactions.length
+);
     ptMessage(
       "pt-transactions-message",
       "Data transaksi berhasil dimuat."

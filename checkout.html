@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#123b2c">
 <title>Checkout | KopiHub</title>
 
@@ -21,8 +21,11 @@
   --danger:#a12e24;
   --shadow:0 8px 28px rgba(18,59,44,.055);
 
-  /* Sama persis dengan tinggi header menu */
-  --header-height:68px;
+  /* Tinggi area isi header, mengikuti standar global KopiHub */
+  --header-content-height:68px;
+  --header-total-height:calc(
+    var(--header-content-height) + env(safe-area-inset-top, 0px)
+  );
 }
 
 *{box-sizing:border-box}
@@ -35,33 +38,44 @@ html,body{
 
 html{
   width:100%;
-  background:var(--cream);
+  background:var(--green);
 }
 
 body{
   background:var(--cream);
   color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  padding-top:var(--header-height);
+  padding-top:var(--header-total-height);
 }
 
-/* HEADER FIXED - MENGIKUTI MENU.HTML */
+/* =========================================
+   HEADER GLOBAL KOPIHUB
+   EDGE-TO-EDGE + SAFE AREA IPHONE
+========================================= */
+
 header{
   position:fixed;
   top:0;
   left:0;
   right:0;
   z-index:1000;
-  height:var(--header-height);
+
+  /* Tinggi header termasuk area status bar */
+  height:var(--header-total-height);
+
+  /* Satu latar hijau menyatu sampai belakang status bar */
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-left:20px;
+  padding-right:20px;
+
   background:var(--green);
   color:white;
-  padding:0 20px;
   box-shadow:0 3px 15px rgba(0,0,0,.12);
 }
 
 .header-inner{
   width:100%;
-  height:100%;
+  height:var(--header-content-height);
   max-width:1150px;
   margin:auto;
   display:flex;
@@ -516,14 +530,15 @@ footer{
   margin-top:3px;
 }
 
-/* MOBILE - SAMA DENGAN MENU.HTML */
+/* MOBILE */
 @media(max-width:760px){
   :root{
-    --header-height:60px;
+    --header-content-height:60px;
   }
 
   header{
-    padding:0 20px;
+    padding-left:20px;
+    padding-right:20px;
   }
 
   .logo{font-size:23px}
@@ -544,7 +559,7 @@ footer{
   .action-group{grid-template-columns:1fr 1fr}
 }
 
-/* LAYAR KECIL - SAMA DENGAN MENU.HTML */
+/* LAYAR KECIL */
 @media(max-width:390px){
   header{
     padding-left:15px;
@@ -1352,7 +1367,6 @@ document.getElementById("printReceiptBtn").addEventListener("click",()=>{
   window.print();
 });
 
-
 /* =========================================
    SIMPAN SEBAGAI FOTO - FORMAT STRUK DIGITAL
 ========================================= */
@@ -1627,7 +1641,6 @@ savePhotoBtn.addEventListener("click",async()=>{
   }
 
 });
-
 
 </script>
 </body>

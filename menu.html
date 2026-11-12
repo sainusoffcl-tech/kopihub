@@ -90,8 +90,7 @@ header {
   width: 100%;
   height: var(--header-total-height);
 
-  /* Transparan: tidak membuat bidang hijau kedua */
-  background: transparent;
+  background-color: var(--green);
   color: var(--white);
 
   padding-top: var(--safe-top);
@@ -101,6 +100,8 @@ header {
 
   border: 0;
   box-shadow: none;
+
+  isolation: isolate;
 }
     .header-inner {
   width: 100%;

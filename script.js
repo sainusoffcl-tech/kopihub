@@ -1,13 +1,13 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Tahun footer otomatis.
+  // Tahun footer mengikuti tahun saat ini.
   const year = document.querySelector("[data-year]");
 
   if (year) {
     year.textContent = new Date().getFullYear();
   }
 
-  // Aktivitas pelanggan membuka menu.
+  // Pesan sambutan saat pelanggan membuka menu.
   const menuLinks = document.querySelectorAll(
     'a[href="menu.html"]'
   );
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Tombol pendaftaran mitra.
+  // Tombol daftar mitra: contoh interaksi sementara.
   const partnerButton = document.querySelector(
     "[data-partner-button]"
   );
@@ -33,57 +33,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ===== KONFIGURASI SUPABASE KOPIHUB ===== */
+const KOPIHUB_SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+const KOPIHUB_SUPABASE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
-const KOPIHUB_SUPABASE_URL =
-  "https://ozcliasebeydgyvgluht.supabase.co";
+/* ===== TES KONEKSI SUPABASE KOPIHUB ===== */
+const kopihubSupabaseClient = window.supabase.createClient(
+  KOPIHUB_SUPABASE_URL,
+  KOPIHUB_SUPABASE_KEY
+);
 
-const KOPIHUB_SUPABASE_KEY =
-  "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+console.log("KopiHub: klien Supabase berhasil dibuat");
+ 
+/* ===== TES KONEKSI KOPIHUB ===== */
+ const status = document.createElement("div");
 
-/* ===== KLIEN SUPABASE ===== */
+  status.style.cssText =
+    "position:fixed;bottom:12px;left:12px;right:12px;" +
+    "z-index:99999;padding:14px;border-radius:10px;" +
+    "background:#123b2a;color:white;font:14px sans-serif;";
 
-if (!window.supabase) {
-  console.error("Library Supabase belum dimuat.");
-} else {
-  const kopihubSupabaseClient =
-    window.supabase.createClient(
-      KOPIHUB_SUPABASE_URL,
-      KOPIHUB_SUPABASE_KEY
-    );
+  status.textContent = "Memeriksa koneksi database KopiHub...";
+  document.body.appendChild(status);
 
-  console.log("KopiHub: klien Supabase berhasil dibuat.");
+  try {
+    const { error } = await kopihubSupabaseClient
+      .from("kh_shops")
+      .select("id")
+      .limit(1);
 
-  /* ===== TES KONEKSI DATABASE TANPA NOTIFIKASI ===== */
-
-  async function tesKoneksiKopiHub() {
-    try {
-      const { data, error } =
-        await kopihubSupabaseClient
-          .from("kh_shops")
-          .select("id")
-          .limit(1);
-
-      if (error) throw error;
-
-      console.log(
-        "Koneksi database berhasil. Tabel kh_shops dapat dibaca.",
-        data
-      );
-
-    } catch (err) {
-      console.error(
-        "Tes koneksi database gagal:",
-        err.message || "Kesalahan tidak diketahui."
-      );
+    if (error) {
+      status.textContent =
+        "Koneksi database gagal: " + error.message;
+      status.style.background = "#8b2525";
+      return;
     }
-  }
 
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      tesKoneksiKopiHub
-    );
-  } else {
-    tesKoneksiKopiHub();
+    status.textContent =
+      "Tes berhasil: KopiHub dapat membaca tabel kh_shops.";
+  } catch (err) {
+    status.textContent =
+      "Terjadi kesalahan: " + err.message;
+    status.style.background = "#8b2525";
   }
 }
+
+tesKoneksiKopiHub();
+        

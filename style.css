@@ -1,4 +1,7 @@
-
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"
+/>
 :root {
   --green: #123b2c;
   --green-light: #1c5940;
@@ -16,15 +19,22 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  width: 100%;
+  min-width: 0;
   margin: 0;
   background: var(--cream);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, sans-serif;
   line-height: 1.6;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
 }
 
 a {
@@ -32,12 +42,22 @@ a {
   text-decoration: none;
 }
 
+/* ===== NAVBAR PERMANEN ===== */
+
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+
+  width: 100%;
+  min-height: 64px;
   padding: 18px 7%;
+
   background: var(--white);
   border-bottom: 1px solid #e8ece7;
 }
@@ -58,6 +78,8 @@ a {
   font-size: 13px;
   font-weight: 700;
 }
+
+/* ===== HERO ===== */
 
 .hero {
   padding: 75px 8% 85px;
@@ -104,6 +126,8 @@ a {
   opacity: 0.92;
 }
 
+/* ===== DAFTAR COFFEE SHOP ===== */
+
 .shops {
   padding: 55px 7%;
 }
@@ -130,6 +154,7 @@ a {
 }
 
 .shop-card {
+  min-width: 0;
   overflow: hidden;
   background: var(--white);
   border: 1px solid #e9ece6;
@@ -180,6 +205,8 @@ a {
   font-weight: 800;
 }
 
+/* ===== PENDAFTARAN MITRA ===== */
+
 .partner {
   margin: 10px 7% 55px;
   padding: 32px;
@@ -201,6 +228,8 @@ a {
   font-size: 11px !important;
 }
 
+/* ===== FOOTER ===== */
+
 footer {
   padding: 30px 7%;
   background: #102e23;
@@ -216,6 +245,27 @@ footer p {
   margin: 5px 0;
   font-size: 12px;
 }
+
+/* ===== FOTO PROFIL TOKO ===== */
+
+#profile-logo-preview {
+  width: 100%;
+  max-width: 160px;
+  margin: 12px auto;
+  overflow: hidden;
+}
+
+#profile-logo-image {
+  display: block;
+  width: 120px;
+  height: 120px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  margin: 0 auto;
+}
+
+/* ===== RESPONSIVE IPHONE ===== */
 
 @media (max-width: 600px) {
   .navbar {
@@ -262,22 +312,4 @@ footer p {
     margin: 10px 5% 40px;
     padding: 25px 20px;
   }
-}
-
-/* Perbaikan ukuran foto profil toko */
-#profile-logo-preview {
-  width: 100%;
-  max-width: 160px;
-  margin: 12px auto;
-  overflow: hidden;
-}
-
-#profile-logo-image {
-  display: block;
-  width: 120px;
-  height: 120px;
-  max-width: 100%;
-  object-fit: contain;
-  border-radius: 12px;
-  margin: 0 auto;
 }

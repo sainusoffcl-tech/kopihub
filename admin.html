@@ -4673,12 +4673,101 @@ const ptOutflowType =
 const ptRefundField =
   document.getElementById("pt-refund-field");
 
+let ptApprovedRefundPaymentsLoaded = false;
+
+async function loadApprovedRefundPayments() {
+  const select = document.getElementById("pt-refund-payment-id");
+
+  if (!select) return;
+
+  if (ptApprovedRefundPaymentsLoaded) return;
+
+  select.innerHTML = `
+    <option value="">Memuat pembayaran...</option>
+  `;
+
+  try {
+    const { data, error } = await client.rpc(
+      "kh_admin_get_platform_transactions",
+      {
+        p_date_from: null,
+        p_date_to: null,
+        p_type: "income",
+        p_search: null
+      }
+    );
+
+    if (error) throw error;
+
+    if (data?.success === false) {
+      throw new Error(data.message || "Daftar pembayaran gagal dimuat.");
+    }
+
+    const payments = (data?.transactions || []).filter(item =>
+      item.direction === "income" &&
+      item.transaction_type === "invoice_payment" &&
+      item.status === "approved" &&
+      item.related_payment_id
+    );
+
+    select.innerHTML = "";
+
+    if (!payments.length) {
+      select.innerHTML = `
+        <option value="">Belum ada pembayaran disetujui</option>
+      `;
+      ptApprovedRefundPaymentsLoaded = true;
+      return;
+    }
+
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Pilih pembayaran invoice";
+    select.appendChild(placeholder);
+
+    payments.forEach(payment => {
+      const option = document.createElement("option");
+
+      option.value = payment.related_payment_id;
+      option.textContent =
+        (payment.shop_name || "Kedai") +
+        " · " +
+        (payment.description || "Pembayaran invoice") +
+        " · " +
+        ptRupiah(payment.amount) +
+        " · " +
+        ptDate(payment.transaction_date);
+
+      select.appendChild(option);
+    });
+
+    ptApprovedRefundPaymentsLoaded = true;
+
+  } catch (error) {
+    console.error("Daftar pembayaran refund:", error);
+
+    select.innerHTML = `
+      <option value="">Gagal memuat pembayaran</option>
+    `;
+
+    ptMessage(
+      "pt-outflow-message",
+      error.message || "Daftar pembayaran refund gagal dimuat.",
+      true
+    );
+  }
+}
+
 function togglePtRefundField() {
   if (!ptRefundField || !ptOutflowType) return;
 
   const isRefund = ptOutflowType.value === "refund";
 
   ptRefundField.hidden = !isRefund;
+
+  if (isRefund) {
+    loadApprovedRefundPayments();
+  }
 }
 
 function closePtOutflowForm() {

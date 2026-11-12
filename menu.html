@@ -24,7 +24,7 @@
       --border: #e8eae3;
       --shadow: 0 8px 28px rgba(18, 59, 44, .055);
 
-      /* SATU HEADER EDGE-TO-EDGE */
+      /* HEADER EDGE-TO-EDGE */
       --header-height: 68px;
       --safe-top: env(safe-area-inset-top, 0px);
       --header-total-height: calc(var(--header-height) + var(--safe-top));
@@ -34,31 +34,30 @@
       box-sizing: border-box;
     }
 
-html {
-  width: 100%;
-  min-width: 0;
-  min-height: 100%;
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
-  scroll-behavior: smooth;
-  touch-action: pan-y;
-  background: var(--green);
-}
+    html {
+      width: 100%;
+      min-width: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+      scroll-behavior: smooth;
+      background: var(--green);
+    }
 
-body {
-  width: 100%;
-  min-width: 0;
-  min-height: 100vh;
-  margin: 0;
-  padding-top: var(--header-total-height);
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
-  touch-action: pan-y;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--text);
-  background: var(--cream);
-  -webkit-font-smoothing: antialiased;
-}
+    body {
+      width: 100%;
+      min-width: 0;
+      min-height: 100vh;
+      margin: 0;
+      padding-top: var(--header-total-height);
+      overflow-x: hidden;
+      overscroll-behavior-x: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--cream);
+      -webkit-font-smoothing: antialiased;
+    }
+
     button, input {
       font: inherit;
     }
@@ -77,48 +76,49 @@ body {
        HIJAU MENYATU DARI STATUS BAR SAMPAI LOGO
     ========================================== */
 
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
 
-  width: 100%;
-  height: var(--header-total-height);
+      width: 100%;
+      height: var(--header-total-height);
 
-  background-color: var(--green);
-  color: var(--white);
+      background-color: var(--green);
+      color: var(--white);
 
-  padding-top: var(--safe-top);
+      padding-top: var(--safe-top);
 
-  display: flex;
-  flex-direction: column;
+      display: flex;
+      flex-direction: column;
 
-  border: 0;
-  box-shadow: none;
+      border: 0;
+      box-shadow: none;
+      isolation: isolate;
+    }
 
-  isolation: isolate;
-}
     .header-inner {
-  width: 100%;
-  max-width: 1150px;
-  height: var(--header-height);
-  min-height: var(--header-height);
-  flex: 0 0 var(--header-height);
+      width: 100%;
+      max-width: 1150px;
+      height: var(--header-height);
+      min-height: var(--header-height);
+      flex: 0 0 var(--header-height);
 
-  margin: 0 auto;
-  padding: 0 20px;
+      margin: 0 auto;
+      padding: 0 20px;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
 
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-}
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
     .logo {
       font-size: 25px;
       font-weight: 900;
@@ -139,7 +139,7 @@ header {
       white-space: nowrap;
     }
 
-    /* HERO */
+    /* HERO / IDENTITAS KEDAI */
 
     .hero {
       background: #e9eee7;
@@ -225,26 +225,94 @@ header {
       font-weight: 900;
     }
 
-    /* NAVIGASI KATEGORI STICKY */
+    /* ==========================================
+       AREA PENCARIAN + KATEGORI STICKY
+       KEDUANYA MENETAP DI BAWAH HEADER
+       SETELAH IDENTITAS KEDAI TERGULIR
+    ========================================== */
 
     .filters-sticky {
       position: sticky;
       top: var(--header-total-height);
       z-index: 900;
+
+      width: 100%;
       background: var(--cream);
-      padding-top: 5px;
+
+      padding-top: 10px;
       padding-bottom: 2px;
       margin-bottom: 9px;
+
       isolation: isolate;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      width: 100%;
+      min-width: 0;
+      height: 48px;
+
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+
+      padding: 0 13px;
+      margin-bottom: 12px;
+
+      box-shadow: 0 3px 12px rgba(18, 59, 44, .035);
+    }
+
+    .search-icon {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 19px;
+      margin-right: 10px;
+      line-height: 1;
+    }
+
+    #search-input {
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+
+      border: 0;
+      outline: none;
+      background: transparent;
+
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 550;
+    }
+
+    #search-input::placeholder {
+      color: #9aa39c;
+      font-weight: 450;
+    }
+
+    #search-input::-webkit-search-cancel-button {
+      cursor: pointer;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 3px rgba(36, 91, 66, .08);
     }
 
     #filters {
       display: flex;
       gap: 9px;
+
       overflow-x: auto;
+      overflow-y: hidden;
       overscroll-behavior-x: contain;
+
       padding: 2px 1px 13px;
       margin: 0;
+
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
@@ -255,12 +323,15 @@ header {
 
     .filter {
       flex: 0 0 auto;
+
       border: 1px solid var(--border);
       background: white;
       border-radius: 30px;
+
       padding: 11px 17px;
       white-space: nowrap;
       cursor: pointer;
+
       color: var(--text);
       font-size: 13px;
       font-weight: 700;
@@ -287,10 +358,12 @@ header {
       display: flex;
       flex-direction: column;
       min-width: 0;
+
       background: white;
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 13px;
+
       box-shadow: 0 3px 12px rgba(18, 59, 44, .025);
       transition: transform .18s ease, box-shadow .18s ease;
     }
@@ -300,8 +373,10 @@ header {
       height: 145px;
       border-radius: 13px;
       background: #edf1eb;
+
       display: grid;
       place-items: center;
+
       font-size: 39px;
       margin-bottom: 14px;
       overflow: hidden;
@@ -359,18 +434,23 @@ header {
 
     .add-button {
       flex: 0 0 auto;
+
       display: grid;
       place-items: center;
+
       width: 40px;
       height: 40px;
+
       background: var(--orange);
       color: #2d251c;
       border: 0;
       border-radius: 11px;
+
       font-size: 23px;
       line-height: 1;
       font-weight: 800;
       cursor: pointer;
+
       transition: transform .15s ease, opacity .15s ease;
     }
 
@@ -391,8 +471,10 @@ header {
       border: 1px solid var(--border);
       border-radius: 19px;
       padding: 20px;
+
       position: sticky;
       top: calc(var(--header-total-height) + 18px);
+
       box-shadow: var(--shadow);
       min-width: 0;
     }
@@ -449,12 +531,15 @@ header {
     .quantity button {
       display: grid;
       place-items: center;
+
       border: 1px solid var(--border);
       background: var(--cream);
       color: var(--green);
+
       border-radius: 8px;
       width: 31px;
       height: 31px;
+
       font-weight: 800;
       cursor: pointer;
     }
@@ -475,8 +560,10 @@ header {
       display: flex;
       justify-content: space-between;
       gap: 10px;
+
       padding: 17px 0;
       margin-top: 3px;
+
       color: var(--green);
       font-size: 15px;
       font-weight: 900;
@@ -490,13 +577,17 @@ header {
     .checkout-button {
       width: 100%;
       padding: 14px 15px;
+
       border: 0;
       border-radius: 12px;
+
       color: white;
       background: var(--green);
+
       font-size: 14px;
       font-weight: 850;
       cursor: pointer;
+
       transition: opacity .15s ease, transform .15s ease;
     }
 
@@ -519,10 +610,12 @@ header {
     .empty {
       padding: 23px 13px;
       text-align: center;
+
       color: var(--muted);
       background: #f8f9f6;
       border: 1px dashed var(--border);
       border-radius: 12px;
+
       font-size: 13px;
       line-height: 1.6;
     }
@@ -603,6 +696,7 @@ header {
         display: grid;
         grid-template-columns: 112px minmax(0, 1fr);
         grid-template-rows: auto auto 1fr auto;
+
         column-gap: 14px;
         padding: 12px;
         border-radius: 16px;
@@ -611,6 +705,7 @@ header {
       .product-image {
         grid-column: 1;
         grid-row: 1 / 5;
+
         height: 112px;
         margin: 0;
         align-self: start;
@@ -657,7 +752,13 @@ header {
       }
 
       .filters-sticky {
-        padding-top: 5px;
+        padding-top: 8px;
+        padding-bottom: 2px;
+      }
+
+      .search-box {
+        height: 46px;
+        margin-bottom: 10px;
       }
 
       #filters {
@@ -747,11 +848,25 @@ header {
       <section class="menu-section">
         <h2 class="section-title">Menu Favorit</h2>
 
+        <!-- PENCARIAN DAN KATEGORI STICKY -->
         <div class="filters-sticky">
-          <div id="filters">
+
+          <div class="search-box">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+
+            <input
+              id="search-input"
+              type="search"
+              placeholder="Cari kopi, makanan, atau menu favorit..."
+              autocomplete="off"
+              aria-label="Cari menu"
+            >
           </div>
+
+          <div id="filters"></div>
         </div>
 
+        <!-- DAFTAR PRODUK -->
         <div id="menu-container" class="products">
           <div class="empty">Sedang memuat menu...</div>
         </div>
@@ -809,6 +924,7 @@ header {
     const statusBox = document.getElementById("status");
     const menuContainer = document.getElementById("menu-container");
     const filtersContainer = document.getElementById("filters");
+    const searchInput = document.getElementById("search-input");
     const cartItemsContainer = document.getElementById("cart-items");
     const cartTotalElement = document.getElementById("cart-total");
     const checkoutButton = document.getElementById("checkout");
@@ -819,7 +935,7 @@ header {
     let categories = [];
     let activeCategory = "all";
 
-    // Keranjang menggunakan ID produk.
+    // KERANJANG MENGGUNAKAN ID PRODUK
     const cart = new Map();
 
     function rupiah(value) {
@@ -862,6 +978,10 @@ header {
       return category ? category.name : "Lainnya";
     }
 
+    /* ==========================================
+       RENDER KATEGORI
+    ========================================== */
+
     function renderFilters() {
       filtersContainer.replaceChildren();
 
@@ -873,6 +993,7 @@ header {
 
       allButton.type = "button";
       allButton.dataset.category = "all";
+
       allButton.classList.toggle(
         "active",
         activeCategory === "all"
@@ -893,6 +1014,7 @@ header {
 
         button.type = "button";
         button.dataset.category = category.id;
+
         button.classList.toggle(
           "active",
           activeCategory === category.id
@@ -902,27 +1024,53 @@ header {
       });
     }
 
+    /* ==========================================
+       PENCARIAN + FILTER PRODUK
+    ========================================== */
+
     function renderProducts() {
       menuContainer.replaceChildren();
 
+      const keyword = searchInput.value
+        .trim()
+        .toLocaleLowerCase("id-ID");
+
       const visibleProducts = products.filter(product => {
-        return activeCategory === "all" ||
+        const matchesCategory =
+          activeCategory === "all" ||
           product.category_id === activeCategory;
+
+        const searchableText = [
+          product.name,
+          product.description,
+          getCategoryName(product)
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLocaleLowerCase("id-ID");
+
+        const matchesSearch =
+          keyword === "" ||
+          searchableText.includes(keyword);
+
+        return matchesCategory && matchesSearch;
       });
 
       if (visibleProducts.length === 0) {
+        const message = keyword
+          ? "Menu yang kamu cari belum ditemukan. Coba kata kunci lain."
+          : "Belum ada menu tersedia pada kategori ini.";
+
         menuContainer.appendChild(
-          makeElement(
-            "div",
-            "empty",
-            "Belum ada menu tersedia pada kategori ini."
-          )
+          makeElement("div", "empty", message)
         );
+
         return;
       }
 
       visibleProducts.forEach(product => {
         const card = makeElement("article", "product");
+
         const imageBox = makeElement(
           "div",
           "product-image",
@@ -991,6 +1139,7 @@ header {
           getStock(product) <= 0;
 
         addButton.disabled = unavailable;
+
         addButton.title = unavailable
           ? "Menu sedang tidak tersedia"
           : "Tambah";
@@ -1016,6 +1165,10 @@ header {
         menuContainer.appendChild(card);
       });
     }
+
+    /* ==========================================
+       RENDER KERANJANG
+    ========================================== */
 
     function renderCart() {
       cartItemsContainer.replaceChildren();
@@ -1070,6 +1223,7 @@ header {
         );
 
         minus.type = "button";
+
         minus.setAttribute(
           "aria-label",
           "Kurangi " + item.name
@@ -1092,6 +1246,7 @@ header {
         );
 
         plus.type = "button";
+
         plus.setAttribute(
           "aria-label",
           "Tambah " + item.name
@@ -1119,6 +1274,10 @@ header {
         ? "Lanjut ke Checkout (" + count + ")"
         : "Lanjut ke Checkout";
     }
+
+    /* ==========================================
+       TAMBAH PRODUK KE KERANJANG
+    ========================================== */
 
     function addToCart(productId) {
       const product = products.find(
@@ -1158,6 +1317,10 @@ header {
       renderCart();
     }
 
+    /* ==========================================
+       UBAH JUMLAH PRODUK
+    ========================================== */
+
     function changeQuantity(productId, change) {
       const item = cart.get(productId);
 
@@ -1182,6 +1345,10 @@ header {
 
       renderCart();
     }
+
+    /* ==========================================
+       MEMUAT KEDAI DAN MENU DARI SUPABASE
+    ========================================== */
 
     async function loadShopAndMenu() {
       try {
@@ -1321,6 +1488,10 @@ header {
       }
     }
 
+    /* ==========================================
+       EVENT KATEGORI
+    ========================================== */
+
     filtersContainer.addEventListener("click", event => {
       const button = event.target.closest(
         "button[data-category]"
@@ -1333,6 +1504,18 @@ header {
       renderFilters();
       renderProducts();
     });
+
+    /* ==========================================
+       EVENT PENCARIAN
+    ========================================== */
+
+    searchInput.addEventListener("input", () => {
+      renderProducts();
+    });
+
+    /* ==========================================
+       LANJUT KE CHECKOUT
+    ========================================== */
 
     checkoutButton.addEventListener("click", () => {
       if (!currentShop || cart.size === 0) {
@@ -1379,6 +1562,8 @@ header {
         );
       }
     });
+
+    /* MULAI MEMUAT MENU */
 
     loadShopAndMenu();
   </script>

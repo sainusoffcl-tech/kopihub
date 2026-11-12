@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#123b2c">
   <title>Menu Kedai - KopiHub</title>
 
@@ -22,8 +22,10 @@
       --border: #e8eae3;
       --shadow: 0 8px 28px rgba(18, 59, 44, .055);
 
-      /* Tinggi header dibuat konsisten */
+      /* STICKY EDGE-TO-EDGE HEADER */
       --header-height: 68px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --header-total-height: calc(var(--header-height) + var(--safe-top));
     }
 
     * {
@@ -40,7 +42,7 @@
       width: 100%;
       min-width: 0;
       margin: 0;
-      padding-top: var(--header-height);
+      padding-top: var(--header-total-height);
       overflow-x: clip;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
@@ -61,7 +63,9 @@
       text-decoration: none;
     }
 
-    /* HEADER FIXED */
+    /* =====================================
+       STICKY EDGE-TO-EDGE HEADER
+    ===================================== */
 
     header {
       position: fixed;
@@ -69,18 +73,24 @@
       left: 0;
       right: 0;
       z-index: 1000;
-      height: var(--header-height);
+
+      height: var(--header-total-height);
+
+      /* Area Status Bar menyatu dengan header */
+      padding: var(--safe-top) 20px 0;
+
       background: var(--green);
       color: white;
-      padding: 0 20px;
+
       box-shadow: 0 3px 15px rgba(0, 0, 0, .12);
     }
 
     .header-inner {
       width: 100%;
-      height: 100%;
+      height: var(--header-height);
       max-width: 1150px;
       margin: auto;
+
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -195,7 +205,7 @@
 
     .filters-sticky {
       position: sticky;
-      top: var(--header-height);
+      top: var(--header-total-height);
       z-index: 900;
       background: var(--cream);
       padding-top: 5px;
@@ -358,7 +368,7 @@
       border-radius: 19px;
       padding: 20px;
       position: sticky;
-      top: calc(var(--header-height) + 18px);
+      top: calc(var(--header-total-height) + 18px);
       box-shadow: var(--shadow);
       min-width: 0;
     }
@@ -535,7 +545,8 @@
       }
 
       header {
-        padding: 0 20px;
+        padding-left: 20px;
+        padding-right: 20px;
       }
 
       .logo {

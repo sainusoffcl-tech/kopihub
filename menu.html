@@ -64,7 +64,7 @@
     }
 
     /* =====================================
-       STICKY EDGE-TO-EDGE HEADER
+       SATU LAPISAN STICKY EDGE-TO-EDGE HEADER
     ===================================== */
 
     header {
@@ -74,13 +74,17 @@
       right: 0;
       z-index: 1000;
 
+      width: 100%;
       height: var(--header-total-height);
 
-      /* Area Status Bar menyatu dengan header */
-      padding: var(--safe-top) 20px 0;
-
+      /* Satu background untuk Status Bar dan header */
       background: var(--green);
-      color: white;
+      color: var(--white);
+
+      /* Safe Area berada di dalam header yang sama */
+      padding-top: var(--safe-top);
+      padding-left: 0;
+      padding-right: 0;
 
       box-shadow: 0 3px 15px rgba(0, 0, 0, .12);
     }
@@ -89,12 +93,16 @@
       width: 100%;
       height: var(--header-height);
       max-width: 1150px;
-      margin: auto;
+      margin: 0 auto;
+      padding: 0 20px;
 
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
+
+      /* Tidak membuat background kedua */
+      background: transparent;
     }
 
     .logo {
@@ -544,7 +552,7 @@
         --header-height: 60px;
       }
 
-      header {
+      .header-inner {
         padding-left: 20px;
         padding-right: 20px;
       }
@@ -642,7 +650,7 @@
     }
 
     @media (max-width: 390px) {
-      header {
+      .header-inner {
         padding-left: 15px;
         padding-right: 15px;
       }

@@ -4954,8 +4954,19 @@ ptSaveOutflowButton?.addEventListener("click", async () => {
     document.getElementById("pt-outflow-attachment").value = "";
     document.getElementById("pt-refund-payment-id").value = "";
 
-    closePtOutflowForm();
+// Muat ulang daftar pembayaran refund saat formulir dibuka kembali.
+ptApprovedRefundPaymentsLoaded = false;
 
+const refundSelect =
+  document.getElementById("pt-refund-payment-id");
+
+if (refundSelect) {
+  refundSelect.innerHTML = `
+    <option value="">Memuat daftar pembayaran...</option>
+  `;
+}
+
+closePtOutflowForm();
     alert(
       data.message ||
       "Transaksi uang keluar berhasil dicatat."

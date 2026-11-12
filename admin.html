@@ -4675,6 +4675,7 @@ const ptRefundField =
 
 let ptApprovedRefundPaymentsLoaded = false;
 
+
 async function loadApprovedRefundPayments() {
   const select = document.getElementById("pt-refund-payment-id");
 
@@ -4688,34 +4689,18 @@ async function loadApprovedRefundPayments() {
 
   try {
     const { data, error } = await client.rpc(
-      "kh_admin_get_platform_transactions",
-      {
-        p_date_from: null,
-        p_date_to: null,
-        p_type: "income",
-        p_search: null
-      }
+      "kh_admin_get_refundable_payments"
     );
 
     if (error) throw error;
 
-    if (data?.success === false) {
-      throw new Error(data.message || "Daftar pembayaran gagal dimuat.");
-    }
-
-    const payments = (data?.transactions || []).filter(item =>
-      item.direction === "income" &&
-      item.transaction_type === "invoice_payment" &&
-      item.status === "approved" &&
-      item.related_payment_id
-    );
-
     select.innerHTML = "";
 
-    if (!payments.length) {
+    if (!data || !data.length) {
       select.innerHTML = `
-        <option value="">Belum ada pembayaran disetujui</option>
+        <option value="">Tidak ada pembayaran dengan sisa refund</option>
       `;
+
       ptApprovedRefundPaymentsLoaded = true;
       return;
     }
@@ -4725,16 +4710,17 @@ async function loadApprovedRefundPayments() {
     placeholder.textContent = "Pilih pembayaran invoice";
     select.appendChild(placeholder);
 
-    payments.forEach(payment => {
+    data.forEach(payment => {
       const option = document.createElement("option");
 
-      option.value = payment.related_payment_id;
+      option.value = payment.payment_id;
+
       option.textContent =
         (payment.shop_name || "Kedai") +
-        " · " +
-        (payment.description || "Pembayaran invoice") +
-        " · " +
-        ptRupiah(payment.amount) +
+        " · Invoice " +
+        (payment.invoice_number || "-") +
+        " · Sisa refund " +
+        ptRupiah(payment.remaining_amount) +
         " · " +
         ptDate(payment.transaction_date);
 
@@ -4757,6 +4743,7 @@ async function loadApprovedRefundPayments() {
     );
   }
 }
+
 
 function togglePtRefundField() {
   if (!ptRefundField || !ptOutflowType) return;

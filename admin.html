@@ -894,47 +894,49 @@ main,
    RESPONSIVE GLOBAL
 ===================================== */
 
+
 @media (max-width: 600px) {
 
+  /* AREA KONTEN */
   .admin-content-scroll {
-    padding: 14px 15px 25px;
+    padding: 0 15px 25px;
   }
 
+  /* HEADER */
   .topbar {
-    min-height: 78px;
-    padding: 9px 11px;
-    gap: 8px;
+    min-height: 88px;
+    padding: 12px 18px;
+    gap: 10px;
   }
 
-  .header-controls {
-    gap: 5px;
-  }
-
-  .admin-back-button,
-  .header-menu-button {
-    width: 35px;
-    height: 35px;
-    flex-basis: 35px;
-  }
-
+  /* LOGO KOPIHUB */
   .topbar-brand {
-    font-size: 22px;
+    font-size: 30px;
   }
 
   .topbar-label {
-    font-size: 6.5px;
-    letter-spacing: .7px;
+    font-size: 8px;
+    letter-spacing: .8px;
   }
 
-  .topbar-panel-title {
-    font-size: 13px;
+  /* HAMBURGER */
+  .header-menu-button {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
   }
 
-  .profile-button {
-    width: 37px;
-    height: 37px;
-    flex-basis: 37px;
+  /* JUDUL HALAMAN */
+  .admin-page-heading {
+    min-height: 76px;
+    padding-top: 24px;
+    margin-bottom: 18px;
   }
+
+  .admin-page-heading h1 {
+    font-size: 24px;
+  }
+
 
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));

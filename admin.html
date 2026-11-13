@@ -2908,9 +2908,6 @@ const { data: authData, error: authError } = authResult;
           );
         }
 
-        document.getElementById("admin-email").textContent =
-          user.email || "Akun terverifikasi";
-
         loading.style.display = "none";
 
         /*
@@ -2922,12 +2919,7 @@ const { data: authData, error: authError } = authResult;
 
         refreshIcons();
 
-        /*
-         * Ukur header setelah aplikasi ditampilkan.
-         */
-
-        requestAnimationFrame(measureHeader);
-
+        
         await loadDashboardStats();
 
       } catch (error) {

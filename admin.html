@@ -2502,7 +2502,9 @@ function showPage(page) {
     contentScroll.scrollTop = 0;
   }
 
+  if (typeof measureHeader === "function") {
   requestAnimationFrame(measureHeader);
+}
 
   if (page === "dashboard") {
     showDashboardShopList();

@@ -5357,6 +5357,7 @@ if (!client || !client.auth) {
       }
     );
 
+
     /* =========================================
        NAVIGASI MENU HAMBURGER
     ========================================= */
@@ -5373,6 +5374,13 @@ if (!client || !client.auth) {
       ?.addEventListener("click", () => {
         closeMobileMenu();
         showPage("commission");
+      });
+
+    document
+      .getElementById("mobile-menu-platform-orders")
+      ?.addEventListener("click", () => {
+        closeMobileMenu();
+        showPage("orders");
       });
 
     document

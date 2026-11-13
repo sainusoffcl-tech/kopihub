@@ -2260,64 +2260,55 @@ const contentScroll =
   settings: "Pengaturan Platform"
 };
 
-    function setDesktopActive(page) {
-      document.querySelectorAll("aside .nav-item")
-        .forEach(button => button.classList.remove("active"));
-
-     const map = {
-  dashboard: "nav-dashboard",
-  shops: "nav-shops",
-  orders: "nav-orders",
-  applications: "nav-applications",
-  commission: "nav-commission",
-  platformTransactions: "nav-platform-transactions"
-};
-      if (map[page]) {
-        document.getElementById(map[page])
-          ?.classList.add("active");
-      }
-    }
-
     
+/* =========================================
+   NAVIGASI HALAMAN ADMIN
+   Satu header global, tanpa sidebar
+   dan tanpa navigasi bawah.
+========================================= */
 
-function setMobileActive(page) {
-  const map = {
-    dashboard: "mobile-nav-dashboard",
-    shops: "mobile-nav-shops",
-    orders: "mobile-nav-orders",
-    commission: "mobile-nav-commission"
-  };
+const pageTitles = {
+  dashboard: "Dashboard Admin",
+  shops: "Kedai Mitra",
+  orders: "Pesanan Platform",
+  applications: "Pendaftaran Mitra",
+  commission: "Komisi & Pendapatan",
+  platformTransactions: "Transaksi Platform",
+  settings: "Pengaturan Platform"
+};
 
-  document.querySelectorAll(".bottom-nav-item")
-    .forEach(button => button.classList.remove("active"));
-
-  if (map[page]) {
-    document.getElementById(map[page])
-      ?.classList.add("active");
-  }
-}
+let currentAdminPage = "dashboard";
 
 function showPage(page) {
-  dashboardView.hidden = page !== "dashboard";
-  shopsSection.hidden = page !== "shops";
-  ordersSection.hidden = page !== "orders";
-  applicationsSection.hidden = page !== "applications";
-  commissionSection.hidden = page !== "commission";
+  const sections = {
+    dashboard: dashboardView,
+    shops: shopsSection,
+    orders: ordersSection,
+    applications: applicationsSection,
+    commission: commissionSection,
+    platformTransactions: platformTransactionsSection,
+    settings: settingsSection
+  };
 
-  platformTransactionsSection.hidden =
-    page !== "platformTransactions";
-
-  settingsSection.hidden = page !== "settings";
-
-  if (page === "settings") {
-    loadPlatformSettings();
+  if (!Object.prototype.hasOwnProperty.call(sections, page)) {
+    console.warn("Halaman Admin tidak dikenal:", page);
+    return;
   }
 
-  document.getElementById("page-title").textContent =
-    pageTitles[page] || "Dashboard Admin";
+  Object.entries(sections).forEach(([name, section]) => {
+    if (section) {
+      section.hidden = name !== page;
+    }
+  });
 
-  setDesktopActive(page);
-  setMobileActive(page);
+  currentAdminPage = page;
+
+  const pageTitle = document.getElementById("page-title");
+
+  if (pageTitle) {
+    pageTitle.textContent =
+      pageTitles[page] || "Dashboard Admin";
+  }
 
   if (contentScroll) {
     contentScroll.scrollTop = 0;
@@ -2344,12 +2335,32 @@ function showPage(page) {
     loadCommissionData();
   }
 
+  if (page === "settings") {
+    loadPlatformSettings();
+  }
+
   if (page === "platformTransactions") {
-    loadPlatformTransactions();
+    if (typeof loadPlatformTransactions === "function") {
+      loadPlatformTransactions();
+    } else {
+      const message = document.getElementById(
+        "platform-transactions-message"
+      );
+
+      if (message) {
+        message.textContent =
+          "Fitur Transaksi Platform belum memiliki fungsi pemuatan data.";
+      }
+
+      console.warn(
+        "loadPlatformTransactions() belum tersedia."
+      );
+    }
   }
 
   refreshIcons();
 }
+
 
 /* =========================================
    RINGKASAN COFFEE SHOP

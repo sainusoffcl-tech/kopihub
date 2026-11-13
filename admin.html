@@ -1396,7 +1396,143 @@ main,
     align-items: flex-start;
   }
 }
+/* =========================================
+   MENU HAMBURGER ADMIN
+========================================= */
 
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.48);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-menu-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+.mobile-menu-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2001;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  max-height: 85dvh;
+  margin: 0 auto;
+  padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 22px 22px 0 0;
+  background: #FAF9F5;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.16);
+  transform: translateY(105%);
+  visibility: hidden;
+  transition: transform 0.25s ease, visibility 0.25s ease;
+}
+
+.mobile-menu-sheet.show {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.menu-handle {
+  width: 42px;
+  height: 5px;
+  margin: 0 auto 18px;
+  border-radius: 10px;
+  background: #D5DAD2;
+}
+
+.menu-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.menu-sheet-header h2 {
+  margin: 0;
+  color: #123B2C;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.menu-close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #E5E8DF;
+  border-radius: 10px;
+  color: #123B2C;
+  background: #FFFFFF;
+}
+
+.menu-close svg {
+  width: 19px;
+  height: 19px;
+}
+
+.mobile-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-menu-item {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 13px;
+  border: 1px solid #E5E8DF;
+  border-radius: 12px;
+  color: #123B2C;
+  background: #FFFFFF;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.mobile-menu-item:active {
+  background: #EDF2E9;
+}
+
+.mobile-menu-icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #174C38;
+  background: #EDF2E9;
+}
+
+.mobile-menu-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mobile-menu-item.logout-item {
+  margin-top: 8px;
+  border-color: #F0D9D6;
+  color: #A52C2C;
+}
+
+.mobile-menu-item.logout-item .mobile-menu-icon {
+  color: #A52C2C;
+  background: #FCE8E6;
+}
   </style>
 </head>
 

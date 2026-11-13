@@ -1795,11 +1795,10 @@
 
       <div class="nav-label">KEUANGAN</div>
 
-      <button type="button" class="nav-item"
-        data-coming-soon="Transaksi Platform">
-        <i data-lucide="credit-card"></i>
-        <span>Transaksi Platform</span>
-      </button>
+      <button type="button" id="nav-platform-transactions" class="nav-item">
+  <i data-lucide="credit-card"></i>
+  <span>Transaksi Platform</span>
+</button>
 
       <button type="button" id="nav-commission" class="nav-item">
         <i data-lucide="wallet"></i>
@@ -3417,8 +3416,26 @@ document.getElementById("back-to-dashboard-shops")
 
     async function initAdmin() {
       try {
-        const { data: authData, error: authError } =
-          await client.auth.getUser();
+        if (!client || !client.auth) {
+  throw new Error(
+    "Koneksi Supabase belum berhasil dibuat. Periksa pemuatan library Supabase."
+  );
+}
+
+const authResult = await Promise.race([
+  client.auth.getUser(),
+  new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(
+        new Error(
+          "Pemeriksaan akun melebihi 15 detik. Periksa koneksi Supabase."
+        )
+      );
+    }, 15000);
+  })
+]);
+
+const { data: authData, error: authError } = authResult;
 
         if (authError || !authData.user) {
           throw new Error("Silakan login terlebih dahulu.");

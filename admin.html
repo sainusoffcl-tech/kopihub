@@ -432,6 +432,701 @@ main,
   font-size: 11px;
   line-height: 1.6;
 }
+    
+/* =====================================
+   KOMISI & PENDAPATAN
+   DASHBOARD KEUANGAN KOPIHUB
+===================================== */
+
+#commission-section {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  width: 100%;
+  min-width: 0;
+}
+
+#commission-section > * {
+  min-width: 0;
+}
+
+.commission-panel {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #E5E8DF;
+  border-radius: 17px;
+  background: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(25,55,37,.045);
+}
+
+.commission-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.commission-panel-heading strong,
+.commission-panel-title {
+  display: block;
+  margin: 0;
+  color: #123B2C;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.commission-panel-heading p,
+.commission-panel-description {
+  margin: 5px 0 0;
+  color: #788278;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.commission-reload-button {
+  min-height: 39px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 10px;
+  color: #FFFFFF;
+  background: #123B2C;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.commission-reload-button svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* KARTU TOTAL BIAYA LAYANAN */
+
+.commission-hero-card {
+  padding: 21px;
+  border-radius: 15px;
+  color: #FFFFFF;
+  background: #123B2C;
+}
+
+.commission-hero-label {
+  display: block;
+  margin-bottom: 9px;
+  color: #C5D9C9;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .7px;
+}
+
+.commission-hero-value {
+  display: block;
+  color: #FFFFFF;
+  font-size: clamp(25px, 7vw, 34px);
+  line-height: 1.2;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.commission-hero-note {
+  margin: 10px 0 0;
+  color: #C5D9C9;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* RINGKASAN PEMBAYARAN */
+
+.commission-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.commission-metric-card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #E5E8DF;
+  border-radius: 13px;
+  background: #FAF9F5;
+}
+
+.commission-metric-card span {
+  display: block;
+  margin-bottom: 8px;
+  color: #788278;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.commission-metric-card strong {
+  display: block;
+  color: #123B2C;
+  font-size: 17px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.commission-metric-card.unpaid strong {
+  color: #C47732;
+}
+
+.commission-summary-note {
+  margin: 13px 0 0;
+  color: #788278;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* FILTER */
+
+.commission-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.commission-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.commission-filter-field label {
+  color: #43534A;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.commission-filter-field select {
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  padding: 10px 12px;
+  border: 1px solid #DFE5DF;
+  border-radius: 10px;
+  color: #26372D;
+  background: #FAFBF8;
+  font: inherit;
+  font-size: 13px;
+}
+
+.commission-filter-button {
+  min-height: 44px;
+  grid-column: 1 / -1;
+  padding: 11px 15px;
+  border: 0;
+  border-radius: 10px;
+  color: #FFFFFF;
+  background: #123B2C;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* DAFTAR RIWAYAT, INVOICE, PEMBAYARAN */
+
+.commission-list-message {
+  margin: 12px 0;
+  color: #788278;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.commission-record {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 13px;
+  min-width: 0;
+  margin-top: 11px;
+  padding: 15px;
+  border: 1px solid #E5E8DF;
+  border-radius: 13px;
+  background: #FFFFFF;
+}
+
+.commission-record-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.commission-record-main strong {
+  color: #123B2C;
+  font-size: 13px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.commission-record-main small {
+  color: #788278;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.commission-record-main a {
+  color: #24543E;
+  font-size: 12px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.commission-record-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  flex: 0 0 auto;
+  max-width: 45%;
+  text-align: right;
+}
+
+.commission-record-side strong {
+  color: #123B2C;
+  font-size: 14px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.commission-record-side span {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  color: #24543E;
+  background: #EAF2E9;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.commission-record-side small {
+  color: #788278;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* VERIFIKASI PEMBAYARAN */
+
+.commission-payment-record {
+  flex-wrap: wrap;
+}
+
+.commission-record-actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  padding-top: 12px;
+  border-top: 1px solid #E5E8DF;
+}
+
+.commission-record-actions button {
+  min-height: 40px;
+  flex: 1 1 0;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.commission-approve-btn {
+  color: #FFFFFF;
+  background: #24543E;
+}
+
+.commission-reject-btn {
+  color: #A52C2C;
+  background: #FCEBEA;
+}
+
+/* RESPONSIVE IPHONE */
+
+@media (max-width: 600px) {
+  .commission-panel {
+    padding: 15px;
+  }
+
+  .commission-panel-heading {
+    align-items: flex-start;
+  }
+
+  .commission-reload-button {
+    width: 100%;
+  }
+
+  .commission-hero-card {
+    padding: 18px;
+  }
+
+  .commission-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .commission-metric-card:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
+  .commission-metric-card {
+    padding: 13px;
+  }
+
+  .commission-metric-card strong {
+    font-size: 16px;
+  }
+
+  .commission-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .commission-filter-button {
+    grid-column: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .commission-record {
+    flex-direction: column;
+  }
+
+  .commission-record-side {
+    align-items: flex-start;
+    max-width: 100%;
+    text-align: left;
+  }
+}
+
+/* =====================================
+   KOMISI & PENDAPATAN — REDESAIN
+   Tampilan mobile-first KopiHub
+===================================== */
+
+#commission-section {
+  width: 100%;
+  min-width: 0;
+  padding-bottom: 12px;
+}
+
+#commission-section > .panel {
+  margin: 0 0 16px;
+  padding: 19px;
+  border: 1px solid #e8e9e1;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(18, 59, 44, .055);
+}
+
+/* Judul setiap panel */
+#commission-section > .panel > strong {
+  display: block;
+  margin: 0 0 7px;
+  color: #123B2C;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+#commission-section .panel p.muted {
+  margin: 5px 0 15px;
+  color: #788278;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Header ringkasan */
+#commission-section .settings-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+#commission-section .settings-heading strong {
+  display: block;
+  color: #123B2C;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+#commission-section .settings-heading p {
+  margin: 5px 0 0;
+}
+
+/* Kartu ringkasan */
+#commission-section .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  margin: 0;
+}
+
+#commission-section .summary-card {
+  min-width: 0;
+  min-height: 105px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid #e8ece5;
+  border-radius: 14px;
+  background: #fafbf8;
+}
+
+#commission-section .summary-card span {
+  color: #788278;
+  font-size: 11px;
+  line-height: 1.45;
+  font-weight: 650;
+}
+
+#commission-section .summary-card strong {
+  color: #123B2C;
+  font-size: 19px;
+  line-height: 1.3;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+#commission-section .summary-card:first-child {
+  grid-column: 1 / -1;
+  min-height: 125px;
+  padding: 19px;
+  border-color: #dce8dc;
+  background: #edf3eb;
+}
+
+#commission-section .summary-card:first-child strong {
+  color: #123B2C;
+  font-size: 28px;
+}
+
+#commission-section #commission-summary-note {
+  margin: 13px 2px 0;
+  font-size: 11px;
+}
+
+/* Filter */
+#commission-section .settings-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #edf0e9;
+}
+
+#commission-section .settings-form label {
+  margin-top: 5px;
+  color: #405447;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#commission-section .settings-form select {
+  width: 100%;
+  min-height: 47px;
+  padding: 11px 13px;
+  border: 1px solid #dfe5dc;
+  border-radius: 11px;
+  color: #26372d;
+  background: #fafbf8;
+  font: inherit;
+  font-size: 14px;
+}
+
+#commission-section .settings-form .action-button {
+  width: 100%;
+  min-height: 46px;
+  margin: 8px 0 0;
+  border-radius: 11px;
+  font-size: 13px;
+}
+
+/* Pesan status */
+#commission-section #commission-ledger-message,
+#commission-section #commission-invoice-message,
+#commission-section #commission-payment-message {
+  margin: 10px 0;
+  font-size: 11px;
+}
+
+/* Riwayat ledger dan invoice */
+#commission-section .commission-record {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  margin-top: 10px;
+  padding: 15px 0;
+  border-bottom: 1px solid #edf0e9;
+}
+
+#commission-section .commission-record:last-child {
+  border-bottom: 0;
+}
+
+#commission-section .commission-record-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+#commission-section .commission-record-main strong {
+  color: #123B2C;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+#commission-section .commission-record-main small {
+  color: #788278;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#commission-section .commission-record-side {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  max-width: 45%;
+  text-align: right;
+}
+
+#commission-section .commission-record-side strong {
+  color: #123B2C;
+  font-size: 14px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+#commission-section .commission-record-side span {
+  padding: 5px 9px;
+  border-radius: 20px;
+  color: #45634b;
+  background: #edf3eb;
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 750;
+}
+
+#commission-section .commission-record-side small {
+  color: #788278;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* Pembayaran menunggu verifikasi */
+#commission-section .commission-payment-record {
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 0;
+}
+
+#commission-section .commission-payment-record .commission-record-main {
+  width: 100%;
+}
+
+#commission-section .commission-payment-record .commission-record-actions {
+  display: flex;
+  gap: 9px;
+  width: 100%;
+}
+
+#commission-section .commission-record-actions button {
+  flex: 1 1 0;
+  min-height: 43px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#commission-section .commission-approve-btn {
+  color: #ffffff;
+  background: #245b3b;
+}
+
+#commission-section .commission-reject-btn {
+  color: #a52c2c;
+  background: #fcebea;
+}
+
+#commission-section .commission-record-actions button:disabled {
+  opacity: .55;
+}
+
+/* Kondisi kosong */
+#commission-section .empty-state {
+  margin: 8px 0 0;
+  padding: 22px 12px;
+  border: 1px dashed #dfe5dc;
+  border-radius: 12px;
+  color: #788278;
+  background: #fafbf8;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Tombol muat ulang */
+#commission-section #reload-commission {
+  flex: 0 0 auto;
+  min-height: 40px;
+  margin: 0;
+  padding: 9px 11px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+/* Penyesuaian layar kecil */
+@media (max-width: 380px) {
+  #commission-section > .panel {
+    padding: 15px;
+  }
+
+  #commission-section .summary-card {
+    padding: 12px;
+  }
+
+  #commission-section .summary-card strong {
+    font-size: 17px;
+  }
+
+  #commission-section .summary-card:first-child strong {
+    font-size: 24px;
+  }
+
+  #commission-section .settings-heading {
+    align-items: flex-start;
+  }
+
+  #commission-section #reload-commission {
+    padding: 8px;
+  }
+
+  #commission-section .commission-record {
+    gap: 8px;
+  }
+}
+
 /* =====================================
    KONTEN DASHBOARD
 ===================================== */

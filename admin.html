@@ -3054,7 +3054,7 @@ try {
     ========================================= */
 
     const pageTitles = {
-      dashboard: "Dashboard Admin",
+      dashboard: "",
       shops: "Kedai Mitra",
       orders: "Pesanan Platform",
       applications: "Pendaftaran Mitra",
@@ -3102,14 +3102,9 @@ try {
       const pageTitle =
         document.getElementById("page-title");
 
-      
-if (pageTitle) {
-  pageTitle.textContent =
-    page === "dashboard"
-      ? ""
-      : (pageTitles[page] || "");
+      if (pageTitle) {
+  pageTitle.textContent = pageTitles[page] || "";
 }
-
 
       if (contentScroll) {
         contentScroll.scrollTop = 0;

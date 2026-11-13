@@ -4011,25 +4011,35 @@ document.getElementById("nav-settings")
         window.location.href = "admin-login.html";
       });
 
-    /* =========================================
-       PROFIL ADMIN
-    ========================================= */
+/* =========================================
+   PROFIL ADMIN
+========================================= */
 
-    function showAdminProfile() {
-      const email =
-        document.getElementById("admin-email").textContent;
+async function showAdminProfile() {
+  try {
+    const { data, error } = await client.auth.getUser();
 
-      alert(
-        "Profil Admin KopiHub\n\n" +
-        (email || "Akun Admin terverifikasi")
-      );
-    }
+    if (error) throw error;
 
-    document.getElementById("admin-profile-button")
-      .addEventListener("click", showAdminProfile);
+    const email =
+      data.user?.email || "Akun Admin terverifikasi";
 
-    document.getElementById("admin-profile-button-compact")
-      .addEventListener("click", showAdminProfile);
+    alert(
+      "Profil Admin KopiHub\n\n" +
+      email
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Tidak dapat memuat profil Admin. Silakan coba lagi."
+    );
+  }
+}
+
+document.getElementById("admin-profile-button")
+  ?.addEventListener("click", showAdminProfile);
 
     /* =========================================
        MENU HAMBURGER MOBILE

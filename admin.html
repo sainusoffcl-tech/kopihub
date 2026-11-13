@@ -778,299 +778,233 @@
   color: var(--red);
 }
 
-    /* =====================================
-       MOBILE
-    ===================================== */
 
-    @media (max-width: 849px) {
+/* =====================================
+   LAYOUT GLOBAL — SEMUA PERANGKAT
+===================================== */
 
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        max-width: 100%;
-        overflow: hidden !important;
-        overscroll-behavior: none;
-      }
+html,
+body {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
 
-      body {
-        position: fixed;
-        inset: 0;
-      }
+body {
+  position: fixed;
+  inset: 0;
+  background: var(--green);
+}
 
-      #app.layout {
-        position: fixed !important;
-        inset: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        max-width: 100%;
-        height: 100vh !important;
-        height: 100dvh !important;
-        min-height: 0 !important;
-        margin: 0;
-        padding: 0;
-        overflow: hidden !important;
-      }
+#app.layout {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--green);
+}
 
-      #app aside {
-        display: none;
-      }
+#app aside {
+  display: none !important;
+}
 
-      #app main {
-        display: flex !important;
-        flex: 1 1 0% !important;
-        flex-direction: column !important;
-        width: 100%;
-        height: auto !important;
-        max-width: 100%;
-        min-width: 0;
-        min-height: 0 !important;
-        margin: 0;
-        padding: 0;
-        overflow: hidden !important;
-      }
+#app main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--cream);
+}
 
-      /* HEADER DUA LAPISAN */
+/* =====================================
+   HEADER TUNGGAL — EDGE TO EDGE
+===================================== */
 
-      .header-shell {
-        position: relative;
-        flex: 0 0 auto;
-        width: 100%;
-        min-width: 0;
-        min-height: 56px;
-        height: auto;
-        overflow: hidden;
-        background: var(--green);
-        border-radius: 0;
-        will-change: height;
-      }
+.header-shell {
+  position: relative;
+  z-index: 20;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+  overflow: visible;
+  border-radius: 0;
+  background: var(--green);
+}
 
-      .topbar {
-        position: absolute;
-        inset: 0 auto auto 0;
-        width: 100%;
-        min-height: 0;
-        padding: 10px 16px 12px;
-        gap: 9px;
-        border-radius: 0;
-        box-shadow: none;
-        transform: translateY(0) scale(1);
-        transform-origin: top center;
-        will-change: transform, opacity;
-      }
+.topbar {
+  position: relative;
+  inset: auto;
+  display: flex;
+  width: 100%;
+  min-height: 76px;
+  padding: 12px 18px;
+  gap: 12px;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 1;
+  transform: none;
+  transition: none;
+  animation: none;
+  will-change: auto;
+}
 
-      .topbar-content {
-        min-width: 0;
-        max-width: 100%;
-      }
+.topbar-content {
+  min-width: 0;
+  max-width: 100%;
+}
 
-      .topbar-brand {
-        font-size: 23px;
-        line-height: 1;
-        margin-bottom: 2px;
-      }
+.topbar-brand {
+  font-size: 23px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
 
-      .topbar-label {
-        font-size: 7.5px;
-        letter-spacing: 1.1px;
-      }
+.topbar-label {
+  font-size: 7.5px;
+  letter-spacing: 1.1px;
+}
 
-      .topbar-divider {
-        margin: 5px 0 4px;
-      }
+.topbar-divider {
+  margin: 5px 0 4px;
+}
 
-      .topbar-panel-title {
-        font-size: 14px;
-        line-height: 1.15;
-      }
+.topbar-panel-title {
+  font-size: 14px;
+  line-height: 1.15;
+}
 
-      .profile-button {
-        width: 38px;
-        height: 38px;
-      }
+.profile-button {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
 
-      .profile-button svg {
-        width: 20px;
-        height: 20px;
-      }
+.profile-button svg {
+  width: 20px;
+  height: 20px;
+}
 
-      /* HEADER RINGKAS */
+/* =====================================
+   SATU-SATUNYA AREA SCROLL
+===================================== */
 
-      .compact-header {
-        position: absolute;
-        inset: 0;
-        padding: 8px 16px;
-        min-height: 56px;
-        border-radius: 0;
-      }
+.admin-content-scroll {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 18px 18px 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+  background: var(--cream);
+}
 
-      /* SATU-SATUNYA AREA SCROLL */
+.admin-content-scroll::-webkit-scrollbar {
+  width: 0;
+}
 
-      .admin-content-scroll {
-        display: block;
-        flex: 1 1 0% !important;
-        width: 100%;
-        height: auto !important;
-        min-width: 0;
-        min-height: 0 !important;
-        padding: 14px 15px calc(100px + env(safe-area-inset-bottom));
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-y: contain;
-        overscroll-behavior-x: none;
-        touch-action: pan-y;
-      }
+/* =====================================
+   KARTU RINGKASAN
+===================================== */
 
-      .admin-content-scroll::-webkit-scrollbar {
-        width: 0;
-      }
+.stats,
+.card,
+.panel,
+#dashboard-view {
+  min-width: 0;
+  max-width: 100%;
+}
 
-      /* KARTU RINGKASAN */
+/* =====================================
+   RESPONSIVE
+===================================== */
 
-      .stats {
-        grid-template-columns: repeat(2,minmax(0,1fr));
-        gap: 12px;
-      }
-
-      .stats .card {
-        min-width: 0;
-        padding: 16px 14px;
-        border-radius: 17px;
-      }
-
-      .stats .card:nth-child(3) {
-        grid-column: 1 / -1;
-      }
-
-      .stat-label {
-        font-size: 11px;
-      }
-
-      .stat-value {
-        font-size: 23px;
-      }
-
-      .stat-note {
-        font-size: 10px;
-      }
-
-      .section-title {
-        margin-top: 22px;
-      }
-
-      .stats,
-      .card,
-      .panel,
-      #dashboard-view {
-        min-width: 0;
-        max-width: 100%;
-      }
-
-      /* NAVIGASI BAWAH TETAP */
-
-      .mobile-bottom-nav {
-        position: fixed !important;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 900;
-        width: 100%;
-        max-width: 100%;
-        display: grid;
-        grid-template-columns: repeat(5,minmax(0,1fr));
-        padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
-        background: var(--green);
-        box-shadow: 0 -4px 18px rgba(0,0,0,.13);
-        touch-action: none;
-        overscroll-behavior: none;
-      }
-
-      .bottom-nav-item {
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        padding: 4px 1px;
-        border: 0;
-        color: #cbd9ce;
-        background: transparent;
-        font-size: 9px;
-        font-weight: 600;
-      }
-
-      .bottom-nav-item svg {
-        width: 21px;
-        height: 21px;
-        stroke-width: 1.8;
-      }
-
-      .bottom-nav-item.active {
-        color: white;
-        font-weight: 800;
-      }
-
-      .bottom-nav-item.active svg {
-        stroke-width: 2.4;
-      }
-
-      .bottom-nav-item.menu-button {
-        color: #f2c18d;
-      }
-    }
-
-    @media (min-width: 850px) {
-      .header-shell {
-        height: auto !important;
-        overflow: visible;
-      }
-
-      .topbar {
-        position: relative;
-      }
-
-      .compact-header {
-        display: none;
-      }
-
-      .mobile-menu-overlay,
-      .mobile-menu-sheet {
-        display: none !important;
-      }
-    }
-    /* ADMIN HEADER — IPHONE SAFE AREA */
-@media (max-width: 849px) {
-  html,
-  body {
-    background: var(--green) !important;
-  }
-
-  #app,
-  #app main,
-  .header-shell {
-    border-radius: 0 !important;
-  }
-
-  #app main {
-    background: var(--green) !important;
-  }
-
+@media (max-width: 600px) {
   .admin-content-scroll {
-    background: var(--cream) !important;
+    padding: 14px 15px 25px;
   }
 
-  .header-shell {
-    background: var(--green) !important;
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
-  #app.layout {
-    padding-top: env(safe-area-inset-top, 0px);
-    box-sizing: border-box;
-    background: var(--green) !important;
+  .stats .card {
+    min-width: 0;
+    padding: 16px 14px;
+    border-radius: 17px;
   }
+
+  .stats .card:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  .stat-value {
+    font-size: 23px;
+  }
+
+  .stat-note {
+    font-size: 10px;
+  }
+
+  .section-title {
+    margin-top: 22px;
+  }
+}
+
+@media (min-width: 601px) {
+  .admin-content-scroll {
+    padding: 24px 28px 35px;
+  }
+}
+
+/* =====================================
+   CEGAH OVERFLOW HORIZONTAL
+===================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
 
 /* =====================================================
    KOPIHUB ADMIN — TRANSAKSI PLATFORM

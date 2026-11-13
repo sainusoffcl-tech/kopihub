@@ -2205,20 +2205,36 @@ main,
 
       </div>
     </div>
+    
     /* =========================================
        KONFIGURASI SUPABASE
     ========================================= */
 
     const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
-    const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+let client = null;
+let supabaseInitError = null;
 
-    const client = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
+try {
+  if (
+    !window.supabase ||
+    typeof window.supabase.createClient !== "function"
+  ) {
+    throw new Error(
+      "Library Supabase gagal dimuat. Periksa koneksi internet lalu muat ulang halaman."
     );
+  }
 
+  client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+} catch (error) {
+  supabaseInitError = error;
+  console.error("Inisialisasi Supabase gagal:", error);
+}
     /* =========================================
        ELEMEN UTAMA
     ========================================= */

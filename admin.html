@@ -4195,17 +4195,23 @@ if (navPlatformTransactions) {
         (email || "Akun Admin terverifikasi")
       );
     }
+const adminProfileButton =
+  document.getElementById("admin-profile-button");
 
-    document.getElementById("admin-profile-button")
-      .addEventListener("click", showAdminProfile);
+if (adminProfileButton) {
+  adminProfileButton.addEventListener("click", showAdminProfile);
+}
 
-    document.getElementById("admin-profile-button-compact")
-      .addEventListener("click", showAdminProfile);
+const adminProfileButtonCompact =
+  document.getElementById("admin-profile-button-compact");
 
-    /* =========================================
-       MENU HAMBURGER MOBILE
-    ========================================= */
+if (adminProfileButtonCompact) {
+  adminProfileButtonCompact.addEventListener("click", showAdminProfile);
+}
 
+/* =========================================
+   MENU HAMBURGER MOBILE
+========================================= */
     const mobileMenuOpen =
       document.getElementById("mobile-menu-open");
 

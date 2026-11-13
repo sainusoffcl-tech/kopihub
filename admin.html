@@ -4103,10 +4103,13 @@ document.getElementById("nav-settings")
       .addEventListener("click", () => {
         showPage("commission");
       });
-    document.getElementById("nav-platform-transactions")
-  .addEventListener("click", () => {
+    const navPlatformTransactions = document.getElementById("nav-platform-transactions");
+
+if (navPlatformTransactions) {
+  navPlatformTransactions.addEventListener("click", () => {
     showPage("platformTransactions");
   });
+}
     /* =========================================
        TOMBOL MUAT ULANG
     ========================================= */

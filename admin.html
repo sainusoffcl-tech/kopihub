@@ -1429,10 +1429,35 @@ canvas {
     <!-- AREA UTAMA -->
     <main>
 
-<!-- HEADER GLOBAL — SATU LAPISAN -->
+
+<!-- HEADER GLOBAL ADMIN KOPIHUB -->
 <div class="header-shell" id="header-shell">
+
   <header class="topbar" id="expanded-header">
+
     <div class="topbar-content">
+
+      <!-- TOMBOL KEMBALI -->
+      <button
+        type="button"
+        class="admin-back-button"
+        id="admin-back-button"
+        aria-label="Kembali ke Dashboard"
+        hidden>
+        <i data-lucide="arrow-left"></i>
+      </button>
+
+      <!-- TOMBOL HAMBURGER -->
+      <button
+        type="button"
+        class="header-menu-button"
+        id="mobile-menu-open"
+        aria-label="Buka Menu Admin"
+        aria-expanded="false">
+        <i data-lucide="menu"></i>
+      </button>
+
+      <!-- IDENTITAS KOPIHUB -->
       <div class="topbar-brand">
         <span class="brand-kopi">Kopi</span><span class="hub">Hub</span>
       </div>
@@ -1443,19 +1468,26 @@ canvas {
 
       <div class="topbar-divider"></div>
 
+      <!-- JUDUL HALAMAN -->
       <h1 id="page-title" class="topbar-panel-title">
         Admin KopiHub
       </h1>
+
     </div>
 
-    <button type="button" class="profile-button"
-      id="admin-profile-button" aria-label="Profil Admin">
+    <!-- PROFIL ADMIN -->
+    <button
+      type="button"
+      class="profile-button"
+      id="admin-profile-button"
+      aria-label="Profil Admin">
       <i data-lucide="user-round"></i>
     </button>
+
   </header>
+
 </div>
 
-        
       <!-- HANYA BAGIAN INI YANG BOLEH SCROLL -->
       <div class="admin-content-scroll" id="admin-content-scroll">
 

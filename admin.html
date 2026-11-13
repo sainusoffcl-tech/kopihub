@@ -3967,86 +3967,108 @@ if (!client || !client.auth) {
        Tidak menampilkan nama pelanggan
        Tidak menampilkan nomor meja
     ========================================= */
-
     async function loadOrders() {
       ordersMessage.textContent =
         "Memuat data pesanan...";
 
       ordersList.replaceChildren();
 
-      const { data, error } = await client
-        .from("kh_orders")
-        .select("id, shop_id, status, created_at")
-        .order("created_at", {
-          ascending: false
-        })
-        .limit(100);
+      try {
+        const { data, error } = await client.rpc(
+          "kh_admin_get_platform_orders",
+          {
+            p_shop_id: null,
+            p_limit: 100,
+            p_offset: 0
+          }
+        );
 
-      if (error) {
+        if (error) throw error;
+
+        const orders = Array.isArray(data?.orders)
+          ? data.orders
+          : [];
+
+        if (orders.length === 0) {
+          ordersMessage.textContent = "";
+
+          ordersList.innerHTML = `
+            <div class="empty-state">
+              <i data-lucide="receipt-text"></i>
+              Belum ada pesanan yang dapat ditampilkan.
+            </div>
+          `;
+
+          refreshIcons();
+          return;
+        }
+
+        const totalCount = Number(
+          data.total_count ?? orders.length
+        );
+
         ordersMessage.textContent =
-          "Pesanan gagal dimuat: " + error.message;
+          "Menampilkan " +
+          orders.length.toLocaleString("id-ID") +
+          " dari " +
+          totalCount.toLocaleString("id-ID") +
+          " pesanan.";
 
-        return;
-      }
+        orders.forEach(order => {
+          const card =
+            document.createElement("div");
 
-      if (!data || data.length === 0) {
-        ordersMessage.textContent = "";
+          card.className = "shop-card";
 
-        ordersList.innerHTML = `
-          <div class="empty-state">
-            <i data-lucide="receipt-text"></i>
-            Belum ada pesanan yang dapat ditampilkan.
-          </div>
-        `;
+          const title =
+            document.createElement("strong");
+
+          title.textContent = order.order_number
+            ? "Pesanan #" + order.order_number
+            : "Pesanan #" +
+              String(order.id || "").slice(0, 8);
+
+          const detail =
+            document.createElement("div");
+
+          detail.className = "shop-detail";
+
+          const date = order.created_at
+            ? new Date(order.created_at).toLocaleString("id-ID")
+            : "Tanggal tidak tersedia";
+
+          detail.textContent =
+            "Kedai: " + (order.shop_name || "—") +
+            " · Tanggal: " + date;
+
+          const status =
+            document.createElement("div");
+
+          status.className = "shop-status inactive";
+
+          status.textContent =
+            order.status || "Status belum tersedia";
+
+          card.append(title, detail, status);
+          ordersList.appendChild(card);
+        });
 
         refreshIcons();
-        return;
+
+      } catch (error) {
+        console.error(
+          "Gagal memuat pesanan platform:",
+          error
+        );
+
+        ordersMessage.textContent =
+          "Pesanan gagal dimuat: " +
+          (error.message || "Terjadi kesalahan.");
+
+        ordersList.replaceChildren();
       }
-
-      ordersMessage.textContent =
-        "Menampilkan " + data.length +
-        " pesanan terbaru.";
-
-      data.forEach(order => {
-        const card =
-          document.createElement("div");
-
-        card.className = "shop-card";
-
-        const title =
-          document.createElement("strong");
-
-        title.textContent =
-          "Pesanan #" + String(order.id).slice(0, 8);
-
-        const detail =
-          document.createElement("div");
-
-        detail.className = "shop-detail";
-
-        const date = order.created_at
-          ? new Date(order.created_at).toLocaleString("id-ID")
-          : "Tanggal tidak tersedia";
-
-        detail.textContent =
-          "ID Kedai: " + (order.shop_id || "—") +
-          " · Tanggal: " + date;
-
-        const status =
-          document.createElement("div");
-
-        status.className = "shop-status inactive";
-
-        status.textContent =
-          order.status || "Status belum tersedia";
-
-        card.append(title, detail, status);
-        ordersList.appendChild(card);
-      });
-
-      refreshIcons();
     }
-
+    
     /* =========================================
        MEMUAT PENDAFTARAN MITRA
     ========================================= */

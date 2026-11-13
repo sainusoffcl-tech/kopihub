@@ -3458,17 +3458,31 @@ try {
       const owners =
         dashboardOwnersByShop[shop.id] || [];
 
-      const orderResult = await client
-        .from("kh_orders")
-        .select("id", {
-          count: "exact",
-          head: true
-        })
-        .eq("shop_id", shop.id);
+      let orderCount = null;
 
-      const orderCount = orderResult.error
-        ? null
-        : Number(orderResult.count ?? 0);
+      try {
+        const { data: orderSummary, error: orderError } =
+          await client.rpc(
+            "kh_admin_get_platform_orders",
+            {
+              p_shop_id: shop.id,
+              p_limit: 1,
+              p_offset: 0
+            }
+          );
+
+        if (orderError) throw orderError;
+
+        orderCount = Number(
+          orderSummary?.total_count ?? 0
+        );
+
+      } catch (error) {
+        console.error(
+          "Gagal memuat jumlah pesanan kedai:",
+          error
+        );
+      }
 
       dashboardDetail.replaceChildren();
 

@@ -2327,7 +2327,30 @@
   </div>
 
   <script>
+window.addEventListener("error", function(event) {
+  const loadingScreen = document.getElementById("loading");
 
+  if (loadingScreen) {
+    loadingScreen.style.display = "block";
+    loadingScreen.textContent =
+      "Kesalahan JavaScript: " +
+      event.message +
+      " (baris " +
+      event.lineno +
+      ")";
+  }
+});
+
+window.addEventListener("unhandledrejection", function(event) {
+  const loadingScreen = document.getElementById("loading");
+
+  if (loadingScreen) {
+    loadingScreen.style.display = "block";
+    loadingScreen.textContent =
+      "Kesalahan proses: " +
+      (event.reason?.message || String(event.reason));
+  }
+});
     /* =========================================
        KONFIGURASI SUPABASE
     ========================================= */

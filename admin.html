@@ -2991,11 +2991,12 @@ try {
 
     async function initAdmin() {
       try {
-        if (!client || !client.auth) {
-          throw new Error(
-            "Koneksi Supabase belum berhasil dibuat. Periksa pemuatan library Supabase."
-          );
-        }
+if (!client || !client.auth) {
+  throw new Error(
+    supabaseInitError?.message ||
+    "Koneksi Supabase belum berhasil dibuat."
+  );
+}
 
         const authResult = await Promise.race([
           client.auth.getUser(),

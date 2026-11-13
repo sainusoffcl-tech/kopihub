@@ -2369,8 +2369,6 @@ function showPage(page) {
     contentScroll.scrollTop = 0;
   }
 
-  requestAnimationFrame(measureHeader);
-
   if (page === "dashboard") {
     showDashboardShopList();
     loadDashboardShops();

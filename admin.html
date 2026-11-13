@@ -242,6 +242,170 @@
     }
 
     /* =====================================
+       HEADER SHELL
+       DUA LAPISAN HEADER
+    ===================================== */
+
+    .header-shell {
+      position: relative;
+      z-index: 30;
+      flex: 0 0 auto;
+      width: 100%;
+      min-width: 0;
+      background: var(--green);
+    }
+
+    /* LAPISAN PERTAMA: HEADER BESAR */
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 22px;
+      color: white;
+      background: var(--green);
+      border-radius: 0 0 18px 18px;
+      box-shadow: 0 4px 15px rgba(15,45,29,.08);
+
+      transform-origin: top center;
+      will-change: transform, opacity;
+    }
+
+    .topbar-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3px;
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .brand-kopi {
+      color: #fff;
+    }
+
+    .brand-i {
+      position: relative;
+    }
+
+    .coffee-bean {
+      position: absolute;
+      width: 8px;
+      height: 11px;
+      top: -3px;
+      left: 50%;
+      border-radius: 70% 35% 70% 35%;
+      background: #a66b3d;
+      transform: translateX(-50%) rotate(35deg);
+    }
+
+    .topbar-brand .hub {
+      color: var(--orange);
+    }
+
+    .topbar-label {
+      margin: 0;
+      color: #c5d9c9;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+    }
+
+    .topbar-divider {
+      width: 100%;
+      height: 1px;
+      margin: 7px 0 6px;
+      background: rgba(255,255,255,.22);
+    }
+
+    .topbar-panel-title {
+      margin: 0;
+      color: white;
+      font-size: 15px;
+      line-height: 1.2;
+      font-weight: 650;
+    }
+
+    .profile-button {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #c5d9c9;
+      border-radius: 50%;
+      color: white;
+      background: var(--green2);
+    }
+
+    .profile-button svg {
+      width: 21px;
+      height: 21px;
+      stroke-width: 1.8;
+    }
+
+    /* LAPISAN KEDUA: HEADER RINGKAS */
+
+    .compact-header {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 16px;
+      color: white;
+      background: var(--green);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-8px);
+      will-change: opacity, transform;
+    }
+
+    .compact-brand {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .compact-brand .hub {
+      color: var(--orange);
+    }
+
+    .compact-profile {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #c5d9c9;
+      border-radius: 50%;
+      color: white;
+      background: var(--green2);
+    }
+
+    .compact-profile svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    /* =====================================
        AREA TENGAH YANG SCROLL
     ===================================== */
 
@@ -933,7 +1097,82 @@
         overflow: hidden !important;
       }
 
- /* SATU-SATUNYA AREA SCROLL */
+      /* HEADER DUA LAPISAN */
+
+      .header-shell {
+        position: relative;
+        flex: 0 0 auto;
+        width: 100%;
+        min-width: 0;
+        min-height: 56px;
+        height: auto;
+        overflow: hidden;
+        background: var(--green);
+        border-radius: 0;
+        will-change: height;
+      }
+
+      .topbar {
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        min-height: 0;
+        padding: 10px 16px 12px;
+        gap: 9px;
+        border-radius: 0;
+        box-shadow: none;
+        transform: translateY(0) scale(1);
+        transform-origin: top center;
+        will-change: transform, opacity;
+      }
+
+      .topbar-content {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .topbar-brand {
+        font-size: 23px;
+        line-height: 1;
+        margin-bottom: 2px;
+      }
+
+      .topbar-label {
+        font-size: 7.5px;
+        letter-spacing: 1.1px;
+      }
+
+      .topbar-divider {
+        margin: 5px 0 4px;
+      }
+
+      .topbar-panel-title {
+        font-size: 14px;
+        line-height: 1.15;
+      }
+
+      .profile-button {
+        width: 38px;
+        height: 38px;
+      }
+
+      .profile-button svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* HEADER RINGKAS */
+
+      .compact-header {
+        position: absolute;
+        inset: 0;
+        padding: 8px 16px;
+        min-height: 56px;
+        border-radius: 0;
+      }
+
+      /* SATU-SATUNYA AREA SCROLL */
+
       .admin-content-scroll {
         display: block;
         flex: 1 1 0% !important;
@@ -1595,7 +1834,19 @@
     <!-- AREA UTAMA -->
     <main>
 
+      <!-- HEADER SHELL: DUA LAPISAN -->
+      <div class="header-shell" id="header-shell">
 
+        <!-- LAPISAN PERTAMA: EXPANDED HEADER -->
+        <header class="topbar" id="expanded-header">
+
+          <div class="topbar-content" id="topbar-content">
+
+<div class="topbar-brand">
+  <span class="brand-kopi">Kopi</span><span class="hub">Hub</span>
+</div>
+
+            <div class="topbar-label">
               PUSAT MANAJEMEN COFFEE SHOP
             </div>
 
@@ -1615,6 +1866,23 @@
           </button>
 
         </header>
+
+        <!-- LAPISAN KEDUA: COMPACT HEADER -->
+        <div class="compact-header" id="compact-header">
+
+          <div class="compact-brand">
+            <span>Kopi</span><span class="hub">Hub</span>
+          </div>
+
+          <button type="button" class="compact-profile"
+            id="admin-profile-button-compact"
+            aria-label="Profil Admin">
+            <i data-lucide="user-round"></i>
+          </button>
+
+        </div>
+
+      </div>
 
       <!-- HANYA BAGIAN INI YANG BOLEH SCROLL -->
       <div class="admin-content-scroll" id="admin-content-scroll">
@@ -2327,30 +2595,7 @@
   </div>
 
   <script>
-window.addEventListener("error", function(event) {
-  const loadingScreen = document.getElementById("loading");
 
-  if (loadingScreen) {
-    loadingScreen.style.display = "block";
-    loadingScreen.textContent =
-      "Kesalahan JavaScript: " +
-      event.message +
-      " (baris " +
-      event.lineno +
-      ")";
-  }
-});
-
-window.addEventListener("unhandledrejection", function(event) {
-  const loadingScreen = document.getElementById("loading");
-
-  if (loadingScreen) {
-    loadingScreen.style.display = "block";
-    loadingScreen.textContent =
-      "Kesalahan proses: " +
-      (event.reason?.message || String(event.reason));
-  }
-});
     /* =========================================
        KONFIGURASI SUPABASE
     ========================================= */
@@ -2369,12 +2614,9 @@ window.addEventListener("unhandledrejection", function(event) {
        ELEMEN UTAMA
     ========================================= */
 
-const loading = document.getElementById("loading");
-const denied = document.getElementById("denied");
-const app = document.getElementById("app");
-
-const contentScroll =
-  document.getElementById("content-scroll");
+    const loading = document.getElementById("loading");
+    const denied = document.getElementById("denied");
+    const app = document.getElementById("app");
 
     const dashboardView =
       document.getElementById("dashboard-view");
@@ -2424,6 +2666,184 @@ const contentScroll =
         window.lucide.createIcons();
       }
     }
+
+    /* =========================================
+       COLLAPSING HEADER + PARALLAX
+    ========================================= */
+
+    const headerShell =
+      document.getElementById("header-shell");
+
+    const expandedHeader =
+      document.getElementById("expanded-header");
+
+    const compactHeader =
+      document.getElementById("compact-header");
+
+    const topbarContent =
+      document.getElementById("topbar-content");
+
+    const contentScroll =
+      document.getElementById("admin-content-scroll");
+
+    const COLLAPSE_DISTANCE = 120;
+const COMPACT_HEIGHT = 56;
+
+let expandedHeight = 0;
+let compactHeight = COMPACT_HEIGHT;
+let headerAnimationFrame = null;
+
+function getSafeAreaTop() {
+  if (!isMobileLayout()) return 0;
+
+  const probe = document.createElement("div");
+  probe.style.cssText =
+    "position:absolute;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top,0px);";
+
+  document.body.appendChild(probe);
+
+  const safeArea =
+    parseFloat(getComputedStyle(probe).paddingTop) || 0;
+
+  probe.remove();
+  return safeArea;
+}
+
+    function isMobileLayout() {
+      return window.matchMedia("(max-width: 849px)").matches;
+    }
+
+    function measureHeader() {
+  if (!isMobileLayout()) {
+    headerShell.style.height = "";
+
+    expandedHeader.style.transform = "";
+    expandedHeader.style.opacity = "";
+
+    compactHeader.style.opacity = "";
+    compactHeader.style.visibility = "";
+    compactHeader.style.pointerEvents = "";
+    compactHeader.style.transform = "";
+
+    topbarContent.style.transform = "";
+
+    compactHeight = COMPACT_HEIGHT;
+
+    return;
+  }
+
+  /* Hitung tinggi compact termasuk safe area */
+  compactHeight =
+    COMPACT_HEIGHT + getSafeAreaTop();
+
+  /* Ukur header besar */
+  expandedHeader.style.transform = "none";
+  expandedHeader.style.opacity = "1";
+
+  const measuredHeight =
+    expandedHeader.getBoundingClientRect().height;
+
+  if (measuredHeight > 0) {
+    expandedHeight = measuredHeight;
+  }
+
+  updateCollapsingHeader();
+}
+
+    function updateCollapsingHeader() {
+      if (!isMobileLayout()) return;
+
+      const scrollPosition = contentScroll.scrollTop;
+
+      /*
+       * Progress 0 = header besar.
+       * Progress 1 = header ringkas.
+       */
+
+      const progress = Math.min(
+        Math.max(scrollPosition / COLLAPSE_DISTANCE, 0),
+        1
+      );
+
+      /*
+       * Mengubah tinggi ruang header secara bertahap.
+       */
+
+      const currentHeight =
+  expandedHeight - ((expandedHeight - compactHeight) * progress);
+
+headerShell.style.height =
+  Math.max(compactHeight, currentHeight) + "px";
+      /*
+       * PARALLAX RINGAN:
+       * Konten header bergerak sedikit lebih lambat.
+       */
+
+      const parallaxY = -14 * progress;
+      const scale = 1 - (0.025 * progress);
+
+      topbarContent.style.transform =
+        `translateY(${parallaxY}px)`;
+
+      /*
+       * Header besar memudar dan mengecil.
+       */
+
+      expandedHeader.style.transform =
+        `translateY(${-22 * progress}px) scale(${scale})`;
+
+      expandedHeader.style.opacity =
+        String(1 - progress);
+
+      /*
+       * Header ringkas muncul di atas.
+       */
+
+      compactHeader.style.opacity =
+        String(progress);
+
+      compactHeader.style.visibility =
+        progress > 0.02 ? "visible" : "hidden";
+
+      compactHeader.style.pointerEvents =
+        progress > 0.8 ? "auto" : "none";
+
+      compactHeader.style.transform =
+        `translateY(${-8 + (8 * progress)}px)`;
+    }
+
+    /*
+     * Membatasi update animasi agar mengikuti
+     * frame layar dan tidak membebani scroll.
+     */
+
+    contentScroll.addEventListener("scroll", () => {
+      if (headerAnimationFrame !== null) return;
+
+      headerAnimationFrame = requestAnimationFrame(() => {
+        updateCollapsingHeader();
+        headerAnimationFrame = null;
+      });
+    }, { passive: true });
+
+    /*
+     * Ukur ulang ketika orientasi atau ukuran
+     * layar berubah.
+     */
+
+    window.addEventListener("resize", () => {
+      requestAnimationFrame(measureHeader);
+    });
+
+    window.addEventListener("orientationchange", () => {
+      setTimeout(measureHeader, 150);
+    });
+
+    /*
+     * Pengukuran awal setelah halaman siap.
+     */
+
+    requestAnimationFrame(measureHeader);
 
     /* =========================================
        NAVIGASI HALAMAN
@@ -2502,9 +2922,7 @@ function showPage(page) {
     contentScroll.scrollTop = 0;
   }
 
-  if (typeof measureHeader === "function") {
   requestAnimationFrame(measureHeader);
-}
 
   if (page === "dashboard") {
     showDashboardShopList();
@@ -2984,7 +3402,6 @@ function showDashboardShopList() {
   dashboardDetailView.hidden = true;
   dashboardListView.hidden = false;
 
- if (contentScroll) {
   contentScroll.scrollTop = 0;
 }
 
@@ -3033,24 +3450,23 @@ document.getElementById("back-to-dashboard-shops")
 
         loading.style.display = "none";
 
-/*
- * Desktop menggunakan grid.
- * CSS mobile tetap memaksa layout flex.
- */
+        /*
+         * Desktop menggunakan grid.
+         * CSS mobile tetap memaksa layout flex.
+         */
 
-app.style.display = "grid";
+        app.style.display = "grid";
 
-refreshIcons();
+        refreshIcons();
 
-/*
- * Ukur header setelah aplikasi ditampilkan.
- */
+        /*
+         * Ukur header setelah aplikasi ditampilkan.
+         */
 
-if (typeof measureHeader === "function") {
-  requestAnimationFrame(measureHeader);
-}
+        requestAnimationFrame(measureHeader);
 
-await loadDashboardStats();
+        await loadDashboardStats();
+
       } catch (error) {
         loading.style.display = "none";
         denied.style.display = "block";
@@ -4133,13 +4549,10 @@ document.getElementById("nav-settings")
       .addEventListener("click", () => {
         showPage("commission");
       });
-    const navPlatformTransactions = document.getElementById("nav-platform-transactions");
-
-if (navPlatformTransactions) {
-  navPlatformTransactions.addEventListener("click", () => {
+    document.getElementById("nav-platform-transactions")
+  .addEventListener("click", () => {
     showPage("platformTransactions");
   });
-}
     /* =========================================
        TOMBOL MUAT ULANG
     ========================================= */
@@ -4202,23 +4615,17 @@ if (navPlatformTransactions) {
         (email || "Akun Admin terverifikasi")
       );
     }
-const adminProfileButton =
-  document.getElementById("admin-profile-button");
 
-if (adminProfileButton) {
-  adminProfileButton.addEventListener("click", showAdminProfile);
-}
+    document.getElementById("admin-profile-button")
+      .addEventListener("click", showAdminProfile);
 
-const adminProfileButtonCompact =
-  document.getElementById("admin-profile-button-compact");
+    document.getElementById("admin-profile-button-compact")
+      .addEventListener("click", showAdminProfile);
 
-if (adminProfileButtonCompact) {
-  adminProfileButtonCompact.addEventListener("click", showAdminProfile);
-}
+    /* =========================================
+       MENU HAMBURGER MOBILE
+    ========================================= */
 
-/* =========================================
-   MENU HAMBURGER MOBILE
-========================================= */
     const mobileMenuOpen =
       document.getElementById("mobile-menu-open");
 

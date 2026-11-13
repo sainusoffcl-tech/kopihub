@@ -192,9 +192,10 @@ main,
   background: var(--cream);
 }
 
+
 /* =====================================
    HEADER GLOBAL KOPIHUB ADMIN
-   EDGE-TO-EDGE STICKY APP BAR
+   EDGE-TO-EDGE APP BAR
 ===================================== */
 
 .header-shell {
@@ -204,7 +205,6 @@ main,
   width: 100%;
   min-width: 0;
   padding-top: env(safe-area-inset-top, 0px);
-  overflow: visible;
   background: #123B2C;
 }
 
@@ -212,69 +212,18 @@ main,
 
 .topbar {
   position: relative;
-  inset: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  min-height: 78px;
-  padding: 9px 12px;
+  min-height: 88px;
+  padding: 12px 20px;
   color: #FFFFFF;
   background: #123B2C;
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition: none;
-  animation: none;
-  will-change: auto;
-}
-
-/* AREA TOMBOL KIRI */
-
-.header-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  flex: 0 0 auto;
-  min-width: 0;
-}
-
-/* TOMBOL KEMBALI DAN HAMBURGER */
-
-.admin-back-button,
-.header-menu-button {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid rgba(255,255,255,.22);
-  border-radius: 10px;
-  color: #FFFFFF;
-  background: rgba(255,255,255,.08);
-  cursor: pointer;
-}
-
-.admin-back-button svg,
-.header-menu-button svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2;
-}
-
-.admin-back-button:active,
-.header-menu-button:active {
-  background: rgba(255,255,255,.18);
-}
-
-.admin-back-button[hidden] {
-  display: none !important;
 }
 
 /* IDENTITAS KOPIHUB */
@@ -286,16 +235,15 @@ main,
   justify-content: center;
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .topbar-brand {
   display: flex;
   align-items: center;
-  margin: 0 0 3px;
+  margin: 0 0 5px;
   color: #FFFFFF;
-  font-size: 23px;
+  font-size: 30px;
   line-height: 1;
   font-weight: 850;
   letter-spacing: -1px;
@@ -330,67 +278,70 @@ main,
 .topbar-label {
   margin: 0;
   color: #C5D9C9;
-  font-size: 7px;
+  font-size: 8px;
   font-weight: 800;
   letter-spacing: .8px;
   white-space: nowrap;
 }
 
-/* PEMBATAS */
+/* HAMBURGER DI KANAN */
 
-.topbar-divider {
-  width: 100%;
-  max-width: 230px;
-  height: 1px;
-  flex: 0 0 1px;
-  margin: 5px 0 4px;
-  background: rgba(255,255,255,.22);
-}
-
-/* JUDUL HALAMAN */
-
-.topbar-panel-title {
-  max-width: 100%;
-  margin: 0;
+.header-menu-button {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
   color: #FFFFFF;
-  font-size: 13px;
-  line-height: 1.2;
-  font-weight: 650;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  background: transparent;
+  cursor: pointer;
 }
 
-/* PROFIL ADMIN */
+.header-menu-button svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 2.2;
+}
 
-.profile-button {
+.header-menu-button:active {
+  background: rgba(255,255,255,.15);
+}
+
+/* TOMBOL KEMBALI DI AREA JUDUL */
+
+.admin-back-button {
   width: 38px;
   height: 38px;
   flex: 0 0 38px;
   display: grid;
   place-items: center;
   padding: 0;
-  border: 1.5px solid #C5D9C9;
-  border-radius: 50%;
-  color: #FFFFFF;
-  background: #174C38;
+  border: 0;
+  border-radius: 11px;
+  color: #123B2C;
+  background: #EDF2E9;
   cursor: pointer;
 }
 
-.profile-button:active {
-  background: #24543E;
+.admin-back-button svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 2;
 }
 
-.profile-button svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 1.8;
+.admin-back-button:active {
+  background: #DCE7DC;
 }
 
-/* =====================================
-   AREA KONTEN YANG BOLEH SCROLL
-   HANYA VERTIKAL
-===================================== */
+.admin-back-button[hidden] {
+  display: none !important;
+}
+
+/* AREA KONTEN YANG BOLEH SCROLL */
 
 .admin-content-scroll {
   display: block;
@@ -399,7 +350,7 @@ main,
   height: auto;
   min-width: 0;
   min-height: 0;
-  padding: 18px 18px 30px;
+  padding: 0 18px 30px;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -418,6 +369,27 @@ main,
 .admin-content-scroll::-webkit-scrollbar-thumb {
   background: #C7D0C6;
   border-radius: 10px;
+}
+
+/* JUDUL HALAMAN DI AREA KREM */
+
+.admin-page-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 76px;
+  margin: 0 0 18px;
+  padding-top: 24px;
+}
+
+.admin-page-heading h1 {
+  min-width: 0;
+  margin: 0;
+  color: #123B2C;
+  font-size: 25px;
+  line-height: 1.25;
+  font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 /* =====================================

@@ -3027,23 +3027,24 @@ document.getElementById("back-to-dashboard-shops")
 
         loading.style.display = "none";
 
-        /*
-         * Desktop menggunakan grid.
-         * CSS mobile tetap memaksa layout flex.
-         */
+/*
+ * Desktop menggunakan grid.
+ * CSS mobile tetap memaksa layout flex.
+ */
 
-        app.style.display = "grid";
+app.style.display = "grid";
 
-        refreshIcons();
+refreshIcons();
 
-        /*
-         * Ukur header setelah aplikasi ditampilkan.
-         */
+/*
+ * Ukur header setelah aplikasi ditampilkan.
+ */
 
-        requestAnimationFrame(measureHeader);
+if (typeof measureHeader === "function") {
+  requestAnimationFrame(measureHeader);
+}
 
-        await loadDashboardStats();
-
+await loadDashboardStats();
       } catch (error) {
         loading.style.display = "none";
         denied.style.display = "block";

@@ -3102,10 +3102,14 @@ try {
       const pageTitle =
         document.getElementById("page-title");
 
-      if (pageTitle) {
-        pageTitle.textContent =
-          pageTitles[page] || "Dashboard Admin";
-      }
+      
+if (pageTitle) {
+  pageTitle.textContent =
+    page === "dashboard"
+      ? ""
+      : (pageTitles[page] || "");
+}
+
 
       if (contentScroll) {
         contentScroll.scrollTop = 0;

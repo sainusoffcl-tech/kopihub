@@ -2915,7 +2915,56 @@ main,
 
         </section>
 
-        <!-- FOOTER ADMIN KOPIHUB -->
+  <!-- PENGGUNA & AKSES -->
+<section id="users-section" hidden>
+  <div class="panel">
+    <strong>Pengelolaan Pengguna</strong>
+    <p class="muted">
+      Daftar akun pengguna KopiHub, peran platform,
+      hubungan dengan kedai, dan status keanggotaan.
+    </p>
+
+    <div class="stats" style="margin:18px 0">
+      <div class="card">
+        <div class="stat-label">Total Pengguna</div>
+        <div class="stat-value" id="users-total">—</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Admin Platform</div>
+        <div class="stat-value" id="users-admin-total">—</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Keanggotaan Aktif</div>
+        <div class="stat-value" id="users-active-total">—</div>
+      </div>
+    </div>
+
+    <input
+      id="users-search"
+      type="search"
+      placeholder="Cari nama, nomor telepon, atau kedai..."
+      style="width:100%;min-height:46px;padding:12px;
+      border:1px solid #dfe5dc;border-radius:11px;
+      margin:8px 0 16px;font:inherit">
+
+    <button
+      type="button"
+      class="action-button"
+      id="reload-users">
+      <i data-lucide="refresh-cw"></i>
+      Muat Ulang
+    </button>
+
+    <p id="users-message" class="muted"
+      aria-live="polite">
+      Menyiapkan daftar pengguna...
+    </p>
+
+    <div id="users-list"></div>
+  </div>
+</section>
+        
+  <!-- FOOTER ADMIN KOPIHUB -->
         <footer class="admin-footer">
           <p class="admin-footer-brand">
             Kopi<span>Hub</span>

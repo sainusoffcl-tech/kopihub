@@ -6357,6 +6357,201 @@ document.getElementById(
         showAdminProfile
       );
 
+/* =========================================
+   PENGGUNA & AKSES
+   TAMPILAN BACA SAJA
+========================================= */
+
+let usersCache = [];
+
+async function loadUsers() {
+  const message = document.getElementById("users-message");
+  const list = document.getElementById("users-list");
+
+  if (!message || !list) return;
+
+  message.textContent = "Memuat data pengguna...";
+  list.replaceChildren();
+
+  try {
+    const [
+      { data: profiles, error: profileError },
+      { data: memberships, error: memberError },
+      { data: shops, error: shopError }
+    ] = await Promise.all([
+      client
+        .from("kh_profiles")
+        .select("id, full_name, phone, is_platform_admin, created_at")
+        .order("created_at", { ascending: false }),
+
+      client
+        .from("kh_shop_members")
+        .select("shop_id, user_id, role, is_active, created_at"),
+
+      client
+        .from("kh_shops")
+        .select("id, name")
+    ]);
+
+    if (profileError) throw profileError;
+    if (memberError) throw memberError;
+    if (shopError) throw shopError;
+
+    const shopMap = new Map(
+      (shops || []).map(shop => [shop.id, shop.name])
+    );
+
+    const memberMap = new Map();
+
+    (memberships || []).forEach(member => {
+      if (!memberMap.has(member.user_id)) {
+        memberMap.set(member.user_id, []);
+      }
+
+      memberMap.get(member.user_id).push(member);
+    });
+
+    usersCache = (profiles || []).map(profile => ({
+      ...profile,
+      memberships: memberMap.get(profile.id) || []
+    }));
+
+    document.getElementById("users-total").textContent =
+      usersCache.length.toLocaleString("id-ID");
+
+    document.getElementById("users-admin-total").textContent =
+      usersCache.filter(user => user.is_platform_admin).length
+        .toLocaleString("id-ID");
+
+    document.getElementById("users-active-total").textContent =
+      (memberships || []).filter(member => member.is_active).length
+        .toLocaleString("id-ID");
+
+    function renderUsers() {
+      const keyword = (
+        document.getElementById("users-search")?.value || ""
+      ).trim().toLowerCase();
+
+      list.replaceChildren();
+
+      const filtered = usersCache.filter(user => {
+        const membershipText = user.memberships.map(member =>
+          [
+            member.role,
+            shopMap.get(member.shop_id) || ""
+          ].join(" ")
+        ).join(" ");
+
+        return [
+          user.full_name || "",
+          user.phone || "",
+          user.id,
+          membershipText,
+          user.is_platform_admin ? "admin platform" : ""
+        ].join(" ").toLowerCase().includes(keyword);
+      });
+
+      message.textContent =
+        filtered.length.toLocaleString("id-ID") +
+        " pengguna ditemukan.";
+
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = usersCache.length
+          ? "Tidak ada pengguna yang cocok dengan pencarian."
+          : "Belum ada pengguna terdaftar.";
+        list.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(user => {
+        const card = document.createElement("div");
+        card.className = "panel";
+        card.style.marginTop = "12px";
+        card.style.padding = "15px";
+
+        const name = document.createElement("strong");
+        name.textContent = user.full_name || "Nama belum diisi";
+
+        const phone = document.createElement("p");
+        phone.className = "muted";
+        phone.style.margin = "6px 0";
+        phone.textContent = user.phone || "Nomor telepon belum diisi";
+
+        const platformRole = document.createElement("div");
+        platformRole.className = "status";
+        platformRole.style.margin = "5px 0 10px";
+        platformRole.textContent = user.is_platform_admin
+          ? "Admin Platform"
+          : "Pengguna";
+
+        card.append(name, phone, platformRole);
+
+        if (user.memberships.length) {
+          const heading = document.createElement("strong");
+          heading.style.display = "block";
+          heading.style.marginTop = "8px";
+          heading.textContent = "Keanggotaan Kedai";
+          card.appendChild(heading);
+
+          user.memberships.forEach(member => {
+            const row = document.createElement("p");
+            row.className = "muted";
+            row.style.margin = "7px 0";
+
+            const shopName =
+              shopMap.get(member.shop_id) || "Kedai tidak ditemukan";
+
+            row.textContent =
+              shopName + " · " +
+              member.role + " · " +
+              (member.is_active ? "Aktif" : "Nonaktif");
+
+            card.appendChild(row);
+          });
+        } else {
+          const noMembership = document.createElement("p");
+          noMembership.className = "muted";
+          noMembership.textContent =
+            "Belum memiliki keanggotaan kedai.";
+          card.appendChild(noMembership);
+        }
+
+        const created = document.createElement("small");
+        created.className = "muted";
+        created.textContent =
+          "Terdaftar: " +
+          (user.created_at
+            ? new Date(user.created_at).toLocaleDateString("id-ID")
+            : "Tidak tersedia");
+
+        card.appendChild(created);
+        list.appendChild(card);
+      });
+    }
+
+    renderUsers();
+
+    document.getElementById("users-search").oninput = renderUsers;
+
+  } catch (error) {
+    console.error("Gagal memuat Pengguna & Akses:", error);
+
+    message.textContent =
+      "Data pengguna gagal dimuat: " +
+      (error.message || "Terjadi kesalahan.");
+  }
+}
+
+document.getElementById("reload-users")
+  ?.addEventListener("click", loadUsers);
+
+document.getElementById("mobile-menu-users")
+  ?.addEventListener("click", () => {
+    closeMobileMenu();
+    showPage("users");
+  });
     /* =========================================
        MENU HAMBURGER MOBILE
     ========================================= */

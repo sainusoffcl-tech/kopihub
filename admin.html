@@ -201,7 +201,6 @@ main,
   background: var(--cream);
 }
 
-
 /* =====================================
    HEADER GLOBAL KOPIHUB ADMIN
    EDGE-TO-EDGE APP BAR
@@ -210,10 +209,17 @@ main,
 .header-shell {
   position: relative;
   z-index: 1000;
+
   flex: 0 0 auto;
+
   width: 100%;
+  max-width: 100%;
   min-width: 0;
+
+  box-sizing: border-box;
+
   padding-top: env(safe-area-inset-top, 0px);
+
   background: #123B2C;
 }
 
@@ -221,15 +227,26 @@ main,
 
 .topbar {
   position: relative;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 12px;
+
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   min-height: 88px;
+
+  box-sizing: border-box;
+
   padding: 12px 20px;
+
   color: #FFFFFF;
   background: #123B2C;
+
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -242,20 +259,31 @@ main,
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+
   flex: 1 1 auto;
+
+  width: auto;
   min-width: 0;
-  overflow: visible;
+  max-width: 100%;
+
+  overflow: hidden;
 }
 
 .topbar-brand {
   display: flex;
   align-items: center;
+
+  max-width: 100%;
+
   margin: 0 0 5px;
+
   color: #FFFFFF;
+
   font-size: 30px;
   line-height: 1;
   font-weight: 850;
   letter-spacing: -1px;
+
   white-space: nowrap;
 }
 
@@ -269,12 +297,17 @@ main,
 
 .coffee-bean {
   position: absolute;
+
   width: 8px;
   height: 11px;
+
   top: -3px;
   left: 50%;
+
   border-radius: 70% 35% 70% 35%;
+
   background: #A66B3D;
+
   transform: translateX(-50%) rotate(35deg);
 }
 
@@ -285,11 +318,16 @@ main,
 /* TAGLINE */
 
 .topbar-label {
+  max-width: 100%;
+
   margin: 0;
+
   color: #C5D9C9;
+
   font-size: 8px;
   font-weight: 800;
   letter-spacing: .8px;
+
   white-space: nowrap;
 }
 
@@ -298,21 +336,30 @@ main,
 .header-menu-button {
   width: 46px;
   height: 46px;
+
   flex: 0 0 46px;
+
   display: grid;
   place-items: center;
+
   margin-left: auto;
   padding: 0;
+
+  box-sizing: border-box;
+
   border: 0;
   border-radius: 10px;
+
   color: #FFFFFF;
   background: transparent;
+
   cursor: pointer;
 }
 
 .header-menu-button svg {
   width: 32px;
   height: 32px;
+
   stroke-width: 2.2;
 }
 
@@ -320,26 +367,34 @@ main,
   background: rgba(255,255,255,.15);
 }
 
-
 /* TOMBOL KEMBALI DI AREA JUDUL */
 
 .admin-back-button {
   width: 32px;
   height: 32px;
+
   flex: 0 0 32px;
+
   display: grid;
   place-items: center;
+
   padding: 0;
+
+  box-sizing: border-box;
+
   border: 0;
   border-radius: 9px;
+
   color: #123B2C;
   background: #EDF2E9;
+
   cursor: pointer;
 }
 
 .admin-back-button svg {
   width: 18px;
   height: 18px;
+
   stroke-width: 2;
 }
 
@@ -350,25 +405,38 @@ main,
 .admin-back-button[hidden] {
   display: none !important;
 }
-
-
-/* AREA KONTEN YANG BOLEH SCROLL */
+/* =========================================
+   AREA KONTEN YANG BOLEH SCROLL
+========================================= */
 
 .admin-content-scroll {
   display: block;
-  flex: 1 1 auto;
+
+  flex: 1 1 0;
+
   width: 100%;
+  max-width: 100%;
   height: auto;
+
   min-width: 0;
   min-height: 0;
+
+  box-sizing: border-box;
+
   padding: 0 18px 30px;
+
   overflow-x: hidden;
   overflow-y: auto;
+
   -webkit-overflow-scrolling: touch;
+
   overscroll-behavior-y: contain;
   overscroll-behavior-x: none;
+
   touch-action: pan-y;
+
   background: var(--cream);
+
   scrollbar-width: thin;
   scrollbar-color: #C7D0C6 transparent;
 }
@@ -382,32 +450,48 @@ main,
   border-radius: 10px;
 }
 
-/* JUDUL HALAMAN DI AREA KREM */
-
+/* =========================================
+   JUDUL HALAMAN DI AREA KREM
+========================================= */
 
 .admin-page-heading {
   position: sticky;
   top: 0;
   z-index: 40;
+
   display: flex;
   align-items: center;
+
   gap: 10px;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   min-height: 54px;
+
   margin: 0 0 18px;
   padding: 8px 0;
+
+  box-sizing: border-box;
+
   background: #FAF9F5;
 }
 
-
 .admin-page-heading h1 {
   min-width: 0;
+
   margin: 0;
+
   color: #123B2C;
+
   font-size: 25px;
   line-height: 1.25;
   font-weight: 800;
+
   overflow-wrap: anywhere;
 }
+    
 /* =====================================
    FOOTER ADMIN KOPIHUB
    ELEGANT ORANGE

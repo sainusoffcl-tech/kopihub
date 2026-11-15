@@ -1295,7 +1295,7 @@ const ownerHeader = $("owner-header");
 const headerBackButton = $("header-back-button");
 
 /* =========================================
-   NAVIGASI HALAMAN UTAMA
+   NAVIGASI HALAMAN UTAMA DAN PANEL TURUNAN
 ========================================= */
 
 const pages = {
@@ -1309,6 +1309,10 @@ const pages = {
 let currentPage = "home";
 let pageHistory = [];
 
+/* RIWAYAT PANEL KELOLA MENU */
+let currentMenuPanel = "menu-home-panel";
+let menuPanelHistory = [];
+
 const pageTitles = {
   home: "Dashboard Owner",
   menu: "Kelola Menu",
@@ -1317,15 +1321,18 @@ const pageTitles = {
   lainnya: "Pengaturan Kedai"
 };
 
-/*
-  Satu sistem navigasi digunakan untuk seluruh
-  halaman utama dan halaman turunan.
 
-  Tombol kembali berada di header global.
-*/
+/* PERBARUI TOMBOL KEMBALI HEADER */
 
 function updateGlobalBackButton() {
-  const hasHistory = pageHistory.length > 0;
+  const hasPageHistory = pageHistory.length > 0;
+
+  const hasMenuPanelHistory =
+    currentPage === "menu" &&
+    menuPanelHistory.length > 0;
+
+  const hasHistory =
+    hasPageHistory || hasMenuPanelHistory;
 
   if (ownerHeader) {
     ownerHeader.classList.toggle("has-back", hasHistory);
@@ -1333,12 +1340,16 @@ function updateGlobalBackButton() {
 
   if (headerBackButton) {
     headerBackButton.hidden = !hasHistory;
+
     headerBackButton.setAttribute(
       "aria-label",
       hasHistory ? "Kembali" : "Dashboard Owner"
     );
   }
 }
+
+
+/* PINDAH HALAMAN UTAMA */
 
 function navigateToPage(pageName, options = {}) {
   if (!pages[pageName]) return;
@@ -1355,6 +1366,23 @@ function navigateToPage(pageName, options = {}) {
 
   if (options.replace === true) {
     pageHistory = [];
+  }
+
+  /* Saat masuk Kelola Menu dari halaman lain,
+     mulai dari halaman utama Kelola Menu. */
+
+  if (
+    pageName === "menu" &&
+    previousPage !== "menu"
+  ) {
+    currentMenuPanel = "menu-home-panel";
+    menuPanelHistory = [];
+
+    showMenuPanel(
+      "menu-home-panel",
+      false,
+      true
+    );
   }
 
   Object.entries(pages).forEach(([name, element]) => {
@@ -1391,16 +1419,46 @@ function navigateToPage(pageName, options = {}) {
   }
 }
 
+
+/* TOMBOL KEMBALI GLOBAL */
+
 function goBackPage() {
+
+  /* PRIORITAS PERTAMA:
+     Kembali dari panel turunan Kelola Menu. */
+
+  if (
+    currentPage === "menu" &&
+    menuPanelHistory.length > 0
+  ) {
+    const previousPanel = menuPanelHistory.pop();
+
+    showMenuPanel(
+      previousPanel,
+      false,
+      true
+    );
+
+    updateGlobalBackButton();
+    return;
+  }
+
+  /* PRIORITAS KEDUA:
+     Kembali ke halaman utama sebelumnya. */
+
   if (pageHistory.length === 0) {
-    navigateToPage("home", { replace: true });
+    navigateToPage("home", {
+      replace: true
+    });
     return;
   }
 
   const previousPage = pageHistory.pop();
 
   if (!pages[previousPage]) {
-    navigateToPage("home", { replace: true });
+    navigateToPage("home", {
+      replace: true
+    });
     return;
   }
 
@@ -1427,11 +1485,16 @@ function goBackPage() {
   }
 }
 
-/* TOMBOL KEMBALI HEADER GLOBAL */
+
+/* AKTIFKAN TOMBOL KEMBALI HEADER */
 
 if (headerBackButton) {
-  headerBackButton.addEventListener("click", goBackPage);
+  headerBackButton.addEventListener(
+    "click",
+    goBackPage
+  );
 }
+
 
 /* =========================================
    KARTU DASHBOARD
@@ -1446,8 +1509,8 @@ document.querySelectorAll("[data-page]").forEach(button => {
     }
   });
 });
-
-/* =========================================
+  
+  /* =========================================
    NAVIGASI PENGATURAN KEDAI
 ========================================= */
 

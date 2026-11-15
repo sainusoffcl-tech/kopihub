@@ -5714,7 +5714,7 @@ function createInvoicePaymentForm(invoice, card) {
     )
   );
 
-  const message = invoiceElement(
+    const message = invoiceElement(
     "div",
     "invoice-message"
   );
@@ -5736,9 +5736,9 @@ function createInvoicePaymentForm(invoice, card) {
 
     const shop = selectedShop();
 
-    if (!shop || !shop.id) {
+    if (!client || !shop || !shop.id) {
       message.textContent =
-        "Data kedai tidak tersedia. Muat ulang halaman.";
+        "Data kedai tidak tersedia. Silakan muat ulang halaman.";
       message.className = "invoice-message error";
       return;
     }
@@ -5750,11 +5750,18 @@ function createInvoicePaymentForm(invoice, card) {
       return;
     }
 
+    if (invoice.status !== "issued") {
+      message.textContent =
+        "Invoice ini tidak sedang tersedia untuk pembayaran.";
+      message.className = "invoice-message error";
+      return;
+    }
+
     const file = fileInput.files?.[0];
 
     if (!file) {
       message.textContent =
-        "Pilih file bukti transfer terlebih dahulu.";
+        "Pilih bukti transfer terlebih dahulu.";
       message.className = "invoice-message error";
       return;
     }
@@ -5772,6 +5779,12 @@ function createInvoicePaymentForm(invoice, card) {
       return;
     }
 
+    if (file.size === 0) {
+      message.textContent = "File yang dipilih kosong.";
+      message.className = "invoice-message error";
+      return;
+    }
+
     if (file.size > 10 * 1024 * 1024) {
       message.textContent =
         "Ukuran file melebihi batas 10 MB.";
@@ -5779,12 +5792,7 @@ function createInvoicePaymentForm(invoice, card) {
       return;
     }
 
-    if (file.size === 0) {
-      message.textContent = "File yang dipilih kosong.";
-      message.className = "invoice-message error";
-      return;
-    }
-
+    // Invoice wajib dibayar sekaligus.
     const amount = Number(invoice.total_due);
 
     if (!Number.isFinite(amount) || amount <= 0) {
@@ -5796,15 +5804,18 @@ function createInvoicePaymentForm(invoice, card) {
 
     invoiceSubmitBusy = true;
     submit.disabled = true;
+    fileInput.disabled = true;
     submit.textContent = "Mengirim...";
 
+    let proofPath = null;
     let proofUploaded = false;
 
     try {
       const randomPart =
         window.crypto?.randomUUID
           ? window.crypto.randomUUID()
-          : Math.random().toString(36).slice(2);
+          : Date.now() + "-" +
+            Math.random().toString(36).slice(2);
 
       const safeName = file.name
         .replace(/[^a-zA-Z0-9._-]/g, "-")
@@ -5813,7 +5824,7 @@ function createInvoicePaymentForm(invoice, card) {
       const filename =
         Date.now() + "-" + randomPart + "-" + safeName;
 
-      const proofPath =
+      proofPath =
         shop.id + "/" + invoice.id + "/" + filename;
 
       message.textContent =
@@ -5846,18 +5857,18 @@ function createInvoicePaymentForm(invoice, card) {
 
       if (error) {
         throw new Error(
-          "Bukti sudah terunggah, tetapi pengajuan belum tercatat. " +
-          "Jangan mengunggah ulang dengan file yang sama. " +
-          "Silakan hubungi Admin KopiHub. Detail: " +
+          "Bukti transfer sudah terunggah, tetapi pengajuan pembayaran " +
+          "belum berhasil dicatat. Jangan mengirim ulang sebelum " +
+          "memastikan statusnya kepada Admin KopiHub. Detail: " +
           error.message
         );
       }
 
       if (!data || data.success !== true) {
         throw new Error(
-          proofUploaded
-            ? "Bukti sudah terunggah, tetapi pengajuan belum berhasil dicatat. Hubungi Admin KopiHub sebelum mengirim ulang."
-            : data?.message || "Pengajuan pembayaran belum berhasil dicatat."
+          data?.message ||
+          "Bukti transfer sudah terunggah, tetapi pengajuan pembayaran " +
+          "belum berhasil dicatat. Hubungi Admin KopiHub sebelum mencoba lagi."
         );
       }
 
@@ -5880,9 +5891,17 @@ function createInvoicePaymentForm(invoice, card) {
 
       message.className = "invoice-message error";
 
+      if (proofUploaded) {
+        console.warn(
+          "Bukti transfer sudah berada di bucket privat:",
+          proofPath
+        );
+      }
+
     } finally {
       invoiceSubmitBusy = false;
       submit.disabled = false;
+      fileInput.disabled = false;
       submit.textContent = "Kirim Bukti Pembayaran";
     }
   });
@@ -5890,6 +5909,8 @@ function createInvoicePaymentForm(invoice, card) {
   card.appendChild(form);
 }
 
+
+/* TAMPILKAN DAFTAR INVOICE OWNER */
 function renderOwnerInvoices() {
   const list = document.getElementById(
     "owner-invoice-list"
@@ -6011,18 +6032,16 @@ function renderOwnerInvoices() {
     );
 
     if (invoice.status === "paid") {
-      const paidInfo = invoiceElement(
-        "div",
-        "invoice-message success"
+      card.appendChild(
+        invoiceElement(
+          "div",
+          "invoice-message success",
+          "Pembayaran telah diterima. Invoice berstatus Lunas" +
+          (invoice.paid_at
+            ? " pada " + invoiceDate(invoice.paid_at) + "."
+            : ".")
+        )
       );
-
-      paidInfo.textContent =
-        "Pembayaran Telah Diterima. Invoice berstatus Lunas" +
-        (invoice.paid_at
-          ? " pada " + invoiceDate(invoice.paid_at) + "."
-          : ".");
-
-      card.appendChild(paidInfo);
 
       card.appendChild(
         invoiceElement(
@@ -6037,7 +6056,8 @@ function renderOwnerInvoices() {
         invoiceElement(
           "div",
           "invoice-message",
-          "Saldo tagihan ini telah dibawa ke tagihan periode berikutnya. Pembayaran dilakukan melalui invoice terbaru."
+          "Saldo tagihan ini telah dibawa ke tagihan periode berikutnya. " +
+          "Pembayaran dilakukan melalui invoice terbaru."
         )
       );
 
@@ -6050,7 +6070,10 @@ function renderOwnerInvoices() {
         )
       );
 
-    } else if (invoice.status === "issued" && hasSubmitted) {
+    } else if (
+      invoice.status === "issued" &&
+      hasSubmitted
+    ) {
       card.appendChild(
         invoiceElement(
           "div",
@@ -6067,6 +6090,7 @@ function renderOwnerInvoices() {
       createInvoicePaymentForm(invoice, card);
     }
 
+    // Riwayat pembayaran tetap ditampilkan.
     renderInvoicePaymentHistory(invoice, card);
 
     list.appendChild(card);
@@ -6079,20 +6103,21 @@ document
   .getElementById("refresh-owner-invoices")
   ?.addEventListener("click", loadOwnerInvoices);
 
-/* LOGOUT */
-const logoutButton = $("logout");
 
-console.log("Tombol logout ditemukan:", !!logoutButton);
+/* LOGOUT OWNER */
+const logoutButton = $("logout");
 
 if (logoutButton) {
   logoutButton.addEventListener("click", async function () {
-    console.log("Tombol logout diklik");
+    if (!client) {
+      alert("Sesi belum tersedia. Silakan muat ulang halaman.");
+      return;
+    }
+
+    logoutButton.disabled = true;
 
     try {
-      const { data, error } = await client.auth.signOut();
-
-      console.log("Hasil logout:", data);
-      console.log("Error logout:", error);
+      const { error } = await client.auth.signOut();
 
       if (error) throw error;
 
@@ -6100,14 +6125,19 @@ if (logoutButton) {
 
     } catch (error) {
       console.error("Gagal logout:", error);
+
       alert("Logout gagal: " + error.message);
+
+      logoutButton.disabled = false;
     }
   });
 }
 
-/* MULAI DASHBOARD */
+
+/* MULAI DASHBOARD OWNER */
 navigateToPage("home");
 loadShops();
+
 </script>
 </body>
 </html>

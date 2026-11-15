@@ -5071,6 +5071,7 @@ $("share-qr").addEventListener("click", async () => {
    PROFIL KEDAI OWNER
    ===================================================== */
 
+/* HAPUS LOGO KEDAI */
 $("remove-shop-logo").addEventListener("click", () => {
   $("profile-shop-logo").value = "";
   $("profile-logo-image").removeAttribute("src");
@@ -5080,6 +5081,8 @@ $("remove-shop-logo").addEventListener("click", () => {
     "Logo ditandai untuk dihapus. Klik Simpan Profil Kedai untuk menerapkan perubahan.";
 });
 
+
+/* SIMPAN PROFIL KEDAI */
 $("shop-profile-form").addEventListener("submit", async event => {
   event.preventDefault();
 
@@ -5087,6 +5090,8 @@ $("shop-profile-form").addEventListener("submit", async event => {
   const message = $("profile-message");
   const saveButton = $("save-shop-profile");
   const fileInput = $("profile-shop-logo");
+  const preview = $("profile-logo-preview");
+  const image = $("profile-logo-image");
 
   if (!client || !shop) {
     message.textContent = "Pilih kedai terlebih dahulu.";
@@ -5094,18 +5099,23 @@ $("shop-profile-form").addEventListener("submit", async event => {
   }
 
   const name = $("profile-shop-name").value.trim();
-  const description = $("profile-shop-description").value.trim();
-  const file = fileInput.files[0] || null;
+  const description =
+    $("profile-shop-description").value.trim();
+
+  const file = fileInput.files?.[0] || null;
 
   if (!name) {
     message.textContent = "Nama kedai wajib diisi.";
     return;
   }
 
-  if (file && (
-    !["image/png", "image/jpeg", "image/webp"].includes(file.type) ||
-    file.size > 2 * 1024 * 1024
-  )) {
+  if (
+    file &&
+    (
+      !["image/png", "image/jpeg", "image/webp"].includes(file.type) ||
+      file.size > 2 * 1024 * 1024
+    )
+  ) {
     message.textContent =
       "Pilih gambar PNG, JPG, atau WebP maksimal 2 MB.";
     return;
@@ -5113,8 +5123,12 @@ $("shop-profile-form").addEventListener("submit", async event => {
 
   const removeLogo =
     !file &&
-    $("profile-logo-preview").hidden &&
+    preview.hidden &&
     Boolean(shop.logo_url);
+
+  const originalLogoUrl = shop.logo_url || null;
+
+  let uploadedFilePath = null;
 
   saveButton.disabled = true;
   message.textContent = "Menyimpan profil kedai...";
@@ -5122,30 +5136,33 @@ $("shop-profile-form").addEventListener("submit", async event => {
   try {
     let logoUrl = removeLogo
       ? null
-      : (shop.logo_url || null);
+      : originalLogoUrl;
 
+    /* UNGGAH LOGO BARU */
     if (file) {
       const safeName = file.name.replace(
         /[^a-zA-Z0-9._-]/g,
         "-"
       );
 
-      const filePath =
+      uploadedFilePath =
         shop.id + "/" + Date.now() + "-" + safeName;
 
       const { error: uploadError } = await client.storage
         .from("shop-logos")
-        .upload(filePath, file, {
+        .upload(uploadedFilePath, file, {
           contentType: file.type,
           cacheControl: "3600",
           upsert: false
         });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        throw uploadError;
+      }
 
       const { data: publicData } = client.storage
         .from("shop-logos")
-        .getPublicUrl(filePath);
+        .getPublicUrl(uploadedFilePath);
 
       if (!publicData?.publicUrl) {
         throw new Error(
@@ -5156,18 +5173,22 @@ $("shop-profile-form").addEventListener("submit", async event => {
       logoUrl = publicData.publicUrl;
     }
 
-    const { data: updatedData, error: updateError } = await client
-      .from("kh_shops")
-      .update({
-        name,
-        description: description || null,
-        logo_url: logoUrl
-      })
-      .eq("id", shop.id)
-      .select("id")
-      .single();
+    /* SIMPAN KE DATABASE */
+    const { data: updatedData, error: updateError } =
+      await client
+        .from("kh_shops")
+        .update({
+          name,
+          description: description || null,
+          logo_url: logoUrl
+        })
+        .eq("id", shop.id)
+        .select("id")
+        .single();
 
-    if (updateError) throw updateError;
+    if (updateError) {
+      throw updateError;
+    }
 
     if (!updatedData) {
       throw new Error(
@@ -5175,10 +5196,12 @@ $("shop-profile-form").addEventListener("submit", async event => {
       );
     }
 
+    /* PERBARUI DATA KEDAI DI MEMORI */
     shop.name = name;
     shop.description = description || null;
     shop.logo_url = logoUrl;
 
+    /* PERBARUI NAMA PADA PILIHAN KEDAI */
     const option = shopSelect?.selectedOptions?.[0];
 
     if (option) {
@@ -5186,13 +5209,46 @@ $("shop-profile-form").addEventListener("submit", async event => {
         shop.name + " (" + shop.slug + ")";
     }
 
+    /* BERSIHKAN INPUT LOGO */
+    fileInput.value = "";
+
+    /* PERBARUI TAMPILAN PROFIL */
     renderSelectedShop();
 
     message.textContent =
       "Profil kedai berhasil disimpan.";
 
   } catch (error) {
-    console.error("Gagal menyimpan profil:", error);
+    console.error(
+      "Gagal menyimpan profil kedai:",
+      error
+    );
+
+    /*
+      Jika logo baru sudah terunggah tetapi
+      penyimpanan database gagal, hapus file baru
+      agar tidak meninggalkan file yatim.
+    */
+    if (uploadedFilePath) {
+      try {
+        const { error: cleanupError } =
+          await client.storage
+            .from("shop-logos")
+            .remove([uploadedFilePath]);
+
+        if (cleanupError) {
+          console.error(
+            "Gagal membersihkan logo sementara:",
+            cleanupError
+          );
+        }
+      } catch (cleanupError) {
+        console.error(
+          "Kesalahan saat membersihkan logo:",
+          cleanupError
+        );
+      }
+    }
 
     message.textContent =
       "Gagal menyimpan profil: " +
@@ -5203,7 +5259,11 @@ $("shop-profile-form").addEventListener("submit", async event => {
   }
 });
 
-/* SIMPAN PENGATURAN PAJAK PBJT OWNER */
+
+/* =====================================================
+   SIMPAN PENGATURAN PAJAK PBJT OWNER
+   ===================================================== */
+
 $("shop-pbjt-form").addEventListener("submit", async event => {
   event.preventDefault();
 
@@ -5274,7 +5334,10 @@ $("shop-pbjt-form").addEventListener("submit", async event => {
 
     const currentShop = selectedShop();
 
-    if (currentShop && String(currentShop.id) === shopId) {
+    if (
+      currentShop &&
+      String(currentShop.id) === shopId
+    ) {
       input.value = savedRate.toString();
 
       message.textContent =
@@ -5283,15 +5346,22 @@ $("shop-pbjt-form").addEventListener("submit", async event => {
     }
 
   } catch (error) {
-    console.error("Gagal menyimpan tarif PBJT:", error);
+    console.error(
+      "Gagal menyimpan tarif PBJT:",
+      error
+    );
 
     const currentShop = selectedShop();
 
-    if (currentShop && String(currentShop.id) === shopId) {
+    if (
+      currentShop &&
+      String(currentShop.id) === shopId
+    ) {
       input.value = previousRate.toString();
 
       message.textContent =
-        "Gagal menyimpan tarif PBJT: " + error.message;
+        "Gagal menyimpan tarif PBJT: " +
+        error.message;
     }
 
   } finally {
@@ -5299,8 +5369,11 @@ $("shop-pbjt-form").addEventListener("submit", async event => {
   }
 });
 
-  
-/* PENGATURAN WAKTU PEMBAYARAN OWNER */
+
+/* =====================================================
+   PENGATURAN WAKTU PEMBAYARAN OWNER
+   ===================================================== */
+
 $("owner-payment-timing").addEventListener(
   "change",
   async function () {
@@ -5309,11 +5382,13 @@ $("owner-payment-timing").addEventListener(
     const select = $("owner-payment-timing");
 
     if (!client || !shop) {
-      message.textContent = "Pilih kedai terlebih dahulu.";
+      message.textContent =
+        "Pilih kedai terlebih dahulu.";
       return;
     }
 
     const shopId = String(shop.id);
+
     const previousValue = String(
       shop.preparation_before_payment === true
     );
@@ -5336,7 +5411,9 @@ $("owner-payment-timing").addEventListener(
       if (error) throw error;
 
       if (!data) {
-        throw new Error("Pengaturan kedai tidak berhasil diperbarui.");
+        throw new Error(
+          "Pengaturan kedai tidak berhasil diperbarui."
+        );
       }
 
       const updatedShop = shops.find(
@@ -5348,9 +5425,15 @@ $("owner-payment-timing").addEventListener(
           data.preparation_before_payment;
       }
 
+      shop.preparation_before_payment =
+        data.preparation_before_payment;
+
       const currentShop = selectedShop();
 
-      if (currentShop && String(currentShop.id) === shopId) {
+      if (
+        currentShop &&
+        String(currentShop.id) === shopId
+      ) {
         select.value = String(
           data.preparation_before_payment === true
         );
@@ -5369,10 +5452,15 @@ $("owner-payment-timing").addEventListener(
 
       const currentShop = selectedShop();
 
-      if (currentShop && String(currentShop.id) === shopId) {
+      if (
+        currentShop &&
+        String(currentShop.id) === shopId
+      ) {
         select.value = previousValue;
+
         message.textContent =
-          "Gagal menyimpan pengaturan: " + error.message;
+          "Gagal menyimpan pengaturan: " +
+          error.message;
       }
 
     } finally {
@@ -5380,8 +5468,6 @@ $("owner-payment-timing").addEventListener(
     }
   }
 );
-
-
 
 /* =====================================================
    KOPIHUB — OWNER INVOICE / TAGIHAN

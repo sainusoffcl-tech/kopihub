@@ -4865,16 +4865,8 @@ function closeOwnerOrderDetail() {
       (sum, order) => sum + orderValue(order),
       0
     );
-
-    $("today-orders").textContent = todaysOrders.length;
-    $("today-sales").textContent = rupiah(paidValue);
-
-    // Biaya layanan mengikuti pengaturan terpusat Admin KopiHub.
-    $("today-service-fee").textContent = "Mengikuti Admin";
-
     $("summary-income").textContent = rupiah(paidValue);
     $("summary-sales").textContent = rupiah(totalValue);
-
     $("transaction-order-count").textContent = todaysOrders.length;
     $("transaction-paid-count").textContent = paidOrders.length;
     $("transaction-unpaid-count").textContent = unpaidOrders.length;

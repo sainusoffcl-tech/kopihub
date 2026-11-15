@@ -3231,20 +3231,6 @@ $("open-menu-qr").addEventListener("click", () => {
 });
 
 
-/*
-  KOMPATIBILITAS TOMBOL KEMBALI LAMA.
-
-  Tombol lokal ini dapat dihapus dari HTML
-  setelah navigasi header global diterapkan.
-*/
-
-document.querySelectorAll(".menu-back-home").forEach(button => {
-  button.addEventListener("click", () => {
-    showMenuHome();
-  });
-});
-
-
 /* RESET FORM MENU */
 
 function resetMenuForm() {

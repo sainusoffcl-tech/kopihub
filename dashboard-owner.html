@@ -1252,6 +1252,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 </main>
 </div>
 
+
 <!-- NAVIGASI BAWAH DIHAPUS -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1262,79 +1263,134 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 <script>
 "use strict";
 
-/* KONFIGURASI */
+/* =========================================
+   KONFIGURASI KOPIHUB OWNER
+========================================= */
+
 const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
 const CASHIER_FUNCTION = "cashier-access";
 const CASHIER_MANAGEMENT_FUNCTION = "cashier-management-v2";
-const TEMPORARY_SERVICE_FEE = 3000;
+
+/*
+  Catatan:
+  Biaya layanan KopiHub harus mengikuti pengaturan
+  Admin Dashboard, bukan angka tetap di dashboard Owner.
+*/
 
 const $ = id => document.getElementById(id);
+
 let client = null;
 let shops = [];
 let categories = [];
 let products = [];
 let allOrders = [];
 let ownerOrderCashierAssignments = new Map();
+
 let currentReport = null;
 let editingProductId = null;
 let requestVersion = 0;
+
 let cashierStaff = [];
 let cashierRequestBusy = false;
+
 const cashierResetBusyIds = new Set();
 
 const shopSelect = $("shop-select");
+const appScroll = $("app-scroll");
+const ownerHeader = $("owner-header");
+const headerBackButton = $("header-back-button");
 
-/* NAVIGASI HALAMAN */
+/* =========================================
+   NAVIGASI HALAMAN UTAMA
+========================================= */
+
 const pages = {
-  home:$("page-home"),
-  menu:$("page-menu"),
-  transaksi:$("page-transaksi"),
-  laporan:$("page-laporan"),
-  lainnya:$("page-lainnya")
+  home: $("page-home"),
+  menu: $("page-menu"),
+  transaksi: $("page-transaksi"),
+  laporan: $("page-laporan"),
+  lainnya: $("page-lainnya")
 };
 
 let currentPage = "home";
 let pageHistory = [];
 
 const pageTitles = {
-  home:"Dashboard Owner",
-  menu:"Kelola Menu",
-  transaksi:"Transaksi",
-  laporan:"Laporan Penjualan",
-  lainnya:"Pengaturan Kedai"
+  home: "Dashboard Owner",
+  menu: "Kelola Menu",
+  transaksi: "Transaksi",
+  laporan: "Laporan Penjualan",
+  lainnya: "Pengaturan Kedai"
 };
+
+/*
+  Satu sistem navigasi digunakan untuk seluruh
+  halaman utama dan halaman turunan.
+
+  Tombol kembali berada di header global.
+*/
+
+function updateGlobalBackButton() {
+  const hasHistory = pageHistory.length > 0;
+
+  if (ownerHeader) {
+    ownerHeader.classList.toggle("has-back", hasHistory);
+  }
+
+  if (headerBackButton) {
+    headerBackButton.hidden = !hasHistory;
+    headerBackButton.setAttribute(
+      "aria-label",
+      hasHistory ? "Kembali" : "Dashboard Owner"
+    );
+  }
+}
 
 function navigateToPage(pageName, options = {}) {
   if (!pages[pageName]) return;
 
   const previousPage = currentPage;
 
-  if (pageName !== previousPage && options.fromBack !== true) {
+  if (
+    pageName !== previousPage &&
+    options.fromBack !== true &&
+    options.replace !== true
+  ) {
     pageHistory.push(previousPage);
   }
 
+  if (options.replace === true) {
+    pageHistory = [];
+  }
+
   Object.entries(pages).forEach(([name, element]) => {
-    element.hidden = name !== pageName;
+    if (element) {
+      element.hidden = name !== pageName;
+    }
   });
 
   currentPage = pageName;
 
-  const header = $("owner-header");
-  const backButton = $("header-back-button");
+  if ($("header-shop-name")) {
+    $("header-shop-name").textContent =
+      pageTitles[pageName] || "Dashboard Owner";
+  }
 
-  header.classList.toggle("has-back", pageName !== "home");
-  backButton.setAttribute(
-    "aria-label",
-    pageName === "home" ? "Dashboard Owner" : "Kembali"
-  );
+  updateGlobalBackButton();
 
-  $("header-shop-name").textContent = pageTitles[pageName] || "Dashboard Owner";
+  if (appScroll) {
+    appScroll.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }
 
-  $("app-scroll").scrollTo({ top:0, behavior:"instant" });
-
-  if (pageName === "laporan" && currentReport === null && allOrders.length) {
-    updateReport();
+  if (pageName === "laporan") {
+    if (currentReport === null && allOrders.length > 0) {
+      updateReport();
+    }
   }
 
   if (pageName === "lainnya" && selectedShop()) {
@@ -1344,27 +1400,65 @@ function navigateToPage(pageName, options = {}) {
 }
 
 function goBackPage() {
-  if (currentPage === "home") return;
-
-  let previousPage = pageHistory.pop();
-
-  if (!previousPage || !pages[previousPage]) {
-    previousPage = "home";
+  if (pageHistory.length === 0) {
+    navigateToPage("home", { replace: true });
+    return;
   }
 
-  navigateToPage(previousPage, {fromBack:true});
+  const previousPage = pageHistory.pop();
+
+  if (!pages[previousPage]) {
+    navigateToPage("home", { replace: true });
+    return;
+  }
+
+  Object.entries(pages).forEach(([name, element]) => {
+    if (element) {
+      element.hidden = name !== previousPage;
+    }
+  });
+
+  currentPage = previousPage;
+
+  if ($("header-shop-name")) {
+    $("header-shop-name").textContent =
+      pageTitles[previousPage] || "Dashboard Owner";
+  }
+
+  updateGlobalBackButton();
+
+  if (appScroll) {
+    appScroll.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }
 }
 
-$("header-back-button").addEventListener("click", goBackPage);
+/* TOMBOL KEMBALI HEADER GLOBAL */
 
-/* KARTU DASHBOARD */
+if (headerBackButton) {
+  headerBackButton.addEventListener("click", goBackPage);
+}
+
+/* =========================================
+   KARTU DASHBOARD
+========================================= */
+
 document.querySelectorAll("[data-page]").forEach(button => {
   button.addEventListener("click", () => {
-    navigateToPage(button.dataset.page);
+    const targetPage = button.dataset.page;
+
+    if (pages[targetPage]) {
+      navigateToPage(targetPage);
+    }
   });
 });
 
-/* TOMBOL PENGATURAN */
+/* =========================================
+   NAVIGASI PENGATURAN KEDAI
+========================================= */
+
 document.querySelectorAll("[data-settings-target]").forEach(button => {
   button.addEventListener("click", () => {
     const target = button.dataset.settingsTarget;
@@ -1373,101 +1467,177 @@ document.querySelectorAll("[data-settings-target]").forEach(button => {
 
     requestAnimationFrame(() => {
       const section = $(target);
-      if (!section) return;
+
+      if (!section || !appScroll) return;
 
       const top = section.offsetTop - 10;
-      $("app-scroll").scrollTo({top,behavior:"smooth"});
+
+      appScroll.scrollTo({
+        top,
+        behavior: "smooth"
+      });
+
+      let focusTarget = null;
 
       if (target === "manajemen-kasir") {
         loadCashierStaff();
-        $("cashier-name").focus({preventScroll:true});
+        focusTarget = $("cashier-name");
       } else if (target === "profil-kedai") {
-        $("profile-shop-name").focus({preventScroll:true});
+        focusTarget = $("profile-shop-name");
       } else if (target === "pengaturan-pbjt") {
-        $("shop-pbjt-percent").focus({preventScroll:true});
+        focusTarget = $("shop-pbjt-percent");
+      }
+
+      if (focusTarget) {
+        focusTarget.focus({ preventScroll: true });
       }
     });
   });
 });
 
-/* HEADER TETAP: TIDAK ADA EFEK COLLAPSE */
-const header = $("owner-header");
-const appScroll = $("app-scroll");
+/* =========================================
+   HEADER TETAP
+   TIDAK ADA COLLAPSE SAAT SCROLL
+========================================= */
 
-/* UTILITAS */
+/*
+  Header dikendalikan oleh CSS position: fixed.
+  Tidak ada listener scroll untuk mengecilkan header.
+*/
+
+/* =========================================
+   UTILITAS
+========================================= */
+
 function rupiah(value) {
-  return new Intl.NumberFormat("id-ID",{
-    style:"currency",
-    currency:"IDR",
-    maximumFractionDigits:0
-  }).format(Number(value)||0);
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(Number(value) || 0);
 }
 
-function showStatus(message,error=false) {
-  const status=$("connection-status");
-  if(!status){console[error?"error":"log"](message);return;}
-  status.textContent=message;
-  status.style.background=error?"#fff0ef":"#e8f2ec";
-  status.style.color=error?"#9b2525":"#174c38";
+function showStatus(message, error = false) {
+  const status = $("connection-status");
+
+  if (!status) {
+    console[error ? "error" : "log"](message);
+    return;
+  }
+
+  status.textContent = message;
+
+  status.style.background = error
+    ? "#fff0ef"
+    : "#e8f2ec";
+
+  status.style.color = error
+    ? "#9b2525"
+    : "#174c38";
 }
 
-function showMenuMessage(message,error=false) {
-  $("menu-message").textContent=message;
-  $("menu-message").style.color=error?"#b42318":"";
+function showMenuMessage(message, error = false) {
+  const element = $("menu-message");
+
+  if (!element) return;
+
+  element.textContent = message;
+  element.style.color = error ? "#b42318" : "";
 }
 
 function selectedShop() {
-  return shops.find(shop=>shop.id===shopSelect.value)||null;
+  if (!shopSelect) return null;
+
+  return shops.find(
+    shop => shop.id === shopSelect.value
+  ) || null;
 }
 
 function getMenuUrl(slug) {
-  return new URL("menu.html?kedai="+encodeURIComponent(slug),location.href).href;
+  return new URL(
+    "menu.html?kedai=" + encodeURIComponent(slug),
+    location.href
+  ).href;
 }
 
 function clearQr(message) {
-  $("qr-image").hidden=true;
-  $("qr-image").removeAttribute("src");
-  $("menu-url").textContent="";
-  $("qr-status").textContent=message;
-  $("open-menu").href="menu.html";
+  const qrImage = $("qr-image");
+  const menuUrl = $("menu-url");
+  const qrStatus = $("qr-status");
+  const openMenu = $("open-menu");
+
+  if (qrImage) {
+    qrImage.hidden = true;
+    qrImage.removeAttribute("src");
+  }
+
+  if (menuUrl) {
+    menuUrl.textContent = "";
+  }
+
+  if (qrStatus) {
+    qrStatus.textContent = message;
+  }
+
+  if (openMenu) {
+    openMenu.href = "menu.html";
+  }
 }
 
 function escapeHtml(value) {
-  return String(value??"").replace(/[&<>"']/g,char=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
   })[char]);
 }
 
-function setCashierMessage(message,type="") {
-  const el=$("cashier-message");
-  el.textContent=message;
-  el.className="cashier-message"+(type?" "+type:"");
+function setCashierMessage(message, type = "") {
+  const element = $("cashier-message");
+
+  if (!element) return;
+
+  element.textContent = message;
+  element.className =
+    "cashier-message" + (type ? " " + type : "");
 }
 
 function formatExpiry(value) {
-  if(!value) return "Masa berlaku kode mengikuti batas waktu dari server.";
-  const date=new Date(value);
-  if(Number.isNaN(date.getTime())) return "Masa berlaku kode: "+value;
-  return "Kode berlaku sampai "+date.toLocaleString("id-ID",{
-    dateStyle:"medium",
-    timeStyle:"short"
-  })+".";
+  if (!value) {
+    return "Masa berlaku kode mengikuti batas waktu dari server.";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Masa berlaku kode: " + value;
+  }
+
+  return "Kode berlaku sampai " +
+    date.toLocaleString("id-ID", {
+      dateStyle: "medium",
+      timeStyle: "short"
+    }) + ".";
 }
 
-/* PROFIL HEADER */
-function renderSelectedShop() {
-  const shop=selectedShop();
+/* =========================================
+   IDENTITAS DAN PENGATURAN KEDAI
+========================================= */
 
-  /* PENGATURAN PAJAK PBJT OWNER */
+function renderSelectedShop() {
+  const shop = selectedShop();
+
+  /* PENGATURAN PBJT */
+
   const pbjtInput = $("shop-pbjt-percent");
   const pbjtMessage = $("shop-pbjt-message");
 
   if (pbjtInput) {
-    pbjtInput.value = Number(shop?.tax_percent ?? 0).toString();
+    pbjtInput.value = Number(
+      shop?.tax_percent ?? 0
+    ).toString();
   }
 
   if (pbjtMessage) {
@@ -1477,7 +1647,8 @@ function renderSelectedShop() {
       : "Pilih kedai terlebih dahulu.";
   }
 
-  /* PENGATURAN WAKTU PEMBAYARAN OWNER */
+  /* PENGATURAN WAKTU PEMBAYARAN */
+
   const paymentTiming = $("owner-payment-timing");
   const paymentTimingMessage = $("owner-payment-timing-message");
 
@@ -1494,730 +1665,289 @@ function renderSelectedShop() {
         : "Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
   }
 
-  /* IDENTITAS KEDAI PADA HEADER */
-  $("header-shop-name").textContent =
-    pageTitles[currentPage] || "Dashboard Owner";
+  /* JUDUL HEADER */
 
-  const headerLogo=$("header-shop-logo");
-  const fallbackSvg=$("header-profile-fallback-svg");
+  const headerTitle = $("header-shop-name");
 
-  if(shop&&shop.logo_url){
-    headerLogo.src=shop.logo_url;
-    headerLogo.hidden=false;
-    fallbackSvg.hidden=true;
-    headerLogo.onerror=()=>{
-      headerLogo.hidden=true;
-      fallbackSvg.hidden=false;
-    };
-  }else{
-    headerLogo.removeAttribute("src");
-    headerLogo.hidden=true;
-    fallbackSvg.hidden=false;
+  if (headerTitle) {
+    headerTitle.textContent =
+      pageTitles[currentPage] || "Dashboard Owner";
   }
 
-  $("shop-details").textContent=shop
-    ?"Kedai: "+shop.name+" · Slug: "+shop.slug
-    :"Belum ada kedai yang dipilih.";
+  /*
+    Tidak ada lagi logo kedai atau tombol profil
+    pada header global.
+  */
 
-  $("make-qr").disabled=!shop;
-  $("qr-title").textContent=shop?"QR Menu "+shop.name:"QR Menu KopiHub";
-  clearQr(shop?"Tekan Buat QR Menu.":"Pilih kedai terlebih dahulu.");
+  const shopDetails = $("shop-details");
 
-  $("profile-shop-name").value=shop?.name||"";
-  $("profile-shop-description").value=shop?.description||"";
-  $("profile-shop-logo").value="";
-  $("profile-message").textContent="";
-
-  if(shop?.logo_url){
-    $("profile-logo-image").src=shop.logo_url;
-    $("profile-logo-preview").hidden=false;
-  }else{
-    $("profile-logo-image").removeAttribute("src");
-    $("profile-logo-preview").hidden=true;
+  if (shopDetails) {
+    shopDetails.textContent = shop
+      ? "Kedai: " + shop.name + " · Slug: " + shop.slug
+      : "Belum ada kedai yang dipilih.";
   }
 
-  $("save-shop-profile").disabled=!shop;
+  /* QR MENU */
+
+  const makeQrButton = $("make-qr");
+  const qrTitle = $("qr-title");
+
+  if (makeQrButton) {
+    makeQrButton.disabled = !shop;
+  }
+
+  if (qrTitle) {
+    qrTitle.textContent = shop
+      ? "QR Menu " + shop.name
+      : "QR Menu KopiHub";
+  }
+
+  clearQr(
+    shop
+      ? "Tekan Buat QR Menu."
+      : "Pilih kedai terlebih dahulu."
+  );
+
+  /* FORM PROFIL KEDAI */
+
+  const profileName = $("profile-shop-name");
+  const profileDescription = $("profile-shop-description");
+  const profileLogo = $("profile-shop-logo");
+  const profileMessage = $("profile-message");
+
+  if (profileName) {
+    profileName.value = shop?.name || "";
+  }
+
+  if (profileDescription) {
+    profileDescription.value = shop?.description || "";
+  }
+
+  if (profileLogo) {
+    profileLogo.value = "";
+  }
+
+  if (profileMessage) {
+    profileMessage.textContent = "";
+  }
+
+  const profileLogoImage = $("profile-logo-image");
+  const profileLogoPreview = $("profile-logo-preview");
+
+  if (shop?.logo_url) {
+    if (profileLogoImage) {
+      profileLogoImage.src = shop.logo_url;
+    }
+
+    if (profileLogoPreview) {
+      profileLogoPreview.hidden = false;
+    }
+  } else {
+    if (profileLogoImage) {
+      profileLogoImage.removeAttribute("src");
+    }
+
+    if (profileLogoPreview) {
+      profileLogoPreview.hidden = true;
+    }
+  }
+
+  const saveProfileButton = $("save-shop-profile");
+
+  if (saveProfileButton) {
+    saveProfileButton.disabled = !shop;
+  }
 }
 
-/* LOAD SUPABASE */
-async function loadShops() {
-  try{
-    if(!window.supabase) throw new Error("Library Supabase tidak termuat.");
+/* =========================================
+   MEMUAT DATA SUPABASE
+========================================= */
 
-    client=window.supabase.createClient(
+async function loadShops() {
+  try {
+    if (!window.supabase) {
+      throw new Error("Library Supabase tidak termuat.");
+    }
+
+    client = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     );
 
-    const {data:sessionData,error:sessionError}=await client.auth.getSession();
-    if(sessionError) throw sessionError;
+    const {
+      data: sessionData,
+      error: sessionError
+    } = await client.auth.getSession();
 
-    if(!sessionData.session){
-      showStatus("Silakan login terlebih dahulu.",true);
-      $("shop-details").textContent="Silakan login melalui halaman akun.";
-      $("sales-chart").innerHTML='<p class="muted">Silakan login untuk melihat grafik.</p>';
-      $("report-message").textContent="Silakan login terlebih dahulu.";
+    if (sessionError) {
+      throw sessionError;
+    }
+
+    if (!sessionData.session) {
+      showStatus("Silakan login terlebih dahulu.", true);
+
+      if ($("shop-details")) {
+        $("shop-details").textContent =
+          "Silakan login melalui halaman akun.";
+      }
+
+      if ($("sales-chart")) {
+        $("sales-chart").innerHTML =
+          '<p class="muted">Silakan login untuk melihat grafik.</p>';
+      }
+
+      if ($("report-message")) {
+        $("report-message").textContent =
+          "Silakan login terlebih dahulu.";
+      }
+
       return;
     }
 
-    const userId=sessionData.session.user.id;
+    const userId = sessionData.session.user.id;
 
-    const {data:memberships,error:memberError}=await client
+    /*
+      Hanya keanggotaan Owner yang aktif
+      yang boleh digunakan untuk akses dashboard.
+    */
+
+    const {
+      data: memberships,
+      error: memberError
+    } = await client
       .from("kh_shop_members")
-      .select("shop_id, role")
-      .eq("user_id",userId);
+      .select("shop_id, role, is_active")
+      .eq("user_id", userId)
+      .eq("is_active", true);
 
-    if(memberError) throw memberError;
+    if (memberError) {
+      throw memberError;
+    }
 
-    const ownerMemberships=(memberships||[]).filter(
-      member=>String(member.role||"").toLowerCase()==="owner"
+    const ownerMemberships = (memberships || []).filter(
+      member =>
+        String(member.role || "").toLowerCase() === "owner"
     );
 
-    const uniqueShopIds=[
-      ...new Set(ownerMemberships.map(m=>m.shop_id).filter(Boolean))
+    const uniqueShopIds = [
+      ...new Set(
+        ownerMemberships
+          .map(member => member.shop_id)
+          .filter(Boolean)
+      )
     ];
 
-    if(uniqueShopIds.length!==1){
-      shops=[];
-      $("shop-details").textContent=uniqueShopIds.length===0
-        ?"Akun ini belum memiliki kedai. Hubungi administrator KopiHub."
-        :"Akun ini terhubung ke lebih dari satu kedai. Administrator perlu memperbaiki hubungan akun dan kedai.";
+    if (uniqueShopIds.length !== 1) {
+      shops = [];
 
-      $("header-shop-name").textContent="Dashboard Owner";
-      clearQr("Akun belum terhubung ke satu kedai.");
-      $("menu-list").textContent="Kedai belum dapat dimuat.";
-      $("sales-chart").innerHTML='<p class="muted">Grafik belum tersedia.</p>';
-      $("report-message").textContent="Akun Owner belum terhubung dengan tepat satu kedai.";
-      showStatus("Akses dashboard memerlukan tepat satu kedai untuk akun owner.",true);
+      if ($("shop-details")) {
+        $("shop-details").textContent =
+          uniqueShopIds.length === 0
+            ? "Akun ini belum memiliki kedai aktif. Hubungi administrator KopiHub."
+            : "Akun ini terhubung ke lebih dari satu kedai. Administrator perlu memperbaiki hubungan akun dan kedai.";
+      }
+
+      if ($("header-shop-name")) {
+        $("header-shop-name").textContent =
+          "Dashboard Owner";
+      }
+
+      clearQr("Akun belum terhubung ke satu kedai aktif.");
+
+      if ($("menu-list")) {
+        $("menu-list").textContent =
+          "Kedai belum dapat dimuat.";
+      }
+
+      if ($("sales-chart")) {
+        $("sales-chart").innerHTML =
+          '<p class="muted">Grafik belum tersedia.</p>';
+      }
+
+      if ($("report-message")) {
+        $("report-message").textContent =
+          "Akun Owner belum terhubung dengan tepat satu kedai aktif.";
+      }
+
+      showStatus(
+        "Akses dashboard memerlukan tepat satu kedai aktif untuk akun Owner.",
+        true
+      );
+
       return;
     }
 
-    const shopId=uniqueShopIds[0];
+    const shopId = uniqueShopIds[0];
 
-    const {data:shop,error:shopError}=await client
+    const {
+      data: shop,
+      error: shopError
+    } = await client
       .from("kh_shops")
-      .select("id,name,slug,is_active,timezone,logo_url,description,preparation_before_payment,tax_percent")
-      .eq("id",shopId)
+      .select(
+        "id,name,slug,is_active,timezone,logo_url,description,preparation_before_payment,tax_percent"
+      )
+      .eq("id", shopId)
       .maybeSingle();
 
-    if(shopError) throw shopError;
-    if(!shop) throw new Error("Data kedai tidak ditemukan.");
+    if (shopError) {
+      throw shopError;
+    }
 
-    shops=[shop];
-    shopSelect.replaceChildren();
+    if (!shop) {
+      throw new Error("Data kedai tidak ditemukan.");
+    }
 
-    const option=document.createElement("option");
-    option.value=shop.id;
-    option.textContent=shop.name;
-    shopSelect.appendChild(option);
-    shopSelect.value=shop.id;
-    shopSelect.disabled=true;
+    shops = [shop];
+
+    if (shopSelect) {
+      shopSelect.replaceChildren();
+
+      const option = document.createElement("option");
+
+      option.value = shop.id;
+      option.textContent = shop.name;
+
+      shopSelect.appendChild(option);
+      shopSelect.value = shop.id;
+      shopSelect.disabled = true;
+    }
 
     renderSelectedShop();
-    showStatus("Dashboard terhubung ke kedai milik akun ini.");
+
+    showStatus(
+      "Dashboard terhubung ke kedai milik akun ini."
+    );
 
     await refreshMenu();
     await loadOrders();
     await loadCashierStaff();
-
-  }catch(error){
-    console.error("Gagal memuat dashboard:",error);
-    showStatus("Gagal memuat kedai: "+error.message,true);
-  }
-}
-
-/* =========================
-   MANAJEMEN KASIR
-========================= */
-
-/*
-  Semua tindakan manajemen kasir menggunakan Edge Function.
-  Jangan melakukan insert/update langsung ke tabel kh_cashier_staff dari browser.
-
-  Keamanan tetap wajib diperiksa di Edge Function:
-  - Sesi pengguna valid.
-  - Owner memiliki keanggotaan aktif.
-  - Owner berhak mengakses shopId yang diminta.
-*/
-
-async function callCashierFunction(body) {
-  if (!client) {
-    throw new Error("Koneksi Supabase belum siap.");
-  }
-
-  const { data, error } = await client.functions.invoke(
-    CASHIER_FUNCTION,
-    { body }
-  );
-
-  if (error) {
-    let detail = error.message || "Permintaan ke server gagal.";
-
-    try {
-      if (error.context && typeof error.context.json === "function") {
-        const responseBody = await error.context.json();
-
-        if (responseBody?.error) {
-          detail = responseBody.error;
-        } else if (responseBody?.message) {
-          detail = responseBody.message;
-        }
-      }
-    } catch (_) {}
-
-    throw new Error(detail);
-  }
-
-  if (!data) {
-    throw new Error("Server tidak mengirimkan respons.");
-  }
-
-  if (data.success === false) {
-    throw new Error(
-      data.error || data.message || "Permintaan gagal."
-    );
-  }
-
-  return data;
-}
-
-async function callCashierManagementFunction(body) {
-  if (!client) {
-    throw new Error("Koneksi Supabase belum siap.");
-  }
-
-  const { data, error } = await client.functions.invoke(
-    CASHIER_MANAGEMENT_FUNCTION,
-    { body }
-  );
-
-  if (error) {
-    let detail = error.message || "Permintaan ke server gagal.";
-
-    try {
-      if (error.context && typeof error.context.json === "function") {
-        const responseBody = await error.context.json();
-
-        if (responseBody?.error) {
-          detail = responseBody.error;
-        } else if (responseBody?.message) {
-          detail = responseBody.message;
-        }
-      }
-    } catch (_) {}
-
-    throw new Error(detail);
-  }
-
-  if (!data) {
-    throw new Error("Server tidak mengirimkan respons.");
-  }
-
-  if (data.success === false) {
-    throw new Error(data.error || data.message || "Permintaan gagal.");
-  }
-
-  return data;
-}
-
-async function loadCashierStaff() {
-  const shop = selectedShop();
-
-  if (!client || !shop) return;
-
-  if (cashierRequestBusy) return;
-
-  cashierRequestBusy = true;
-
-  const refreshButton = $("refresh-cashiers");
-  if (refreshButton) refreshButton.disabled = true;
-
-  $("cashier-list-status").textContent = "Memuat daftar kasir...";
-  $("cashier-list").innerHTML =
-    '<div class="cashier-empty">Mengambil data kasir dari server...</div>';
-
-  try {
-    const data = await callCashierManagementFunction({
-      action: "list_staff",
-      shopId: shop.id
-    });
-
-    if (selectedShop()?.id !== shop.id) return;
-
-    cashierStaff = Array.isArray(data.staff)
-      ? data.staff
-      : [];
-
-    renderCashierStaff();
-
-    $("cashier-list-status").textContent =
-      cashierStaff.length + " identitas kasir terdaftar.";
 
   } catch (error) {
-    console.error("Gagal memuat kasir:", error);
+    console.error(
+      "Gagal memuat dashboard:",
+      error
+    );
 
-    $("cashier-list-status").textContent =
-      "Daftar kasir gagal dimuat.";
-
-    $("cashier-list").textContent = "";
-
-    const errorBox = document.createElement("div");
-    errorBox.className = "cashier-empty";
-    errorBox.textContent = error.message;
-
-    $("cashier-list").appendChild(errorBox);
-
-  } finally {
-    cashierRequestBusy = false;
-
-    if (refreshButton) {
-      refreshButton.disabled = false;
-    }
+    showStatus(
+      "Gagal memuat kedai: " + error.message,
+      true
+    );
   }
 }
 
-function getCashierStatus(staff) {
-  const status = String(staff.status || "").toLowerCase();
+/* =========================================
+   INISIALISASI NAVIGASI
+========================================= */
 
-  if (status === "disabled") {
-    return {label:"Nonaktif",className:"disabled"};
-  }
+navigateToPage("home", { replace: true });
 
-  if (status === "pending_pin") {
-    return {label:"Menunggu aktivasi PIN",className:"pending"};
-  }
-
-  if (status === "active") {
-    return {label:"Aktif",className:"active"};
-  }
-
-  return {label:status || "Tidak diketahui",className:""};
-}
-
-function renderCashierStaff() {
-  const container = $("cashier-list");
-
-  container.replaceChildren();
-
-  if (!cashierStaff.length) {
-    const empty = document.createElement("div");
-    empty.className = "cashier-empty";
-    empty.textContent =
-      "Belum ada identitas kasir. Gunakan formulir di atas untuk membuat kasir pertama.";
-    container.appendChild(empty);
-    return;
-  }
-
-  cashierStaff.forEach(staff => {
-    const card = document.createElement("article");
-    card.className = "cashier-card";
-
-    const top = document.createElement("div");
-    top.className = "cashier-card-top";
-
-    const identity = document.createElement("div");
-    identity.style.minWidth = "0";
-
-    const name = document.createElement("div");
-    name.className = "cashier-card-name";
-    name.textContent = staff.full_name || "Kasir";
-
-    const code = document.createElement("div");
-    code.className = "cashier-code";
-    code.textContent = "ID Kasir: " + (staff.staff_code || "—");
-
-    identity.append(name, code);
-
-    const status = getCashierStatus(staff);
-
-    const badges = document.createElement("div");
-    badges.className = "cashier-badges";
-
-    const statusBadge = document.createElement("span");
-    statusBadge.className = "cashier-badge " + status.className;
-    statusBadge.textContent = status.label;
-
-    const pinBadge = document.createElement("span");
-    pinBadge.className = "cashier-badge";
-    pinBadge.textContent = staff.pin_set_at
-      ? "PIN sudah dibuat"
-      : "PIN belum dibuat";
-
-    badges.append(statusBadge, pinBadge);
-    identity.appendChild(badges);
-
-    top.appendChild(identity);
-    card.appendChild(top);
-
-    const created = document.createElement("p");
-    created.className = "muted";
-    created.style.fontSize = "12px";
-    created.style.margin = "10px 0 0";
-
-    created.textContent = staff.created_at
-      ? "Dibuat: " + new Date(staff.created_at)
-          .toLocaleDateString("id-ID", {dateStyle:"medium"})
-      : "";
-
-    card.appendChild(created);
-
-    if (String(staff.status || "").toLowerCase() !== "disabled") {
-      const actions = document.createElement("div");
-      actions.className = "cashier-actions";
-
-      if (staff.status === "active") {
-        const reset = document.createElement("button");
-        reset.type = "button";
-        reset.textContent = "Reset PIN";
-
-        reset.addEventListener("click", () => {
-          resetCashierPin(staff, reset);
-        });
-
-        actions.appendChild(reset);
-      }
-
-      const disable = document.createElement("button");
-      disable.type = "button";
-      disable.className = "danger";
-      disable.textContent = "Nonaktifkan Kasir";
-
-      disable.addEventListener("click", () => {
-        disableCashier(staff);
-      });
-
-      actions.appendChild(disable);
-      card.appendChild(actions);
-    }
-
-    container.appendChild(card);
-  });
-}
+/*
+  Fungsi loadShops dipanggil setelah seluruh
+  fungsi dashboard lainnya didefinisikan.
+  Jangan pindahkan pemanggilan ini ke tengah script.
+*/
 </script>
-</body>
-</html>
-
-
-/* KONFIGURASI */
-const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
-const CASHIER_FUNCTION = "cashier-access";
-const CASHIER_MANAGEMENT_FUNCTION = "cashier-management-v2";
-const TEMPORARY_SERVICE_FEE = 3000;
-
-const $ = id => document.getElementById(id);
-let client = null;
-let shops = [];
-let categories = [];
-let products = [];
-let allOrders = [];
-let ownerOrderCashierAssignments = new Map();
-let currentReport = null;
-let editingProductId = null;
-let requestVersion = 0;
-let cashierStaff = [];
-let cashierRequestBusy = false;
-const cashierResetBusyIds = new Set();
-
-const shopSelect = $("shop-select");
-
-/* NAVIGASI */
-const navigationButtons = document.querySelectorAll(".nav-button");
-const pages = {
-  home:$("page-home"),
-  menu:$("page-menu"),
-  transaksi:$("page-transaksi"),
-  laporan:$("page-laporan"),
-  lainnya:$("page-lainnya")
-};
-
-function navigateToPage(pageName) {
-  if (!pages[pageName]) return;
-
-  Object.entries(pages).forEach(([name, element]) => {
-    element.hidden = name !== pageName;
-  });
-
-  navigationButtons.forEach(button => {
-    const active = button.dataset.page === pageName;
-    button.classList.toggle("active", active);
-
-    if (active) {
-      button.setAttribute("aria-current", "page");
-    } else {
-      button.removeAttribute("aria-current");
-    }
-  });
-
-  $("app-scroll").scrollTo({ top: 0, behavior: "instant" });
-
-  if (pageName === "laporan" && currentReport === null && allOrders.length) {
-    updateReport();
-  }
-
-  if (pageName === "lainnya" && selectedShop()) {
-    loadCashierStaff();
-    loadOwnerInvoices();
-  }
-}
-
-navigationButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    navigateToPage(button.dataset.page);
-  });
-});
-
-/* TOMBOL PENGATURAN */
-document.querySelectorAll("[data-settings-target]").forEach(button=>{
-  button.addEventListener("click",()=>{
-    const target=button.dataset.settingsTarget;
-
-    if(target==="home"){
-      navigateToPage("home");
-      return;
-    }
-
-    navigateToPage("lainnya");
-
-    requestAnimationFrame(()=>{
-      const section=$(target);
-      if(!section) return;
-
-      const top=section.offsetTop-10;
-      $("app-scroll").scrollTo({top,behavior:"smooth"});
-
-      if(target==="manajemen-kasir"){
-        loadCashierStaff();
-        $("cashier-name").focus({preventScroll:true});
-      }else if(target==="profil-kedai"){
-        $("profile-shop-name").focus({preventScroll:true});
-      }else if(target==="pengaturan-pbjt"){
-        $("shop-pbjt-percent").focus({preventScroll:true});
-      }
-    });
-  });
-});
-
-  /* COLLAPSING HEADER */
-const header = $("owner-header");
-const appScroll = $("app-scroll");
-let headerCollapsed = false;
-
-function updateHeader() {
-  const shouldCollapse = appScroll.scrollTop>35;
-  if(shouldCollapse===headerCollapsed) return;
-  headerCollapsed=shouldCollapse;
-  header.classList.toggle("collapsed",shouldCollapse);
-  document.body.classList.toggle("header-collapsed",shouldCollapse);
-}
-appScroll.addEventListener("scroll",updateHeader,{passive:true});
-
-/* UTILITAS */
-function rupiah(value) {
-  return new Intl.NumberFormat("id-ID",{
-    style:"currency",currency:"IDR",maximumFractionDigits:0
-  }).format(Number(value)||0);
-}
-
-function showStatus(message,error=false) {
-  const status=$("connection-status");
-  if(!status){console[error?"error":"log"](message);return;}
-  status.textContent=message;
-  status.style.background=error?"#fff0ef":"#e8f2ec";
-  status.style.color=error?"#9b2525":"#174c38";
-}
-
-function showMenuMessage(message,error=false) {
-  $("menu-message").textContent=message;
-  $("menu-message").style.color=error?"#b42318":"";
-}
-
-function selectedShop() {
-  return shops.find(shop=>shop.id===shopSelect.value)||null;
-}
-
-function getMenuUrl(slug) {
-  return new URL("menu.html?kedai="+encodeURIComponent(slug),location.href).href;
-}
-
-function clearQr(message) {
-  $("qr-image").hidden=true;
-  $("qr-image").removeAttribute("src");
-  $("menu-url").textContent="";
-  $("qr-status").textContent=message;
-  $("open-menu").href="menu.html";
-}
-
-function escapeHtml(value) {
-  return String(value??"").replace(/[&<>"']/g,char=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[char]);
-}
-
-function setCashierMessage(message,type="") {
-  const el=$("cashier-message");
-  el.textContent=message;
-  el.className="cashier-message"+(type?" "+type:"");
-}
-
-function formatExpiry(value) {
-  if(!value) return "Masa berlaku kode mengikuti batas waktu dari server.";
-  const date=new Date(value);
-  if(Number.isNaN(date.getTime())) return "Masa berlaku kode: "+value;
-  return "Kode berlaku sampai "+date.toLocaleString("id-ID",{
-    dateStyle:"medium",timeStyle:"short"
-  })+".";
-}
-
-/* PROFIL HEADER */
-function renderSelectedShop() {
-  const shop=selectedShop();
-
-  /* PENGATURAN PAJAK PBJT OWNER */
-  const pbjtInput = $("shop-pbjt-percent");
-  const pbjtMessage = $("shop-pbjt-message");
-
-  if (pbjtInput) {
-    pbjtInput.value = Number(shop?.tax_percent ?? 0).toString();
-  }
-
-  if (pbjtMessage) {
-    pbjtMessage.textContent = shop
-      ? "Tarif PBJT kedai saat ini: " +
-        Number(shop.tax_percent ?? 0).toLocaleString("id-ID") + "%"
-      : "Pilih kedai terlebih dahulu.";
-  }
-  /* PENGATURAN WAKTU PEMBAYARAN OWNER */
-  const paymentTiming = $("owner-payment-timing");
-  const paymentTimingMessage = $("owner-payment-timing-message");
-
-  if (paymentTiming) {
-    paymentTiming.value = String(
-      shop?.preparation_before_payment === true
-    );
-  }
-
-  if (paymentTimingMessage) {
-    paymentTimingMessage.textContent =
-      shop?.preparation_before_payment === true
-        ? "Pesanan dapat dipersiapkan sebelum pembayaran dikonfirmasi."
-        : "Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
-  }
-
-  $("header-shop-name").textContent=shop?shop.name:"Dashboard Owner";
-
-  const headerLogo=$("header-shop-logo");
-  const fallbackSvg=$("header-profile-fallback-svg");
-
-  if(shop&&shop.logo_url){
-    headerLogo.src=shop.logo_url;
-    headerLogo.hidden=false;
-    fallbackSvg.hidden=true;
-    headerLogo.onerror=()=>{
-      headerLogo.hidden=true;
-      fallbackSvg.hidden=false;
-    };
-  }else{
-    headerLogo.removeAttribute("src");
-    headerLogo.hidden=true;
-    fallbackSvg.hidden=false;
-  }
-
-  $("shop-details").textContent=shop
-    ?"Kedai: "+shop.name+" · Slug: "+shop.slug
-    :"Belum ada kedai yang dipilih.";
-
-  $("make-qr").disabled=!shop;
-  $("qr-title").textContent=shop?"QR Menu "+shop.name:"QR Menu KopiHub";
-  clearQr(shop?"Tekan Buat QR Menu.":"Pilih kedai terlebih dahulu.");
-
-  $("profile-shop-name").value=shop?.name||"";
-  $("profile-shop-description").value=shop?.description||"";
-  $("profile-shop-logo").value="";
-  $("profile-message").textContent="";
-
-  if(shop?.logo_url){
-    $("profile-logo-image").src=shop.logo_url;
-    $("profile-logo-preview").hidden=false;
-  }else{
-    $("profile-logo-image").removeAttribute("src");
-    $("profile-logo-preview").hidden=true;
-  }
-
-  $("save-shop-profile").disabled=!shop;
-}
-/* LOAD SUPABASE */
-async function loadShops() {
-  try{
-    if(!window.supabase) throw new Error("Library Supabase tidak termuat.");
-    client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-
-    const {data:sessionData,error:sessionError}=await client.auth.getSession();
-    if(sessionError) throw sessionError;
-
-    if(!sessionData.session){
-      showStatus("Silakan login terlebih dahulu.",true);
-      $("shop-details").textContent="Silakan login melalui halaman akun.";
-      $("sales-chart").innerHTML='<p class="muted">Silakan login untuk melihat grafik.</p>';
-      $("report-message").textContent="Silakan login terlebih dahulu.";
-      return;
-    }
-
-    const userId=sessionData.session.user.id;
-    const {data:memberships,error:memberError}=await client
-      .from("kh_shop_members").select("shop_id, role").eq("user_id",userId);
-
-    if(memberError) throw memberError;
-
-    const ownerMemberships=(memberships||[]).filter(
-      member=>String(member.role||"").toLowerCase()==="owner"
-    );
-
-    const uniqueShopIds=[...new Set(ownerMemberships.map(m=>m.shop_id).filter(Boolean))];
-
-    if(uniqueShopIds.length!==1){
-      shops=[];
-      $("shop-details").textContent=uniqueShopIds.length===0
-        ?"Akun ini belum memiliki kedai. Hubungi administrator KopiHub."
-        :"Akun ini terhubung ke lebih dari satu kedai. Administrator perlu memperbaiki hubungan akun dan kedai.";
-      $("header-shop-name").textContent="Dashboard Owner";
-      clearQr("Akun belum terhubung ke satu kedai.");
-      $("menu-list").textContent="Kedai belum dapat dimuat.";
-      $("sales-chart").innerHTML='<p class="muted">Grafik belum tersedia.</p>';
-      $("report-message").textContent="Akun Owner belum terhubung dengan tepat satu kedai.";
-      showStatus("Akses dashboard memerlukan tepat satu kedai untuk akun owner.",true);
-      return;
-    }
-
-    const shopId=uniqueShopIds[0];
-    const {data:shop,error:shopError}=await client.from("kh_shops")
-  .select("id,name,slug,is_active,timezone,logo_url,description,preparation_before_payment,tax_percent")
-  .eq("id",shopId).maybeSingle();
-
-    if(shopError) throw shopError;
-    if(!shop) throw new Error("Data kedai tidak ditemukan.");
-
-    shops=[shop];
-    shopSelect.replaceChildren();
-
-    const option=document.createElement("option");
-    option.value=shop.id;
-    option.textContent=shop.name;
-    shopSelect.appendChild(option);
-    shopSelect.value=shop.id;
-    shopSelect.disabled=true;
-
-    renderSelectedShop();
-    showStatus("Dashboard terhubung ke kedai milik akun ini.");
-
-    await refreshMenu();
-    await loadOrders();
-    await loadCashierStaff();
-  }catch(error){
-    console.error("Gagal memuat dashboard:",error);
-    showStatus("Gagal memuat kedai: "+error.message,true);
-  }
-}
 
 /* =========================
    MANAJEMEN KASIR

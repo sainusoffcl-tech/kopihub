@@ -2554,18 +2554,24 @@ $("copy-cashier-code").addEventListener("click", async () => {
 });
 
 
+
 /* =========================
    KELOLA MENU
 ========================= */
+
+/* MUAT DATA KATEGORI DAN PRODUK */
 
 async function refreshMenu() {
   const shop = selectedShop();
   const version = ++requestVersion;
 
-  if (!client || !shop) return;
+  if (!client || !shop) return false;
 
-  $("menu-list").textContent = "Memuat menu...";
-  $("menu-category").disabled = true;
+  const menuList = $("menu-list");
+  const categorySelect = $("menu-category");
+
+  menuList.textContent = "Memuat menu...";
+  categorySelect.disabled = true;
 
   try {
     const [catResult, productResult] = await Promise.all([
@@ -2585,9 +2591,9 @@ async function refreshMenu() {
 
     if (
       version !== requestVersion ||
-      shopSelect.value !== shop.id
+      String(shopSelect.value) !== String(shop.id)
     ) {
-      return;
+      return false;
     }
 
     if (catResult.error) throw catResult.error;
@@ -2596,10 +2602,10 @@ async function refreshMenu() {
     categories = catResult.data || [];
     products = productResult.data || [];
 
-    const categorySelect = $("menu-category");
     categorySelect.replaceChildren();
 
     const placeholder = document.createElement("option");
+
     placeholder.value = "";
     placeholder.textContent = categories.length
       ? "Pilih kategori"
@@ -2609,8 +2615,10 @@ async function refreshMenu() {
 
     categories.forEach(category => {
       const option = document.createElement("option");
+
       option.value = category.id;
       option.textContent = category.name;
+
       categorySelect.appendChild(option);
     });
 
@@ -2623,16 +2631,34 @@ async function refreshMenu() {
 
     renderProducts();
 
+    return true;
+
   } catch (error) {
-    $("menu-list").textContent =
+    if (
+      version !== requestVersion ||
+      String(shopSelect.value) !== String(shop.id)
+    ) {
+      return false;
+    }
+
+    console.error("Gagal memuat menu:", error);
+
+    menuList.textContent =
       "Gagal memuat menu: " + error.message;
+
+    categorySelect.disabled = !categories.length;
 
     showMenuMessage(
       "Gagal memuat kategori atau menu: " + error.message,
       true
     );
+
+    return false;
   }
 }
+
+
+/* TAMPILKAN DAFTAR PRODUK */
 
 function renderProducts() {
   const list = $("menu-list");
@@ -2655,7 +2681,7 @@ function renderProducts() {
     details.className = "muted";
 
     const category = categories.find(
-      item => item.id === product.category_id
+      item => String(item.id) === String(product.category_id)
     );
 
     details.textContent =
@@ -2667,8 +2693,10 @@ function renderProducts() {
 
     if (product.description) {
       const desc = document.createElement("p");
+
       desc.className = "muted";
       desc.textContent = product.description;
+
       card.appendChild(desc);
     }
 
@@ -2676,6 +2704,7 @@ function renderProducts() {
     actions.className = "menu-actions";
 
     const edit = document.createElement("button");
+
     edit.type = "button";
     edit.className = "secondary";
     edit.textContent = "Edit";
@@ -2685,6 +2714,7 @@ function renderProducts() {
     });
 
     const remove = document.createElement("button");
+
     remove.type = "button";
     remove.className = "danger";
     remove.textContent = "Hapus";
@@ -2698,6 +2728,7 @@ function renderProducts() {
     list.appendChild(card);
   });
 }
+
 
 /* =========================================
    NAVIGASI PANEL KELOLA MENU
@@ -2713,6 +2744,11 @@ async function showMenuPanel(panelId, refreshData = true) {
     "product-stock-panel",
     "menu-availability-panel"
   ];
+
+  if (!panels.includes(panelId)) {
+    console.warn("Panel menu tidak ditemukan:", panelId);
+    return;
+  }
 
   panels.forEach(id => {
     const panel = $(id);
@@ -2751,34 +2787,49 @@ async function showMenuPanel(panelId, refreshData = true) {
   }
 }
 
+
 /* HALAMAN UTAMA KELOLA MENU */
 
 function showMenuHome() {
   showMenuPanel("menu-home-panel");
 }
 
+
 /* TAMBAH MENU */
+
 $("show-add-menu").addEventListener("click", () => {
   resetMenuForm();
   showMenuPanel("menu-form-panel");
 });
 
+
 /* DAFTAR MENU */
+
 $("toggle-menu-list").addEventListener("click", () => {
   showMenuPanel("menu-list-panel");
 });
 
+
 /* QR MENU */
+
 $("open-menu-qr").addEventListener("click", () => {
   showMenuPanel("menu-qr-panel");
 });
 
-/* TOMBOL KEMBALI */
+
+/*
+  KOMPATIBILITAS TOMBOL KEMBALI LAMA.
+
+  Tombol lokal ini dapat dihapus dari HTML
+  setelah navigasi header global diterapkan.
+*/
+
 document.querySelectorAll(".menu-back-home").forEach(button => {
   button.addEventListener("click", () => {
     showMenuHome();
   });
 });
+
 
 /* RESET FORM MENU */
 
@@ -2792,15 +2843,31 @@ function resetMenuForm() {
   $("cancel-edit").hidden = false;
 }
 
+
 /* EDIT MENU */
 
 function startEdit(id) {
-  const product = products.find(item => item.id === id);
+  const shop = selectedShop();
 
-  if (!product) return;
+  const product = products.find(
+    item =>
+      String(item.id) === String(id) &&
+      shop &&
+      String(item.shop_id) === String(shop.id)
+  );
+
+  if (!product) {
+    showMenuMessage(
+      "Produk tidak ditemukan pada kedai yang dipilih.",
+      true
+    );
+    return;
+  }
 
   if (
-    !categories.some(item => item.id === product.category_id)
+    !categories.some(
+      item => String(item.id) === String(product.category_id)
+    )
   ) {
     showMenuMessage(
       "Kategori menu tidak aktif atau tidak ditemukan.",
@@ -2822,8 +2889,10 @@ function startEdit(id) {
   $("save-menu").textContent = "Simpan Perubahan";
   $("cancel-edit").hidden = false;
   $("menu-form-title").textContent = "Edit Menu";
+
   showMenuPanel("menu-form-panel", false);
 }
+
 
 /* SIMPAN MENU */
 
@@ -2831,9 +2900,15 @@ $("menu-form").addEventListener("submit", async event => {
   event.preventDefault();
 
   const shop = selectedShop();
+
   const name = $("menu-name").value.trim();
   const categoryId = $("menu-category").value;
   const price = Number($("menu-price").value);
+
+  const description =
+    $("menu-description").value.trim();
+
+  const save = $("save-menu");
 
   if (!shop || !client) {
     showMenuMessage(
@@ -2843,7 +2918,11 @@ $("menu-form").addEventListener("submit", async event => {
     return;
   }
 
-  if (!categories.some(item => item.id === categoryId)) {
+  if (
+    !categories.some(
+      item => String(item.id) === String(categoryId)
+    )
+  ) {
     showMenuMessage(
       "Pilih kategori yang valid.",
       true
@@ -2866,9 +2945,26 @@ $("menu-form").addEventListener("submit", async event => {
   }
 
   const wasEditing = Boolean(editingProductId);
-  const save = $("save-menu");
+  const productId = editingProductId;
+
+  if (wasEditing) {
+    const existingProduct = products.find(
+      item =>
+        String(item.id) === String(productId) &&
+        String(item.shop_id) === String(shop.id)
+    );
+
+    if (!existingProduct) {
+      showMenuMessage(
+        "Produk yang akan diedit tidak ditemukan.",
+        true
+      );
+      return;
+    }
+  }
 
   save.disabled = true;
+
   showMenuMessage("Menyimpan menu...");
 
   try {
@@ -2877,8 +2973,7 @@ $("menu-form").addEventListener("submit", async event => {
       category_id: categoryId,
       name,
       price,
-      description:
-        $("menu-description").value.trim() || null,
+      description: description || null,
       is_available:
         $("menu-available").value === "true",
       item_type: "drink"
@@ -2886,11 +2981,11 @@ $("menu-form").addEventListener("submit", async event => {
 
     let result;
 
-    if (editingProductId) {
+    if (wasEditing) {
       result = await client
         .from("kh_products")
         .update(payload)
-        .eq("id", editingProductId)
+        .eq("id", productId)
         .eq("shop_id", shop.id)
         .select("id")
         .maybeSingle();
@@ -2905,23 +3000,23 @@ $("menu-form").addEventListener("submit", async event => {
 
     if (result.error) throw result.error;
 
-    // Hindari pesan sukses jika tidak ada baris yang berubah.
     if (!result.data?.id) {
       throw new Error(
         "Data menu tidak berubah. Periksa hak akses Owner dan kebijakan RLS."
       );
     }
 
-resetMenuForm();
-showMenuHome();
+    resetMenuForm();
+
+    await refreshMenu();
+
+    showMenuHome();
 
     showMenuMessage(
       wasEditing
         ? "Menu berhasil diperbarui."
         : "Menu berhasil disimpan."
     );
-
-    await refreshMenu();
 
   } catch (error) {
     console.error("Gagal menyimpan menu:", error);
@@ -2936,6 +3031,7 @@ showMenuHome();
   }
 });
 
+
 /* BATAL TAMBAH / EDIT MENU */
 
 $("cancel-edit").addEventListener("click", () => {
@@ -2944,19 +3040,24 @@ $("cancel-edit").addEventListener("click", () => {
   showMenuMessage("Formulir ditutup.");
 });
 
-  /* HAPUS MENU */
+
+/* HAPUS MENU */
 
 async function deleteProduct(id) {
   const shop = selectedShop();
 
-  const product = products.find(item => item.id === id);
+  const product = products.find(
+    item =>
+      String(item.id) === String(id) &&
+      shop &&
+      String(item.shop_id) === String(shop.id)
+  );
 
-  if (
-    !shop ||
-    !product ||
-    product.shop_id !== shop.id ||
-    !client
-  ) {
+  if (!shop || !product || !client) {
+    showMenuMessage(
+      "Produk tidak ditemukan pada kedai yang dipilih.",
+      true
+    );
     return;
   }
 
@@ -2981,9 +3082,9 @@ async function deleteProduct(id) {
       );
     }
 
-    showMenuMessage("Menu berhasil dihapus.");
-
     await refreshMenu();
+
+    showMenuMessage("Menu berhasil dihapus.");
 
   } catch (error) {
     console.error("Gagal menghapus menu:", error);

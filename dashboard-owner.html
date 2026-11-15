@@ -3642,7 +3642,7 @@ function renderOwnerOrderDetail(order) {
 
   const isPOS = ["pos", "cashier"].includes(source);
 
-  const sourceLabel = isPOS ? "POS" : "QRIS";
+const sourceLabel = getOrderSourceLabel(order);
 
   const formatDateTime = timestamp => {
     if (!timestamp) return "Belum tercatat";

@@ -2697,10 +2697,7 @@ async function refreshMenu() {
 
     categorySelect.disabled = !categories.length;
 
-    $("menu-count").textContent = products.length;
-    $("available-count").textContent =
-      products.filter(product => product.is_available).length;
-
+    
     renderProducts();
     renderCategories();
 

@@ -3590,31 +3590,43 @@ function ownerOrderStatusInfo(order) {
     order.order_status || order.status || ""
   ).trim().toLowerCase();
 
-  let currentIndex = -1;
-  let label = rawStatus || "Status belum tersedia";
+  const statusMap = {
+    accepted: {
+      currentIndex: 0,
+      label: "Diterima"
+    },
+    received: {
+      currentIndex: 0,
+      label: "Diterima"
+    },
+    processing: {
+      currentIndex: 1,
+      label: "Diproses"
+    },
+    ready_for_delivery: {
+      currentIndex: 2,
+      label: "Siap diantar"
+    },
+    completed: {
+      currentIndex: 3,
+      label: "Selesai"
+    },
+    complete: {
+      currentIndex: 3,
+      label: "Selesai"
+    }
+  };
 
-  if (["accepted", "received"].includes(rawStatus)) {
-    currentIndex = 0;
-    label = "Diterima";
-  } else if (
-    ["processing", "ready_for_delivery"].includes(rawStatus)
-  ) {
-    currentIndex = 1;
-    label = rawStatus === "ready_for_delivery"
-      ? "Siap diantar"
-      : "Diproses";
-  } else if (["completed", "complete"].includes(rawStatus)) {
-    currentIndex = 2;
-    label = "Selesai";
-  }
+  const result = statusMap[rawStatus];
 
   return {
     rawStatus,
-    currentIndex,
-    label
+    currentIndex: result ? result.currentIndex : -1,
+    label: result
+      ? result.label
+      : (rawStatus || "Status belum tersedia")
   };
 }
-
 
 function renderOwnerOrderDetail(order) {
   const content = $("owner-order-detail-content");

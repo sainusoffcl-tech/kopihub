@@ -1417,12 +1417,26 @@ function navigateToPage(pageName, options = {}) {
   }
 }
 
-
 /* TOMBOL KEMBALI GLOBAL */
 
 function goBackPage() {
 
   /* PRIORITAS PERTAMA:
+     Kembali dari detail transaksi ke daftar pesanan. */
+
+  const orderDetailPanel = $("owner-order-detail-panel");
+
+  if (
+    currentPage === "transaksi" &&
+    orderDetailPanel &&
+    !orderDetailPanel.hidden
+  ) {
+    closeOwnerOrderDetail();
+    updateGlobalBackButton();
+    return;
+  }
+
+  /* PRIORITAS KEDUA:
      Kembali dari panel turunan Kelola Menu. */
 
   if (
@@ -1441,7 +1455,7 @@ function goBackPage() {
     return;
   }
 
-  /* PRIORITAS KEDUA:
+  /* PRIORITAS KETIGA:
      Kembali ke halaman utama sebelumnya. */
 
   if (pageHistory.length === 0) {
@@ -1482,8 +1496,6 @@ function goBackPage() {
     });
   }
 }
-
-
 /* AKTIFKAN TOMBOL KEMBALI HEADER */
 
 if (headerBackButton) {

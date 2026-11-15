@@ -2548,7 +2548,6 @@ $("copy-cashier-code").addEventListener("click", async () => {
 });
 
 
-
 /* =========================
    KELOLA MENU
 ========================= */
@@ -2599,7 +2598,6 @@ async function refreshMenu() {
     categorySelect.replaceChildren();
 
     const placeholder = document.createElement("option");
-
     placeholder.value = "";
     placeholder.textContent = categories.length
       ? "Pilih kategori"
@@ -2619,11 +2617,11 @@ async function refreshMenu() {
     categorySelect.disabled = !categories.length;
 
     $("menu-count").textContent = products.length;
-
     $("available-count").textContent =
       products.filter(product => product.is_available).length;
 
     renderProducts();
+    renderCategories();
 
     return true;
 
@@ -2648,6 +2646,358 @@ async function refreshMenu() {
     );
 
     return false;
+  }
+}
+
+
+/* =========================================
+   PENGELOLAAN KATEGORI
+========================================= */
+
+function showCategoryMessage(message, isError = false) {
+  const target = $("category-message");
+
+  if (!target) return;
+
+  target.textContent = message;
+  target.style.color = isError ? "#a72d2d" : "#21683a";
+}
+
+
+/* MEMBUAT TAMPILAN KATEGORI */
+
+function renderCategories() {
+  const container = $("menu-category-content");
+
+  if (!container) return;
+
+  container.replaceChildren();
+
+  const shop = selectedShop();
+
+  if (!shop) {
+    container.textContent = "Pilih kedai terlebih dahulu.";
+    return;
+  }
+
+  const form = document.createElement("form");
+  form.id = "category-form";
+
+  const field = document.createElement("div");
+  field.className = "field";
+
+  const label = document.createElement("label");
+  label.htmlFor = "category-name";
+  label.textContent = "Nama Kategori";
+
+  const input = document.createElement("input");
+  input.id = "category-name";
+  input.type = "text";
+  input.maxLength = 80;
+  input.required = true;
+  input.placeholder = "Contoh: Kopi, Non-Kopi, Makanan";
+
+  const saveButton = document.createElement("button");
+  saveButton.type = "submit";
+  saveButton.className = "primary";
+  saveButton.textContent = "Tambah Kategori";
+
+  const message = document.createElement("p");
+  message.id = "category-message";
+  message.className = "muted";
+  message.setAttribute("role", "status");
+
+  field.append(label, input);
+  form.append(field, saveButton);
+
+  const listTitle = document.createElement("h3");
+  listTitle.textContent = "Daftar Kategori";
+  listTitle.style.marginTop = "22px";
+
+  const list = document.createElement("div");
+  list.id = "category-list";
+
+  container.append(form, message, listTitle, list);
+
+  if (!categories.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Belum ada kategori. Tambahkan kategori pertama kedai Anda.";
+    list.appendChild(empty);
+  } else {
+    categories.forEach(category => {
+      const card = document.createElement("article");
+      card.className = "menu-item";
+
+      const name = document.createElement("strong");
+      name.textContent = category.name;
+
+      const actions = document.createElement("div");
+      actions.className = "menu-actions";
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "secondary";
+      editButton.textContent = "Ubah Nama";
+
+      editButton.addEventListener("click", () => {
+        editCategory(category.id);
+      });
+
+      const deactivateButton = document.createElement("button");
+      deactivateButton.type = "button";
+      deactivateButton.className = "danger";
+      deactivateButton.textContent = "Nonaktifkan";
+
+      deactivateButton.addEventListener("click", () => {
+        deactivateCategory(category.id);
+      });
+
+      actions.append(editButton, deactivateButton);
+      card.append(name, actions);
+      list.appendChild(card);
+    });
+  }
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const currentShop = selectedShop();
+    const categoryName = input.value.trim();
+
+    if (!currentShop || !client) {
+      showCategoryMessage(
+        "Pilih kedai terlebih dahulu.",
+        true
+      );
+      return;
+    }
+
+    if (!categoryName || categoryName.length > 80) {
+      showCategoryMessage(
+        "Nama kategori wajib diisi dan maksimal 80 karakter.",
+        true
+      );
+      return;
+    }
+
+    const duplicate = categories.some(category =>
+      category.name.trim().toLowerCase() ===
+      categoryName.toLowerCase()
+    );
+
+    if (duplicate) {
+      showCategoryMessage(
+        "Nama kategori tersebut sudah digunakan.",
+        true
+      );
+      return;
+    }
+
+    saveButton.disabled = true;
+    showCategoryMessage("Menyimpan kategori...");
+
+    try {
+      const nextSortOrder = categories.reduce(
+        (maximum, category) =>
+          Math.max(maximum, Number(category.sort_order) || 0),
+        -1
+      ) + 1;
+
+      const { data, error } = await client
+        .from("kh_categories")
+        .insert({
+          shop_id: currentShop.id,
+          name: categoryName,
+          sort_order: nextSortOrder,
+          is_active: true
+        })
+        .select("id")
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!data?.id) {
+        throw new Error(
+          "Kategori tidak tersimpan. Periksa hak akses Owner dan kebijakan RLS."
+        );
+      }
+
+      await refreshMenu();
+
+      showCategoryMessage("Kategori berhasil ditambahkan.");
+
+    } catch (error) {
+      console.error("Gagal menambahkan kategori:", error);
+
+      showCategoryMessage(
+        "Gagal menambahkan kategori: " + error.message,
+        true
+      );
+
+    } finally {
+      saveButton.disabled = false;
+    }
+  });
+}
+
+
+/* UBAH NAMA KATEGORI */
+
+async function editCategory(id) {
+  const shop = selectedShop();
+
+  const category = categories.find(item =>
+    String(item.id) === String(id)
+  );
+
+  if (!shop || !category || !client) {
+    showCategoryMessage(
+      "Kategori tidak ditemukan pada kedai yang dipilih.",
+      true
+    );
+    return;
+  }
+
+  const newName = prompt(
+    "Masukkan nama kategori baru:",
+    category.name
+  );
+
+  if (newName === null) return;
+
+  const name = newName.trim();
+
+  if (!name || name.length > 80) {
+    showCategoryMessage(
+      "Nama kategori wajib diisi dan maksimal 80 karakter.",
+      true
+    );
+    return;
+  }
+
+  const duplicate = categories.some(item =>
+    String(item.id) !== String(id) &&
+    item.name.trim().toLowerCase() === name.toLowerCase()
+  );
+
+  if (duplicate) {
+    showCategoryMessage(
+      "Nama kategori tersebut sudah digunakan.",
+      true
+    );
+    return;
+  }
+
+  try {
+    const { data, error } = await client
+      .from("kh_categories")
+      .update({
+        name
+      })
+      .eq("id", id)
+      .eq("shop_id", shop.id)
+      .eq("is_active", true)
+      .select("id")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data?.id) {
+      throw new Error(
+        "Kategori tidak berubah. Periksa hak akses Owner dan kebijakan RLS."
+      );
+    }
+
+    await refreshMenu();
+
+    showCategoryMessage("Nama kategori berhasil diperbarui.");
+
+  } catch (error) {
+    console.error("Gagal mengubah kategori:", error);
+
+    showCategoryMessage(
+      "Gagal mengubah kategori: " + error.message,
+      true
+    );
+  }
+}
+
+
+/* NONAKTIFKAN KATEGORI */
+
+async function deactivateCategory(id) {
+  const shop = selectedShop();
+
+  const category = categories.find(item =>
+    String(item.id) === String(id)
+  );
+
+  if (!shop || !category || !client) {
+    showCategoryMessage(
+      "Kategori tidak ditemukan pada kedai yang dipilih.",
+      true
+    );
+    return;
+  }
+
+  try {
+    const { count, error: countError } = await client
+      .from("kh_products")
+      .select("id", {
+        count: "exact",
+        head: true
+      })
+      .eq("shop_id", shop.id)
+      .eq("category_id", category.id);
+
+    if (countError) throw countError;
+
+    if (count > 0) {
+      showCategoryMessage(
+        "Kategori tidak dapat dinonaktifkan karena masih digunakan oleh " +
+        count + " produk. Pindahkan produk ke kategori lain terlebih dahulu.",
+        true
+      );
+      return;
+    }
+
+    if (!confirm(
+      'Nonaktifkan kategori "' + category.name + '"?'
+    )) {
+      return;
+    }
+
+    const { data, error } = await client
+      .from("kh_categories")
+      .update({
+        is_active: false
+      })
+      .eq("id", id)
+      .eq("shop_id", shop.id)
+      .eq("is_active", true)
+      .select("id")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data?.id) {
+      throw new Error(
+        "Kategori tidak berubah. Periksa hak akses Owner dan kebijakan RLS."
+      );
+    }
+
+    await refreshMenu();
+
+    showCategoryMessage("Kategori berhasil dinonaktifkan.");
+
+  } catch (error) {
+    console.error("Gagal menonaktifkan kategori:", error);
+
+    showCategoryMessage(
+      "Gagal menonaktifkan kategori: " + error.message,
+      true
+    );
   }
 }
 
@@ -2797,6 +3147,13 @@ $("show-add-menu").addEventListener("click", () => {
 });
 
 
+/* KATEGORI MENU */
+
+$("open-menu-categories").addEventListener("click", () => {
+  showMenuPanel("menu-category-panel");
+});
+
+
 /* DAFTAR MENU */
 
 $("toggle-menu-list").addEventListener("click", () => {
@@ -2831,7 +3188,6 @@ function resetMenuForm() {
   editingProductId = null;
 
   $("menu-form").reset();
-
   $("save-menu").textContent = "Simpan Menu";
   $("menu-form-title").textContent = "Tambah Menu Baru";
   $("cancel-edit").hidden = false;
@@ -2876,7 +3232,6 @@ function startEdit(id) {
   $("menu-category").value = product.category_id;
   $("menu-price").value = product.price;
   $("menu-description").value = product.description || "";
-
   $("menu-available").value =
     String(Boolean(product.is_available));
 
@@ -2894,7 +3249,6 @@ $("menu-form").addEventListener("submit", async event => {
   event.preventDefault();
 
   const shop = selectedShop();
-
   const name = $("menu-name").value.trim();
   const categoryId = $("menu-category").value;
   const price = Number($("menu-price").value);
@@ -3089,7 +3443,6 @@ async function deleteProduct(id) {
     );
   }
 }
-
 /* TANGGAL DAN GRAFIK */
 function getDateFormatter(timezone) {
   return new Intl.DateTimeFormat("en-CA", {

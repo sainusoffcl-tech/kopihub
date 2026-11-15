@@ -1935,19 +1935,15 @@ async function loadShops() {
     );
   }
 }
-
 /* =========================================
    INISIALISASI NAVIGASI
 ========================================= */
 
-navigateToPage("home", { replace: true });
-
 /*
-  Fungsi loadShops dipanggil setelah seluruh
-  fungsi dashboard lainnya didefinisikan.
-  Jangan pindahkan pemanggilan ini ke tengah script.
+  Pemanggilan navigasi dan loadShops
+  diletakkan di bagian paling akhir script,
+  setelah seluruh fungsi dashboard tersedia.
 */
-</script>
 
 /* =========================
    MANAJEMEN KASIR
@@ -2705,47 +2701,60 @@ function renderProducts() {
   });
 }
 
-
-/* =========================
-   NAVIGASI HALAMAN MENU
-========================= */
+/* =========================================
+   NAVIGASI PANEL KELOLA MENU
+========================================= */
 
 async function showMenuPanel(panelId, refreshData = true) {
   const panels = [
     "menu-home-panel",
     "menu-form-panel",
     "menu-list-panel",
-    "menu-qr-panel"
+    "menu-qr-panel",
+    "menu-category-panel",
+    "product-stock-panel",
+    "menu-availability-panel"
   ];
 
   panels.forEach(id => {
     const panel = $(id);
+
     if (panel) {
       panel.hidden = id !== panelId;
     }
   });
 
-    if (
+  if (
     refreshData &&
-    (
-      panelId === "menu-list-panel" ||
-      panelId === "menu-form-panel"
-    )
+    [
+      "menu-list-panel",
+      "menu-form-panel",
+      "menu-category-panel",
+      "product-stock-panel",
+      "menu-availability-panel"
+    ].includes(panelId)
   ) {
     await refreshMenu();
   }
 
   if (panelId === "menu-form-panel") {
-    $("menu-name").focus({ preventScroll: true });
+    $("menu-name")?.focus({
+      preventScroll: true
+    });
   }
 
-  $("app-scroll").scrollTo({
-    top: $("page-menu").offsetTop,
-    behavior: "smooth"
-  });
+  const appScrollElement = $("app-scroll");
+
+  if (appScrollElement) {
+    appScrollElement.scrollTo({
+      top: $("page-menu")?.offsetTop || 0,
+      behavior: "smooth"
+    });
+  }
 }
 
-/* HALAMAN AWAL MENU */
+/* HALAMAN UTAMA KELOLA MENU */
+
 function showMenuHome() {
   showMenuPanel("menu-home-panel");
 }

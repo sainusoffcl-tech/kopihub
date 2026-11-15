@@ -870,386 +870,380 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
       </div>
     </section>
 
-    <!-- PANEL KATEGORI, STOK, DAN KETERSEDIAAN AKAN DIISI PADA BAGIAN LANJUTAN -->
-    <section class="panel" id="menu-category-panel" hidden>
-      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
-      <h2>Kategori Menu</h2>
-      <div id="menu-category-content"></div>
-    </section>
 
-    <section class="panel" id="product-stock-panel" hidden>
-      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
-      <h2>Stok Produk</h2>
-      <div id="product-stock-content"></div>
-    </section>
+<!-- PANEL KATEGORI, STOK, DAN KETERSEDIAAN -->
+<section class="panel" id="menu-category-panel" hidden>
+  <h2>Kategori Menu</h2>
+  <div id="menu-category-content"></div>
+</section>
 
-    <section class="panel" id="menu-availability-panel" hidden>
-      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
-      <h2>Ketersediaan Menu</h2>
-      <div id="menu-availability-content"></div>
-    </section>
+<section class="panel" id="product-stock-panel" hidden>
+  <h2>Stok Produk</h2>
+  <div id="product-stock-content"></div>
+</section>
 
-  </section>
+<section class="panel" id="menu-availability-panel" hidden>
+  <h2>Ketersediaan Menu</h2>
+  <div id="menu-availability-content"></div>
+</section>
 
-  <!-- TRANSAKSI -->
-  <section class="page" id="page-transaksi" hidden>
-    <h1 class="page-heading" id="transaction-page-heading">Pesanan</h1>
-    <p class="page-description" id="transaction-page-description">
-      Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
+</section>
+
+<!-- TRANSAKSI -->
+<section class="page" id="page-transaksi" hidden>
+  <h1 class="page-heading" id="transaction-page-heading">Pesanan</h1>
+  <p class="page-description" id="transaction-page-description">
+    Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
+  </p>
+
+  <section class="panel" id="transaction-summary-panel">
+    <h2>Informasi Transaksi</h2>
+    <p class="muted">
+      Riwayat transaksi hanya dapat dilihat oleh Owner.
+      Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
     </p>
 
-    <section class="panel" id="transaction-summary-panel">
-      <h2>Informasi Transaksi</h2>
-      <p class="muted">
-        Riwayat transaksi hanya dapat dilihat oleh Owner.
-        Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
-      </p>
-
-      <div class="settings-item">
-        <div class="settings-icon">🧾</div>
-        <div class="settings-info">
-          <strong>Jumlah Pesanan Hari Ini</strong>
-          <span>Seluruh pesanan kedai</span>
-        </div>
-        <strong id="transaction-order-count">—</strong>
+    <div class="settings-item">
+      <div class="settings-icon">🧾</div>
+      <div class="settings-info">
+        <strong>Jumlah Pesanan Hari Ini</strong>
+        <span>Seluruh pesanan kedai</span>
       </div>
+      <strong id="transaction-order-count">—</strong>
+    </div>
 
-      <div class="settings-item">
-        <div class="settings-icon">💳</div>
-        <div class="settings-info">
-          <strong>Transaksi Lunas</strong>
-          <span>Pesanan dengan pembayaran lunas</span>
-        </div>
-        <strong id="transaction-paid-count">—</strong>
+    <div class="settings-item">
+      <div class="settings-icon">💳</div>
+      <div class="settings-info">
+        <strong>Transaksi Lunas</strong>
+        <span>Pesanan dengan pembayaran lunas</span>
       </div>
+      <strong id="transaction-paid-count">—</strong>
+    </div>
 
-      <div class="settings-item">
-        <div class="settings-icon">⏳</div>
-        <div class="settings-info">
-          <strong>Belum Dibayar</strong>
-          <span>Pesanan menunggu pembayaran</span>
-        </div>
-        <strong id="transaction-unpaid-count">—</strong>
+    <div class="settings-item">
+      <div class="settings-icon">⏳</div>
+      <div class="settings-info">
+        <strong>Belum Dibayar</strong>
+        <span>Pesanan menunggu pembayaran</span>
       </div>
-    </section>
-
-    <section class="panel" id="transaction-history-panel">
-      <h2>Riwayat Transaksi</h2>
-      <p class="muted">Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.</p>
-
-      <div class="transaction-filters">
-        <label for="transaction-start-date">Dari tanggal</label>
-        <input type="date" id="transaction-start-date">
-        <label for="transaction-end-date">Sampai tanggal</label>
-        <input type="date" id="transaction-end-date">
-        <button type="button" class="action-link" id="transaction-reset-filter">
-          Reset Tanggal
-        </button>
-      </div>
-
-      <p class="muted" id="transaction-result-count" aria-live="polite">
-        Memuat riwayat transaksi...
-      </p>
-      <div id="transaction-list">
-        <p class="muted">Memuat riwayat transaksi...</p>
-      </div>
-    </section>
-
-    <section class="panel" id="transaction-cashier-panel">
-      <h2>Dashboard Kasir</h2>
-      <p class="muted">
-        Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.
-      </p>
-      <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
-    </section>
-
-    <section class="panel owner-order-detail-panel" id="owner-order-detail-panel" hidden>
-      <div class="owner-order-detail-header">
-        <button type="button" class="secondary owner-order-back-button" id="owner-order-detail-back">
-          ← Kembali
-        </button>
-        <h2>Detail Pesanan</h2>
-      </div>
-      <div id="owner-order-detail-content"></div>
-    </section>
+      <strong id="transaction-unpaid-count">—</strong>
+    </div>
   </section>
 
-  <!-- LAPORAN -->
-  <section class="page" id="page-laporan" hidden>
-    <h1 class="page-heading">Laporan Penjualan</h1>
-    <p class="page-description">Pantau omzet, produk terjual, dan metode pembayaran kedai.</p>
+  <section class="panel" id="transaction-history-panel">
+    <h2>Riwayat Transaksi</h2>
+    <p class="muted">Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.</p>
 
-    <section class="panel" id="sales-report-panel">
-      <p class="muted">Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.</p>
+    <div class="transaction-filters">
+      <label for="transaction-start-date">Dari tanggal</label>
+      <input type="date" id="transaction-start-date">
+      <label for="transaction-end-date">Sampai tanggal</label>
+      <input type="date" id="transaction-end-date">
+      <button type="button" class="action-link" id="transaction-reset-filter">
+        Reset Tanggal
+      </button>
+    </div>
 
-      <div class="report-filter">
-        <div class="field">
-          <label for="report-period">Periode Laporan</label>
-          <select id="report-period">
-            <option value="today">Hari Ini</option>
-            <option value="last7">7 Hari Terakhir</option>
-            <option value="month">Bulan Ini</option>
-            <option value="custom">Rentang Tanggal</option>
-          </select>
-        </div>
+    <p class="muted" id="transaction-result-count" aria-live="polite">
+      Memuat riwayat transaksi...
+    </p>
+    <div id="transaction-list">
+      <p class="muted">Memuat riwayat transaksi...</p>
+    </div>
+  </section>
 
-        <div class="field" id="report-start-wrap" hidden>
-          <label for="report-start-date">Tanggal Mulai</label>
-          <input id="report-start-date" type="date">
-        </div>
+  <section class="panel" id="transaction-cashier-panel">
+    <h2>Dashboard Kasir</h2>
+    <p class="muted">
+      Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.
+    </p>
+    <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
+  </section>
 
-        <div class="field" id="report-end-wrap" hidden>
-          <label for="report-end-date">Tanggal Akhir</label>
-          <input id="report-end-date" type="date">
-        </div>
+  <section class="panel owner-order-detail-panel" id="owner-order-detail-panel" hidden>
+    <div class="owner-order-detail-header">
+      <h2>Detail Pesanan</h2>
+    </div>
+    <div id="owner-order-detail-content"></div>
+  </section>
+</section>
+
+<!-- LAPORAN -->
+<section class="page" id="page-laporan" hidden>
+  <h1 class="page-heading">Laporan Penjualan</h1>
+  <p class="page-description">Pantau omzet, produk terjual, dan metode pembayaran kedai.</p>
+
+  <section class="panel" id="sales-report-panel">
+    <p class="muted">Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.</p>
+
+    <div class="report-filter">
+      <div class="field">
+        <label for="report-period">Periode Laporan</label>
+        <select id="report-period">
+          <option value="today">Hari Ini</option>
+          <option value="last7">7 Hari Terakhir</option>
+          <option value="month">Bulan Ini</option>
+          <option value="custom">Rentang Tanggal</option>
+        </select>
+      </div>
+
+      <div class="field" id="report-start-wrap" hidden>
+        <label for="report-start-date">Tanggal Mulai</label>
+        <input id="report-start-date" type="date">
+      </div>
+
+      <div class="field" id="report-end-wrap" hidden>
+        <label for="report-end-date">Tanggal Akhir</label>
+        <input id="report-end-date" type="date">
+      </div>
+    </div>
+
+    <div class="button-stack">
+      <button class="primary" id="refresh-sales-report" type="button">Tampilkan Laporan</button>
+    </div>
+
+    <p class="muted" id="report-period-label">Periode: Hari Ini</p>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Nilai Seluruh Pesanan</div><div class="stat-number" id="report-order-value">—</div></div>
+      <div class="stat"><div class="stat-label">Omzet Sudah Dibayar</div><div class="stat-number" id="report-paid-sales">—</div></div>
+      <div class="stat"><div class="stat-label">Nilai Belum Dibayar</div><div class="stat-number" id="report-unpaid-sales">—</div></div>
+      <div class="stat"><div class="stat-label">Pesanan Lunas</div><div class="stat-number" id="report-paid-count">—</div></div>
+      <div class="stat"><div class="stat-label">Pesanan Belum Lunas</div><div class="stat-number" id="report-unpaid-count">—</div></div>
+      <div class="stat"><div class="stat-label">Jumlah Produk Terjual</div><div class="stat-number" id="report-products-sold">—</div></div>
+    </div>
+
+    <h3 class="report-section-title">Rincian Penjualan Produk</h3>
+    <div class="report-table-wrap">
+      <table class="report-table">
+        <thead><tr><th>Nama Produk</th><th>Jumlah</th><th>Nilai Penjualan</th></tr></thead>
+        <tbody id="report-product-list"><tr><td colspan="3">Laporan belum dimuat.</td></tr></tbody>
+      </table>
+    </div>
+
+    <h3 class="report-section-title">Metode Pembayaran</h3>
+    <div class="report-table-wrap">
+      <table class="report-table">
+        <thead><tr><th>Metode</th><th>Jumlah Transaksi</th><th>Nilai</th></tr></thead>
+        <tbody id="report-payment-methods"><tr><td colspan="3">Data metode pembayaran belum tersedia.</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="report-note" id="report-data-note">
+      Laporan menggunakan status pembayaran pada tabel kh_orders. Rincian produk dibaca dari kolom items.
+    </div>
+
+    <div class="report-actions">
+      <button class="primary" id="download-report-excel" type="button" disabled>Unduh Excel</button>
+      <button class="primary" id="download-report-pdf" type="button" disabled>Unduh PDF</button>
+    </div>
+
+    <p id="report-message" class="muted" role="status">Laporan akan diperbarui saat data pesanan dimuat.</p>
+  </section>
+</section>
+
+<!-- LAINNYA -->
+<section class="page" id="page-lainnya" hidden>
+  <h1 class="page-heading">Pengaturan Kedai</h1>
+  <p class="page-description">Pengaturan dan informasi pengelolaan kedai Anda.</p>
+
+  <!-- PROFIL KEDAI -->
+  <section class="panel" id="profil-kedai">
+    <h2>Profil Kedai</h2>
+    <p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
+
+    <form id="shop-profile-form">
+      <div class="field">
+        <label for="profile-shop-name">Nama Kedai</label>
+        <input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi">
+      </div>
+
+      <div class="field">
+        <label for="profile-shop-description">Deskripsi Kedai</label>
+        <textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="profile-shop-logo">Logo Kedai</label>
+        <input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp">
+        <p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p>
+      </div>
+
+      <div id="profile-logo-preview" hidden>
+        <img id="profile-logo-image" alt="Pratinjau logo kedai"
+          style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px">
+        <button type="button" id="remove-shop-logo" class="danger" style="margin-top:10px">Hapus Logo</button>
       </div>
 
       <div class="button-stack">
-        <button class="primary" id="refresh-sales-report" type="button">Tampilkan Laporan</button>
+        <button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button>
       </div>
-
-      <p class="muted" id="report-period-label">Periode: Hari Ini</p>
-
-      <div class="stats">
-        <div class="stat"><div class="stat-label">Nilai Seluruh Pesanan</div><div class="stat-number" id="report-order-value">—</div></div>
-        <div class="stat"><div class="stat-label">Omzet Sudah Dibayar</div><div class="stat-number" id="report-paid-sales">—</div></div>
-        <div class="stat"><div class="stat-label">Nilai Belum Dibayar</div><div class="stat-number" id="report-unpaid-sales">—</div></div>
-        <div class="stat"><div class="stat-label">Pesanan Lunas</div><div class="stat-number" id="report-paid-count">—</div></div>
-        <div class="stat"><div class="stat-label">Pesanan Belum Lunas</div><div class="stat-number" id="report-unpaid-count">—</div></div>
-        <div class="stat"><div class="stat-label">Jumlah Produk Terjual</div><div class="stat-number" id="report-products-sold">—</div></div>
-      </div>
-
-      <h3 class="report-section-title">Rincian Penjualan Produk</h3>
-      <div class="report-table-wrap">
-        <table class="report-table">
-          <thead><tr><th>Nama Produk</th><th>Jumlah</th><th>Nilai Penjualan</th></tr></thead>
-          <tbody id="report-product-list"><tr><td colspan="3">Laporan belum dimuat.</td></tr></tbody>
-        </table>
-      </div>
-
-      <h3 class="report-section-title">Metode Pembayaran</h3>
-      <div class="report-table-wrap">
-        <table class="report-table">
-          <thead><tr><th>Metode</th><th>Jumlah Transaksi</th><th>Nilai</th></tr></thead>
-          <tbody id="report-payment-methods"><tr><td colspan="3">Data metode pembayaran belum tersedia.</td></tr></tbody>
-        </table>
-      </div>
-
-      <div class="report-note" id="report-data-note">
-        Laporan menggunakan status pembayaran pada tabel kh_orders. Rincian produk dibaca dari kolom items.
-      </div>
-
-      <div class="report-actions">
-        <button class="primary" id="download-report-excel" type="button" disabled>Unduh Excel</button>
-        <button class="primary" id="download-report-pdf" type="button" disabled>Unduh PDF</button>
-      </div>
-
-      <p id="report-message" class="muted" role="status">Laporan akan diperbarui saat data pesanan dimuat.</p>
-    </section>
+      <p id="profile-message" class="muted" role="status"></p>
+    </form>
   </section>
 
-  <!-- LAINNYA -->
-  <section class="page" id="page-lainnya" hidden>
-    <h1 class="page-heading">Pengaturan Kedai</h1>
-    <p class="page-description">Pengaturan dan informasi pengelolaan kedai Anda.</p>
+  <!-- PBJT -->
+  <section class="panel" id="pengaturan-pbjt">
+    <h2>Pengaturan Pajak PBJT</h2>
+    <p class="muted">
+      Atur tarif PBJT yang berlaku untuk kedai ini.
+      Tarif akan digunakan otomatis dalam perhitungan pesanan pelanggan.
+    </p>
 
-    <!-- PROFIL KEDAI -->
-    <section class="panel" id="profil-kedai">
-      <h2>Profil Kedai</h2>
-      <p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
+    <form id="shop-pbjt-form">
+      <div class="field">
+        <label for="shop-pbjt-percent">Tarif PBJT (%)</label>
+        <input id="shop-pbjt-percent" type="number" min="0" max="100"
+          step="0.01" inputmode="decimal" placeholder="Contoh: 10" required>
+      </div>
 
-      <form id="shop-profile-form">
-        <div class="field">
-          <label for="profile-shop-name">Nama Kedai</label>
-          <input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi">
-        </div>
-
-        <div class="field">
-          <label for="profile-shop-description">Deskripsi Kedai</label>
-          <textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea>
-        </div>
-
-        <div class="field">
-          <label for="profile-shop-logo">Logo Kedai</label>
-          <input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp">
-          <p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p>
-        </div>
-
-        <div id="profile-logo-preview" hidden>
-          <img id="profile-logo-image" alt="Pratinjau logo kedai"
-            style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px">
-          <button type="button" id="remove-shop-logo" class="danger" style="margin-top:10px">Hapus Logo</button>
-        </div>
-
-        <div class="button-stack">
-          <button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button>
-        </div>
-        <p id="profile-message" class="muted" role="status"></p>
-      </form>
-    </section>
-
-    <!-- PBJT -->
-    <section class="panel" id="pengaturan-pbjt">
-      <h2>Pengaturan Pajak PBJT</h2>
       <p class="muted">
-        Atur tarif PBJT yang berlaku untuk kedai ini.
-        Tarif akan digunakan otomatis dalam perhitungan pesanan pelanggan.
+        Pastikan tarif sesuai ketentuan PBJT daerah yang berlaku.
+        KopiHub tidak menetapkan tarif secara otomatis.
       </p>
 
-      <form id="shop-pbjt-form">
-        <div class="field">
-          <label for="shop-pbjt-percent">Tarif PBJT (%)</label>
-          <input id="shop-pbjt-percent" type="number" min="0" max="100"
-            step="0.01" inputmode="decimal" placeholder="Contoh: 10" required>
-        </div>
-
-        <p class="muted">
-          Pastikan tarif sesuai ketentuan PBJT daerah yang berlaku.
-          KopiHub tidak menetapkan tarif secara otomatis.
-        </p>
-
-        <button type="submit" class="primary" id="save-shop-pbjt">Simpan Tarif PBJT</button>
-        <p id="shop-pbjt-message" class="muted" role="status" aria-live="polite"></p>
-      </form>
-    </section>
-
-    <!-- TAGIHAN KOPIHUB -->
-    <section class="panel" id="tagihan-kopihub">
-      <h2>Tagihan KopiHub</h2>
-      <p class="muted">
-        Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
-        Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
-      </p>
-
-      <button class="secondary invoice-refresh" id="refresh-owner-invoices" type="button">
-        Muat Ulang Tagihan
-      </button>
-
-      <p id="owner-invoice-message" class="invoice-message" role="status">Tagihan belum dimuat.</p>
-      <div id="owner-invoice-list">
-        <div class="invoice-empty">Tagihan akan ditampilkan di sini.</div>
-      </div>
-    </section>
-
-    <!-- MANAJEMEN KASIR -->
-    <section class="panel" id="manajemen-kasir">
-      <h2>Manajemen Kasir</h2>
-      <p class="muted">Buat identitas staf kasir yang bertugas di kedai Anda.</p>
-
-      <div class="cashier-intro">
-        <strong>Informasi keamanan</strong><br>
-        Setiap kasir memiliki ID dan PIN pribadi. Owner hanya membuat identitas serta memberikan kode aktivasi. PIN dibuat sendiri oleh kasir dan tidak dapat dilihat Owner. Pengelolaan ini hanya dapat dilakukan oleh akun Owner aktif.
-      </div>
-
-      <form id="cashier-create-form">
-        <div class="field">
-          <label for="cashier-name">Nama Kasir</label>
-          <input id="cashier-name" type="text" maxlength="100"
-            autocomplete="off" required placeholder="Masukkan nama lengkap kasir">
-        </div>
-        <button class="primary" id="create-cashier-button" type="submit">
-          + Buat Identitas Kasir
-        </button>
-      </form>
-
-      <p id="cashier-message" class="cashier-message" role="status" aria-live="polite"></p>
-
-      <div id="cashier-setup-panel" class="setup-code-panel" hidden>
-        <strong>Identitas kasir berhasil dibuat</strong>
-        <p class="muted">
-          Berikan ID Kasir dan kode aktivasi ini kepada staf yang bersangkutan.
-          Kode aktivasi hanya ditampilkan sekarang dan tidak dapat ditampilkan kembali.
-        </p>
-
-        <div class="field">
-          <label>ID Kasir</label>
-          <div class="setup-code-value" id="cashier-created-id" style="font-size:17px;letter-spacing:1px"></div>
-          <button class="secondary" id="copy-cashier-id" type="button">Salin ID Kasir</button>
-        </div>
-
-        <div class="field">
-          <label>Kode Aktivasi Sekali Pakai</label>
-          <div class="setup-code-value" id="cashier-created-code"></div>
-          <button class="secondary" id="copy-cashier-code" type="button">Salin Kode Aktivasi</button>
-        </div>
-
-        <p class="setup-code-meta" id="cashier-code-expiry"></p>
-        <p class="setup-code-meta">
-          Kasir harus mengaktifkan identitasnya melalui halaman Login Kasir dan membuat PIN pribadi sebelum mulai bertugas.
-        </p>
-      </div>
-
-      <div class="cashier-list-heading">
-        <h3>Daftar Kasir</h3>
-        <button class="secondary" id="refresh-cashiers" type="button">Muat Ulang</button>
-      </div>
-
-      <p class="muted" id="cashier-list-status">Memuat daftar kasir...</p>
-      <div id="cashier-list">
-        <div class="cashier-empty">Daftar kasir akan ditampilkan di sini.</div>
-      </div>
-
-      <p class="owner-only-note">
-        Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
-      </p>
-    </section>
-
-    <!-- PENGATURAN WAKTU PEMBAYARAN -->
-    <section class="panel">
-      <h2>Waktu Pembayaran</h2>
-      <p class="muted">Tentukan kapan pelanggan harus membayar pesanannya.</p>
-
-      <select id="owner-payment-timing">
-        <option value="false">Bayar di Awal</option>
-        <option value="true">Bayar di Akhir</option>
-      </select>
-
-      <p id="owner-payment-timing-message" class="muted" style="margin:8px 0 0;font-size:12px">
-        Pengaturan mengikuti kebijakan pembayaran kedai.
-      </p>
-    </section>
-
-    <!-- PENGATURAN -->
-    <section class="panel">
-      <h2>Pengaturan Kedai</h2>
-
-      <button class="settings-item settings-item-button" type="button" data-settings-target="profil-kedai">
-        <div class="settings-icon">🏪</div>
-        <div class="settings-info"><strong>Identitas Kedai</strong><span>Nama dan logo kedai</span></div>
-        <div class="settings-arrow">›</div>
-      </button>
-
-      <button class="settings-item settings-item-button" type="button" data-settings-target="pengaturan-pbjt">
-        <div class="settings-icon">🧾</div>
-        <div class="settings-info"><strong>Pajak PBJT</strong><span>Atur tarif pajak kedai</span></div>
-        <div class="settings-arrow">›</div>
-      </button>
-
-      <button class="settings-item settings-item-button" type="button" data-settings-target="manajemen-kasir">
-        <div class="settings-icon">👥</div>
-        <div class="settings-info"><strong>Manajemen Kasir</strong><span>Identitas dan akses staf kasir</span></div>
-        <div class="settings-arrow">›</div>
-      </button>
-
-      <button class="settings-item settings-item-button" type="button" data-settings-target="tagihan-kopihub">
-        <div class="settings-icon">💳</div>
-        <div class="settings-info"><strong>Tagihan KopiHub</strong><span>Kewajiban biaya layanan dan pembayaran</span></div>
-        <div class="settings-arrow">›</div>
-      </button>
-    </section>
-
-    <!-- AKUN -->
-    <section class="panel">
-      <h2>Akun</h2>
-      <p class="muted">Keluar dari akun Owner KopiHub pada perangkat ini.</p>
-      <button class="danger" id="logout" type="button">Keluar dari Akun</button>
-    </section>
+      <button type="submit" class="primary" id="save-shop-pbjt">Simpan Tarif PBJT</button>
+      <p id="shop-pbjt-message" class="muted" role="status" aria-live="polite"></p>
+    </form>
   </section>
 
-  <footer>KopiHub © 2026 · Dashboard Owner Coffee Shop</footer>
+  <!-- TAGIHAN KOPIHUB -->
+  <section class="panel" id="tagihan-kopihub">
+    <h2>Tagihan KopiHub</h2>
+    <p class="muted">
+      Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
+      Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
+    </p>
+
+    <button class="secondary invoice-refresh" id="refresh-owner-invoices" type="button">
+      Muat Ulang Tagihan
+    </button>
+
+    <p id="owner-invoice-message" class="invoice-message" role="status">Tagihan belum dimuat.</p>
+    <div id="owner-invoice-list">
+      <div class="invoice-empty">Tagihan akan ditampilkan di sini.</div>
+    </div>
+  </section>
+
+  <!-- MANAJEMEN KASIR -->
+  <section class="panel" id="manajemen-kasir">
+    <h2>Manajemen Kasir</h2>
+    <p class="muted">Buat identitas staf kasir yang bertugas di kedai Anda.</p>
+
+    <div class="cashier-intro">
+      <strong>Informasi keamanan</strong><br>
+      Setiap kasir memiliki ID dan PIN pribadi. Owner hanya membuat identitas serta memberikan kode aktivasi. PIN dibuat sendiri oleh kasir dan tidak dapat dilihat Owner. Pengelolaan ini hanya dapat dilakukan oleh akun Owner aktif.
+    </div>
+
+    <form id="cashier-create-form">
+      <div class="field">
+        <label for="cashier-name">Nama Kasir</label>
+        <input id="cashier-name" type="text" maxlength="100"
+          autocomplete="off" required placeholder="Masukkan nama lengkap kasir">
+      </div>
+      <button class="primary" id="create-cashier-button" type="submit">
+        + Buat Identitas Kasir
+      </button>
+    </form>
+
+    <p id="cashier-message" class="cashier-message" role="status" aria-live="polite"></p>
+
+    <div id="cashier-setup-panel" class="setup-code-panel" hidden>
+      <strong>Identitas kasir berhasil dibuat</strong>
+      <p class="muted">
+        Berikan ID Kasir dan kode aktivasi ini kepada staf yang bersangkutan.
+        Kode aktivasi hanya ditampilkan sekarang dan tidak dapat ditampilkan kembali.
+      </p>
+
+      <div class="field">
+        <label>ID Kasir</label>
+        <div class="setup-code-value" id="cashier-created-id" style="font-size:17px;letter-spacing:1px"></div>
+        <button class="secondary" id="copy-cashier-id" type="button">Salin ID Kasir</button>
+      </div>
+
+      <div class="field">
+        <label>Kode Aktivasi Sekali Pakai</label>
+        <div class="setup-code-value" id="cashier-created-code"></div>
+        <button class="secondary" id="copy-cashier-code" type="button">Salin Kode Aktivasi</button>
+      </div>
+
+      <p class="setup-code-meta" id="cashier-code-expiry"></p>
+      <p class="setup-code-meta">
+        Kasir harus mengaktifkan identitasnya melalui halaman Login Kasir dan membuat PIN pribadi sebelum mulai bertugas.
+      </p>
+    </div>
+
+    <div class="cashier-list-heading">
+      <h3>Daftar Kasir</h3>
+      <button class="secondary" id="refresh-cashiers" type="button">Muat Ulang</button>
+    </div>
+
+    <p class="muted" id="cashier-list-status">Memuat daftar kasir...</p>
+    <div id="cashier-list">
+      <div class="cashier-empty">Daftar kasir akan ditampilkan di sini.</div>
+    </div>
+
+    <p class="owner-only-note">
+      Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
+    </p>
+  </section>
+
+  <!-- PENGATURAN WAKTU PEMBAYARAN -->
+  <section class="panel">
+    <h2>Waktu Pembayaran</h2>
+    <p class="muted">Tentukan kapan pelanggan harus membayar pesanannya.</p>
+
+    <select id="owner-payment-timing">
+      <option value="false">Bayar di Awal</option>
+      <option value="true">Bayar di Akhir</option>
+    </select>
+
+    <p id="owner-payment-timing-message" class="muted" style="margin:8px 0 0;font-size:12px">
+      Pengaturan mengikuti kebijakan pembayaran kedai.
+    </p>
+  </section>
+
+  <!-- PENGATURAN -->
+  <section class="panel">
+    <h2>Pengaturan Kedai</h2>
+
+    <button class="settings-item settings-item-button" type="button" data-settings-target="profil-kedai">
+      <div class="settings-icon">🏪</div>
+      <div class="settings-info"><strong>Identitas Kedai</strong><span>Nama dan logo kedai</span></div>
+      <div class="settings-arrow">›</div>
+    </button>
+
+    <button class="settings-item settings-item-button" type="button" data-settings-target="pengaturan-pbjt">
+      <div class="settings-icon">🧾</div>
+      <div class="settings-info"><strong>Pajak PBJT</strong><span>Atur tarif pajak kedai</span></div>
+      <div class="settings-arrow">›</div>
+    </button>
+
+    <button class="settings-item settings-item-button" type="button" data-settings-target="manajemen-kasir">
+      <div class="settings-icon">👥</div>
+      <div class="settings-info"><strong>Manajemen Kasir</strong><span>Identitas dan akses staf kasir</span></div>
+      <div class="settings-arrow">›</div>
+    </button>
+
+    <button class="settings-item settings-item-button" type="button" data-settings-target="tagihan-kopihub">
+      <div class="settings-icon">💳</div>
+      <div class="settings-info"><strong>Tagihan KopiHub</strong><span>Kewajiban biaya layanan dan pembayaran</span></div>
+      <div class="settings-arrow">›</div>
+    </button>
+  </section>
+
+  <!-- AKUN -->
+  <section class="panel">
+    <h2>Akun</h2>
+    <p class="muted">Keluar dari akun Owner KopiHub pada perangkat ini.</p>
+    <button class="danger" id="logout" type="button">Keluar dari Akun</button>
+  </section>
+</section>
+
+<footer>KopiHub © 2026 · Dashboard Owner Coffee Shop</footer>
 </main>
 </div>
-
 
 <!-- NAVIGASI BAWAH DIHAPUS -->
 

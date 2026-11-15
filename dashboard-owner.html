@@ -569,6 +569,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
 <body>
 
+
 <header class="owner-header" id="owner-header">
   <div class="owner-header-inner">
 
@@ -577,6 +578,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
       id="header-back-button"
       type="button"
       aria-label="Kembali ke halaman sebelumnya"
+      hidden
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M15 18l-6-6 6-6"></path>
@@ -586,18 +588,14 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
     <div class="owner-brand-area">
       <div class="brand">☕ Kopi<span>Hub</span></div>
-      <div class="header-subtitle">SATU PLATFORM, BANYAK CERITA</div>
-      <div class="header-shop-name" id="header-shop-name">Dashboard Owner</div>
+      <div class="header-subtitle">
+        SATU PLATFORM, BANYAK CERITA
+      </div>
+      <div class="header-shop-name" id="header-shop-name">
+        Dashboard Owner
+      </div>
     </div>
 
-    <button class="profile-icon-button" id="header-profile-button"
-      type="button" aria-label="Buka profil kedai">
-      <svg id="header-profile-fallback-svg" viewBox="0 0 24 24">
-        <circle cx="12" cy="8" r="4"></circle>
-        <path d="M4 21a8 8 0 0 1 16 0"></path>
-      </svg>
-      <img id="header-shop-logo" hidden alt="Logo kedai">
-    </button>
   </div>
 </header>
 

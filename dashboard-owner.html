@@ -5057,7 +5057,10 @@ $("share-qr").addEventListener("click", async () => {
 });
 
 
-/* PROFIL KEDAI */
+/* =====================================================
+   PROFIL KEDAI OWNER
+   ===================================================== */
+
 $("remove-shop-logo").addEventListener("click", () => {
   $("profile-shop-logo").value = "";
   $("profile-logo-image").removeAttribute("src");
@@ -5071,21 +5074,21 @@ $("shop-profile-form").addEventListener("submit", async event => {
   event.preventDefault();
 
   const shop = selectedShop();
+  const message = $("profile-message");
+  const saveButton = $("save-shop-profile");
+  const fileInput = $("profile-shop-logo");
 
   if (!client || !shop) {
-    $("profile-message").textContent =
-      "Pilih kedai terlebih dahulu.";
+    message.textContent = "Pilih kedai terlebih dahulu.";
     return;
   }
 
   const name = $("profile-shop-name").value.trim();
   const description = $("profile-shop-description").value.trim();
-  const file = $("profile-shop-logo").files[0];
-  const saveButton = $("save-shop-profile");
+  const file = fileInput.files[0] || null;
 
   if (!name) {
-    $("profile-message").textContent =
-      "Nama kedai wajib diisi.";
+    message.textContent = "Nama kedai wajib diisi.";
     return;
   }
 
@@ -5093,20 +5096,23 @@ $("shop-profile-form").addEventListener("submit", async event => {
     !["image/png", "image/jpeg", "image/webp"].includes(file.type) ||
     file.size > 2 * 1024 * 1024
   )) {
-    $("profile-message").textContent =
+    message.textContent =
       "Pilih gambar PNG, JPG, atau WebP maksimal 2 MB.";
     return;
   }
 
+  const removeLogo =
+    !file &&
+    $("profile-logo-preview").hidden &&
+    Boolean(shop.logo_url);
+
   saveButton.disabled = true;
-  $("profile-message").textContent =
-    "Menyimpan profil kedai...";
+  message.textContent = "Menyimpan profil kedai...";
 
   try {
-    const removeLogo =
-      $("profile-logo-preview").hidden && !file;
-
-    let logoUrl = removeLogo ? null : (shop.logo_url || null);
+    let logoUrl = removeLogo
+      ? null
+      : (shop.logo_url || null);
 
     if (file) {
       const safeName = file.name.replace(
@@ -5131,46 +5137,61 @@ $("shop-profile-form").addEventListener("submit", async event => {
         .from("shop-logos")
         .getPublicUrl(filePath);
 
+      if (!publicData?.publicUrl) {
+        throw new Error(
+          "Alamat logo yang diunggah tidak berhasil diperoleh."
+        );
+      }
+
       logoUrl = publicData.publicUrl;
     }
 
-    const { error: updateError } = await client
+    const { data: updatedData, error: updateError } = await client
       .from("kh_shops")
       .update({
         name,
         description: description || null,
         logo_url: logoUrl
       })
-      .eq("id", shop.id);
+      .eq("id", shop.id)
+      .select("id")
+      .single();
 
     if (updateError) throw updateError;
+
+    if (!updatedData) {
+      throw new Error(
+        "Data kedai tidak berhasil diperbarui."
+      );
+    }
 
     shop.name = name;
     shop.description = description || null;
     shop.logo_url = logoUrl;
 
-    const option = shopSelect.selectedOptions[0];
+    const option = shopSelect?.selectedOptions?.[0];
 
     if (option) {
-      option.textContent = shop.name + " (" + shop.slug + ")";
+      option.textContent =
+        shop.name + " (" + shop.slug + ")";
     }
 
     renderSelectedShop();
 
-    $("profile-message").textContent =
+    message.textContent =
       "Profil kedai berhasil disimpan.";
 
   } catch (error) {
     console.error("Gagal menyimpan profil:", error);
 
-    $("profile-message").textContent =
-      "Gagal menyimpan profil: " + error.message;
+    message.textContent =
+      "Gagal menyimpan profil: " +
+      (error.message || "Terjadi kesalahan.");
 
   } finally {
     saveButton.disabled = !selectedShop();
   }
 });
-
 
 /* SIMPAN PENGATURAN PAJAK PBJT OWNER */
 $("shop-pbjt-form").addEventListener("submit", async event => {
@@ -5350,19 +5371,6 @@ $("owner-payment-timing").addEventListener(
   }
 );
 
-/* HEADER PROFILE */
-$("header-profile-button").addEventListener("click", () => {
-  navigateToPage("lainnya");
-
-  $("app-scroll").scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-  $("profile-shop-name").focus({
-    preventScroll: true
-  });
-});
 
 
 /* =====================================================
@@ -5372,18 +5380,35 @@ $("header-profile-button").addEventListener("click", () => {
 let ownerInvoices = [];
 let invoiceSubmitBusy = false;
 
-function invoiceRupiah(value) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0
-  }).format(Number(value || 0));
-}
 
 function invoiceDate(value) {
   if (!value) return "-";
 
-  const date = new Date(value);
+  let date;
+
+  // Tanggal YYYY-MM-DD diproses sebagai tanggal lokal,
+  // agar tidak bergeser karena konversi UTC.
+  const dateOnly = String(value).match(
+    /^(\d{4})-(\d{2})-(\d{2})$/
+  );
+
+  if (dateOnly) {
+    date = new Date(
+      Number(dateOnly[1]),
+      Number(dateOnly[2]) - 1,
+      Number(dateOnly[3])
+    );
+
+    if (
+      date.getFullYear() !== Number(dateOnly[1]) ||
+      date.getMonth() !== Number(dateOnly[2]) - 1 ||
+      date.getDate() !== Number(dateOnly[3])
+    ) {
+      return "-";
+    }
+  } else {
+    date = new Date(value);
+  }
 
   if (Number.isNaN(date.getTime())) return "-";
 

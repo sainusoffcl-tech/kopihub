@@ -4747,7 +4747,7 @@ function openOwnerOrderDetail(orderId) {
   });
 
   detailPanel.hidden = false;
-
+  updateGlobalBackButton();
   renderOwnerOrderDetail(order);
 
   appScroll.scrollTo({

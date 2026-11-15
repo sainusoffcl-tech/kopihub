@@ -2,3094 +2,1421 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>Admin KopiHub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123b2c">
+<title>Dashboard Owner | KopiHub</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <style>
-
+<style>
 :root {
-  --green: #123B2C;
-  --green2: #24543e;
-  --green3: #315c45;
-  --cream: #FAF9F5;
-  --white: #ffffff;
-  --text: #26372d;
-  --muted: #788278;
-  --line: #e5e8df;
-  --orange: #E99A48;
-  --red: #a52c2c;
-  --shadow: 0 5px 20px rgba(25,55,37,.07);
-}
-
-/* =====================================
-   RESET GLOBAL
-===================================== */
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  margin: 0;
-  overflow: hidden;
-  overscroll-behavior: none;
-}
-
-body {
-  position: fixed;
-  inset: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--green);
-  color: var(--text);
-}
-
-button {
-  cursor: pointer;
-  font: inherit;
-  -webkit-tap-highlight-color: transparent;
-}
-
-button:disabled {
-  opacity: .55;
-  cursor: wait;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-img,
-svg,
-video,
-canvas {
-  max-width: 100%;
-}
-
-/* =====================================
-   LOADING DAN AKSES DITOLAK
-===================================== */
-
-#loading {
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 25px;
-  text-align: center;
-  color: var(--green);
-  background: var(--cream);
-  z-index: 3000;
-  font-weight: 650;
-}
-
-#denied {
-  display: none;
-  position: fixed;
-  inset: 0;
-  overflow-y: auto;
-  padding: 25px;
-  background: var(--cream);
-  z-index: 3001;
-}
-
-.denied-card {
-  max-width: 480px;
-  margin: 60px auto;
-  padding: 28px;
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-}
-
-.denied-icon {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border-radius: 15px;
-  color: var(--red);
-  background: #fce8e6;
-  margin-bottom: 18px;
-}
-
-.denied-card h2 {
-  margin: 0 0 10px;
-  color: var(--green);
-}
-
-.denied-card p {
-  color: var(--muted);
-  line-height: 1.6;
-  font-size: 14px;
-}
-
-/* =====================================
-   STRUKTUR UTAMA KOPIHUB ADMIN
-===================================== */
-
-#app {
-  display: none;
-  position: fixed;
-  inset: 0;
-
-  width: auto;
-  height: auto;
-  max-width: 100%;
-
-  min-width: 0;
-  min-height: 0;
-
-  overflow: hidden;
-  background: var(--green);
-}
-
-#app.layout {
-  display: none;
-  flex-direction: column;
-
-  margin: 0;
-  padding: 0;
-
-  min-width: 0;
-  min-height: 0;
-}
-
-.layout {
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  height: 100%;
-
-  min-width: 0;
-  min-height: 0;
-}
-
-/* SIDEBAR TIDAK DIGUNAKAN */
-
-#app aside {
-  display: none !important;
-}
-
-  /* =====================================
-   AREA MAIN
-===================================== */
-
-main,
-#app main {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border-radius: 0;
-  background: var(--cream);
-}
-
-/* =====================================
-   HEADER GLOBAL KOPIHUB ADMIN
-   EDGE-TO-EDGE APP BAR
-===================================== */
-
-.header-shell {
-  position: relative;
-  z-index: 1000;
-
-  flex: 0 0 auto;
-
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-
-  box-sizing: border-box;
-
-  padding-top: env(safe-area-inset-top, 0px);
-
-  background: #123B2C;
-}
-
-/* HEADER UTAMA */
-
-.topbar {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 12px;
-
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-
-  min-height: 88px;
-
-  box-sizing: border-box;
-
-  padding: 12px 20px;
-
-  color: #FFFFFF;
-  background: #123B2C;
-
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-/* IDENTITAS KOPIHUB */
-
-.topbar-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
-  flex: 1 1 auto;
-
-  width: auto;
-  min-width: 0;
-  max-width: 100%;
-
-  overflow: hidden;
-}
-
-.topbar-brand {
-  display: flex;
-  align-items: center;
-
-  max-width: 100%;
-
-  margin: 0 0 5px;
-
-  color: #FFFFFF;
-
-  font-size: 30px;
-  line-height: 1;
-  font-weight: 850;
-  letter-spacing: -1px;
-
-  white-space: nowrap;
-}
-
-.brand-kopi {
-  color: #FFFFFF;
-}
-
-.brand-i {
-  position: relative;
-}
-
-.coffee-bean {
-  position: absolute;
-
-  width: 8px;
-  height: 11px;
-
-  top: -3px;
-  left: 50%;
-
-  border-radius: 70% 35% 70% 35%;
-
-  background: #A66B3D;
-
-  transform: translateX(-50%) rotate(35deg);
-}
-
-.topbar-brand .hub {
-  color: #E99A48;
-}
-
-/* TAGLINE */
-
-.topbar-label {
-  max-width: 100%;
-
-  margin: 0;
-
-  color: #C5D9C9;
-
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: .8px;
-
-  white-space: nowrap;
-}
-
-/* HAMBURGER DI KANAN */
-
-.header-menu-button {
-  width: 46px;
-  height: 46px;
-
-  flex: 0 0 46px;
-
-  display: grid;
-  place-items: center;
-
-  margin-left: auto;
-  padding: 0;
-
-  box-sizing: border-box;
-
-  border: 0;
-  border-radius: 10px;
-
-  color: #FFFFFF;
-  background: transparent;
-
-  cursor: pointer;
-}
-
-.header-menu-button svg {
-  width: 32px;
-  height: 32px;
-
-  stroke-width: 2.2;
-}
-
-.header-menu-button:active {
-  background: rgba(255,255,255,.15);
-}
-
-/* TOMBOL KEMBALI DI AREA JUDUL */
-
-.admin-back-button {
-  width: 32px;
-  height: 32px;
-
-  flex: 0 0 32px;
-
-  display: grid;
-  place-items: center;
-
-  padding: 0;
-
-  box-sizing: border-box;
-
-  border: 0;
-  border-radius: 9px;
-
-  color: #123B2C;
-  background: #EDF2E9;
-
-  cursor: pointer;
-}
-
-.admin-back-button svg {
-  width: 18px;
-  height: 18px;
-
-  stroke-width: 2;
-}
-
-.admin-back-button:active {
-  background: #DCE7DC;
-}
-
-.admin-back-button[hidden] {
-  display: none !important;
-}
-/* =========================================
-   AREA KONTEN YANG BOLEH SCROLL
-========================================= */
-
-.admin-content-scroll {
-  display: block;
-
-  flex: 1 1 0;
-
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-
-  min-width: 0;
-  min-height: 0;
-
-  box-sizing: border-box;
-
-  padding: 0 18px 30px;
-
-  overflow-x: hidden;
-  overflow-y: auto;
-
-  -webkit-overflow-scrolling: touch;
-
-  overscroll-behavior-y: contain;
-  overscroll-behavior-x: none;
-
-  touch-action: pan-y;
-
-  background: var(--cream);
-
-  scrollbar-width: thin;
-  scrollbar-color: #C7D0C6 transparent;
-}
-
-.admin-content-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.admin-content-scroll::-webkit-scrollbar-thumb {
-  background: #C7D0C6;
-  border-radius: 10px;
-}
-
-/* =========================================
-   JUDUL HALAMAN DI AREA KREM
-========================================= */
-
-.admin-page-heading {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-
-  min-height: 54px;
-
-  margin: 0 0 18px;
-  padding: 8px 0;
-
-  box-sizing: border-box;
-
-  background: #FAF9F5;
-}
-
-.admin-page-heading h1 {
-  min-width: 0;
-
-  margin: 0;
-
-  color: #123B2C;
-
-  font-size: 25px;
-  line-height: 1.25;
-  font-weight: 800;
-
-  overflow-wrap: anywhere;
-}
-    
-/* =====================================
-   FOOTER ADMIN KOPIHUB
-   ELEGANT ORANGE
-===================================== */
-
-.admin-footer {
-  width: 100%;
-  margin-top: 42px;
-  padding: 25px 12px 20px;
-  border-top: 3px solid #E99A48;
-  text-align: center;
-  background: #FAF9F5;
-}
-
-.admin-footer-brand {
-  margin: 0;
-  color: #123B2C;
-  font-size: 23px;
-  line-height: 1.2;
-  font-weight: 850;
-  letter-spacing: -.5px;
-}
-
-.admin-footer-brand span {
-  color: #E99A48;
-}
-
-.admin-footer-tagline {
-  margin: 7px 0 15px;
-  color: #788278;
-  font-size: 9px;
-  font-weight: 750;
-  letter-spacing: 1px;
-}
-
-.admin-footer-copyright {
-  margin: 0;
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.6;
-}
-    
-
-/* =====================================
-   KOMISI & PENDAPATAN — REDESAIN
-   Tampilan mobile-first KopiHub
-===================================== */
-
-#commission-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 100%;
-  min-width: 0;
-  padding-bottom: 12px;
-}
-
-#commission-section > .panel {
-  margin: 0 0 16px;
-  padding: 19px;
-  border: 1px solid #e8e9e1;
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 4px 16px rgba(18, 59, 44, .055);
-}
-
-/* Judul setiap panel */
-#commission-section > .panel > strong {
-  display: block;
-  margin: 0 0 7px;
-  color: #123B2C;
-  font-size: 16px;
-  line-height: 1.4;
-  font-weight: 800;
-}
-
-#commission-section .panel p.muted {
-  margin: 5px 0 15px;
-  color: #788278;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-/* Header ringkasan */
-#commission-section .settings-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-#commission-section .settings-heading strong {
-  display: block;
-  color: #123B2C;
-  font-size: 16px;
-  line-height: 1.4;
-  font-weight: 800;
-}
-
-#commission-section .settings-heading p {
-  margin: 5px 0 0;
-}
-
-/* Kartu ringkasan */
-#commission-section .summary-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 11px;
-  margin: 0;
-}
-
-#commission-section .summary-card {
-  min-width: 0;
-  min-height: 105px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 15px;
-  border: 1px solid #e8ece5;
-  border-radius: 14px;
-  background: #fafbf8;
-}
-
-#commission-section .summary-card span {
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.45;
-  font-weight: 650;
-}
-
-#commission-section .summary-card strong {
-  color: #123B2C;
-  font-size: 19px;
-  line-height: 1.3;
-  font-weight: 850;
-  overflow-wrap: anywhere;
-}
-
-#commission-section .summary-card:first-child {
-  grid-column: 1 / -1;
-  min-height: 125px;
-  padding: 19px;
-  border-color: #dce8dc;
-  background: #edf3eb;
-}
-
-#commission-section .summary-card:first-child strong {
-  color: #123B2C;
-  font-size: 28px;
-}
-
-#commission-section #commission-summary-note {
-  margin: 13px 2px 0;
-  font-size: 11px;
-}
-
-/* Filter */
-#commission-section .settings-form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 9px;
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #edf0e9;
-}
-
-#commission-section .settings-form label {
-  margin-top: 5px;
-  color: #405447;
-  font-size: 12px;
-  font-weight: 750;
-}
-
-#commission-section .settings-form select {
-  width: 100%;
-  min-height: 47px;
-  padding: 11px 13px;
-  border: 1px solid #dfe5dc;
-  border-radius: 11px;
-  color: #26372d;
-  background: #fafbf8;
-  font: inherit;
-  font-size: 14px;
-}
-
-#commission-section .settings-form .action-button {
-  width: 100%;
-  min-height: 46px;
-  margin: 8px 0 0;
-  border-radius: 11px;
-  font-size: 13px;
-}
-
-/* Pesan status */
-#commission-section #commission-ledger-message,
-#commission-section #commission-invoice-message,
-#commission-section #commission-payment-message {
-  margin: 10px 0;
-  font-size: 11px;
-}
-
-/* Riwayat ledger dan invoice */
-#commission-section .commission-record {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  min-width: 0;
-  margin-top: 10px;
-  padding: 15px 0;
-  border-bottom: 1px solid #edf0e9;
-}
-
-#commission-section .commission-record:last-child {
-  border-bottom: 0;
-}
-
-#commission-section .commission-record-main {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-#commission-section .commission-record-main strong {
-  color: #123B2C;
-  font-size: 13px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-
-#commission-section .commission-record-main small {
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-#commission-section .commission-record-side {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 7px;
-  max-width: 45%;
-  text-align: right;
-}
-
-#commission-section .commission-record-side strong {
-  color: #123B2C;
-  font-size: 14px;
-  font-weight: 850;
-  overflow-wrap: anywhere;
-}
-
-#commission-section .commission-record-side span {
-  padding: 5px 9px;
-  border-radius: 20px;
-  color: #45634b;
-  background: #edf3eb;
-  font-size: 10px;
-  line-height: 1.4;
-  font-weight: 750;
-}
-
-#commission-section .commission-record-side small {
-  color: #788278;
-  font-size: 10px;
-  line-height: 1.5;
-}
-
-/* Pembayaran menunggu verifikasi */
-#commission-section .commission-payment-record {
-  flex-direction: column;
-  gap: 14px;
-  padding: 16px 0;
-}
-
-#commission-section .commission-payment-record .commission-record-main {
-  width: 100%;
-}
-
-#commission-section .commission-payment-record .commission-record-actions {
-  display: flex;
-  gap: 9px;
-  width: 100%;
-}
-
-#commission-section .commission-record-actions button {
-  flex: 1 1 0;
-  min-height: 43px;
-  padding: 10px 12px;
-  border: 0;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 750;
-}
-
-#commission-section .commission-approve-btn {
-  color: #ffffff;
-  background: #245b3b;
-}
-
-#commission-section .commission-reject-btn {
-  color: #a52c2c;
-  background: #fcebea;
-}
-
-#commission-section .commission-record-actions button:disabled {
-  opacity: .55;
-}
-
-/* Kondisi kosong */
-#commission-section .empty-state {
-  margin: 8px 0 0;
-  padding: 22px 12px;
-  border: 1px dashed #dfe5dc;
-  border-radius: 12px;
-  color: #788278;
-  background: #fafbf8;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-/* Tombol muat ulang */
-#commission-section #reload-commission {
-  flex: 0 0 auto;
-  min-height: 40px;
-  margin: 0;
-  padding: 9px 11px;
-  border-radius: 10px;
-  font-size: 11px;
-}
-
-/* Penyesuaian layar kecil */
-@media (max-width: 380px) {
-  #commission-section > .panel {
-    padding: 15px;
-  }
-
-  #commission-section .summary-card {
-    padding: 12px;
-  }
-
-  #commission-section .summary-card strong {
-    font-size: 17px;
-  }
-
-  #commission-section .summary-card:first-child strong {
-    font-size: 24px;
-  }
-
-  #commission-section .settings-heading {
-    align-items: flex-start;
-  }
-
-  #commission-section #reload-commission {
-    padding: 8px;
-  }
-
-  #commission-section .commission-record {
-    gap: 8px;
-  }
-}
-
-/* =====================================
-   KONTEN DASHBOARD
-===================================== */
-
-.warning {
-  padding: 15px 16px;
-  border: 1px solid #f0d9bb;
-  border-radius: 13px;
-  color: #754719;
-  background: #fff0df;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.section-title {
-  margin: 25px 0 14px;
-  color: var(--green);
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3,minmax(0,1fr));
-  gap: 14px;
-}
-
-.card,
-.panel {
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  background: white;
-  box-shadow: var(--shadow);
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-}
-
-.stat-value {
-  margin: 12px 0 5px;
-  color: var(--green);
-  font-size: 27px;
-  font-weight: 850;
-  letter-spacing: -.5px;
-}
-
-.stat-note {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 30px;
-  color: #236338;
-  background: #e6f3e6;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-.status svg {
-  width: 14px;
-  height: 14px;
-}
-
-.panel p {
-  line-height: 1.6;
-}
-
-.muted {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.action-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 4px 5px 4px 0;
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 10px;
-  color: white;
-  background: var(--green);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.action-button:hover {
-  background: var(--green2);
-}
-
-.action-button svg {
-  width: 15px;
-  height: 15px;
-}
-
-.action-button.danger {
-  background: var(--red);
-}
-
-/* =====================================
-   RINGKASAN DAN DETAIL COFFEE SHOP
-===================================== */
-
-.dashboard-shop-panel {
-  padding: 18px;
-}
-
-.dashboard-shop-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.dashboard-shop-count {
-  margin-top: 5px;
-  color: var(--green);
-  font-size: 30px;
-  font-weight: 850;
-}
-
-.dashboard-shop-icon {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  color: var(--green);
-  background: #edf2e9;
-}
-
-.dashboard-shop-icon svg {
-  width: 23px;
-  height: 23px;
-}
-
-.dashboard-search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-  padding: 12px 13px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fafbf8;
-}
-
-.dashboard-search svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  color: var(--muted);
-}
-
-.dashboard-search input {
-  width: 100%;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  color: var(--text);
-  background: transparent;
-  font: inherit;
-  font-size: 13px;
-}
-
-.dashboard-shop-row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 17px 2px;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  color: var(--green);
-  background: transparent;
-  text-align: left;
-}
-
-.dashboard-shop-row:last-child {
-  border-bottom: 0;
-}
-
-.dashboard-shop-row strong {
-  font-size: 14px;
-  overflow-wrap: anywhere;
-}
-
-.dashboard-shop-row small {
-  display: block;
-  margin-top: 5px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.dashboard-shop-row > svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  color: #9aa99b;
-}
-
-.dashboard-detail-card {
-  margin-top: 16px;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: white;
-  box-shadow: var(--shadow);
-}
-
-.dashboard-detail-heading {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  min-width: 0;
-  margin-bottom: 18px;
-}
-
-.dashboard-detail-logo {
-  width: 58px;
-  height: 58px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 15px;
-  color: var(--green);
-  background: #edf2e9;
-}
-
-.dashboard-detail-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.dashboard-detail-heading h2 {
-  margin: 0;
-  color: var(--green);
-  font-size: 18px;
-  overflow-wrap: anywhere;
-}
-
-.dashboard-detail-heading p {
-  margin: 5px 0 0;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.dashboard-detail-section {
-  padding: 15px 0;
-  border-top: 1px solid var(--line);
-}
-
-.dashboard-detail-section h3 {
-  margin: 0 0 12px;
-  color: var(--green);
-  font-size: 13px;
-}
-
-.dashboard-detail-item {
-  margin: 10px 0;
-}
-
-.dashboard-detail-label {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.dashboard-detail-value {
-  display: block;
-  color: var(--text);
-  font-size: 13px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.dashboard-detail-status {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-.dashboard-detail-status.active {
-  color: #236338;
-  background: #e6f3e6;
-}
-
-.dashboard-detail-status.inactive {
-  color: var(--red);
-  background: #fce8e6;
-}
-
-.shop-card {
-  padding: 17px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.shop-card:last-child {
-  border-bottom: 0;
-}
-
-.shop-card strong {
-  color: var(--green);
-  font-size: 14px;
-}
-
-.shop-detail {
-  margin: 8px 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-}
-
-.shop-status {
-  display: inline-block;
-  margin: 4px 0 9px;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-.shop-status.active {
-  color: #236338;
-  background: #e6f3e6;
-}
-
-.shop-status.inactive {
-  color: var(--red);
-  background: #fce8e6;
-}
-
-.empty-state {
-  padding: 25px 10px;
-  color: var(--muted);
-  text-align: center;
-  font-size: 13px;
-}
-
-.empty-state svg {
-  display: block;
-  width: 30px;
-  height: 30px;
-  margin: 0 auto 10px;
-  color: #9aa99b;
-}
-
-/* =====================================
-   PENGATURAN PLATFORM
-===================================== */
-
-.settings-card {
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  background: white;
-  box-shadow: var(--shadow);
-}
-
-.settings-heading {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.settings-icon {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 13px;
-  color: var(--green);
-  background: #edf2e9;
-}
-
-.settings-heading h3 {
-  margin: 0;
-  color: var(--green);
-  font-size: 15px;
-}
-
-.settings-heading p {
-  margin: 5px 0 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.settings-rate-label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-}
-
-.settings-rate {
-  margin: 0 0 6px;
-  color: var(--green);
-  font-size: 30px;
-  font-weight: 850;
-  overflow-wrap: anywhere;
-}
-
-.settings-note {
-  margin: 12px 0 18px;
-  padding: 12px;
-  border-radius: 11px;
-  color: #754719;
-  background: #fff0df;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.settings-form {
-  display: grid;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
-}
-
-.settings-form label {
-  color: var(--green);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.settings-form input,
-.settings-form select {
-  width: 100%;
-  min-width: 0;
-  padding: 13px;
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  outline: none;
-  color: var(--text);
-  background: #fafbf8;
-  font: inherit;
-  font-size: 16px;
-}
-
-.settings-form input:focus,
-.settings-form select:focus {
-  border-color: var(--green2);
-}
-
-.settings-message {
-  min-height: 20px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.settings-message.success {
-  color: #236338;
-}
-
-.settings-message.error {
-  color: var(--red);
-}
-
-/* =====================================
-   KARTU RINGKASAN
-===================================== */
-
-.stats,
-.card,
-.panel,
-#dashboard-view {
-  min-width: 0;
-  max-width: 100%;
-}
-
-/* =====================================
-   RESPONSIVE GLOBAL
-===================================== */
-
-
-@media (max-width: 600px) {
-
-  /* AREA KONTEN */
-  .admin-content-scroll {
-    padding: 0 15px 25px;
-  }
-
-  /* HEADER */
-  .topbar {
-    min-height: 88px;
-    padding: 12px 18px;
-    gap: 10px;
-  }
-
-  /* LOGO KOPIHUB */
-  .topbar-brand {
-    font-size: 30px;
-  }
-
-  .topbar-label {
-    font-size: 8px;
-    letter-spacing: .8px;
-  }
-
-  /* HAMBURGER */
-  .header-menu-button {
-    width: 46px;
-    height: 46px;
-    flex-basis: 46px;
-  }
-
-  /* JUDUL HALAMAN */
-  .admin-page-heading {
-    min-height: 76px;
-    padding-top: 24px;
-    margin-bottom: 18px;
-  }
-
-  .admin-page-heading h1 {
-    font-size: 24px;
-  }
-
-
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .stats .card {
-    min-width: 0;
-    padding: 16px 14px;
-    border-radius: 17px;
-  }
-
-  .stats .card:nth-child(3) {
-    grid-column: 1 / -1;
-  }
-
-  .stat-label {
-    font-size: 11px;
-  }
-
-  .stat-value {
-    font-size: 23px;
-  }
-
-  .stat-note {
-    font-size: 10px;
-  }
-
-  .section-title {
-    margin-top: 22px;
-  }
-}
-
-
-@media (min-width: 601px) {
-  .admin-content-scroll {
-    padding: 0 28px 35px;
-  }
-
-  .admin-page-heading {
-    min-height: 80px;
-    padding-top: 26px;
-    margin-bottom: 20px;
-  }
-}
-
-
-/* =====================================
-   KOPIHUB ADMIN — TRANSAKSI PLATFORM
-   REDESAIN MOBILE-FIRST
-===================================== */
-
-#platform-transactions-section:not([hidden]) {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  min-width: 0;
-  padding-bottom: 12px;
-  color: #26372D;
-}
-
-/* HEADER TRANSAKSI PLATFORM */
-#platform-transactions-section .pt-page-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-}
-
-#platform-transactions-section .pt-page-heading > div {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-#platform-transactions-section .pt-page-heading p {
-  margin: 0;
-  color: #788278;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-#platform-transactions-section #reload-platform-transactions {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-height: 40px;
-  margin: 0;
-  padding: 9px 12px;
-  border: 0;
-  border-radius: 10px;
-  color: #FFFFFF;
-  background: #123B2C;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-#platform-transactions-section #reload-platform-transactions svg {
-  width: 15px;
-  height: 15px;
-}
-
-/* RINGKASAN KEUANGAN */
-#platform-transactions-section .pt-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 11px;
-  width: 100%;
-  min-width: 0;
-}
-
-#platform-transactions-section .pt-summary-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 9px;
-  min-width: 0;
-  min-height: 132px;
-  padding: 15px;
-  border: 1px solid #E8ECE5;
-  border-radius: 16px;
-  background: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(18, 59, 44, .045);
-}
-
-#platform-transactions-section .pt-summary-icon {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: 11px;
-  color: #245B3B;
-  background: #EDF3EB;
-}
-
-#platform-transactions-section .pt-summary-icon svg {
-  width: 19px;
-  height: 19px;
-}
-
-#platform-transactions-section .pt-summary-card > span {
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.45;
-  font-weight: 650;
-}
-
-#platform-transactions-section .pt-summary-card > strong {
-  display: block;
-  max-width: 100%;
-  color: #123B2C;
-  font-size: 19px;
-  line-height: 1.3;
-  font-weight: 850;
-  overflow-wrap: anywhere;
-}
-
-#platform-transactions-section .pt-summary-card > small {
-  color: #788278;
-  font-size: 10px;
-  line-height: 1.5;
-}
-
-#platform-transactions-section .pt-summary-card.pt-income {
-  border-color: #DCE8DC;
-  background: #EDF3EB;
-}
-
-#platform-transactions-section .pt-summary-card.pt-income .pt-summary-icon {
-  color: #245B3B;
-  background: #FFFFFF;
-}
-
-#platform-transactions-section .pt-summary-card.pt-outflow {
-  border-color: #F0E2D8;
-}
-
-#platform-transactions-section .pt-summary-card.pt-outflow .pt-summary-icon {
-  color: #B66A43;
-  background: #FFF2E9;
-}
-
-#platform-transactions-section .pt-summary-card.pt-balance {
-  grid-column: 1 / -1;
-  min-height: 120px;
-  border-color: #EBD9C3;
-  background: #FFF7EC;
-}
-
-#platform-transactions-section .pt-summary-card.pt-balance .pt-summary-icon {
-  color: #A66A2E;
-  background: #FFFFFF;
-}
-
-/* KARTU AKSI PENCATATAN */
-#platform-transactions-section .pt-action-card {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 14px;
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid #DCE8DC;
-  border-radius: 16px;
-  background: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(18, 59, 44, .045);
-}
-
-#platform-transactions-section .pt-action-card > div {
-  min-width: 0;
-}
-
-#platform-transactions-section .pt-action-card strong {
-  display: block;
-  color: #123B2C;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-#platform-transactions-section .pt-action-card p {
-  margin: 6px 0 0;
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-/* TOMBOL UTAMA DAN SEKUNDER */
-#platform-transactions-section .pt-primary-button,
-#platform-transactions-section .pt-secondary-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  min-height: 45px;
-  padding: 11px 14px;
-  border: 0;
-  border-radius: 11px;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 750;
-  cursor: pointer;
-}
-
-#platform-transactions-section .pt-primary-button {
-  color: #FFFFFF;
-  background: #123B2C;
-}
-
-#platform-transactions-section .pt-primary-button:active {
-  background: #24543E;
-}
-
-#platform-transactions-section .pt-secondary-button {
-  color: #123B2C;
-  background: #EDF2E9;
-}
-
-#platform-transactions-section .pt-primary-button svg,
-#platform-transactions-section .pt-secondary-button svg {
-  width: 16px;
-  height: 16px;
-}
-
-#platform-transactions-section button:disabled {
-  opacity: .55;
-  cursor: not-allowed;
-}
-
-/* FORM UANG KELUAR */
-#platform-transactions-section #pt-outflow-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid #DCE8DC;
-  border-radius: 16px;
-  background: #FFFFFF;
-  box-shadow: 0 4px 16px rgba(18, 59, 44, .055);
-}
-
-#platform-transactions-section #pt-outflow-form[hidden] {
-  display: none !important;
-}
-
-#platform-transactions-section .pt-form-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 7px;
-}
-
-#platform-transactions-section .pt-form-heading > div {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-#platform-transactions-section .pt-form-heading strong {
-  display: block;
-  color: #123B2C;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-#platform-transactions-section .pt-form-heading p {
-  margin: 5px 0 0;
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-#platform-transactions-section .pt-close-button {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid #E8ECE5;
-  border-radius: 10px;
-  color: #536258;
-  background: #FAFBF8;
-}
-
-#platform-transactions-section .pt-close-button svg {
-  width: 17px;
-  height: 17px;
-}
-
-#platform-transactions-section #pt-outflow-form > label {
-  margin-top: 5px;
-  color: #405447;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-#platform-transactions-section #pt-outflow-form > input,
-#platform-transactions-section #pt-outflow-form > select,
-#platform-transactions-section #pt-outflow-form > textarea,
-#platform-transactions-section #pt-refund-field input {
-  display: block;
-  width: 100%;
-  min-width: 0;
-  min-height: 45px;
-  padding: 11px 12px;
-  border: 1px solid #DFE5DC;
-  border-radius: 10px;
-  outline: none;
-  color: #26372D;
-  background: #FAFBF8;
-  font: inherit;
-  font-size: 13px;
-}
-
-#platform-transactions-section #pt-outflow-form textarea {
-  min-height: 85px;
-  resize: vertical;
-}
-
-#platform-transactions-section #pt-outflow-form input:focus,
-#platform-transactions-section #pt-outflow-form select:focus,
-#platform-transactions-section #pt-outflow-form textarea:focus,
-#platform-transactions-section #pt-refund-field input:focus {
-  border-color: #24543E;
-  box-shadow: 0 0 0 3px rgba(36, 84, 62, .08);
-}
-
-#platform-transactions-section #pt-refund-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 13px;
-  border: 1px solid #F0D9BB;
-  border-radius: 11px;
-  background: #FFF7EC;
-}
-
-#platform-transactions-section #pt-refund-field[hidden] {
-  display: none !important;
-}
-
-#platform-transactions-section #pt-refund-field label {
-  color: #754719;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-#platform-transactions-section #pt-refund-field small {
-  color: #8B6A45;
-  font-size: 10px;
-  line-height: 1.5;
-}
-
-#platform-transactions-section .pt-form-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  margin-top: 8px;
-}
-
-#platform-transactions-section .pt-message {
-  min-height: 18px;
-  margin: 3px 0 0;
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-/* FILTER RIWAYAT TRANSAKSI */
-#platform-transactions-section .pt-filter-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid #E8E9E1;
-  border-radius: 16px;
-  background: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(18, 59, 44, .045);
-}
-
-#platform-transactions-section .pt-filter-heading strong {
-  display: block;
-  color: #123B2C;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-#platform-transactions-section .pt-filter-heading p {
-  margin: 5px 0 4px;
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-#platform-transactions-section .pt-filter-card > label,
-#platform-transactions-section .pt-date-range label {
-  margin-top: 4px;
-  color: #405447;
-  font-size: 11px;
-  font-weight: 750;
-}
-
-#platform-transactions-section .pt-filter-card > select,
-#platform-transactions-section .pt-filter-card > input,
-#platform-transactions-section .pt-date-range input {
-  width: 100%;
-  min-width: 0;
-  min-height: 45px;
-  padding: 10px 12px;
-  border: 1px solid #DFE5DC;
-  border-radius: 10px;
-  outline: none;
-  color: #26372D;
-  background: #FAFBF8;
-  font: inherit;
-  font-size: 13px;
-}
-
-#platform-transactions-section .pt-filter-card select:focus,
-#platform-transactions-section .pt-filter-card input:focus {
-  border-color: #24543E;
-  box-shadow: 0 0 0 3px rgba(36, 84, 62, .08);
-}
-
-#platform-transactions-section .pt-date-range {
-  display: none;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  min-width: 0;
-}
-
-#platform-transactions-section .pt-date-range.active {
-  display: grid;
-}
-
-#platform-transactions-section .pt-date-range[hidden] {
-  display: none !important;
-}
-
-#platform-transactions-section .pt-date-range > div {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  min-width: 0;
-}
-
-#platform-transactions-section #pt-apply-filter {
-  margin-top: 5px;
-}
-
-/* JUDUL DAFTAR TRANSAKSI */
-#platform-transactions-section .pt-list-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-width: 0;
-  margin-top: 3px;
-}
-
-#platform-transactions-section .pt-list-heading strong {
-  display: block;
-  color: #123B2C;
-  font-size: 16px;
-  font-weight: 800;
-}
-
-#platform-transactions-section .pt-list-heading p {
-  margin: 5px 0 0;
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-/* PESAN DAN DAFTAR TRANSAKSI */
-#platform-transactions-section #pt-transactions-message {
-  margin: 0;
-  color: #788278;
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-#platform-transactions-section .pt-transactions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-}
-
-#platform-transactions-section .pt-transaction-card {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  min-width: 0;
-  padding: 15px;
-  border: 1px solid #E8ECE5;
-  border-radius: 14px;
-  background: #FFFFFF;
-  box-shadow: 0 3px 12px rgba(18, 59, 44, .035);
-}
-
-#platform-transactions-section .pt-transaction-main {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-#platform-transactions-section .pt-transaction-main strong {
-  color: #123B2C;
-  font-size: 13px;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-}
-
-#platform-transactions-section .pt-transaction-main small {
-  color: #788278;
-  font-size: 10px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-#platform-transactions-section .pt-transaction-side {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 7px;
-  max-width: 45%;
-  text-align: right;
-}
-
-#platform-transactions-section .pt-transaction-amount {
-  color: #245B3B;
-  font-size: 14px;
-  line-height: 1.4;
-  font-weight: 850;
-  overflow-wrap: anywhere;
-}
-
-#platform-transactions-section .pt-transaction-amount.outflow {
-  color: #A94F36;
-}
-
-#platform-transactions-section .pt-status {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 9px;
-  border-radius: 20px;
-  color: #245B3B;
-  background: #EDF3EB;
-  font-size: 10px;
-  line-height: 1.4;
-  font-weight: 750;
-}
-
-#platform-transactions-section .pt-status.voided {
-  color: #A52C2C;
-  background: #FCEBEA;
-}
-
-#platform-transactions-section .pt-detail-button {
-  min-height: 34px;
-  padding: 7px 10px;
-  border: 1px solid #DFE5DC;
-  border-radius: 9px;
-  color: #123B2C;
-  background: #FAFBF8;
-  font-size: 10px;
-  font-weight: 750;
-}
-
-#platform-transactions-section .pt-empty {
-  padding: 24px 14px;
-  border: 1px dashed #DFE5DC;
-  border-radius: 13px;
-  color: #788278;
-  background: #FAFBF8;
-  text-align: center;
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-/* RESPONSIVE TABLET DAN DESKTOP */
-@media (min-width: 761px) {
-  #platform-transactions-section .pt-action-card {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  #platform-transactions-section .pt-action-card .pt-primary-button {
-    width: auto;
-    min-width: 190px;
-  }
-
-  #platform-transactions-section .pt-form-actions {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  #platform-transactions-section .pt-form-actions button {
-    width: auto;
-    min-width: 145px;
-  }
-
-  #platform-transactions-section .pt-filter-card {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: end;
-  }
-
-  #platform-transactions-section .pt-filter-heading,
-  #platform-transactions-section .pt-date-range {
-    grid-column: 1 / -1;
-  }
-
-  #platform-transactions-section #pt-apply-filter {
-    width: 100%;
-  }
-}
-
-/* PENYESUAIAN IPHONE DAN LAYAR KECIL */
-@media (max-width: 380px) {
-  #platform-transactions-section .pt-page-heading {
-    align-items: flex-start;
-  }
-
-  #platform-transactions-section #reload-platform-transactions {
-    min-height: 38px;
-    padding: 8px;
-    font-size: 10px;
-  }
-
-  #platform-transactions-section .pt-summary-grid {
-    gap: 8px;
-  }
-
-  #platform-transactions-section .pt-summary-card {
-    min-height: 125px;
-    padding: 12px;
-  }
-
-  #platform-transactions-section .pt-summary-card > strong {
-    font-size: 17px;
-  }
-
-  #platform-transactions-section .pt-summary-card.pt-balance {
-    min-height: 112px;
-  }
-
-  #platform-transactions-section .pt-action-card,
-  #platform-transactions-section #pt-outflow-form,
-  #platform-transactions-section .pt-filter-card {
-    padding: 15px;
-  }
-
-  #platform-transactions-section .pt-date-range {
-    grid-template-columns: 1fr;
-  }
-
-  #platform-transactions-section .pt-transaction-card {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  #platform-transactions-section .pt-transaction-side {
-    width: 100%;
-    max-width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    text-align: left;
-  }
-}
-
-/* =========================================
-   MENU HAMBURGER ADMIN
-========================================= */
-
-.mobile-menu-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background: rgba(0, 0, 0, 0.48);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.mobile-menu-overlay.show {
-  display: block;
-  opacity: 1;
-}
-
-.mobile-menu-sheet {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2001;
-  width: 100%;
-  max-width: 600px;
-  max-height: 85vh;
-  max-height: 85dvh;
-  margin: 0 auto;
-  padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 0px));
-  overflow-x: hidden;
-  overflow-y: auto;
-  border-radius: 22px 22px 0 0;
-  background: #FAF9F5;
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.16);
-  transform: translateY(105%);
-  visibility: hidden;
-  transition: transform 0.25s ease, visibility 0.25s ease;
-}
-
-.mobile-menu-sheet.show {
-  transform: translateY(0);
-  visibility: visible;
-}
-.menu-handle {
-  width: 42px;
-  height: 5px;
-  margin: 0 auto 18px;
-  border-radius: 10px;
-  background: #D5DAD2;
-}
-
-.menu-sheet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-
-.menu-sheet-header h2 {
-  margin: 0;
-  color: #123B2C;
-  font-size: 18px;
-  font-weight: 800;
-}
-
-.menu-close {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #E5E8DF;
-  border-radius: 10px;
-  color: #123B2C;
-  background: #FFFFFF;
-}
-
-.menu-close svg {
-  width: 19px;
-  height: 19px;
-}
-
-.mobile-menu-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mobile-menu-item {
-  width: 100%;
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 11px 13px;
-  border: 1px solid #E5E8DF;
-  border-radius: 12px;
-  color: #123B2C;
-  background: #FFFFFF;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 650;
-}
-
-.mobile-menu-item:active {
-  background: #EDF2E9;
-}
-
-.mobile-menu-icon {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  color: #174C38;
-  background: #EDF2E9;
-}
-
-.mobile-menu-icon svg {
-  width: 18px;
-  height: 18px;
-}
-
-.mobile-menu-item.logout-item {
-  margin-top: 8px;
-  border-color: #F0D9D6;
-  color: #A52C2C;
-}
-
-.mobile-menu-item.logout-item .mobile-menu-icon {
-  color: #A52C2C;
-  background: #FCE8E6;
-}
-  </style>
+  --green:#174c38;
+  --dark:#123b2c;
+  --light:#e8f2ec;
+  --bg:#faf9f5;
+  --text:#26352d;
+  --muted:#748078;
+  --border:#e1e8e2;
+  --orange:#e99a48;
+  --danger:#a72d2d;
+  --header-height:86px;
+}
+
+*{box-sizing:border-box}
+html{height:100%;scroll-behavior:smooth}
+body{
+  margin:0;height:100%;overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  color:var(--text);background:var(--bg);line-height:1.5;
+}
+
+/* =====================================================
+   HEADER GLOBAL KOPIHUB
+   Tetap, tidak mengecil, dan menyatu dengan status bar
+===================================================== */
+.owner-header{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  height:calc(var(--header-height) + env(safe-area-inset-top));
+  padding:env(safe-area-inset-top) 18px 0;
+  background:var(--dark);
+  color:#fff;
+  border-radius:0;
+  box-shadow:0 3px 14px rgba(0,0,0,.12);
+}
+.owner-header-inner{
+  width:100%;
+  max-width:1000px;
+  height:var(--header-height);
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.owner-brand-area{min-width:0}
+.brand{
+  font-size:27px;
+  font-weight:850;
+  letter-spacing:-1px;
+  line-height:1.15;
+}
+.brand span{color:var(--orange)}
+.header-subtitle{
+  color:#d7e9de;
+  font-size:11px;
+  letter-spacing:1.2px;
+  margin-top:4px;
+}
+.header-shop-name{
+  color:#fff;
+  font-size:11px;
+  margin-top:2px;
+  opacity:.8;
+}
+.global-back-button{
+  display:none;
+  flex:0 0 auto;
+  width:auto;
+  min-width:90px;
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:10px;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+}
+.global-back-button.visible{display:block}
+.global-back-button:active{background:rgba(255,255,255,.2)}
+
+/* Elemen profil lama dipertahankan untuk kompatibilitas JS */
+.profile-icon-button{display:none}
+#header-shop-logo{display:none}
+
+/* =====================================================
+   AREA KONTEN
+===================================================== */
+#app-scroll{
+  position:fixed;
+  top:calc(var(--header-height) + env(safe-area-inset-top));
+  left:0;right:0;bottom:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  padding:22px 0 calc(28px + env(safe-area-inset-bottom));
+}
+main{
+  width:100%;
+  max-width:1000px;
+  margin:auto;
+  padding:0 16px;
+  min-width:0;
+  overflow-x:clip;
+}
+.page{animation:pageIn .2s ease}
+@keyframes pageIn{
+  from{opacity:.65;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.page-heading{
+  margin:0 0 5px;
+  font-size:23px;
+  color:var(--dark);
+  font-weight:800;
+}
+.page-description{
+  color:var(--muted);
+  font-size:13px;
+  margin:0 0 20px;
+}
+h1,h2,h3{color:var(--dark);line-height:1.3}
+h2{font-size:20px;margin-top:0}
+h3{font-size:17px}
+.panel,.stat,.summary-card,.chart-panel{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:17px;
+  margin-bottom:16px;
+  box-shadow:0 5px 18px rgba(18,59,44,.05);
+}
+.muted{color:var(--muted);font-size:14px;line-height:1.6}
+.field{margin:13px 0}
+label{display:block;margin-bottom:7px;font-size:14px;font-weight:700}
+input,select,textarea{
+  width:100%;
+  max-width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  color:var(--text);
+  font:inherit;
+  margin-top:5px;
+  margin-bottom:12px;
+}
+button,.action-link{
+  display:inline-block;
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:10px;
+  font:600 14px Arial,sans-serif;
+  text-align:center;
+  text-decoration:none;
+  cursor:pointer;
+}
+button:disabled{opacity:.55;cursor:not-allowed}
+.primary,button{background:var(--dark);color:#fff}
+.secondary{background:var(--light);color:var(--dark)}
+.danger{background:#fff0ef;color:var(--danger)}
+.button-stack{display:grid;gap:9px;margin-top:12px}
+.button-stack.two{grid-template-columns:1fr 1fr}
+
+/* =====================================================
+   DASHBOARD UTAMA - KARTU NAVIGASI
+===================================================== */
+.dashboard-menu-title{
+  margin:24px 0 12px;
+  font-size:17px;
+  font-weight:800;
+  color:var(--dark);
+}
+.dashboard-card-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:0 0 22px;
+}
+.dashboard-card{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  min-width:0;
+  min-height:132px;
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#fff;
+  color:var(--text);
+  text-align:left;
+  box-shadow:0 5px 18px rgba(18,59,44,.05);
+  transition:transform .15s ease,border-color .15s ease;
+}
+.dashboard-card:active{
+  transform:scale(.98);
+  border-color:var(--green);
+}
+.dashboard-card-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:43px;
+  height:43px;
+  margin-bottom:12px;
+  border-radius:13px;
+  background:var(--light);
+  color:var(--green);
+  font-size:22px;
+}
+.dashboard-card strong{
+  display:block;
+  color:var(--dark);
+  font-size:14px;
+  line-height:1.4;
+}
+.dashboard-card span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.45;
+}
+
+/* =====================================================
+   RINGKASAN HOME
+===================================================== */
+.business-summary{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:20px;
+}
+.summary-card{padding:16px 14px;margin-bottom:0;min-width:0}
+.summary-icon{font-size:24px;margin-bottom:10px}
+.stat-label{color:var(--muted);font-size:13px}
+.stat-number{
+  margin-top:8px;
+  color:var(--dark);
+  font-size:20px;
+  font-weight:750;
+  overflow-wrap:anywhere;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:20px;
+}
+.stat{margin-bottom:0;padding:14px;min-width:0}
+.chart-panel{padding:20px 16px;margin-bottom:20px}
+.chart-panel h2{margin:0 0 6px}
+.chart-panel>p{margin:0 0 20px}
+.sales-chart{
+  min-height:190px;
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:8px;
+  align-items:stretch;
+}
+.chart-day{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:7px;
+  text-align:center;
+}
+.chart-value{
+  font-size:10px;
+  color:var(--muted);
+  overflow-wrap:anywhere;
+  min-height:15px;
+}
+.chart-track{
+  height:125px;
+  width:100%;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  background:#f3f6f2;
+  border-radius:8px 8px 4px 4px;
+  overflow:hidden;
+}
+.chart-bar{
+  width:70%;
+  min-height:3px;
+  background:linear-gradient(180deg,var(--orange),var(--green));
+  border-radius:7px 7px 0 0;
+}
+.chart-label{font-size:11px;color:var(--text)}
+
+/* =====================================================
+   KELOLA MENU
+===================================================== */
+.menu-feature-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:14px 0 18px;
+}
+.menu-feature-card{
+  min-width:0;
+  min-height:112px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fff;
+  color:var(--text);
+  text-align:left;
+  box-shadow:0 4px 14px rgba(18,59,44,.04);
+}
+.menu-feature-card:active{border-color:var(--green)}
+.menu-feature-icon{
+  display:block;
+  font-size:22px;
+  margin-bottom:8px;
+}
+.menu-feature-card strong{
+  display:block;
+  color:var(--dark);
+  font-size:13px;
+}
+.menu-feature-card small{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.4;
+}
+.menu-item{
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+  overflow-wrap:anywhere;
+}
+.menu-item:last-child{border-bottom:0}
+.menu-item strong{display:block;font-size:16px}
+.menu-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.menu-actions button{padding:10px 6px}
+.qr-box{
+  padding:16px;
+  text-align:center;
+  background:#f8faf8;
+  border:1px dashed #aabbb0;
+  border-radius:12px;
+  margin-top:14px;
+}
+#qr-image{
+  display:block;
+  width:220px;
+  max-width:100%;
+  height:auto;
+  margin:14px auto;
+}
+.url-text{overflow-wrap:anywhere;font-size:13px;color:var(--muted)}
+.menu-back-home{margin-bottom:16px}
+
+/* =====================================================
+   TRANSAKSI DAN DETAIL PESANAN
+===================================================== */
+.transaction-filters{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+  margin:14px 0;
+}
+.owner-order-list{display:grid;gap:10px}
+.owner-order-card{
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  cursor:pointer;
+  transition:border-color .2s ease,box-shadow .2s ease;
+}
+.owner-order-card:active{
+  border-color:var(--green);
+  box-shadow:0 3px 12px rgba(18,59,44,.10);
+}
+.owner-order-card:focus-visible{
+  outline:2px solid var(--green);
+  outline-offset:3px;
+}
+.owner-order-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.owner-order-number{
+  min-width:0;
+  color:var(--dark);
+  font-size:14px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.owner-order-total{
+  flex:0 0 auto;
+  color:var(--dark);
+  font-size:14px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.owner-order-datetime{
+  margin:8px 0 2px;
+  color:var(--muted);
+  font-size:12px;
+}
+.owner-order-source{margin:0;color:var(--muted);font-size:12px}
+.owner-order-empty{
+  padding:20px 12px;
+  border:1px dashed var(--border);
+  border-radius:12px;
+  color:var(--muted);
+  text-align:center;
+  font-size:13px;
+}
+.owner-order-detail-header{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:18px;
+}
+.owner-order-detail-header h2{margin:0}
+.owner-order-back-button{width:auto;padding:10px 14px}
+.owner-order-detail-section{
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.owner-order-detail-section:last-child{border-bottom:0}
+.owner-order-detail-section h3{margin:0 0 12px;font-size:15px}
+.owner-order-detail-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  margin:9px 0;
+  font-size:13px;
+}
+.owner-order-detail-line span{color:var(--muted);flex:1;min-width:0}
+.owner-order-detail-line strong{
+  color:var(--text);
+  text-align:right;
+  max-width:65%;
+  overflow-wrap:anywhere;
+}
+.owner-order-detail-code{display:flex;align-items:flex-start;gap:8px}
+.owner-order-detail-code strong{flex:1;min-width:0;overflow-wrap:anywhere}
+.owner-order-copy-button{width:auto;flex:0 0 auto;padding:7px 10px;font-size:11px}
+.owner-order-product{padding:12px 0;border-bottom:1px solid var(--border)}
+.owner-order-product:last-child{border-bottom:0}
+.owner-order-product-name{font-size:14px;font-weight:750;color:var(--dark)}
+.owner-order-product-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:6px;
+  font-size:12px;
+}
+.owner-order-product-meta span:first-child{color:var(--muted)}
+.owner-order-product-note{margin-top:6px;color:var(--muted);font-size:12px;font-style:italic}
+.owner-order-payment-total{
+  padding-top:12px;
+  margin-top:12px;
+  border-top:1px dashed var(--border);
+}
+.owner-order-payment-total strong{color:var(--green);font-size:17px}
+.owner-order-payment-status{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#fff3df;
+  color:#93621f;
+  font-size:11px;
+  font-weight:750;
+}
+.owner-order-payment-status.paid{background:#e4f4e9;color:#21683a}
+.owner-order-status-list{display:grid;gap:10px}
+.owner-order-status-step{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+.owner-order-status-dot{
+  width:20px;height:20px;flex:0 0 20px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:50%;font-size:11px;
+}
+.owner-order-status-step.is-done{color:var(--green);font-weight:700}
+.owner-order-status-step.is-done .owner-order-status-dot{background:var(--light);border-color:var(--green)}
+.owner-order-status-step.is-current{color:var(--dark);font-weight:800}
+.owner-order-detail-empty{padding:12px;color:var(--muted);font-size:13px;text-align:center}
+.owner-order-detail-hint{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid rgba(23,76,56,.12);
+  color:#174c38;
+  font-size:13px;
+  font-weight:700;
+}
+
+/* =====================================================
+   LAPORAN
+===================================================== */
+.report-filter{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}
+.report-filter .field{margin:0}
+.report-filter input,.report-filter select{margin-bottom:5px}
+.report-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  margin-top:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+}
+.report-table{width:100%;min-width:440px;border-collapse:collapse;font-size:13px}
+.report-table th,.report-table td{
+  padding:11px 10px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.report-table th{background:#f3f7f3;color:var(--dark)}
+.report-table tr:last-child td{border-bottom:0}
+.report-section-title{margin:22px 0 8px;font-size:16px}
+.report-note{
+  padding:12px;
+  border-radius:10px;
+  background:#f6f8f5;
+  font-size:13px;
+  color:var(--muted);
+  margin-top:14px;
+}
+.report-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+.report-actions button{min-width:0;padding:12px 7px}
+
+/* =====================================================
+   PENGATURAN DAN LAINNYA
+===================================================== */
+.settings-item{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:15px 0;
+  border-bottom:1px solid var(--border);
+}
+.settings-item:last-child{border-bottom:0}
+.settings-icon{
+  flex:0 0 43px;
+  width:43px;height:43px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--light);
+  color:var(--green);
+  font-size:21px;
+}
+.settings-info{flex:1;min-width:0}
+.settings-info strong{display:block;font-size:14px}
+.settings-info span{font-size:12px;color:var(--muted)}
+.settings-arrow{color:var(--muted);font-size:20px}
+.settings-item-button{
+  width:100%;
+  background:transparent;
+  color:var(--text);
+  border:0;
+  border-radius:10px;
+  text-align:left;
+  padding:12px 4px;
+  font:inherit;
+  cursor:pointer;
+}
+.settings-item-button:active{background:#f5f8f5}
+
+/* =====================================================
+   MANAJEMEN KASIR
+===================================================== */
+.cashier-intro{
+  padding:13px;
+  border-radius:11px;
+  background:#f3f7f3;
+  color:#53645a;
+  font-size:13px;
+  line-height:1.6;
+  margin:12px 0 16px;
+}
+.cashier-card{
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:14px;
+  margin:12px 0;
+  background:#fff;
+}
+.cashier-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.cashier-card-name{font-size:15px;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
+.cashier-code{font-size:12px;color:var(--muted);margin-top:3px}
+.cashier-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cashier-badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  background:#edf2ee;
+  color:#486052;
+}
+.cashier-badge.pending{background:#fff3df;color:#93621f}
+.cashier-badge.active{background:#e4f4e9;color:#21683a}
+.cashier-badge.disabled{background:#fff0ef;color:#a72d2d}
+.cashier-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.cashier-actions button{padding:10px}
+.cashier-empty{
+  text-align:center;
+  padding:22px 12px;
+  border:1px dashed #cbd7ce;
+  border-radius:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+.setup-code-panel{
+  margin-top:15px;
+  padding:15px;
+  border:1px solid #e9c58d;
+  border-radius:13px;
+  background:#fff8eb;
+}
+.setup-code-value{
+  padding:13px;
+  margin:10px 0;
+  border-radius:9px;
+  background:#fff;
+  color:#6e481b;
+  border:1px dashed #d7a75c;
+  font-size:22px;
+  font-weight:850;
+  letter-spacing:2px;
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+.setup-code-meta{font-size:12px;color:#826b4d;line-height:1.6}
+.cashier-message{font-size:13px;line-height:1.5;margin-top:10px}
+.cashier-message.error{color:#b42318}
+.cashier-message.success{color:#21683a}
+.cashier-list-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:22px;
+}
+.cashier-list-heading h3{margin:0}
+.cashier-list-heading button{width:auto;padding:9px 12px;font-size:12px}
+.owner-only-note{font-size:12px;color:var(--muted);margin-top:12px}
+
+/* =====================================================
+   TAGIHAN KOPIHUB
+===================================================== */
+.invoice-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  margin:13px 0;
+  background:#fff;
+}
+.invoice-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.invoice-number{font-size:14px;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
+.invoice-period{font-size:12px;color:var(--muted);margin-top:4px}
+.invoice-status{
+  flex-shrink:0;
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:750;
+  background:#fff3df;
+  color:#93621f;
+}
+.invoice-status.paid{background:#e4f4e9;color:#21683a}
+.invoice-status.rejected{background:#fff0ef;color:#a72d2d}
+.invoice-status.carried{background:#edf1f5;color:#526273}
+.invoice-details{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.invoice-line{display:flex;justify-content:space-between;gap:12px;margin:8px 0;font-size:13px}
+.invoice-line span:first-child{color:var(--muted)}
+.invoice-line strong{text-align:right;overflow-wrap:anywhere}
+.invoice-total{margin-top:12px;padding-top:12px;border-top:1px dashed #cbd7ce;font-size:15px}
+.invoice-total strong{color:var(--dark);font-size:17px}
+.invoice-payment-history{margin-top:14px;padding:12px;background:#f6f8f5;border-radius:10px}
+.invoice-payment-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.invoice-payment-item:last-child{border-bottom:0}
+.invoice-payment-item strong{display:block;color:var(--dark);margin-bottom:4px}
+.invoice-proof-link{display:inline-block;margin-top:7px;color:var(--green);font-weight:700;text-decoration:underline}
+.invoice-form{margin-top:14px;padding:13px;border:1px solid #e9c58d;border-radius:12px;background:#fffaf1}
+.invoice-form small{display:block;color:var(--muted);line-height:1.6;margin-top:5px}
+.invoice-message{margin-top:10px;font-size:13px;line-height:1.6}
+.invoice-message.error{color:#b42318}
+.invoice-message.success{color:#21683a}
+.invoice-empty{
+  padding:22px 14px;
+  text-align:center;
+  border:1px dashed #cbd7ce;
+  border-radius:12px;
+  color:var(--muted);
+  font-size:13px;
+}
+.invoice-refresh{margin-bottom:12px}
+
+/* =====================================================
+   FOOTER DAN UTILITAS
+===================================================== */
+footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
+[hidden]{display:none!important}
+
+@media(min-width:650px){
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .report-filter{grid-template-columns:1fr 1fr 1fr;align-items:end}
+  .cashier-actions{grid-template-columns:1fr 1fr}
+  .dashboard-card-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .menu-feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:649px){
+  .business-summary,.stats{width:100%;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panel,.chart-panel,.summary-card,.stat{min-width:0}
+  .sales-chart{width:100%;gap:4px}
+}
+@media(max-width:380px){
+  .business-summary{gap:8px}
+  .summary-card{padding:12px 10px}
+  .summary-card .stat-number{font-size:17px}
+  .sales-chart{gap:4px}
+  .chart-value{font-size:8px}
+  .chart-label{font-size:10px}
+  .chart-track{height:110px}
+  .report-actions{grid-template-columns:1fr}
+  .brand{font-size:24px}
+  .global-back-button{min-width:78px;padding:9px 10px;font-size:12px}
+}
+</style>
 </head>
 
 <body>
 
-  <div id="loading">
-    Memeriksa akun Admin KopiHub...
-  </div>
+<!-- HEADER GLOBAL -->
+<header class="owner-header" id="owner-header">
+  <div class="owner-header-inner">
+    <div class="owner-brand-area">
+      <div class="brand">☕ Kopi<span>Hub</span></div>
+      <div class="header-subtitle">SATU PLATFORM, BANYAK CERITA</div>
+      <div class="header-shop-name" id="header-shop-name">Dashboard Owner</div>
+    </div>
 
-  <div id="denied">
-    <div class="denied-card">
-      <div class="denied-icon">
-        <i data-lucide="shield-alert"></i>
-      </div>
-      <h2>Akses Admin tidak tersedia</h2>
-      <p id="denied-message">
-        Akun ini belum berhasil diverifikasi sebagai Admin platform.
-      </p>
-      <button class="action-button" id="back-to-login" type="button">
-        Kembali ke halaman login
+    <button
+      class="global-back-button"
+      id="global-back-button"
+      type="button"
+      aria-label="Kembali ke halaman sebelumnya"
+      hidden
+    >
+      ← Kembali
+    </button>
+
+    <!-- Elemen lama dipertahankan untuk kompatibilitas kode sebelumnya -->
+    <button class="profile-icon-button" id="header-profile-button"
+      type="button" aria-label="Buka profil kedai" hidden>
+      <svg id="header-profile-fallback-svg" viewBox="0 0 24 24">
+        <circle cx="12" cy="8" r="4"></circle>
+        <path d="M4 21a8 8 0 0 1 16 0"></path>
+      </svg>
+      <img id="header-shop-logo" hidden alt="Logo kedai">
+    </button>
+  </div>
+</header>
+
+<div id="app-scroll">
+<main>
+  <select id="shop-select" hidden aria-hidden="true"></select>
+  <div id="connection-status" hidden></div>
+  <div id="shop-details" hidden></div>
+  <span id="header-profile-fallback" hidden></span>
+  <button id="close-shop-profile" type="button" hidden></button>
+
+  <!-- =================================================
+       HOME / DASHBOARD UTAMA
+  ================================================== -->
+  <section class="page" id="page-home">
+    <h1 class="page-heading">Dashboard Owner</h1>
+    <p class="page-description">Pantau dan kelola aktivitas kedai Anda melalui KopiHub.</p>
+
+    <h2 class="dashboard-menu-title">Menu Utama</h2>
+
+    <section class="dashboard-card-grid">
+      <button class="dashboard-card" type="button" data-page="menu">
+        <span class="dashboard-card-icon">☕</span>
+        <strong>Kelola Menu</strong>
+        <span>Produk, kategori, stok, dan ketersediaan menu</span>
       </button>
+
+      <button class="dashboard-card" type="button" data-page="transaksi">
+        <span class="dashboard-card-icon">🧾</span>
+        <strong>Pesanan</strong>
+        <span>Pantau riwayat pesanan dan transaksi kedai</span>
+      </button>
+
+      <button class="dashboard-card" type="button" data-page="laporan">
+        <span class="dashboard-card-icon">📊</span>
+        <strong>Laporan</strong>
+        <span>Lihat laporan penjualan dan produk terjual</span>
+      </button>
+
+      <button class="dashboard-card" type="button" data-page="lainnya">
+        <span class="dashboard-card-icon">⚙️</span>
+        <strong>Pengaturan Kedai</strong>
+        <span>Profil, PBJT, kasir, tagihan, dan pengaturan</span>
+      </button>
+    </section>
+
+    <h2>Ringkasan Hari Ini</h2>
+    <section class="business-summary">
+      <div class="summary-card">
+        <div class="summary-icon">💰</div>
+        <div class="stat-label">Total Pendapatan</div>
+        <div class="stat-number" id="summary-income">Rp0</div>
+        <p class="muted">Pesanan lunas hari ini</p>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">📈</div>
+        <div class="stat-label">Total Penjualan</div>
+        <div class="stat-number" id="summary-sales">Rp0</div>
+        <p class="muted">Nilai pesanan hari ini</p>
+      </div>
+    </section>
+
+    <section class="chart-panel">
+      <h2>Grafik Penjualan</h2>
+      <p class="muted">Penjualan lunas selama 7 hari terakhir</p>
+      <div id="sales-chart" class="sales-chart">
+        <p class="muted">Memuat grafik penjualan...</p>
+      </div>
+      <p id="chart-message" class="muted" role="status"></p>
+    </section>
+
+    <h2>Ringkasan Kedai</h2>
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-label">Jumlah Menu</div>
+        <div class="stat-number" id="menu-count">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Menu Tersedia</div>
+        <div class="stat-number" id="available-count">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pesanan Hari Ini</div>
+        <div class="stat-number" id="today-orders">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Penjualan Hari Ini (Sudah Dibayar)</div>
+        <div class="stat-number" id="today-sales">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Kewajiban Biaya Layanan</div>
+        <div class="stat-number" id="today-service-fee">Rp3.000</div>
+        <p class="muted">Ditanggung Owner, bukan pelanggan.</p>
+      </div>
+    </section>
+  </section>
+
+  <!-- =================================================
+       KELOLA MENU
+  ================================================== -->
+  <section class="page" id="page-menu" hidden>
+    <h1 class="page-heading">Kelola Menu</h1>
+    <p class="page-description">Kelola produk dan seluruh informasi menu kedai Anda.</p>
+
+    <div id="menu-home-panel">
+      <section class="menu-feature-grid">
+
+        <button class="menu-feature-card" id="show-add-menu" type="button">
+          <span class="menu-feature-icon">➕</span>
+          <strong>Tambah Produk</strong>
+          <small>Tambahkan produk baru ke menu kedai</small>
+        </button>
+
+        <button class="menu-feature-card" id="open-menu-categories" type="button" data-menu-feature="categories">
+          <span class="menu-feature-icon">🗂️</span>
+          <strong>Kategori Menu</strong>
+          <small>Atur kelompok dan kategori produk</small>
+        </button>
+
+        <button class="menu-feature-card" id="toggle-menu-list" type="button">
+          <span class="menu-feature-icon">📋</span>
+          <strong>Daftar Produk</strong>
+          <small>Lihat dan kelola daftar produk kedai</small>
+        </button>
+
+        <button class="menu-feature-card" id="open-menu-stock" type="button" data-menu-feature="stock">
+          <span class="menu-feature-icon">📦</span>
+          <strong>Stok Produk</strong>
+          <small>Kelola jumlah stok produk</small>
+        </button>
+
+        <button class="menu-feature-card" id="open-menu-availability" type="button" data-menu-feature="availability">
+          <span class="menu-feature-icon">🔄</span>
+          <strong>Ketersediaan Menu</strong>
+          <small>Atur produk tersedia atau habis</small>
+        </button>
+
+        <button class="menu-feature-card" id="open-menu-qr" type="button">
+          <span class="menu-feature-icon">▦</span>
+          <strong>QR Menu Kedai</strong>
+          <small>Buat dan bagikan QR menu pelanggan</small>
+        </button>
+
+      </section>
     </div>
-  </div>
 
-  <div id="app" class="layout">
+    <p id="menu-message" class="muted" role="status"></p>
 
-    <!-- AREA UTAMA -->
-    <main>
+    <!-- FORM TAMBAH / EDIT PRODUK -->
+    <section class="panel" id="menu-form-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2 id="menu-form-title">Tambah Produk Baru</h2>
 
-      <!-- HEADER GLOBAL ADMIN KOPIHUB -->
-<div class="header-shell" id="header-shell">
+      <form id="menu-form">
+        <div class="field">
+          <label for="menu-name">Nama Produk</label>
+          <input id="menu-name" maxlength="120" required placeholder="Contoh: Kopi Susu">
+        </div>
 
-  <header class="topbar" id="expanded-header">
+        <div class="field">
+          <label for="menu-category">Kategori</label>
+          <select id="menu-category" required disabled>
+            <option value="">Memuat kategori...</option>
+          </select>
+        </div>
 
-    <!-- IDENTITAS KOPIHUB -->
-    <div class="topbar-content">
-      <div class="topbar-brand">
-        <span class="brand-kopi">Kopi</span><span class="hub">Hub</span>
+        <div class="field">
+          <label for="menu-price">Harga (Rupiah)</label>
+          <input id="menu-price" type="number" min="1" step="1" max="100000000"
+            required placeholder="20000">
+        </div>
+
+        <div class="field">
+          <label for="menu-description">Deskripsi</label>
+          <textarea id="menu-description" rows="2" maxlength="1000"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="menu-available">Ketersediaan</label>
+          <select id="menu-available">
+            <option value="true">Tersedia</option>
+            <option value="false">Habis</option>
+          </select>
+        </div>
+
+        <div class="button-stack two">
+          <button class="primary" id="save-menu" type="submit">Simpan Produk</button>
+          <button class="secondary" id="cancel-edit" type="button">Batal</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- DAFTAR PRODUK -->
+    <section class="panel" id="menu-list-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>Daftar Produk</h2>
+      <div id="menu-list" class="muted">Menunggu data kedai...</div>
+    </section>
+
+    <!-- PANEL KATEGORI: STRUKTUR AWAL UNTUK DISAMBUNGKAN KE JS -->
+    <section class="panel" id="menu-category-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>Kategori Menu</h2>
+      <p class="muted">Pengelolaan kategori menu kedai.</p>
+      <div id="menu-category-content" class="muted">
+        Data kategori akan ditampilkan di sini.
+      </div>
+    </section>
+
+    <!-- PANEL STOK: STRUKTUR AWAL UNTUK DISAMBUNGKAN KE JS -->
+    <section class="panel" id="menu-stock-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>Stok Produk</h2>
+      <p class="muted">Pengelolaan stok produk kedai.</p>
+      <div id="menu-stock-content" class="muted">
+        Data stok produk akan ditampilkan di sini.
+      </div>
+    </section>
+
+    <!-- PANEL KETERSEDIAAN: STRUKTUR AWAL UNTUK DISAMBUNGKAN KE JS -->
+    <section class="panel" id="menu-availability-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>Ketersediaan Menu</h2>
+      <p class="muted">Atur produk yang dapat dipesan pelanggan.</p>
+      <div id="menu-availability-content" class="muted">
+        Data ketersediaan produk akan ditampilkan di sini.
+      </div>
+    </section>
+
+    <!-- QR MENU -->
+    <section class="panel" id="menu-qr-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>QR Menu Kedai</h2>
+      <p class="muted">QR ini membuka halaman pilihan menu, bukan QRIS pembayaran.</p>
+
+      <button class="primary" id="make-qr" type="button" disabled>Buat QR Menu</button>
+
+      <div class="qr-box">
+        <strong id="qr-title">QR Menu KopiHub</strong>
+        <img id="qr-image" alt="QR menu kedai" hidden>
+        <p class="url-text" id="menu-url"></p>
+        <p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p>
       </div>
 
-      <div class="topbar-label">
-        SATU PLATFORM, BANYAK CERITA
+      <div class="button-stack two">
+        <a class="action-link primary" id="open-menu" href="menu.html"
+          style="display:flex;align-items:center;justify-content:center;min-height:44px">
+          Buka Menu
+        </a>
+        <button class="primary" id="share-qr" type="button">Bagikan QR</button>
       </div>
-    </div>
-
-    <!-- TOMBOL HAMBURGER DI KANAN -->
-    <button
-      type="button"
-      class="header-menu-button"
-      id="mobile-menu-open"
-      aria-label="Buka Menu Admin"
-      aria-expanded="false">
-      <i data-lucide="menu"></i>
-    </button>
-
-  </header>
-
-</div>
-
-<!-- HANYA BAGIAN INI YANG BOLEH SCROLL -->
-<div class="admin-content-scroll" id="admin-content-scroll">
-
-  <!-- JUDUL HALAMAN -->
-  <div class="admin-page-heading">
-    <button
-      type="button"
-      class="admin-back-button"
-      id="admin-back-button"
-      aria-label="Kembali ke Dashboard"
-      hidden>
-      <i data-lucide="arrow-left"></i>
-    </button>
-
-    <h1 id="page-title"></h1>
-  </div>
-        <!-- DASHBOARD / RINGKASAN KEDAI -->
-        <section id="dashboard-view">
-
-          <!-- TAMPILAN DAFTAR KEDAI -->
-          <div id="dashboard-shop-list-view">
-
-            <div class="panel dashboard-shop-panel">
-
-              <div class="dashboard-shop-heading">
-                <div>
-                  <div class="stat-label">Total Coffee Shop</div>
-                  <div class="dashboard-shop-count" id="summary-shop-count">—</div>
-                </div>
-
-                <div class="dashboard-shop-icon">
-                  <i data-lucide="store"></i>
-                </div>
-              </div>
-
-              <label class="dashboard-search">
-                <i data-lucide="search"></i>
-                <input
-                  type="search"
-                  id="dashboard-shop-search"
-                  placeholder="Cari nama Coffee Shop..."
-                  autocomplete="off"
-                >
-              </label>
-
-              <p id="dashboard-shops-message" class="muted" aria-live="polite">
-                Memuat daftar kedai...
-              </p>
-
-              <div id="dashboard-shops-list"></div>
-
-            </div>
-          </div>
-
-          <!-- TAMPILAN DETAIL KEDAI -->
-          <div id="dashboard-shop-detail-view" hidden>
-
-            <button type="button" class="action-button"
-              id="back-to-dashboard-shops">
-              <i data-lucide="arrow-left"></i>
-              Kembali ke Daftar Kedai
-            </button>
-
-            <div id="dashboard-shop-detail"></div>
-
-          </div>
-
-        </section>
-
-        <!-- KEDAI MITRA -->
-        <section id="shops-section" hidden>
-
-          <p class="muted">
-            Daftar kedai yang terdaftar di platform KopiHub.
-          </p>
-
-          <div class="panel">
-
-            <button type="button" id="reload-shops"
-              class="action-button">
-              <i data-lucide="refresh-cw"></i>
-              Muat Ulang Kedai
-            </button>
-
-            <p id="shops-message" class="muted" aria-live="polite">
-              Menyiapkan daftar kedai...
-            </p>
-
-            <div id="shops-list"></div>
-
-          </div>
-
-        </section>
-
-        <!-- PESANAN -->
-        <section id="orders-section" hidden>
-
-          <p class="muted">
-            Daftar pesanan dari seluruh kedai mitra KopiHub.
-          </p>
-
-          <div class="panel">
-
-            <button type="button" id="reload-orders"
-              class="action-button">
-              <i data-lucide="refresh-cw"></i>
-              Muat Ulang Pesanan
-            </button>
-
-            <p id="orders-message" class="muted" aria-live="polite">
-              Menyiapkan daftar pesanan...
-            </p>
-
-            <div id="orders-list"></div>
-
-          </div>
-
-        </section>
-
-        <!-- PENDAFTARAN MITRA -->
-        <section id="applications-section" hidden>
-
-          <p class="muted">
-            Periksa pendaftaran kedai sebelum memberikan akses kepada pemilik.
-          </p>
-
-          <div class="panel">
-
-            <button type="button" id="reload-applications"
-              class="action-button">
-              <i data-lucide="refresh-cw"></i>
-              Muat Ulang Pendaftaran
-            </button>
-
-            <p id="applications-message" class="muted"
-              aria-live="polite">
-              Menyiapkan daftar pendaftaran...
-            </p>
-
-            <div id="applications-list"></div>
-
-          </div>
-
-        </section>
-
-        <!-- KOMISI & PENDAPATAN -->
-        <section id="commission-section" hidden>
-
-          <!-- RINGKASAN PENDAPATAN -->
-          <div class="panel">
-            <div class="settings-heading">
-              <div>
-                <strong>Ringkasan Pendapatan KopiHub</strong>
-                <p class="muted">
-                  Rekap biaya layanan dari seluruh kedai mitra.
-                </p>
-              </div>
-              <button type="button" class="action-button"
-                id="reload-commission">
-                <i data-lucide="refresh-cw"></i>
-                Muat Ulang
-              </button>
-            </div>
-
-            <div class="summary-grid">
-
-              <div class="summary-card">
-                <span>Total Biaya Layanan</span>
-                <strong id="commission-total">Memuat...</strong>
-              </div>
-
-              <div class="summary-card">
-                <span>Sudah Dibayar</span>
-                <strong id="commission-paid">Memuat...</strong>
-              </div>
-
-              <div class="summary-card">
-                <span>Belum Dibayar</span>
-                <strong id="commission-unpaid">Memuat...</strong>
-              </div>
-
-              <div class="summary-card">
-                <span>Tarif per Pesanan</span>
-                <strong id="commission-rate">Memuat...</strong>
-              </div>
-
-            </div>
-
-            <p class="muted" id="commission-summary-note">
-              Mengambil ringkasan pencatatan biaya layanan.
-            </p>
-          </div>
-
-          <!-- FILTER -->
-          <div class="panel">
-            <strong>Filter Pendapatan</strong>
-
-            <div class="settings-form">
-
-              <label for="commission-period">
-                Periode
-              </label>
-
-              <select id="commission-period">
-                <option value="all">Semua Periode</option>
-                <option value="today">Hari Ini</option>
-                <option value="7days">7 Hari Terakhir</option>
-                <option value="month">Bulan Ini</option>
-              </select>
-
-              <label for="commission-shop-filter">
-                Kedai Mitra
-              </label>
-
-              <select id="commission-shop-filter">
-                <option value="all">Semua Kedai</option>
-              </select>
-
-              <button type="button" class="action-button"
-                id="filter-commission">
-                Terapkan Filter
-              </button>
-            </div>
-          </div>
-
-          <!-- RIWAYAT BIAYA LAYANAN -->
-          <div class="panel">
-            <strong>Riwayat Biaya Layanan</strong>
-
-            <p class="muted">
-              Catatan biaya dari pesanan yang telah dikonfirmasi
-              pembayarannya.
-            </p>
-
-            <div id="commission-ledger-message" class="muted">
-              Memuat riwayat biaya layanan...
-            </div>
-
-            <div id="commission-ledger-list"></div>
-          </div>
-
-          <!-- TAGIHAN BULANAN -->
-          <div class="panel">
-            <strong>Tagihan Bulanan Kedai</strong>
-
-            <p class="muted">
-              Riwayat invoice, saldo awal tunggakan,
-              biaya periode berjalan, dan status pelunasan.
-            </p>
-
-            <div id="commission-invoice-message" class="muted">
-              Memuat data invoice...
-            </div>
-
-            <div id="commission-invoice-list"></div>
-          </div>
-
-          <!-- PEMBAYARAN MENUNGGU VERIFIKASI -->
-          <div class="panel">
-            <strong>Pembayaran Menunggu Verifikasi</strong>
-
-            <p class="muted">
-              Periksa bukti pembayaran yang dikirim oleh Owner
-              sebelum menyetujui atau menolaknya.
-            </p>
-
-            <div id="commission-payment-message" class="muted">
-              Memuat pembayaran...
-            </div>
-
-            <div id="commission-payment-list"></div>
-          </div>
-
-        </section>
-
-        <!-- TRANSAKSI PLATFORM -->
-        <section id="platform-transactions-section" hidden>
-
-          <div class="pt-page-heading">
-            <div>
-
-              <p class="muted">
-                Pantau seluruh uang masuk dan uang keluar KopiHub.
-              </p>
-            </div>
-
-            <button type="button" class="action-button"
-              id="reload-platform-transactions">
-              <i data-lucide="refresh-cw"></i>
-              Muat Ulang
-            </button>
-          </div>
-
-          <!-- RINGKASAN KEUANGAN -->
-          <div class="pt-summary-grid">
-
-            <article class="pt-summary-card pt-income">
-              <div class="pt-summary-icon">
-                <i data-lucide="trending-up"></i>
-              </div>
-              <span>Total Uang Masuk</span>
-              <strong id="pt-total-income">Memuat...</strong>
-              <small>Pembayaran invoice Owner yang disetujui</small>
-            </article>
-
-            <article class="pt-summary-card pt-outflow">
-              <div class="pt-summary-icon">
-                <i data-lucide="trending-down"></i>
-              </div>
-              <span>Total Uang Keluar</span>
-              <strong id="pt-total-outflow">Memuat...</strong>
-              <small>Pengeluaran dan pengembalian dana</small>
-            </article>
-
-            <article class="pt-summary-card pt-balance">
-              <div class="pt-summary-icon">
-                <i data-lucide="wallet"></i>
-              </div>
-              <span>Saldo Bersih</span>
-              <strong id="pt-net-balance">Memuat...</strong>
-              <small>Uang masuk dikurangi uang keluar</small>
-            </article>
-
-          </div>
-
-          <!-- AKSI -->
-          <div class="pt-action-card">
-            <div>
-              <strong>Pencatatan Keuangan</strong>
-              <p>
-                Catat pengeluaran operasional atau pengembalian dana
-                yang dilakukan oleh KopiHub.
-              </p>
-            </div>
-
-            <button type="button" class="pt-primary-button"
-              id="pt-open-outflow-form">
-              <i data-lucide="plus"></i>
-              Catat Uang Keluar
-            </button>
-          </div>
-
-          <!-- FORM UANG KELUAR -->
-          <div class="pt-form-card" id="pt-outflow-form" hidden>
-
-            <div class="pt-form-heading">
-              <div>
-                <strong>Catat Transaksi Keluar</strong>
-                <p>Informasi ini akan disimpan dalam riwayat keuangan platform.</p>
-              </div>
-
-              <button type="button" class="pt-close-button"
-                id="pt-close-outflow-form" aria-label="Tutup formulir">
-                <i data-lucide="x"></i>
-              </button>
-            </div>
-
-            <label for="pt-outflow-type">Jenis transaksi</label>
-            <select id="pt-outflow-type">
-              <option value="operational_expense">Pengeluaran operasional</option>
-              <option value="refund">Pengembalian dana</option>
-            </select>
-
-            <label for="pt-outflow-category">Kategori</label>
-            <input id="pt-outflow-category" type="text"
-              placeholder="Contoh: Infrastruktur, server, administrasi">
-
-            <label for="pt-outflow-description">Keterangan</label>
-            <textarea id="pt-outflow-description"
-              placeholder="Jelaskan tujuan pengeluaran..."
-              rows="3"></textarea>
-
-            <label for="pt-outflow-amount">Nominal (Rupiah)</label>
-            <input id="pt-outflow-amount" type="number"
-              min="1" step="1" inputmode="numeric"
-              placeholder="Contoh: 150000">
-
-            <label for="pt-outflow-method">Metode pembayaran</label>
-            <input id="pt-outflow-method" type="text"
-              placeholder="Contoh: Transfer bank">
-
-            <label for="pt-outflow-date">Tanggal transaksi</label>
-            <input id="pt-outflow-date" type="datetime-local">
-
-            <label for="pt-outflow-recipient">Penerima</label>
-            <input id="pt-outflow-recipient" type="text"
-              placeholder="Nama penerima (opsional)">
-
-            <label for="pt-outflow-reference">Nomor referensi</label>
-            <input id="pt-outflow-reference" type="text"
-              placeholder="Nomor referensi pembayaran (opsional)">
-
-            <div id="pt-refund-field" hidden>
-              <label for="pt-refund-payment-id">
-                ID Pembayaran Invoice yang Dikembalikan
-              </label>
-              <input id="pt-refund-payment-id" type="text"
-                placeholder="Masukkan ID pembayaran invoice yang disetujui">
-              <small>
-                Pengembalian dana harus terkait pembayaran invoice Owner
-                yang telah disetujui.
-              </small>
-            </div>
-
-            <label for="pt-outflow-attachment">Path lampiran (opsional)</label>
-            <input id="pt-outflow-attachment" type="text"
-              placeholder="Path file bukti jika sudah tersedia">
-
-            <div class="pt-form-actions">
-              <button type="button" class="pt-primary-button"
-                id="pt-save-outflow">
-                Simpan Transaksi
-              </button>
-
-              <button type="button" class="pt-secondary-button"
-                id="pt-cancel-outflow">
-                Batal
-              </button>
-            </div>
-
-            <p id="pt-outflow-message" class="pt-message"
-              aria-live="polite"></p>
-
-          </div>
-
-          <!-- FILTER -->
-          <div class="pt-filter-card">
-
-            <div class="pt-filter-heading">
-              <div>
-                <strong>Riwayat Transaksi</strong>
-                <p>Telusuri arus kas KopiHub berdasarkan kriteria.</p>
-              </div>
-            </div>
-
-            <label for="pt-period">Periode</label>
-            <select id="pt-period">
-              <option value="all">Semua Periode</option>
-              <option value="today">Hari Ini</option>
-              <option value="7days">7 Hari Terakhir</option>
-              <option value="month">Bulan Ini</option>
-              <option value="custom">Rentang Tanggal</option>
-            </select>
-
-            <div class="pt-date-range" id="pt-date-range" hidden>
-              <div>
-                <label for="pt-date-from">Dari tanggal</label>
-                <input type="date" id="pt-date-from">
-              </div>
-              <div>
-                <label for="pt-date-to">Sampai tanggal</label>
-                <input type="date" id="pt-date-to">
-              </div>
-            </div>
-
-            <label for="pt-type">Jenis transaksi</label>
-            <select id="pt-type">
-              <option value="all">Semua Transaksi</option>
-              <option value="income">Uang Masuk</option>
-              <option value="outflow">Uang Keluar</option>
-            </select>
-
-            <label for="pt-search">Pencarian</label>
-            <input id="pt-search" type="search"
-              placeholder="Cari nomor referensi, kedai, atau keterangan...">
-
-            <button type="button" class="pt-primary-button"
-              id="pt-apply-filter">
-              <i data-lucide="search"></i>
-              Terapkan Filter
-            </button>
-
-          </div>
-
-          <!-- DAFTAR TRANSAKSI -->
-          <div class="pt-list-heading">
-            <div>
-              <strong>Daftar Transaksi</strong>
-              <p id="pt-result-count">Menyiapkan data transaksi...</p>
-            </div>
-          </div>
-
-          <div id="pt-transactions-message" class="muted"
-            aria-live="polite">
-            Memuat transaksi platform...
-          </div>
-
-          <div id="pt-transactions-list" class="pt-transactions-list"></div>
-
-        </section>
-
-        <!-- PENGATURAN PLATFORM -->
-        <section id="settings-section" hidden>
-
-          <p class="muted">
-            Kelola ketentuan dan tarif layanan yang berlaku untuk seluruh kedai mitra KopiHub.
-          </p>
-
-          <div class="settings-card">
-
-            <div class="settings-heading">
-              <div class="settings-icon">
-                <i data-lucide="wallet"></i>
-              </div>
-
-              <div>
-                <h3>Biaya Layanan KopiHub</h3>
-                <p>
-                  Tarif yang dibebankan kepada Owner untuk setiap pesanan
-                  yang berhasil dibayar.
-                </p>
-              </div>
-            </div>
-
-            <span class="settings-rate-label">
-              Tarif aktif per pesanan paid
-            </span>
-
-            <div class="settings-rate" id="current-service-fee">
-              Memuat tarif...
-            </div>
-
-            <p class="muted" id="service-fee-updated">
-              Mengambil data dari database...
-            </p>
-
-            <div class="settings-note">
-              Biaya layanan merupakan kewajiban Owner kedai, bukan biaya
-              tambahan pelanggan. Perubahan tarif hanya berlaku untuk
-              konfirmasi pembayaran berikutnya. Catatan biaya yang sudah
-              tercatat tidak berubah.
-            </div>
-
-            <button type="button" class="action-button" id="edit-service-fee">
-              <i data-lucide="pencil"></i>
-              Ubah Tarif
-            </button>
-
-            <div class="settings-form" id="service-fee-form" hidden>
-
-              <label for="service-fee-input">
-                Tarif baru per pesanan (Rupiah)
-              </label>
-
-              <input
-                type="number"
-                id="service-fee-input"
-                min="1"
-                step="1"
-                inputmode="numeric"
-                placeholder="Contoh: 3000"
-              >
-
-              <p class="muted">
-                Tarif yang sama akan berlaku untuk seluruh kedai mitra.
-              </p>
-
-              <div>
-                <button
-                  type="button"
-                  class="action-button"
-                  id="save-service-fee">
-                  <i data-lucide="save"></i>
-                  Simpan Tarif
-                </button>
-
-                <button
-                  type="button"
-                  class="action-button"
-                  id="cancel-service-fee">
-                  Batal
-                </button>
-              </div>
-
-                            <div
-                class="settings-message"
-                id="service-fee-message"
-                aria-live="polite">
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-  <!-- PENGGUNA & AKSES -->
-<section id="users-section" hidden>
-  <div class="panel">
-    <strong>Pengelolaan Pengguna</strong>
-    <p class="muted">
-      Daftar akun pengguna KopiHub, peran platform,
-      hubungan dengan kedai, dan status keanggotaan.
+    </section>
+  </section>
+
+  <!-- =================================================
+       TRANSAKSI
+  ================================================== -->
+  <section class="page" id="page-transaksi" hidden>
+    <h1 class="page-heading" id="transaction-page-heading">Pesanan</h1>
+    <p class="page-description" id="transaction-page-description">
+      Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
     </p>
 
-    <div class="stats" style="margin:18px 0">
-      <div class="card">
-        <div class="stat-label">Total Pengguna</div>
-        <div class="stat-value" id="users-total">—</div>
+    <section class="panel" id="transaction-summary-panel">
+      <h2>Informasi Transaksi</h2>
+      <p class="muted">
+        Riwayat transaksi hanya dapat dilihat oleh Owner.
+        Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
+      </p>
+
+      <div class="settings-item">
+        <div class="settings-icon">🧾</div>
+        <div class="settings-info">
+          <strong>Jumlah Pesanan Hari Ini</strong>
+          <span>Seluruh pesanan kedai</span>
+        </div>
+        <strong id="transaction-order-count">—</strong>
       </div>
-      <div class="card">
-        <div class="stat-label">Admin Platform</div>
-        <div class="stat-value" id="users-admin-total">—</div>
+
+      <div class="settings-item">
+        <div class="settings-icon">💳</div>
+        <div class="settings-info">
+          <strong>Transaksi Lunas</strong>
+          <span>Pesanan dengan pembayaran lunas</span>
+        </div>
+        <strong id="transaction-paid-count">—</strong>
       </div>
-      <div class="card">
-        <div class="stat-label">Keanggotaan Aktif</div>
-        <div class="stat-value" id="users-active-total">—</div>
+
+      <div class="settings-item">
+        <div class="settings-icon">⏳</div>
+        <div class="settings-info">
+          <strong>Belum Dibayar</strong>
+          <span>Pesanan menunggu pembayaran</span>
+        </div>
+        <strong id="transaction-unpaid-count">—</strong>
       </div>
-    </div>
+    </section>
 
-    <input
-      id="users-search"
-      type="search"
-      placeholder="Cari nama, nomor telepon, atau kedai..."
-      style="width:100%;min-height:46px;padding:12px;
-      border:1px solid #dfe5dc;border-radius:11px;
-      margin:8px 0 16px;font:inherit">
+    <section class="panel" id="transaction-history-panel">
+      <h2>Riwayat Transaksi</h2>
+      <p class="muted">Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.</p>
 
-    <button
-      type="button"
-      class="action-button"
-      id="reload-users">
-      <i data-lucide="refresh-cw"></i>
-      Muat Ulang
-    </button>
-
-    <p id="users-message" class="muted"
-      aria-live="polite">
-      Menyiapkan daftar pengguna...
-    </p>
-
-    <div id="users-list"></div>
-  </div>
-</section>
-        
-  <!-- FOOTER ADMIN KOPIHUB -->
-        <footer class="admin-footer">
-          <p class="admin-footer-brand">
-            Kopi<span>Hub</span>
-          </p>
-
-          <p class="admin-footer-tagline">
-            SATU PLATFORM, BANYAK CERITA
-          </p>
-
-          <p class="admin-footer-copyright">
-            © 2026 KopiHub. Hak cipta dilindungi.
-          </p>
-        </footer>
-
+      <div class="transaction-filters">
+        <label for="transaction-start-date">Dari tanggal</label>
+        <input type="date" id="transaction-start-date">
+        <label for="transaction-end-date">Sampai tanggal</label>
+        <input type="date" id="transaction-end-date">
+        <button type="button" class="action-link" id="transaction-reset-filter">Reset Tanggal</button>
       </div>
-    </main>
-    
-    <!-- OVERLAY MENU -->
-    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
 
-   
-<!-- PANEL HAMBURGER -->
-<div class="mobile-menu-sheet" id="mobile-menu-sheet">
+      <p class="muted" id="transaction-result-count" aria-live="polite">
+        Memuat riwayat transaksi...
+      </p>
+      <div id="transaction-list">
+        <p class="muted">Memuat riwayat transaksi...</p>
+      </div>
+    </section>
 
-  <div class="menu-handle"></div>
+    <section class="panel" id="transaction-cashier-panel">
+      <h2>Dashboard Kasir</h2>
+      <p class="muted">Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.</p>
+      <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
+    </section>
 
-  <div class="menu-sheet-header">
-    <h2>Menu Admin</h2>
+    <!-- DETAIL PESANAN OWNER -->
+    <section class="panel owner-order-detail-panel" id="owner-order-detail-panel" hidden>
+      <div class="owner-order-detail-header">
+        <button type="button" class="secondary owner-order-back-button" id="owner-order-detail-back">
+          ← Kembali
+        </button>
+        <h2>Detail Pesanan</h2>
+      </div>
+      <div id="owner-order-detail-content"></div>
+    </section>
+  </section>
 
-    <button
-      type="button"
-      class="menu-close"
-      id="mobile-menu-close"
-      aria-label="Tutup menu">
-      <i data-lucide="x"></i>
-    </button>
-  </div>
+  <!-- =================================================
+       LAPORAN
+  ================================================== -->
+  <section class="page" id="page-laporan" hidden>
+    <h1 class="page-heading">Laporan Penjualan</h1>
+    <p class="page-description">Pantau omzet, produk terjual, dan metode pembayaran kedai.</p>
 
-  <div class="mobile-menu-list">
+    <section class="panel" id="sales-report-panel">
+      <p class="muted">Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.</p>
 
-    <button
-      type="button"
-      class="mobile-menu-item"
-      id="mobile-menu-applications">
-      <span class="mobile-menu-icon">
-        <i data-lucide="clipboard-check"></i>
-      </span>
-      <span>Pendaftaran Mitra</span>
-    </button>
+      <div class="report-filter">
+        <div class="field">
+          <label for="report-period">Periode Laporan</label>
+          <select id="report-period">
+            <option value="today">Hari Ini</option>
+            <option value="last7">7 Hari Terakhir</option>
+            <option value="month">Bulan Ini</option>
+            <option value="custom">Rentang Tanggal</option>
+          </select>
+        </div>
+        <div class="field" id="report-start-wrap" hidden>
+          <label for="report-start-date">Tanggal Mulai</label>
+          <input id="report-start-date" type="date">
+        </div>
+        <div class="field" id="report-end-wrap" hidden>
+          <label for="report-end-date">Tanggal Akhir</label>
+          <input id="report-end-date" type="date">
+        </div>
+      </div>
 
-    <button
-  type="button"
-  class="mobile-menu-item"
-  id="mobile-menu-users">
-  <span class="mobile-menu-icon">
-    <i data-lucide="users"></i>
-  </span>
-  <span>Pengguna &amp; Akses</span>
-</button>
+      <div class="button-stack">
+        <button class="primary" id="refresh-sales-report" type="button">Tampilkan Laporan</button>
+      </div>
 
-    <!-- PESANAN PLATFORM -->
-    <button
-      type="button"
-      class="mobile-menu-item"
-      id="mobile-menu-platform-orders">
-      <span class="mobile-menu-icon">
-        <i data-lucide="receipt-text"></i>
-      </span>
-      <span>Pesanan Platform</span>
-    </button>
+      <p class="muted" id="report-period-label">Periode: Hari Ini</p>
 
-    <button
-      type="button"
-      class="mobile-menu-item"
-      id="mobile-menu-platform-transactions">
-      <span class="mobile-menu-icon">
-        <i data-lucide="credit-card"></i>
-      </span>
-      <span>Transaksi Platform</span>
-    </button>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Nilai Seluruh Pesanan</div><div class="stat-number" id="report-order-value">—</div></div>
+        <div class="stat"><div class="stat-label">Omzet Sudah Dibayar</div><div class="stat-number" id="report-paid-sales">—</div></div>
+        <div class="stat"><div class="stat-label">Nilai Belum Dibayar</div><div class="stat-number" id="report-unpaid-sales">—</div></div>
+        <div class="stat"><div class="stat-label">Pesanan Lunas</div><div class="stat-number" id="report-paid-count">—</div></div>
+        <div class="stat"><div class="stat-label">Pesanan Belum Lunas</div><div class="stat-number" id="report-unpaid-count">—</div></div>
+        <div class="stat"><div class="stat-label">Jumlah Produk Terjual</div><div class="stat-number" id="report-products-sold">—</div></div>
+      </div>
 
-    <button
-      type="button"
-      class="mobile-menu-item"
-      id="mobile-menu-commission">
-      <span class="mobile-menu-icon">
-        <i data-lucide="wallet"></i>
-      </span>
-      <span>Komisi &amp; Pendapatan</span>
-    </button>
+      <h3 class="report-section-title">Rincian Penjualan Produk</h3>
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead><tr><th>Nama Produk</th><th>Jumlah</th><th>Nilai Penjualan</th></tr></thead>
+          <tbody id="report-product-list"><tr><td colspan="3">Laporan belum dimuat.</td></tr></tbody>
+        </table>
+      </div>
 
-    <button
-      type="button"
-      class="mobile-menu-item"
-      id="mobile-menu-settings">
-      <span class="mobile-menu-icon">
-        <i data-lucide="settings"></i>
-      </span>
-      <span>Pengaturan Platform</span>
-    </button>
+      <h3 class="report-section-title">Metode Pembayaran</h3>
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead><tr><th>Metode</th><th>Jumlah Transaksi</th><th>Nilai</th></tr></thead>
+          <tbody id="report-payment-methods"><tr><td colspan="3">Data metode pembayaran belum tersedia.</td></tr></tbody>
+        </table>
+      </div>
 
-    <button
-      type="button"
-      class="mobile-menu-item"
-      data-coming-soon="Audit Log">
-      <span class="mobile-menu-icon">
-        <i data-lucide="history"></i>
-      </span>
-      <span>Audit Log</span>
-    </button>
+      <div class="report-note" id="report-data-note">
+        Laporan menggunakan status pembayaran pada tabel kh_orders. Rincian produk dibaca dari kolom items.
+      </div>
 
-    <button
-      type="button"
-      class="mobile-menu-item logout-item"
-      id="mobile-menu-logout">
-      <span class="mobile-menu-icon">
-        <i data-lucide="log-out"></i>
-      </span>
-      <span>Keluar dari Admin</span>
-    </button>
+      <div class="report-actions">
+        <button class="primary" id="download-report-excel" type="button" disabled>Unduh Excel</button>
+        <button class="primary" id="download-report-pdf" type="button" disabled>Unduh PDF</button>
+      </div>
 
-  </div>
+      <p id="report-message" class="muted" role="status">
+        Laporan akan diperbarui saat data pesanan dimuat.
+      </p>
+    </section>
+  </section>
+
+  <!-- =================================================
+       LAINNYA / PENGATURAN KEDAI
+  ================================================== -->
+  <section class="page" id="page-lainnya" hidden>
+    <h1 class="page-heading">Pengaturan Kedai</h1>
+    <p class="page-description">Kelola identitas, kewajiban, dan pengaturan operasional kedai Anda.</p>
+
+    <!-- PROFIL KEDAI -->
+    <section class="panel" id="profil-kedai">
+      <h2>Profil Kedai</h2>
+      <p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
+
+      <form id="shop-profile-form">
+        <div class="field">
+          <label for="profile-shop-name">Nama Kedai</label>
+          <input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi">
+        </div>
+
+        <div class="field">
+          <label for="profile-shop-description">Deskripsi Kedai</label>
+          <textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="profile-shop-logo">Logo Kedai</label>
+          <input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp">
+          <p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p>
+        </div>
+
+        <div id="profile-logo-preview" hidden>
+          <img id="profile-logo-image" alt="Pratinjau logo kedai"
+            style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px">
+          <button type="button" id="remove-shop-logo" class="danger" style="margin-top:10px">Hapus Logo</button>
+        </div>
+
+        <div class="button-stack">
+          <button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button>
+        </div>
+        <p id="profile-message" class="muted" role="status"></p>
+      </form>
+    </section>
+
+    <!-- PBJT -->
+    <section class="panel" id="pengaturan-pbjt">
+      <h2>Pengaturan Pajak PBJT</h2>
+      <p class="muted">
+        Atur tarif PBJT yang berlaku untuk kedai ini.
+        Tarif akan digunakan otomatis dalam perhitungan pesanan pelanggan.
+      </p>
+
+      <form id="shop-pbjt-form">
+        <div class="field">
+          <label for="shop-pbjt-percent">Tarif PBJT (%)</label>
+          <input id="shop-pbjt-percent" type="number" min="0" max="100"
+            step="0.01" inputmode="decimal" placeholder="Contoh: 10" required>
+        </div>
+
+        <p class="muted">
+          Pastikan tarif sesuai ketentuan PBJT daerah yang berlaku.
+          KopiHub tidak menetapkan tarif secara otomatis.
+        </p>
+
+        <button type="submit" class="primary" id="save-shop-pbjt">Simpan Tarif PBJT</button>
+        <p id="shop-pbjt-message" class="muted" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- TAGIHAN KOPIHUB -->
+    <section class="panel" id="tagihan-kopihub">
+      <h2>Tagihan KopiHub</h2>
+      <p class="muted">
+        Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
+        Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
+      </p>
+
+      <button class="secondary invoice-refresh" id="refresh-owner-invoices" type="button">
+        Muat Ulang Tagihan
+      </button>
+
+      <p id="owner-invoice-message" class="invoice-message" role="status">Tagihan belum dimuat.</p>
+      <div id="owner-invoice-list">
+        <div class="invoice-empty">Tagihan akan ditampilkan di sini.</div>
+      </div>
+    </section>
+
+    <!-- MANAJEMEN KASIR -->
+    <section class="panel" id="manajemen-kasir">
+      <h2>Manajemen Kasir</h2>
+      <p class="muted">Buat identitas staf kasir yang bertugas di kedai Anda.</p>
+
+      <div class="cashier-intro">
+        <strong>Informasi keamanan</strong><br>
+        Setiap kasir memiliki ID dan PIN pribadi. Owner hanya membuat identitas serta memberikan kode aktivasi. PIN dibuat sendiri oleh kasir dan tidak dapat dilihat Owner. Pengelolaan ini hanya dapat dilakukan oleh akun Owner aktif.
+      </div>
+
+      <form id="cashier-create-form">
+        <div class="field">
+          <label for="cashier-name">Nama Kasir</label>
+          <input id="cashier-name" type="text" maxlength="100"
+            autocomplete="off" required placeholder="Masukkan nama lengkap kasir">
+        </div>
+        <button class="primary" id="create-cashier-button" type="submit">
+          + Buat Identitas Kasir
+        </button>
+      </form>
+
+      <p id="cashier-message" class="cashier-message" role="status" aria-live="polite"></p>
+
+      <div id="cashier-setup-panel" class="setup-code-panel" hidden>
+        <strong>Identitas kasir berhasil dibuat</strong>
+        <p class="muted">
+          Berikan ID Kasir dan kode aktivasi ini kepada staf yang bersangkutan.
+          Kode aktivasi hanya ditampilkan sekarang dan tidak dapat ditampilkan kembali.
+        </p>
+
+        <div class="field">
+          <label>ID Kasir</label>
+          <div class="setup-code-value" id="cashier-created-id" style="font-size:17px;letter-spacing:1px"></div>
+          <button class="secondary" id="copy-cashier-id" type="button">Salin ID Kasir</button>
+        </div>
+
+        <div class="field">
+          <label>Kode Aktivasi Sekali Pakai</label>
+          <div class="setup-code-value" id="cashier-created-code"></div>
+          <button class="secondary" id="copy-cashier-code" type="button">Salin Kode Aktivasi</button>
+        </div>
+
+        <p class="setup-code-meta" id="cashier-code-expiry"></p>
+        <p class="setup-code-meta">
+          Kasir harus mengaktifkan identitasnya melalui halaman Login Kasir dan membuat PIN pribadi sebelum mulai bertugas.
+        </p>
+      </div>
+
+      <div class="cashier-list-heading">
+        <h3>Daftar Kasir</h3>
+        <button class="secondary" id="refresh-cashiers" type="button">Muat Ulang</button>
+      </div>
+
+      <p class="muted" id="cashier-list-status">Memuat daftar kasir...</p>
+      <div id="cashier-list">
+        <div class="cashier-empty">Daftar kasir akan ditampilkan di sini.</div>
+      </div>
+
+      <p class="owner-only-note">
+        Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
+      </p>
+    </section>
+
+    <!-- WAKTU PEMBAYARAN -->
+    <section class="panel" id="pengaturan-waktu-pembayaran">
+      <h2>Waktu Pembayaran</h2>
+      <p class="muted">Tentukan kapan pelanggan harus membayar pesanannya.</p>
+
+      <select id="owner-payment-timing">
+        <option value="false">Bayar di Awal</option>
+        <option value="true">Bayar di Akhir</option>
+      </select>
+
+      <p id="owner-payment-timing-message" class="muted" style="margin:8px 0 0;font-size:12px;">
+        Pengaturan mengikuti kebijakan pembayaran kedai.
+      </p>
+    </section>
+
+    <!-- PENGATURAN -->
+    <section class="panel" id="pengaturan-kedai-menu">
+      <h2>Pengaturan Kedai</h2>
+
+      <button class="settings-item settings-item-button" type="button" data-settings-target="profil-kedai">
+        <div class="settings-icon">🏪</div>
+        <div class="settings-info"><strong>Identitas Kedai</strong><span>Nama dan logo kedai</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
+
+      <button class="settings-item settings-item-button" type="button" data-settings-target="pengaturan-pbjt">
+        <div class="settings-icon">🧾</div>
+        <div class="settings-info"><strong>Pajak PBJT</strong><span>Atur tarif pajak kedai</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
+
+      <button class="settings-item settings-item-button" type="button" data-settings-target="manajemen-kasir">
+        <div class="settings-icon">👥</div>
+        <div class="settings-info"><strong>Manajemen Kasir</strong><span>Identitas dan akses staf kasir</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
+
+      <button class="settings-item settings-item-button" type="button" data-settings-target="tagihan-kopihub">
+        <div class="settings-icon">💳</div>
+        <div class="settings-info"><strong>Tagihan KopiHub</strong><span>Kewajiban biaya layanan dan pembayaran</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
+
+      <button class="settings-item settings-item-button" type="button" data-settings-target="pengaturan-waktu-pembayaran">
+        <div class="settings-icon">⏱️</div>
+        <div class="settings-info"><strong>Waktu Pembayaran</strong><span>Pengaturan waktu pembayaran pelanggan</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
+    </section>
+
+    <!-- AKUN -->
+    <section class="panel" id="owner-account-panel">
+      <h2>Akun</h2>
+      <p class="muted">Keluar dari akun Owner KopiHub pada perangkat ini.</p>
+      <button class="danger" id="logout" type="button">Keluar dari Akun</button>
+    </section>
+  </section>
+
+  <footer>KopiHub © 2026 · Dashboard Owner Coffee Shop</footer>
+</main>
 </div>
 
-    <script>
+<!-- NAVIGASI BAWAH DIHAPUS SESUAI RANCANGAN TERBARU -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+
 /* =========================================
    KONFIGURASI SUPABASE
 ========================================= */

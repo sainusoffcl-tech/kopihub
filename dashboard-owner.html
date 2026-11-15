@@ -1326,8 +1326,17 @@ function updateGlobalBackButton() {
     currentPage === "menu" &&
     menuPanelHistory.length > 0;
 
+  const orderDetailPanel = $("owner-order-detail-panel");
+
+  const hasOrderDetail =
+    currentPage === "transaksi" &&
+    orderDetailPanel &&
+    !orderDetailPanel.hidden;
+
   const hasHistory =
-    hasPageHistory || hasMenuPanelHistory;
+    hasPageHistory ||
+    hasMenuPanelHistory ||
+    hasOrderDetail;
 
   if (ownerHeader) {
     ownerHeader.classList.toggle("has-back", hasHistory);
@@ -1342,7 +1351,6 @@ function updateGlobalBackButton() {
     );
   }
 }
-
 
 /* PINDAH HALAMAN UTAMA */
 

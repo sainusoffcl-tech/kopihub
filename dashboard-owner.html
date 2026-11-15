@@ -3135,11 +3135,15 @@ function renderProducts() {
 }
 
 
-/* =========================================
-   NAVIGASI PANEL KELOLA MENU
-========================================= */
+// =========================================
+// NAVIGASI PANEL KELOLA MENU
+// =========================================
 
-async function showMenuPanel(panelId, refreshData = true) {
+async function showMenuPanel(
+  panelId,
+  refreshData = true,
+  fromBack = false
+) {
   const panels = [
     "menu-home-panel",
     "menu-form-panel",
@@ -3155,6 +3159,16 @@ async function showMenuPanel(panelId, refreshData = true) {
     return;
   }
 
+  const previousPanel = currentMenuPanel || "menu-home-panel";
+
+  // Simpan riwayat panel untuk tombol Kembali global.
+  if (!fromBack && panelId !== previousPanel) {
+    menuPanelHistory.push(previousPanel);
+  }
+
+  currentMenuPanel = panelId;
+
+  // Tampilkan panel yang dipilih.
   panels.forEach(id => {
     const panel = $(id);
 
@@ -3163,6 +3177,7 @@ async function showMenuPanel(panelId, refreshData = true) {
     }
   });
 
+  // Muat ulang data sesuai panel.
   if (
     refreshData &&
     [
@@ -3176,12 +3191,19 @@ async function showMenuPanel(panelId, refreshData = true) {
     await refreshMenu();
   }
 
+  // Fokus ke nama produk saat membuka formulir.
   if (panelId === "menu-form-panel") {
     $("menu-name")?.focus({
       preventScroll: true
     });
   }
 
+  // Perbarui tombol Kembali pada header global.
+  if (typeof updateGlobalBackButton === "function") {
+    updateGlobalBackButton();
+  }
+
+  // Kembalikan tampilan ke bagian atas halaman.
   const appScrollElement = $("app-scroll");
 
   if (appScrollElement) {
@@ -3193,64 +3215,109 @@ async function showMenuPanel(panelId, refreshData = true) {
 }
 
 
-/* HALAMAN UTAMA KELOLA MENU */
+// =========================================
+// HALAMAN UTAMA KELOLA MENU
+// =========================================
 
 function showMenuHome() {
-  showMenuPanel("menu-home-panel");
+  // Hapus riwayat panel turunan.
+  menuPanelHistory = [];
+
+  showMenuPanel(
+    "menu-home-panel",
+    false,
+    true
+  );
+
+  if (typeof updateGlobalBackButton === "function") {
+    updateGlobalBackButton();
+  }
 }
 
 
-/* TAMBAH MENU */
+// =========================================
+// TOMBOL TAMBAH PRODUK
+// =========================================
 
-$("show-add-menu").addEventListener("click", () => {
+$("show-add-menu")?.addEventListener("click", () => {
   resetMenuForm();
   showMenuPanel("menu-form-panel");
 });
 
 
-/* KATEGORI MENU */
+// =========================================
+// TOMBOL KATEGORI MENU
+// =========================================
 
-$("open-menu-categories").addEventListener("click", () => {
+$("open-menu-categories")?.addEventListener("click", () => {
   showMenuPanel("menu-category-panel");
 });
 
 
-/* DAFTAR MENU */
+// =========================================
+// TOMBOL DAFTAR PRODUK
+// =========================================
 
-$("toggle-menu-list").addEventListener("click", () => {
+$("toggle-menu-list")?.addEventListener("click", () => {
   showMenuPanel("menu-list-panel");
 });
 
 
-/* QR MENU */
+// =========================================
+// TOMBOL QR MENU
+// =========================================
 
-$("open-menu-qr").addEventListener("click", () => {
+$("open-menu-qr")?.addEventListener("click", () => {
   showMenuPanel("menu-qr-panel");
 });
 
 
-/* RESET FORM MENU */
+// =========================================
+// TOMBOL STOK PRODUK
+// =========================================
+
+$("open-product-stock")?.addEventListener("click", () => {
+  showMenuPanel("product-stock-panel");
+});
+
+
+// =========================================
+// TOMBOL KETERSEDIAAN MENU
+// =========================================
+
+$("open-menu-availability")?.addEventListener("click", () => {
+  showMenuPanel("menu-availability-panel");
+});
+
+
+// =========================================
+// RESET FORM MENU
+// =========================================
 
 function resetMenuForm() {
   editingProductId = null;
 
   $("menu-form").reset();
+
   $("save-menu").textContent = "Simpan Menu";
+
   $("menu-form-title").textContent = "Tambah Menu Baru";
+
   $("cancel-edit").hidden = false;
 }
 
 
-/* EDIT MENU */
+// =========================================
+// EDIT MENU
+// =========================================
 
 function startEdit(id) {
   const shop = selectedShop();
 
-  const product = products.find(
-    item =>
-      String(item.id) === String(id) &&
-      shop &&
-      String(item.shop_id) === String(shop.id)
+  const product = products.find(item =>
+    String(item.id) === String(id) &&
+    shop &&
+    String(item.shop_id) === String(shop.id)
   );
 
   if (!product) {
@@ -3261,11 +3328,12 @@ function startEdit(id) {
     return;
   }
 
-  if (
-    !categories.some(
-      item => String(item.id) === String(product.category_id)
-    )
-  ) {
+  const categoryExists = categories.some(
+    item =>
+      String(item.id) === String(product.category_id)
+  );
+
+  if (!categoryExists) {
     showMenuMessage(
       "Kategori menu tidak aktif atau tidak ditemukan.",
       true
@@ -3276,28 +3344,40 @@ function startEdit(id) {
   editingProductId = product.id;
 
   $("menu-name").value = product.name || "";
+
   $("menu-category").value = product.category_id;
+
   $("menu-price").value = product.price;
-  $("menu-description").value = product.description || "";
+
+  $("menu-description").value =
+    product.description || "";
+
   $("menu-available").value =
     String(Boolean(product.is_available));
 
   $("save-menu").textContent = "Simpan Perubahan";
+
   $("cancel-edit").hidden = false;
+
   $("menu-form-title").textContent = "Edit Menu";
 
   showMenuPanel("menu-form-panel", false);
 }
 
 
-/* SIMPAN MENU */
+// =========================================
+// SIMPAN MENU
+// =========================================
 
-$("menu-form").addEventListener("submit", async event => {
+$("menu-form")?.addEventListener("submit", async event => {
   event.preventDefault();
 
   const shop = selectedShop();
+
   const name = $("menu-name").value.trim();
+
   const categoryId = $("menu-category").value;
+
   const price = Number($("menu-price").value);
 
   const description =
@@ -3340,13 +3420,13 @@ $("menu-form").addEventListener("submit", async event => {
   }
 
   const wasEditing = Boolean(editingProductId);
+
   const productId = editingProductId;
 
   if (wasEditing) {
-    const existingProduct = products.find(
-      item =>
-        String(item.id) === String(productId) &&
-        String(item.shop_id) === String(shop.id)
+    const existingProduct = products.find(item =>
+      String(item.id) === String(productId) &&
+      String(item.shop_id) === String(shop.id)
     );
 
     if (!existingProduct) {
@@ -3393,12 +3473,19 @@ $("menu-form").addEventListener("submit", async event => {
         .maybeSingle();
     }
 
-    if (result.error) throw result.error;
+    if (result.error) {
+      throw result.error;
+    }
 
     if (!result.data?.id) {
       throw new Error(
         "Data menu tidak berubah. Periksa hak akses Owner dan kebijakan RLS."
       );
+    }
+
+    // Pastikan kedai tidak berubah selama proses penyimpanan.
+    if (String(selectedShop()?.id) !== String(shop.id)) {
+      return;
     }
 
     resetMenuForm();
@@ -3427,25 +3514,30 @@ $("menu-form").addEventListener("submit", async event => {
 });
 
 
-/* BATAL TAMBAH / EDIT MENU */
+// =========================================
+// BATAL TAMBAH / EDIT MENU
+// =========================================
 
-$("cancel-edit").addEventListener("click", () => {
+$("cancel-edit")?.addEventListener("click", () => {
   resetMenuForm();
+
   showMenuHome();
+
   showMenuMessage("Formulir ditutup.");
 });
 
 
-/* HAPUS MENU */
+// =========================================
+// HAPUS MENU
+// =========================================
 
 async function deleteProduct(id) {
   const shop = selectedShop();
 
-  const product = products.find(
-    item =>
-      String(item.id) === String(id) &&
-      shop &&
-      String(item.shop_id) === String(shop.id)
+  const product = products.find(item =>
+    String(item.id) === String(id) &&
+    shop &&
+    String(item.shop_id) === String(shop.id)
   );
 
   if (!shop || !product || !client) {
@@ -3469,12 +3561,18 @@ async function deleteProduct(id) {
       .select("id")
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     if (!data?.id) {
       throw new Error(
         "Menu tidak terhapus. Periksa hak akses Owner dan kebijakan RLS."
       );
+    }
+
+    if (String(selectedShop()?.id) !== String(shop.id)) {
+      return;
     }
 
     await refreshMenu();
@@ -3490,6 +3588,7 @@ async function deleteProduct(id) {
     );
   }
 }
+
 /* TANGGAL DAN GRAFIK */
 function getDateFormatter(timezone) {
   return new Intl.DateTimeFormat("en-CA", {

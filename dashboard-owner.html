@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -17,9 +18,8 @@
   --border:#e1e8e2;
   --orange:#e99a48;
   --danger:#a72d2d;
-  --header-expanded:108px;
-  --header-collapsed:65px;
-  --nav-height:70px;
+  --header-height:88px;
+  --nav-height:0px;
 }
 
 *{box-sizing:border-box}
@@ -30,91 +30,180 @@ body{
   color:var(--text);background:var(--bg);line-height:1.5;
 }
 
-/* HEADER */
+/* HEADER GLOBAL TETAP */
 .owner-header{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  height:var(--header-expanded);padding:0 18px;
-  background:var(--dark);color:#fff;
-  border-radius:0 0 20px 20px;
-  transition:height .32s ease,box-shadow .32s ease;overflow:hidden;
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  height:calc(var(--header-height) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:var(--dark);
+  color:#fff;
+  border-radius:0;
+  box-shadow:0 3px 14px rgba(0,0,0,.12);
 }
 .owner-header-inner{
-  height:100%;max-width:1000px;margin:auto;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  height:var(--header-height);
+  max-width:1000px;
+  margin:auto;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
-.owner-brand-area{min-width:0;transition:transform .32s ease}
-.brand{font-size:27px;font-weight:850;letter-spacing:-1px;line-height:1.2}
+.header-back-button{
+  display:none;
+  flex:0 0 40px;
+  width:40px;
+  height:40px;
+  padding:8px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:12px;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  align-items:center;
+  justify-content:center;
+}
+.header-back-button svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.owner-header.has-back .header-back-button{display:flex}
+.owner-brand-area{
+  min-width:0;
+  flex:1;
+}
+.brand{
+  font-size:25px;
+  font-weight:850;
+  letter-spacing:-1px;
+  line-height:1.15;
+  white-space:nowrap;
+}
 .brand span{color:var(--orange)}
 .header-subtitle{
-  color:#d7e9de;font-size:13px;margin-top:6px;
-  transition:opacity .2s ease,max-height .25s ease;
-  max-height:25px;overflow:hidden;
+  color:#d7e9de;
+  font-size:11px;
+  margin-top:3px;
+  letter-spacing:.7px;
 }
-.header-shop-name{color:#fff;font-size:12px;margin-top:4px;opacity:.8}
+.header-shop-name{
+  color:#fff;
+  font-size:12px;
+  margin-top:3px;
+  opacity:.85;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 .profile-icon-button{
-  flex:0 0 43px;width:43px;height:43px;padding:9px;
-  border:0;border-radius:50%;background:#f8c9a8;color:var(--dark);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex:0 0 40px;
+  width:40px;
+  height:40px;
+  padding:8px;
+  border:0;
+  border-radius:50%;
+  background:#f8c9a8;
+  color:var(--dark);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .profile-icon-button svg{
-  width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round;
+  width:100%;
+  height:100%;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
-#header-shop-logo{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.owner-header.collapsed{
-  height:var(--header-collapsed);border-radius:0;
-  box-shadow:0 3px 14px rgba(0,0,0,.13);
-}
-.owner-header.collapsed .brand{font-size:21px}
-.owner-header.collapsed .header-subtitle{
-  max-height:0;opacity:0;margin:0;
-}
-.owner-header.collapsed .header-shop-name{font-size:10px;margin-top:2px}
-.owner-header.collapsed .profile-icon-button{
-  width:37px;height:37px;flex-basis:37px;
+#header-shop-logo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
 }
 
 /* CONTENT */
 #app-scroll{
-  position:fixed;top:var(--header-expanded);left:0;right:0;
-  bottom:calc(var(--nav-height) + env(safe-area-inset-bottom));
-  overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;
-  -webkit-overflow-scrolling:touch;padding:20px 0 30px;
-  transition:top .32s ease;
+  position:fixed;
+  top:calc(var(--header-height) + env(safe-area-inset-top));
+  left:0;
+  right:0;
+  bottom:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  padding:22px 0 30px;
 }
-body.header-collapsed #app-scroll{top:var(--header-collapsed)}
 main{
-  width:100%;max-width:1000px;margin:auto;padding:0 16px;
-  min-width:0;overflow-x:clip;
+  width:100%;
+  max-width:1000px;
+  margin:auto;
+  padding:0 16px;
+  min-width:0;
+  overflow-x:clip;
 }
 .page{animation:pageIn .2s ease}
 @keyframes pageIn{
   from{opacity:.65;transform:translateY(5px)}
   to{opacity:1;transform:translateY(0)}
 }
-.page-heading{margin:0 0 5px;font-size:23px;color:var(--dark);font-weight:800}
-.page-description{color:var(--muted);font-size:13px;margin:0 0 20px}
+.page-heading{
+  margin:0 0 5px;
+  font-size:23px;
+  color:var(--dark);
+  font-weight:800;
+}
+.page-description{
+  color:var(--muted);
+  font-size:13px;
+  margin:0 0 20px;
+}
 h1,h2,h3{color:var(--dark);line-height:1.3}
 h2{font-size:20px;margin-top:0}
 h3{font-size:17px}
 .panel,.stat,.summary-card,.chart-panel{
-  background:#fff;border:1px solid var(--border);border-radius:16px;
-  padding:17px;margin-bottom:16px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:17px;
+  margin-bottom:16px;
   box-shadow:0 5px 18px rgba(18,59,44,.05);
 }
 .muted{color:var(--muted);font-size:14px;line-height:1.6}
 .field{margin:13px 0}
 label{display:block;margin-bottom:7px;font-size:14px;font-weight:700}
 input,select,textarea{
-  width:100%;max-width:100%;padding:12px;
-  border:1px solid var(--border);border-radius:10px;
-  background:#fff;color:var(--text);font:inherit;
-  margin-top:5px;margin-bottom:12px;
+  width:100%;
+  max-width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  color:var(--text);
+  font:inherit;
+  margin-top:5px;
+  margin-bottom:12px;
 }
 button,.action-link{
-  display:inline-block;width:100%;padding:13px;border:0;
-  border-radius:10px;font:600 14px Arial,sans-serif;
-  text-align:center;text-decoration:none;cursor:pointer;
+  display:inline-block;
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:10px;
+  font:600 14px Arial,sans-serif;
+  text-align:center;
+  text-decoration:none;
+  cursor:pointer;
 }
 button:disabled{opacity:.55;cursor:not-allowed}
 .primary,button{background:var(--dark);color:#fff}
@@ -123,43 +212,119 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .button-stack{display:grid;gap:9px;margin-top:12px}
 .button-stack.two{grid-template-columns:1fr 1fr}
 
-/* HOME */
+/* BERANDA DASHBOARD */
+.dashboard-menu-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:18px 0 22px;
+}
+.dashboard-menu-card{
+  min-width:0;
+  min-height:128px;
+  padding:17px 14px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#fff;
+  color:var(--text);
+  text-align:left;
+  box-shadow:0 5px 18px rgba(18,59,44,.05);
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.dashboard-menu-card:active{
+  transform:scale(.98);
+  box-shadow:0 2px 8px rgba(18,59,44,.10);
+}
+.dashboard-menu-card .card-icon{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  background:var(--light);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+}
+.dashboard-menu-card .card-title{
+  display:block;
+  color:var(--dark);
+  font-size:15px;
+  font-weight:800;
+}
+.dashboard-menu-card .card-description{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.4;
+  margin-top:3px;
+}
+.dashboard-menu-card .card-arrow{
+  align-self:flex-end;
+  color:var(--green);
+  font-size:18px;
+  line-height:1;
+}
 .business-summary{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;margin-bottom:20px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-bottom:20px;
 }
 .summary-card{padding:16px 14px;margin-bottom:0;min-width:0}
 .summary-icon{font-size:24px;margin-bottom:10px}
 .stat-label{color:var(--muted);font-size:13px}
 .stat-number{
-  margin-top:8px;color:var(--dark);font-size:20px;font-weight:750;
+  margin-top:8px;
+  color:var(--dark);
+  font-size:20px;
+  font-weight:750;
   overflow-wrap:anywhere;
 }
 .stats{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;margin-bottom:20px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:20px;
 }
 .stat{margin-bottom:0;padding:14px;min-width:0}
 .chart-panel{padding:20px 16px;margin-bottom:20px}
 .chart-panel h2{margin:0 0 6px}
 .chart-panel>p{margin:0 0 20px}
 .sales-chart{
-  min-height:190px;display:grid;
+  min-height:190px;
+  display:grid;
   grid-template-columns:repeat(7,minmax(0,1fr));
-  gap:8px;align-items:stretch;
+  gap:8px;
+  align-items:stretch;
 }
 .chart-day{
-  min-width:0;display:flex;flex-direction:column;
-  justify-content:flex-end;align-items:center;gap:7px;text-align:center;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:7px;
+  text-align:center;
 }
 .chart-value{font-size:10px;color:var(--muted);overflow-wrap:anywhere;min-height:15px}
 .chart-track{
-  height:125px;width:100%;display:flex;align-items:flex-end;
-  justify-content:center;background:#f3f6f2;
-  border-radius:8px 8px 4px 4px;overflow:hidden;
+  height:125px;
+  width:100%;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  background:#f3f6f2;
+  border-radius:8px 8px 4px 4px;
+  overflow:hidden;
 }
 .chart-bar{
-  width:70%;min-height:3px;
+  width:70%;
+  min-height:3px;
   background:linear-gradient(180deg,var(--orange),var(--green));
   border-radius:7px 7px 0 0;
 }
@@ -172,67 +337,44 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .menu-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .menu-actions button{padding:10px 6px}
 .qr-box{
-  padding:16px;text-align:center;background:#f8faf8;
-  border:1px dashed #aabbb0;border-radius:12px;margin-top:14px;
+  padding:16px;
+  text-align:center;
+  background:#f8faf8;
+  border:1px dashed #aabbb0;
+  border-radius:12px;
+  margin-top:14px;
 }
 #qr-image{display:block;width:220px;max-width:100%;height:auto;margin:14px auto}
 .url-text{overflow-wrap:anywhere;font-size:13px;color:var(--muted)}
+
 /* DAFTAR PESANAN OWNER */
-.transaction-filters {
-  display:grid;
-  grid-template-columns:1fr;
-  gap:0;
-  margin:14px 0;
-}
-
-.owner-order-list {
-  display:grid;
-  gap:10px;
-}
-
-.owner-order-card {
+.transaction-filters{display:grid;grid-template-columns:1fr;gap:0;margin:14px 0}
+.owner-order-list{display:grid;gap:10px}
+.owner-order-card{
   padding:14px;
   border:1px solid var(--border);
   border-radius:12px;
   background:#fff;
+  cursor:pointer;
+  transition:border-color .2s ease,box-shadow .2s ease;
 }
-
-.owner-order-top {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
+.owner-order-card:active{
+  border-color:var(--green);
+  box-shadow:0 3px 12px rgba(18,59,44,.10);
 }
-
-.owner-order-number {
+.owner-order-card:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.owner-order-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.owner-order-number{
   min-width:0;
   color:var(--dark);
   font-size:14px;
   font-weight:800;
   overflow-wrap:anywhere;
 }
-
-.owner-order-total {
-  flex:0 0 auto;
-  color:var(--dark);
-  font-size:14px;
-  font-weight:800;
-  white-space:nowrap;
-}
-
-.owner-order-datetime {
-  margin:8px 0 2px;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.owner-order-source {
-  margin:0;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.owner-order-empty {
+.owner-order-total{flex:0 0 auto;color:var(--dark);font-size:14px;font-weight:800;white-space:nowrap}
+.owner-order-datetime{margin:8px 0 2px;color:var(--muted);font-size:12px}
+.owner-order-source{margin:0;color:var(--muted);font-size:12px}
+.owner-order-empty{
   padding:20px 12px;
   border:1px dashed var(--border);
   border-radius:12px;
@@ -240,55 +382,19 @@ button:disabled{opacity:.55;cursor:not-allowed}
   text-align:center;
   font-size:13px;
 }
-/* INTERAKSI KARTU PESANAN */
-.owner-order-card {
-  cursor:pointer;
-  transition:border-color .2s ease,box-shadow .2s ease;
-}
-
-.owner-order-card:active {
-  border-color:var(--green);
-  box-shadow:0 3px 12px rgba(18,59,44,.10);
-}
-
-.owner-order-card:focus-visible {
-  outline:2px solid var(--green);
-  outline-offset:3px;
-}
-
-/* DETAIL PESANAN OWNER */
-.owner-order-detail-header {
+.owner-order-detail-header{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   gap:14px;
   margin-bottom:18px;
 }
-
-.owner-order-detail-header h2 {
-  margin:0;
-}
-
-.owner-order-back-button {
-  width:auto;
-  padding:10px 14px;
-}
-
-.owner-order-detail-section {
-  padding:14px 0;
-  border-bottom:1px solid var(--border);
-}
-
-.owner-order-detail-section:last-child {
-  border-bottom:0;
-}
-
-.owner-order-detail-section h3 {
-  margin:0 0 12px;
-  font-size:15px;
-}
-
-.owner-order-detail-line {
+.owner-order-detail-header h2{margin:0}
+.owner-order-back-button{width:auto;padding:10px 14px}
+.owner-order-detail-section{padding:14px 0;border-bottom:1px solid var(--border)}
+.owner-order-detail-section:last-child{border-bottom:0}
+.owner-order-detail-section h3{margin:0 0 12px;font-size:15px}
+.owner-order-detail-line{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
@@ -296,85 +402,25 @@ button:disabled{opacity:.55;cursor:not-allowed}
   margin:9px 0;
   font-size:13px;
 }
-
-.owner-order-detail-line span {
-  color:var(--muted);
-  flex:1;
-  min-width:0;
-}
-
-.owner-order-detail-line strong {
+.owner-order-detail-line span{color:var(--muted);flex:1;min-width:0}
+.owner-order-detail-line strong{
   color:var(--text);
   text-align:right;
   max-width:65%;
   overflow-wrap:anywhere;
 }
-
-.owner-order-detail-code {
-  display:flex;
-  align-items:flex-start;
-  gap:8px;
-}
-
-.owner-order-detail-code strong {
-  flex:1;
-  min-width:0;
-  overflow-wrap:anywhere;
-}
-
-.owner-order-copy-button {
-  width:auto;
-  flex:0 0 auto;
-  padding:7px 10px;
-  font-size:11px;
-}
-
-.owner-order-product {
-  padding:12px 0;
-  border-bottom:1px solid var(--border);
-}
-
-.owner-order-product:last-child {
-  border-bottom:0;
-}
-
-.owner-order-product-name {
-  font-size:14px;
-  font-weight:750;
-  color:var(--dark);
-}
-
-.owner-order-product-meta {
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:6px;
-  font-size:12px;
-}
-
-.owner-order-product-meta span:first-child {
-  color:var(--muted);
-}
-
-.owner-order-product-note {
-  margin-top:6px;
-  color:var(--muted);
-  font-size:12px;
-  font-style:italic;
-}
-
-.owner-order-payment-total {
-  padding-top:12px;
-  margin-top:12px;
-  border-top:1px dashed var(--border);
-}
-
-.owner-order-payment-total strong {
-  color:var(--green);
-  font-size:17px;
-}
-
-.owner-order-payment-status {
+.owner-order-detail-code{display:flex;align-items:flex-start;gap:8px}
+.owner-order-detail-code strong{flex:1;min-width:0;overflow-wrap:anywhere}
+.owner-order-copy-button{width:auto;flex:0 0 auto;padding:7px 10px;font-size:11px}
+.owner-order-product{padding:12px 0;border-bottom:1px solid var(--border)}
+.owner-order-product:last-child{border-bottom:0}
+.owner-order-product-name{font-size:14px;font-weight:750;color:var(--dark)}
+.owner-order-product-meta{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:12px}
+.owner-order-product-meta span:first-child{color:var(--muted)}
+.owner-order-product-note{margin-top:6px;color:var(--muted);font-size:12px;font-style:italic}
+.owner-order-payment-total{padding-top:12px;margin-top:12px;border-top:1px dashed var(--border)}
+.owner-order-payment-total strong{color:var(--green);font-size:17px}
+.owner-order-payment-status{
   display:inline-block;
   padding:5px 10px;
   border-radius:20px;
@@ -383,85 +429,46 @@ button:disabled{opacity:.55;cursor:not-allowed}
   font-size:11px;
   font-weight:750;
 }
-
-.owner-order-payment-status.paid {
-  background:#e4f4e9;
-  color:#21683a;
+.owner-order-payment-status.paid{background:#e4f4e9;color:#21683a}
+.owner-order-status-list{display:grid;gap:10px}
+.owner-order-status-step{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+.owner-order-status-dot{
+  width:20px;height:20px;flex:0 0 20px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:50%;font-size:11px;
 }
-
-.owner-order-status-list {
-  display:grid;
-  gap:10px;
-}
-
-.owner-order-status-step {
+.owner-order-status-step.is-done{color:var(--green);font-weight:700}
+.owner-order-status-step.is-done .owner-order-status-dot{background:var(--light);border-color:var(--green)}
+.owner-order-status-step.is-current{color:var(--dark);font-weight:800}
+.owner-order-detail-empty{padding:12px;color:var(--muted);font-size:13px;text-align:center}
+.owner-order-detail-hint{
   display:flex;
+  justify-content:flex-end;
   align-items:center;
-  gap:10px;
-  color:var(--muted);
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid rgba(23,76,56,.12);
+  color:#174c38;
   font-size:13px;
-}
-
-.owner-order-status-dot {
-  width:20px;
-  height:20px;
-  flex:0 0 20px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid var(--border);
-  border-radius:50%;
-  font-size:11px;
-}
-
-.owner-order-status-step.is-done {
-  color:var(--green);
   font-weight:700;
 }
 
-.owner-order-status-step.is-done .owner-order-status-dot {
-  background:var(--light);
-  border-color:var(--green);
-}
-
-.owner-order-status-step.is-current {
-  color:var(--dark);
-  font-weight:800;
-}
-
-.owner-order-detail-empty {
-  padding:12px;
-  color:var(--muted);
-  font-size:13px;
-  text-align:center;
-}
-  /* REPORT */
+/* REPORT */
 .report-filter{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0}
 .report-filter .field{margin:0}
 .report-filter input,.report-filter select{margin-bottom:5px}
-.report-table-wrap{
-  width:100%;overflow-x:auto;margin-top:12px;
-  border:1px solid var(--border);border-radius:10px;
-}
+.report-table-wrap{width:100%;overflow-x:auto;margin-top:12px;border:1px solid var(--border);border-radius:10px}
 .report-table{width:100%;min-width:440px;border-collapse:collapse;font-size:13px}
-.report-table th,.report-table td{
-  padding:11px 10px;text-align:left;border-bottom:1px solid var(--border);
-}
+.report-table th,.report-table td{padding:11px 10px;text-align:left;border-bottom:1px solid var(--border)}
 .report-table th{background:#f3f7f3;color:var(--dark)}
 .report-table tr:last-child td{border-bottom:0}
 .report-section-title{margin:22px 0 8px;font-size:16px}
-.report-note{
-  padding:12px;border-radius:10px;background:#f6f8f5;
-  font-size:13px;color:var(--muted);margin-top:14px;
-}
+.report-note{padding:12px;border-radius:10px;background:#f6f8f5;font-size:13px;color:var(--muted);margin-top:14px}
 .report-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
 .report-actions button{min-width:0;padding:12px 7px}
 
 /* SETTINGS */
-.settings-item{
-  display:flex;align-items:center;gap:13px;
-  padding:15px 0;border-bottom:1px solid var(--border);
-}
+.settings-item{display:flex;align-items:center;gap:13px;padding:15px 0;border-bottom:1px solid var(--border)}
 .settings-item:last-child{border-bottom:0}
 .settings-icon{
   flex:0 0 43px;width:43px;height:43px;border-radius:13px;
@@ -480,214 +487,58 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .settings-item-button:active{background:#f5f8f5}
 
 /* CASHIER MANAGEMENT */
-.cashier-intro{
-  padding:13px;border-radius:11px;background:#f3f7f3;
-  color:#53645a;font-size:13px;line-height:1.6;margin:12px 0 16px;
-}
-.cashier-card{
-  border:1px solid var(--border);border-radius:13px;
-  padding:14px;margin:12px 0;background:#fff;
-}
-.cashier-card-top{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;
-}
+.cashier-intro{padding:13px;border-radius:11px;background:#f3f7f3;color:#53645a;font-size:13px;line-height:1.6;margin:12px 0 16px}
+.cashier-card{border:1px solid var(--border);border-radius:13px;padding:14px;margin:12px 0;background:#fff}
+.cashier-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .cashier-card-name{font-size:15px;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
 .cashier-code{font-size:12px;color:var(--muted);margin-top:3px}
 .cashier-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.cashier-badge{
-  display:inline-block;padding:5px 9px;border-radius:20px;
-  font-size:11px;font-weight:700;background:#edf2ee;color:#486052;
-}
+.cashier-badge{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:700;background:#edf2ee;color:#486052}
 .cashier-badge.pending{background:#fff3df;color:#93621f}
 .cashier-badge.active{background:#e4f4e9;color:#21683a}
 .cashier-badge.disabled{background:#fff0ef;color:#a72d2d}
 .cashier-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
 .cashier-actions button{padding:10px}
-.cashier-empty{
-  text-align:center;padding:22px 12px;border:1px dashed #cbd7ce;
-  border-radius:12px;color:var(--muted);font-size:13px;
-}
-.setup-code-panel{
-  margin-top:15px;padding:15px;border:1px solid #e9c58d;
-  border-radius:13px;background:#fff8eb;
-}
-.setup-code-value{
-  padding:13px;margin:10px 0;border-radius:9px;
-  background:#fff;color:#6e481b;border:1px dashed #d7a75c;
-  font-size:22px;font-weight:850;letter-spacing:2px;
-  text-align:center;overflow-wrap:anywhere;
-}
+.cashier-empty{text-align:center;padding:22px 12px;border:1px dashed #cbd7ce;border-radius:12px;color:var(--muted);font-size:13px}
+.setup-code-panel{margin-top:15px;padding:15px;border:1px solid #e9c58d;border-radius:13px;background:#fff8eb}
+.setup-code-value{padding:13px;margin:10px 0;border-radius:9px;background:#fff;color:#6e481b;border:1px dashed #d7a75c;font-size:22px;font-weight:850;letter-spacing:2px;text-align:center;overflow-wrap:anywhere}
 .setup-code-meta{font-size:12px;color:#826b4d;line-height:1.6}
 .cashier-message{font-size:13px;line-height:1.5;margin-top:10px}
 .cashier-message.error{color:#b42318}
 .cashier-message.success{color:#21683a}
-.cashier-list-heading{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;margin-top:22px;
-}
+.cashier-list-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px}
 .cashier-list-heading h3{margin:0}
 .cashier-list-heading button{width:auto;padding:9px 12px;font-size:12px}
-.owner-only-note{
-  font-size:12px;color:var(--muted);margin-top:12px;
-}
+.owner-only-note{font-size:12px;color:var(--muted);margin-top:12px}
+
 /* TAGIHAN KOPIHUB */
-.invoice-card{
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:15px;
-  margin:13px 0;
-  background:#fff;
-}
-.invoice-card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-}
-.invoice-number{
-  font-size:14px;
-  font-weight:800;
-  color:var(--dark);
-  overflow-wrap:anywhere;
-}
-.invoice-period{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:4px;
-}
-.invoice-status{
-  flex-shrink:0;
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:750;
-  background:#fff3df;
-  color:#93621f;
-}
-.invoice-status.paid{
-  background:#e4f4e9;
-  color:#21683a;
-}
-.invoice-status.rejected{
-  background:#fff0ef;
-  color:#a72d2d;
-}
-.invoice-status.carried{
-  background:#edf1f5;
-  color:#526273;
-}
-.invoice-details{
-  margin-top:14px;
-  padding-top:12px;
-  border-top:1px solid var(--border);
-}
-.invoice-line{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  margin:8px 0;
-  font-size:13px;
-}
-.invoice-line span:first-child{
-  color:var(--muted);
-}
-.invoice-line strong{
-  text-align:right;
-  overflow-wrap:anywhere;
-}
-.invoice-total{
-  margin-top:12px;
-  padding-top:12px;
-  border-top:1px dashed #cbd7ce;
-  font-size:15px;
-}
-.invoice-total strong{
-  color:var(--dark);
-  font-size:17px;
-}
-.invoice-payment-history{
-  margin-top:14px;
-  padding:12px;
-  background:#f6f8f5;
-  border-radius:10px;
-}
-.invoice-payment-item{
-  padding:10px 0;
-  border-bottom:1px solid var(--border);
-  font-size:12px;
-}
-.invoice-payment-item:last-child{
-  border-bottom:0;
-}
-.invoice-payment-item strong{
-  display:block;
-  color:var(--dark);
-  margin-bottom:4px;
-}
-.invoice-proof-link{
-  display:inline-block;
-  margin-top:7px;
-  color:var(--green);
-  font-weight:700;
-  text-decoration:underline;
-}
-.invoice-form{
-  margin-top:14px;
-  padding:13px;
-  border:1px solid #e9c58d;
-  border-radius:12px;
-  background:#fffaf1;
-}
-.invoice-form small{
-  display:block;
-  color:var(--muted);
-  line-height:1.6;
-  margin-top:5px;
-}
-.invoice-message{
-  margin-top:10px;
-  font-size:13px;
-  line-height:1.6;
-}
+.invoice-card{border:1px solid var(--border);border-radius:14px;padding:15px;margin:13px 0;background:#fff}
+.invoice-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.invoice-number{font-size:14px;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
+.invoice-period{font-size:12px;color:var(--muted);margin-top:4px}
+.invoice-status{flex-shrink:0;display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:750;background:#fff3df;color:#93621f}
+.invoice-status.paid{background:#e4f4e9;color:#21683a}
+.invoice-status.rejected{background:#fff0ef;color:#a72d2d}
+.invoice-status.carried{background:#edf1f5;color:#526273}
+.invoice-details{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.invoice-line{display:flex;justify-content:space-between;gap:12px;margin:8px 0;font-size:13px}
+.invoice-line span:first-child{color:var(--muted)}
+.invoice-line strong{text-align:right;overflow-wrap:anywhere}
+.invoice-total{margin-top:12px;padding-top:12px;border-top:1px dashed #cbd7ce;font-size:15px}
+.invoice-total strong{color:var(--dark);font-size:17px}
+.invoice-payment-history{margin-top:14px;padding:12px;background:#f6f8f5;border-radius:10px}
+.invoice-payment-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.invoice-payment-item:last-child{border-bottom:0}
+.invoice-payment-item strong{display:block;color:var(--dark);margin-bottom:4px}
+.invoice-proof-link{display:inline-block;margin-top:7px;color:var(--green);font-weight:700;text-decoration:underline}
+.invoice-form{margin-top:14px;padding:13px;border:1px solid #e9c58d;border-radius:12px;background:#fffaf1}
+.invoice-form small{display:block;color:var(--muted);line-height:1.6;margin-top:5px}
+.invoice-message{margin-top:10px;font-size:13px;line-height:1.6}
 .invoice-message.error{color:#b42318}
 .invoice-message.success{color:#21683a}
-.invoice-empty{
-  padding:22px 14px;
-  text-align:center;
-  border:1px dashed #cbd7ce;
-  border-radius:12px;
-  color:var(--muted);
-  font-size:13px;
-}
-.invoice-refresh{
-  margin-bottom:12px;
-}
-/* BOTTOM NAV */
-.bottom-navigation{
-  position:fixed;z-index:200;left:0;right:0;bottom:0;
-  height:calc(var(--nav-height) + env(safe-area-inset-bottom));
-  padding:7px 5px calc(7px + env(safe-area-inset-bottom));
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
-  align-items:center;background:rgba(255,255,255,.97);
-  border-top:1px solid var(--border);
-  box-shadow:0 -4px 18px rgba(18,59,44,.07);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-}
-.nav-button{
-  height:55px;min-width:0;padding:5px 2px;background:transparent;
-  color:#849087;display:flex;flex-direction:column;
-  justify-content:center;align-items:center;gap:4px;
-  border-radius:12px;font:600 10px Arial,sans-serif;
-  transition:color .2s ease,background .2s ease;
-}
-.nav-button svg{
-  width:21px;height:21px;fill:none;stroke:currentColor;
-  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
-}
-.nav-button.active{color:var(--green);background:#eaf2ec}
-.nav-button.active svg{stroke-width:2.2}
+.invoice-empty{padding:22px 14px;text-align:center;border:1px dashed #cbd7ce;border-radius:12px;color:var(--muted);font-size:13px}
+.invoice-refresh{margin-bottom:12px}
+
 footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 [hidden]{display:none!important}
 
@@ -710,19 +561,8 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   .chart-label{font-size:10px}
   .chart-track{height:110px}
   .report-actions{grid-template-columns:1fr}
-  .nav-button{font-size:9px}
-}
-/* PETUNJUK DETAIL PADA KARTU PESANAN OWNER */
-.owner-order-detail-hint {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 10px;
-  padding-top: 9px;
-  border-top: 1px solid rgba(23, 76, 56, 0.12);
-  color: #174c38;
-  font-size: 13px;
-  font-weight: 700;
+  .dashboard-menu-grid{gap:8px}
+  .dashboard-menu-card{padding:13px 11px;min-height:120px}
 }
 </style>
 </head>
@@ -731,11 +571,25 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
 <header class="owner-header" id="owner-header">
   <div class="owner-header-inner">
+
+    <button
+      class="header-back-button"
+      id="header-back-button"
+      type="button"
+      aria-label="Kembali ke halaman sebelumnya"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 18l-6-6 6-6"></path>
+        <path d="M9 12h12"></path>
+      </svg>
+    </button>
+
     <div class="owner-brand-area">
       <div class="brand">☕ Kopi<span>Hub</span></div>
-      <div class="header-subtitle">OWNER DASHBOARD</div>
+      <div class="header-subtitle">SATU PLATFORM, BANYAK CERITA</div>
       <div class="header-shop-name" id="header-shop-name">Dashboard Owner</div>
     </div>
+
     <button class="profile-icon-button" id="header-profile-button"
       type="button" aria-label="Buka profil kedai">
       <svg id="header-profile-fallback-svg" viewBox="0 0 24 24">
@@ -755,10 +609,52 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   <span id="header-profile-fallback" hidden></span>
   <button id="close-shop-profile" type="button" hidden></button>
 
-  <!-- HOME -->
+  <!-- DASHBOARD OWNER -->
   <section class="page" id="page-home">
-    <h1 class="page-heading">Selamat Datang 👋</h1>
-    <p class="page-description">Pantau perkembangan kedai Anda hari ini.</p>
+    <h1 class="page-heading">Dashboard Owner</h1>
+    <p class="page-description">Pusat pengelolaan dan pemantauan kedai Anda.</p>
+
+    <section class="dashboard-menu-grid" aria-label="Menu Dashboard Owner">
+
+      <button class="dashboard-menu-card" type="button" data-page="menu">
+        <span class="card-icon">☕</span>
+        <span>
+          <span class="card-title">Kelola Menu</span>
+          <span class="card-description">Produk, kategori, stok, dan ketersediaan</span>
+        </span>
+        <span class="card-arrow">›</span>
+      </button>
+
+      <button class="dashboard-menu-card" type="button" data-page="transaksi">
+        <span class="card-icon">🧾</span>
+        <span>
+          <span class="card-title">Transaksi</span>
+          <span class="card-description">Riwayat dan informasi pesanan kedai</span>
+        </span>
+        <span class="card-arrow">›</span>
+      </button>
+
+      <button class="dashboard-menu-card" type="button" data-page="laporan">
+        <span class="card-icon">📊</span>
+        <span>
+          <span class="card-title">Laporan Penjualan</span>
+          <span class="card-description">Ringkasan omzet dan penjualan produk</span>
+        </span>
+        <span class="card-arrow">›</span>
+      </button>
+
+      <button class="dashboard-menu-card" type="button" data-page="lainnya">
+        <span class="card-icon">⚙️</span>
+        <span>
+          <span class="card-title">Pengaturan Kedai</span>
+          <span class="card-description">Profil, PBJT, kasir, dan tagihan</span>
+        </span>
+        <span class="card-arrow">›</span>
+      </button>
+
+    </section>
+
+    <h2>Ringkasan Hari Ini</h2>
 
     <section class="business-summary">
       <div class="summary-card">
@@ -767,6 +663,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
         <div class="stat-number" id="summary-income">Rp0</div>
         <p class="muted">Pesanan lunas hari ini</p>
       </div>
+
       <div class="summary-card">
         <div class="summary-icon">📈</div>
         <div class="stat-label">Total Penjualan</div>
@@ -785,325 +682,305 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </section>
 
     <h2>Ringkasan Kedai</h2>
+
     <section class="stats">
       <div class="stat">
         <div class="stat-label">Jumlah Menu</div>
         <div class="stat-number" id="menu-count">—</div>
       </div>
+
       <div class="stat">
         <div class="stat-label">Menu Tersedia</div>
         <div class="stat-number" id="available-count">—</div>
       </div>
+
       <div class="stat">
         <div class="stat-label">Pesanan Hari Ini</div>
         <div class="stat-number" id="today-orders">—</div>
       </div>
+
       <div class="stat">
         <div class="stat-label">Penjualan Hari Ini (Sudah Dibayar)</div>
         <div class="stat-number" id="today-sales">—</div>
       </div>
+
       <div class="stat">
         <div class="stat-label">Biaya Layanan</div>
         <div class="stat-number" id="today-service-fee">Rp3.000</div>
-        <p class="muted">Tarif sementara per pesanan. Ditanggung Owner, bukan pelanggan.</p>
+        <p class="muted">Ditanggung Owner, bukan pelanggan.</p>
       </div>
     </section>
   </section>
 
-  
-<!-- MENU -->
-<section class="page" id="page-menu" hidden>
-  <h1 class="page-heading">Kelola Menu</h1>
-  <p class="page-description">
-    Atur produk, harga, kategori, dan ketersediaan menu kedai.
-  </p>
+  <!-- MENU -->
+  <section class="page" id="page-menu" hidden>
+    <h1 class="page-heading">Kelola Menu</h1>
+    <p class="page-description">
+      Atur produk, harga, kategori, stok, dan ketersediaan menu kedai.
+    </p>
 
-  <!-- HALAMAN UTAMA MENU -->
-  <div id="menu-home-panel">
+    <div id="menu-home-panel">
+      <section class="panel">
+        <h2>Manajemen Produk</h2>
+        <p class="muted">Pilih pengelolaan menu yang ingin dilakukan.</p>
 
-    <section class="panel">
-      <h2>Manajemen Produk</h2>
-      <p class="muted">
-        Kelola produk dan daftar menu kedai Anda.
-      </p>
+        <div class="dashboard-menu-grid">
 
-      <div class="button-stack">
-        <button class="primary" id="show-add-menu" type="button">
-          + Tambahkan Menu
+          <button class="dashboard-menu-card" id="show-add-menu" type="button">
+            <span class="card-icon">➕</span>
+            <span>
+              <span class="card-title">Tambah Produk</span>
+              <span class="card-description">Tambahkan produk baru ke kedai</span>
+            </span>
+            <span class="card-arrow">›</span>
+          </button>
+
+          <button class="dashboard-menu-card" id="open-menu-categories" type="button">
+            <span class="card-icon">📂</span>
+            <span>
+              <span class="card-title">Kategori Menu</span>
+              <span class="card-description">Kelola kelompok kategori produk</span>
+            </span>
+            <span class="card-arrow">›</span>
+          </button>
+
+          <button class="dashboard-menu-card" id="toggle-menu-list" type="button">
+            <span class="card-icon">📋</span>
+            <span>
+              <span class="card-title">Daftar Produk</span>
+              <span class="card-description">Lihat dan ubah informasi produk</span>
+            </span>
+            <span class="card-arrow">›</span>
+          </button>
+
+          <button class="dashboard-menu-card" id="open-product-stock" type="button">
+            <span class="card-icon">📦</span>
+            <span>
+              <span class="card-title">Stok Produk</span>
+              <span class="card-description">Pantau dan atur jumlah persediaan</span>
+            </span>
+            <span class="card-arrow">›</span>
+          </button>
+
+          <button class="dashboard-menu-card" id="open-menu-availability" type="button">
+            <span class="card-icon">🟢</span>
+            <span>
+              <span class="card-title">Ketersediaan Menu</span>
+              <span class="card-description">Atur menu tersedia atau habis</span>
+            </span>
+            <span class="card-arrow">›</span>
+          </button>
+
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>QR Menu Kedai</h2>
+        <p class="muted">
+          Buat dan bagikan QR yang membuka halaman pilihan menu pelanggan.
+        </p>
+        <button class="primary" id="open-menu-qr" type="button">
+          Pengaturan QR Menu
         </button>
+      </section>
+    </div>
 
-        <button class="secondary" id="toggle-menu-list" type="button">
-          Daftar Menu
-        </button>
-      </div>
-    </section>
+    <p id="menu-message" class="muted" role="status"></p>
 
-    <section class="panel">
-      <h2>QR Menu Kedai</h2>
-      <p class="muted">
-        Buat dan bagikan QR yang membuka halaman pilihan menu pelanggan.
-      </p>
-
-      <button class="primary" id="open-menu-qr" type="button">
-        Pengaturan QR Menu
+    <!-- PANEL TAMBAH / EDIT MENU -->
+    <section class="panel" id="menu-form-panel" hidden>
+      <button class="secondary menu-back-home" type="button">
+        ← Kembali ke Kelola Menu
       </button>
+
+      <h2 id="menu-form-title">Tambah Menu Baru</h2>
+
+      <form id="menu-form">
+        <div class="field">
+          <label for="menu-name">Nama</label>
+          <input id="menu-name" maxlength="120" required placeholder="Contoh: Kopi Susu">
+        </div>
+
+        <div class="field">
+          <label for="menu-category">Kategori</label>
+          <select id="menu-category" required disabled>
+            <option value="">Memuat kategori...</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="menu-price">Harga (Rupiah)</label>
+          <input id="menu-price" type="number" min="1" step="1"
+            max="100000000" required placeholder="20000">
+        </div>
+
+        <div class="field">
+          <label for="menu-description">Deskripsi</label>
+          <textarea id="menu-description" rows="2" maxlength="1000"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="menu-available">Ketersediaan</label>
+          <select id="menu-available">
+            <option value="true">Tersedia</option>
+            <option value="false">Habis</option>
+          </select>
+        </div>
+
+        <div class="button-stack two">
+          <button class="primary" id="save-menu" type="submit">Simpan Menu</button>
+          <button class="secondary" id="cancel-edit" type="button">Batal</button>
+        </div>
+      </form>
     </section>
 
-  </div>
+    <!-- PANEL DAFTAR MENU -->
+    <section class="panel" id="menu-list-panel" hidden>
+      <button class="secondary menu-back-home" type="button">
+        ← Kembali ke Kelola Menu
+      </button>
+      <h2>Daftar Produk</h2>
+      <div id="menu-list" class="muted">Menunggu data kedai...</div>
+    </section>
 
-  <!-- PESAN MENU -->
-  <p id="menu-message" class="muted" role="status"></p>
+    <!-- PANEL QR MENU -->
+    <section class="panel" id="menu-qr-panel" hidden>
+      <button class="secondary menu-back-home" type="button">
+        ← Kembali ke Kelola Menu
+      </button>
 
-  <!-- PANEL TAMBAH / EDIT MENU -->
-  <section class="panel" id="menu-form-panel" hidden>
-    <button class="secondary menu-back-home" type="button">
-      ← Kembali ke MENU
-    </button>
+      <h2>QR Menu Kedai</h2>
+      <p class="muted">QR ini membuka halaman pilihan menu, bukan QRIS pembayaran.</p>
 
-    <h2 id="menu-form-title">Tambah Menu Baru</h2>
+      <button class="primary" id="make-qr" type="button" disabled>
+        Buat QR Menu
+      </button>
 
-    <form id="menu-form">
-      <div class="field">
-        <label for="menu-name">Nama</label>
-        <input
-          id="menu-name"
-          maxlength="120"
-          required
-          placeholder="Contoh: Kopi Susu"
-        >
-      </div>
-
-      <div class="field">
-        <label for="menu-category">Kategori</label>
-        <select id="menu-category" required disabled>
-          <option value="">Memuat kategori...</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="menu-price">Harga (Rupiah)</label>
-        <input
-          id="menu-price"
-          type="number"
-          min="1"
-          step="1"
-          max="100000000"
-          required
-          placeholder="20000"
-        >
-      </div>
-
-      <div class="field">
-        <label for="menu-description">Deskripsi</label>
-        <textarea
-          id="menu-description"
-          rows="2"
-          maxlength="1000"
-        ></textarea>
-      </div>
-
-      <div class="field">
-        <label for="menu-available">Ketersediaan</label>
-        <select id="menu-available">
-          <option value="true">Tersedia</option>
-          <option value="false">Habis</option>
-        </select>
+      <div class="qr-box">
+        <strong id="qr-title">QR Menu KopiHub</strong>
+        <img id="qr-image" alt="QR menu kedai" hidden>
+        <p class="url-text" id="menu-url"></p>
+        <p class="muted" id="qr-status">Pilih kedai terlebih dahulu.</p>
       </div>
 
       <div class="button-stack two">
-        <button class="primary" id="save-menu" type="submit">
-          Simpan Menu
-        </button>
-
-        <button class="secondary" id="cancel-edit" type="button">
-          Batal
-        </button>
+        <a class="action-link primary" id="open-menu" href="menu.html"
+          style="display:flex;align-items:center;justify-content:center;min-height:44px">
+          Buka Menu
+        </a>
+        <button class="primary" id="share-qr" type="button">Bagikan QR</button>
       </div>
-    </form>
+    </section>
+
+    <!-- PANEL KATEGORI, STOK, DAN KETERSEDIAAN AKAN DIISI PADA BAGIAN LANJUTAN -->
+    <section class="panel" id="menu-category-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>Kategori Menu</h2>
+      <div id="menu-category-content"></div>
+    </section>
+
+    <section class="panel" id="product-stock-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>Stok Produk</h2>
+      <div id="product-stock-content"></div>
+    </section>
+
+    <section class="panel" id="menu-availability-panel" hidden>
+      <button class="secondary menu-back-home" type="button">← Kembali ke Kelola Menu</button>
+      <h2>Ketersediaan Menu</h2>
+      <div id="menu-availability-content"></div>
+    </section>
+
   </section>
 
-  <!-- PANEL DAFTAR MENU -->
-  <section class="panel" id="menu-list-panel" hidden>
-    <button class="secondary menu-back-home" type="button">
-      ← Kembali ke MENU
-    </button>
-
-    <h2>Daftar Menu</h2>
-
-    <div id="menu-list" class="muted">
-      Menunggu data kedai...
-    </div>
-  </section>
-
-  <!-- PANEL QR MENU -->
-  <section class="panel" id="menu-qr-panel" hidden>
-    <button class="secondary menu-back-home" type="button">
-      ← Kembali ke MENU
-    </button>
-
-    <h2>QR Menu Kedai</h2>
-
-    <p class="muted">
-      QR ini membuka halaman pilihan menu, bukan QRIS pembayaran.
+  <!-- TRANSAKSI -->
+  <section class="page" id="page-transaksi" hidden>
+    <h1 class="page-heading" id="transaction-page-heading">Pesanan</h1>
+    <p class="page-description" id="transaction-page-description">
+      Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
     </p>
 
-    <button
-      class="primary"
-      id="make-qr"
-      type="button"
-      disabled
-    >
-      Buat QR Menu
-    </button>
-
-    <div class="qr-box">
-      <strong id="qr-title">QR Menu KopiHub</strong>
-
-      <img
-        id="qr-image"
-        alt="QR menu kedai"
-        hidden
-      >
-
-      <p class="url-text" id="menu-url"></p>
-
-      <p class="muted" id="qr-status">
-        Pilih kedai terlebih dahulu.
+    <section class="panel" id="transaction-summary-panel">
+      <h2>Informasi Transaksi</h2>
+      <p class="muted">
+        Riwayat transaksi hanya dapat dilihat oleh Owner.
+        Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
       </p>
-    </div>
 
-    <div class="button-stack two">
-      <a
-        class="action-link primary"
-        id="open-menu"
-        href="menu.html"
-        style="display:flex;align-items:center;justify-content:center;min-height:44px"
-      >
-        Buka Menu
-      </a>
-
-      <button class="primary" id="share-qr" type="button">
-        Bagikan QR
-      </button>
-    </div>
-  </section>
-
-</section>
-
-
-
-<!-- TRANSAKSI -->
-<section class="page" id="page-transaksi" hidden>
-  <h1 class="page-heading" id="transaction-page-heading">Pesanan</h1>
-  <p class="page-description" id="transaction-page-description">
-  Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
-</p>
-
-  <section class="panel" id="transaction-summary-panel">
-    <h2>Informasi Transaksi</h2>
-    <p class="muted">
-      Riwayat transaksi hanya dapat dilihat oleh Owner.
-      Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
-    </p>
-
-    <div class="settings-item">
-      <div class="settings-icon">🧾</div>
-      <div class="settings-info">
-        <strong>Jumlah Pesanan Hari Ini</strong>
-        <span>Seluruh pesanan kedai</span>
+      <div class="settings-item">
+        <div class="settings-icon">🧾</div>
+        <div class="settings-info">
+          <strong>Jumlah Pesanan Hari Ini</strong>
+          <span>Seluruh pesanan kedai</span>
+        </div>
+        <strong id="transaction-order-count">—</strong>
       </div>
-      <strong id="transaction-order-count">—</strong>
-    </div>
 
-    <div class="settings-item">
-      <div class="settings-icon">💳</div>
-      <div class="settings-info">
-        <strong>Transaksi Lunas</strong>
-        <span>Pesanan dengan pembayaran lunas</span>
+      <div class="settings-item">
+        <div class="settings-icon">💳</div>
+        <div class="settings-info">
+          <strong>Transaksi Lunas</strong>
+          <span>Pesanan dengan pembayaran lunas</span>
+        </div>
+        <strong id="transaction-paid-count">—</strong>
       </div>
-      <strong id="transaction-paid-count">—</strong>
-    </div>
 
-    <div class="settings-item">
-      <div class="settings-icon">⏳</div>
-      <div class="settings-info">
-        <strong>Belum Dibayar</strong>
-        <span>Pesanan menunggu pembayaran</span>
+      <div class="settings-item">
+        <div class="settings-icon">⏳</div>
+        <div class="settings-info">
+          <strong>Belum Dibayar</strong>
+          <span>Pesanan menunggu pembayaran</span>
+        </div>
+        <strong id="transaction-unpaid-count">—</strong>
       </div>
-      <strong id="transaction-unpaid-count">—</strong>
-    </div>
+    </section>
+
+    <section class="panel" id="transaction-history-panel">
+      <h2>Riwayat Transaksi</h2>
+      <p class="muted">Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.</p>
+
+      <div class="transaction-filters">
+        <label for="transaction-start-date">Dari tanggal</label>
+        <input type="date" id="transaction-start-date">
+        <label for="transaction-end-date">Sampai tanggal</label>
+        <input type="date" id="transaction-end-date">
+        <button type="button" class="action-link" id="transaction-reset-filter">
+          Reset Tanggal
+        </button>
+      </div>
+
+      <p class="muted" id="transaction-result-count" aria-live="polite">
+        Memuat riwayat transaksi...
+      </p>
+      <div id="transaction-list">
+        <p class="muted">Memuat riwayat transaksi...</p>
+      </div>
+    </section>
+
+    <section class="panel" id="transaction-cashier-panel">
+      <h2>Dashboard Kasir</h2>
+      <p class="muted">
+        Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.
+      </p>
+      <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
+    </section>
+
+    <section class="panel owner-order-detail-panel" id="owner-order-detail-panel" hidden>
+      <div class="owner-order-detail-header">
+        <button type="button" class="secondary owner-order-back-button" id="owner-order-detail-back">
+          ← Kembali
+        </button>
+        <h2>Detail Pesanan</h2>
+      </div>
+      <div id="owner-order-detail-content"></div>
+    </section>
   </section>
-
-  <section class="panel" id="transaction-history-panel">
-    <h2>Riwayat Transaksi</h2>
-    <p class="muted">
-      Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.
-    </p>
-
-    <div class="transaction-filters">
-  <label for="transaction-start-date">Dari tanggal</label>
-  <input type="date" id="transaction-start-date">
-
-  <label for="transaction-end-date">Sampai tanggal</label>
-  <input type="date" id="transaction-end-date">
-
-  <button
-    type="button"
-    class="action-link"
-    id="transaction-reset-filter"
-  >
-    Reset Tanggal
-  </button>
-</div>
-    <p
-      class="muted"
-      id="transaction-result-count"
-      aria-live="polite"
-    >
-      Memuat riwayat transaksi...
-    </p>
-
-    <div id="transaction-list">
-      <p class="muted">Memuat riwayat transaksi...</p>
-    </div>
-  </section>
-
-   <section class="panel" id="transaction-cashier-panel">
-    <h2>Dashboard Kasir</h2>
-    <p class="muted">
-      Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.
-    </p>
-    <a href="kasir.html" class="action-link primary">
-      Buka Dashboard Kasir
-    </a>
-  </section>
-
-  <!-- DETAIL PESANAN OWNER -->
-  <section class="panel owner-order-detail-panel"
-           id="owner-order-detail-panel"
-           hidden>
-
-    <div class="owner-order-detail-header">
-      <button
-        type="button"
-        class="secondary owner-order-back-button"
-        id="owner-order-detail-back">
-        ← Kembali
-      </button>
-
-      <h2>Detail Pesanan</h2>
-    </div>
-
-    <div id="owner-order-detail-content"></div>
-
-  </section>
-
-</section>
 
   <!-- LAPORAN -->
   <section class="page" id="page-laporan" hidden>
     <h1 class="page-heading">Laporan Penjualan</h1>
     <p class="page-description">Pantau omzet, produk terjual, dan metode pembayaran kedai.</p>
+
     <section class="panel" id="sales-report-panel">
       <p class="muted">Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.</p>
 
@@ -1117,10 +994,12 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
             <option value="custom">Rentang Tanggal</option>
           </select>
         </div>
+
         <div class="field" id="report-start-wrap" hidden>
           <label for="report-start-date">Tanggal Mulai</label>
           <input id="report-start-date" type="date">
         </div>
+
         <div class="field" id="report-end-wrap" hidden>
           <label for="report-end-date">Tanggal Akhir</label>
           <input id="report-end-date" type="date">
@@ -1161,288 +1040,219 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
       <div class="report-note" id="report-data-note">
         Laporan menggunakan status pembayaran pada tabel kh_orders. Rincian produk dibaca dari kolom items.
       </div>
+
       <div class="report-actions">
         <button class="primary" id="download-report-excel" type="button" disabled>Unduh Excel</button>
         <button class="primary" id="download-report-pdf" type="button" disabled>Unduh PDF</button>
       </div>
+
       <p id="report-message" class="muted" role="status">Laporan akan diperbarui saat data pesanan dimuat.</p>
     </section>
   </section>
 
-  
-<!-- LAINNYA -->
-<section class="page" id="page-lainnya" hidden>
-  <h1 class="page-heading">Lainnya</h1>
-  <p class="page-description">Pengaturan dan informasi pengelolaan kedai Anda.</p>
+  <!-- LAINNYA -->
+  <section class="page" id="page-lainnya" hidden>
+    <h1 class="page-heading">Pengaturan Kedai</h1>
+    <p class="page-description">Pengaturan dan informasi pengelolaan kedai Anda.</p>
 
-  <!-- PROFIL KEDAI -->
-  <section class="panel" id="profil-kedai">
-    <h2>Profil Kedai</h2>
-    <p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
-    <form id="shop-profile-form">
-      <div class="field">
-        <label for="profile-shop-name">Nama Kedai</label>
-        <input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi">
-      </div>
-      <div class="field">
-        <label for="profile-shop-description">Deskripsi Kedai</label>
-        <textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea>
-      </div>
-      <div class="field">
-        <label for="profile-shop-logo">Logo Kedai</label>
-        <input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp">
-        <p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p>
-      </div>
-      <div id="profile-logo-preview" hidden>
-        <img id="profile-logo-image" alt="Pratinjau logo kedai"
-          style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px">
-        <button type="button" id="remove-shop-logo" class="danger" style="margin-top:10px">Hapus Logo</button>
-      </div>
-      <div class="button-stack">
-        <button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button>
-      </div>
-      <p id="profile-message" class="muted" role="status"></p>
-    </form>
-  </section>
+    <!-- PROFIL KEDAI -->
+    <section class="panel" id="profil-kedai">
+      <h2>Profil Kedai</h2>
+      <p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
 
-  <!-- PENGATURAN PAJAK PBJT -->
-  <section class="panel" id="pengaturan-pbjt">
-    <h2>Pengaturan Pajak PBJT</h2>
-    <p class="muted">
-      Atur tarif PBJT yang berlaku untuk kedai ini.
-      Tarif akan digunakan otomatis dalam perhitungan pesanan pelanggan.
-    </p>
+      <form id="shop-profile-form">
+        <div class="field">
+          <label for="profile-shop-name">Nama Kedai</label>
+          <input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi">
+        </div>
 
-    <form id="shop-pbjt-form">
-      <div class="field">
-        <label for="shop-pbjt-percent">Tarif PBJT (%)</label>
-        <input
-          id="shop-pbjt-percent"
-          type="number"
-          min="0"
-          max="100"
-          step="0.01"
-          inputmode="decimal"
-          placeholder="Contoh: 10"
-          required
-        >
-      </div>
+        <div class="field">
+          <label for="profile-shop-description">Deskripsi Kedai</label>
+          <textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea>
+        </div>
 
+        <div class="field">
+          <label for="profile-shop-logo">Logo Kedai</label>
+          <input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp">
+          <p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p>
+        </div>
+
+        <div id="profile-logo-preview" hidden>
+          <img id="profile-logo-image" alt="Pratinjau logo kedai"
+            style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px">
+          <button type="button" id="remove-shop-logo" class="danger" style="margin-top:10px">Hapus Logo</button>
+        </div>
+
+        <div class="button-stack">
+          <button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button>
+        </div>
+        <p id="profile-message" class="muted" role="status"></p>
+      </form>
+    </section>
+
+    <!-- PBJT -->
+    <section class="panel" id="pengaturan-pbjt">
+      <h2>Pengaturan Pajak PBJT</h2>
       <p class="muted">
-        Pastikan tarif sesuai ketentuan PBJT daerah yang berlaku.
-        KopiHub tidak menetapkan tarif secara otomatis.
+        Atur tarif PBJT yang berlaku untuk kedai ini.
+        Tarif akan digunakan otomatis dalam perhitungan pesanan pelanggan.
       </p>
 
-      <button
-        type="submit"
-        class="primary"
-        id="save-shop-pbjt"
-      >
-        Simpan Tarif PBJT
+      <form id="shop-pbjt-form">
+        <div class="field">
+          <label for="shop-pbjt-percent">Tarif PBJT (%)</label>
+          <input id="shop-pbjt-percent" type="number" min="0" max="100"
+            step="0.01" inputmode="decimal" placeholder="Contoh: 10" required>
+        </div>
+
+        <p class="muted">
+          Pastikan tarif sesuai ketentuan PBJT daerah yang berlaku.
+          KopiHub tidak menetapkan tarif secara otomatis.
+        </p>
+
+        <button type="submit" class="primary" id="save-shop-pbjt">Simpan Tarif PBJT</button>
+        <p id="shop-pbjt-message" class="muted" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- TAGIHAN KOPIHUB -->
+    <section class="panel" id="tagihan-kopihub">
+      <h2>Tagihan KopiHub</h2>
+      <p class="muted">
+        Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
+        Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
+      </p>
+
+      <button class="secondary invoice-refresh" id="refresh-owner-invoices" type="button">
+        Muat Ulang Tagihan
       </button>
 
-      <p
-        id="shop-pbjt-message"
-        class="muted"
-        role="status"
-        aria-live="polite"
-      ></p>
-    </form>
-  </section>
-
-  <!-- TAGIHAN KOPIHUB -->
-  <section class="panel" id="tagihan-kopihub">
-    <h2>Tagihan KopiHub</h2>
-    <p class="muted">
-      Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
-      Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
-    </p>
-
-    <button
-      class="secondary invoice-refresh"
-      id="refresh-owner-invoices"
-      type="button">
-      Muat Ulang Tagihan
-    </button>
-
-    <p id="owner-invoice-message" class="invoice-message" role="status">
-      Tagihan belum dimuat.
-    </p>
-
-    <div id="owner-invoice-list">
-      <div class="invoice-empty">
-        Tagihan akan ditampilkan di sini.
+      <p id="owner-invoice-message" class="invoice-message" role="status">Tagihan belum dimuat.</p>
+      <div id="owner-invoice-list">
+        <div class="invoice-empty">Tagihan akan ditampilkan di sini.</div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- MANAJEMEN KASIR -->
-  <section class="panel" id="manajemen-kasir">
-    <h2>Manajemen Kasir</h2>
-    <p class="muted">Buat identitas staf kasir yang bertugas di kedai Anda.</p>
+    <!-- MANAJEMEN KASIR -->
+    <section class="panel" id="manajemen-kasir">
+      <h2>Manajemen Kasir</h2>
+      <p class="muted">Buat identitas staf kasir yang bertugas di kedai Anda.</p>
 
-    <div class="cashier-intro">
-      <strong>Informasi keamanan</strong><br>
-      Setiap kasir memiliki ID dan PIN pribadi. Owner hanya membuat identitas serta memberikan kode aktivasi. PIN dibuat sendiri oleh kasir dan tidak dapat dilihat Owner. Pengelolaan ini hanya dapat dilakukan oleh akun Owner aktif.
-    </div>
-
-    <form id="cashier-create-form">
-      <div class="field">
-        <label for="cashier-name">Nama Kasir</label>
-        <input id="cashier-name" type="text" maxlength="100"
-          autocomplete="off" required placeholder="Masukkan nama lengkap kasir">
+      <div class="cashier-intro">
+        <strong>Informasi keamanan</strong><br>
+        Setiap kasir memiliki ID dan PIN pribadi. Owner hanya membuat identitas serta memberikan kode aktivasi. PIN dibuat sendiri oleh kasir dan tidak dapat dilihat Owner. Pengelolaan ini hanya dapat dilakukan oleh akun Owner aktif.
       </div>
-      <button class="primary" id="create-cashier-button" type="submit">
-        + Buat Identitas Kasir
+
+      <form id="cashier-create-form">
+        <div class="field">
+          <label for="cashier-name">Nama Kasir</label>
+          <input id="cashier-name" type="text" maxlength="100"
+            autocomplete="off" required placeholder="Masukkan nama lengkap kasir">
+        </div>
+        <button class="primary" id="create-cashier-button" type="submit">
+          + Buat Identitas Kasir
+        </button>
+      </form>
+
+      <p id="cashier-message" class="cashier-message" role="status" aria-live="polite"></p>
+
+      <div id="cashier-setup-panel" class="setup-code-panel" hidden>
+        <strong>Identitas kasir berhasil dibuat</strong>
+        <p class="muted">
+          Berikan ID Kasir dan kode aktivasi ini kepada staf yang bersangkutan.
+          Kode aktivasi hanya ditampilkan sekarang dan tidak dapat ditampilkan kembali.
+        </p>
+
+        <div class="field">
+          <label>ID Kasir</label>
+          <div class="setup-code-value" id="cashier-created-id" style="font-size:17px;letter-spacing:1px"></div>
+          <button class="secondary" id="copy-cashier-id" type="button">Salin ID Kasir</button>
+        </div>
+
+        <div class="field">
+          <label>Kode Aktivasi Sekali Pakai</label>
+          <div class="setup-code-value" id="cashier-created-code"></div>
+          <button class="secondary" id="copy-cashier-code" type="button">Salin Kode Aktivasi</button>
+        </div>
+
+        <p class="setup-code-meta" id="cashier-code-expiry"></p>
+        <p class="setup-code-meta">
+          Kasir harus mengaktifkan identitasnya melalui halaman Login Kasir dan membuat PIN pribadi sebelum mulai bertugas.
+        </p>
+      </div>
+
+      <div class="cashier-list-heading">
+        <h3>Daftar Kasir</h3>
+        <button class="secondary" id="refresh-cashiers" type="button">Muat Ulang</button>
+      </div>
+
+      <p class="muted" id="cashier-list-status">Memuat daftar kasir...</p>
+      <div id="cashier-list">
+        <div class="cashier-empty">Daftar kasir akan ditampilkan di sini.</div>
+      </div>
+
+      <p class="owner-only-note">
+        Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
+      </p>
+    </section>
+
+    <!-- PENGATURAN WAKTU PEMBAYARAN -->
+    <section class="panel">
+      <h2>Waktu Pembayaran</h2>
+      <p class="muted">Tentukan kapan pelanggan harus membayar pesanannya.</p>
+
+      <select id="owner-payment-timing">
+        <option value="false">Bayar di Awal</option>
+        <option value="true">Bayar di Akhir</option>
+      </select>
+
+      <p id="owner-payment-timing-message" class="muted" style="margin:8px 0 0;font-size:12px">
+        Pengaturan mengikuti kebijakan pembayaran kedai.
+      </p>
+    </section>
+
+    <!-- PENGATURAN -->
+    <section class="panel">
+      <h2>Pengaturan Kedai</h2>
+
+      <button class="settings-item settings-item-button" type="button" data-settings-target="profil-kedai">
+        <div class="settings-icon">🏪</div>
+        <div class="settings-info"><strong>Identitas Kedai</strong><span>Nama dan logo kedai</span></div>
+        <div class="settings-arrow">›</div>
       </button>
-    </form>
 
-    <p id="cashier-message" class="cashier-message" role="status" aria-live="polite"></p>
+      <button class="settings-item settings-item-button" type="button" data-settings-target="pengaturan-pbjt">
+        <div class="settings-icon">🧾</div>
+        <div class="settings-info"><strong>Pajak PBJT</strong><span>Atur tarif pajak kedai</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
 
-    <div id="cashier-setup-panel" class="setup-code-panel" hidden>
-      <strong>Identitas kasir berhasil dibuat</strong>
-      <p class="muted">
-        Berikan ID Kasir dan kode aktivasi ini kepada staf yang bersangkutan.
-        Kode aktivasi hanya ditampilkan sekarang dan tidak dapat ditampilkan kembali.
-      </p>
-      <div class="field">
-        <label>ID Kasir</label>
-        <div class="setup-code-value" id="cashier-created-id" style="font-size:17px;letter-spacing:1px"></div>
-        <button class="secondary" id="copy-cashier-id" type="button">Salin ID Kasir</button>
-      </div>
-      <div class="field">
-        <label>Kode Aktivasi Sekali Pakai</label>
-        <div class="setup-code-value" id="cashier-created-code"></div>
-        <button class="secondary" id="copy-cashier-code" type="button">Salin Kode Aktivasi</button>
-      </div>
-      <p class="setup-code-meta" id="cashier-code-expiry"></p>
-      <p class="setup-code-meta">
-        Kasir harus mengaktifkan identitasnya melalui halaman Login Kasir dan membuat PIN pribadi sebelum mulai bertugas.
-      </p>
-    </div>
+      <button class="settings-item settings-item-button" type="button" data-settings-target="manajemen-kasir">
+        <div class="settings-icon">👥</div>
+        <div class="settings-info"><strong>Manajemen Kasir</strong><span>Identitas dan akses staf kasir</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
 
-    <div class="cashier-list-heading">
-      <h3>Daftar Kasir</h3>
-      <button class="secondary" id="refresh-cashiers" type="button">Muat Ulang</button>
-    </div>
-    <p class="muted" id="cashier-list-status">Memuat daftar kasir...</p>
-    <div id="cashier-list">
-      <div class="cashier-empty">Daftar kasir akan ditampilkan di sini.</div>
-    </div>
-    <p class="owner-only-note">
-      Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
-    </p>
+      <button class="settings-item settings-item-button" type="button" data-settings-target="tagihan-kopihub">
+        <div class="settings-icon">💳</div>
+        <div class="settings-info"><strong>Tagihan KopiHub</strong><span>Kewajiban biaya layanan dan pembayaran</span></div>
+        <div class="settings-arrow">›</div>
+      </button>
+    </section>
+
+    <!-- AKUN -->
+    <section class="panel">
+      <h2>Akun</h2>
+      <p class="muted">Keluar dari akun Owner KopiHub pada perangkat ini.</p>
+      <button class="danger" id="logout" type="button">Keluar dari Akun</button>
+    </section>
   </section>
 
-  <!-- PENGATURAN WAKTU PEMBAYARAN -->
-  <div class="settings-item" style="display:block;">
-    <div class="settings-info">
-      <strong>Waktu Pembayaran</strong>
-      <span>
-        Tentukan kapan pelanggan harus membayar pesanannya.
-      </span>
-    </div>
-
-    <select
-      id="owner-payment-timing"
-      style="
-        width:100%;
-        margin-top:12px;
-        padding:12px;
-        border:1px solid #d8ded8;
-        border-radius:10px;
-        background:#faf9f5;
-        color:#123b2c;
-        font-size:14px;
-      "
-    >
-      <option value="false">Bayar di Awal</option>
-      <option value="true">Bayar di Akhir</option>
-    </select>
-
-    <p
-      id="owner-payment-timing-message"
-      class="muted"
-      style="margin:8px 0 0;font-size:12px;"
-    >
-      Pengaturan mengikuti kebijakan pembayaran kedai.
-    </p>
-  </div>
-
-  <!-- PENGATURAN -->
-  <section class="panel">
-    <h2>Pengaturan Kedai</h2>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="profil-kedai">
-      <div class="settings-icon">🏪</div>
-      <div class="settings-info"><strong>Identitas Kedai</strong><span>Nama dan logo kedai</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="pengaturan-pbjt">
-      <div class="settings-icon">🧾</div>
-      <div class="settings-info"><strong>Pajak PBJT</strong><span>Atur tarif pajak kedai</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="manajemen-kasir">
-      <div class="settings-icon">👥</div>
-      <div class="settings-info"><strong>Manajemen Kasir</strong><span>Identitas dan akses staf kasir</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="home">
-      <div class="settings-icon">☕</div>
-      <div class="settings-info"><strong>KopiHub Owner</strong><span>Dashboard pengelolaan kedai</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-  </section>
-
-  <!-- AKUN -->
-  <section class="panel">
-    <h2>Akun</h2>
-    <p class="muted">Keluar dari akun Owner KopiHub pada perangkat ini.</p>
-    <button class="danger" id="logout" type="button">Keluar dari Akun</button>
-  </section>
-</section>
-
-<footer>KopiHub © 2026 · Dashboard Owner Coffee Shop</footer>
+  <footer>KopiHub © 2026 · Dashboard Owner Coffee Shop</footer>
 </main>
 </div>
 
-<nav class="bottom-navigation" aria-label="Navigasi utama">
-  <button class="nav-button active" data-page="home" type="button" aria-current="page">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="3" width="8" height="8" rx="2"></rect>
-      <rect x="13" y="3" width="8" height="5" rx="2"></rect>
-      <rect x="13" y="10" width="8" height="11" rx="2"></rect>
-      <rect x="3" y="13" width="8" height="8" rx="2"></rect>
-    </svg>HOME
-  </button>
-  <button class="nav-button" data-page="menu" type="button">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 10h18"></path><path d="M5 10l1 11h12l1-11"></path>
-      <path d="M8 10a4 4 0 0 1 8 0"></path><path d="M12 3v2"></path>
-    </svg>MENU
-  </button>
-  <button class="nav-button" data-page="transaksi" type="button">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7 3h10l4 4v14H3V3z"></path><path d="M7 3v5h10V3"></path>
-      <path d="M7 13h10M7 17h7"></path>
-    </svg>TRANSAKSI
-  </button>
-  <button class="nav-button" data-page="laporan" type="button">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 3v18h18"></path><path d="M8 16v-5M13 16V7M18 16v-8"></path>
-    </svg>LAPORAN
-  </button>
-  <button class="nav-button" data-page="lainnya" type="button">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle>
-      <circle cx="19" cy="12" r="1"></circle>
-    </svg>LAINNYA
-  </button>
-</nav>
+<!-- NAVIGASI BAWAH DIHAPUS -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -1451,6 +1261,642 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
 <script>
 "use strict";
+
+/* KONFIGURASI */
+const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+const CASHIER_FUNCTION = "cashier-access";
+const CASHIER_MANAGEMENT_FUNCTION = "cashier-management-v2";
+const TEMPORARY_SERVICE_FEE = 3000;
+
+const $ = id => document.getElementById(id);
+let client = null;
+let shops = [];
+let categories = [];
+let products = [];
+let allOrders = [];
+let ownerOrderCashierAssignments = new Map();
+let currentReport = null;
+let editingProductId = null;
+let requestVersion = 0;
+let cashierStaff = [];
+let cashierRequestBusy = false;
+const cashierResetBusyIds = new Set();
+
+const shopSelect = $("shop-select");
+
+/* NAVIGASI HALAMAN */
+const pages = {
+  home:$("page-home"),
+  menu:$("page-menu"),
+  transaksi:$("page-transaksi"),
+  laporan:$("page-laporan"),
+  lainnya:$("page-lainnya")
+};
+
+let currentPage = "home";
+let pageHistory = [];
+
+const pageTitles = {
+  home:"Dashboard Owner",
+  menu:"Kelola Menu",
+  transaksi:"Transaksi",
+  laporan:"Laporan Penjualan",
+  lainnya:"Pengaturan Kedai"
+};
+
+function navigateToPage(pageName, options = {}) {
+  if (!pages[pageName]) return;
+
+  const previousPage = currentPage;
+
+  if (pageName !== previousPage && options.fromBack !== true) {
+    pageHistory.push(previousPage);
+  }
+
+  Object.entries(pages).forEach(([name, element]) => {
+    element.hidden = name !== pageName;
+  });
+
+  currentPage = pageName;
+
+  const header = $("owner-header");
+  const backButton = $("header-back-button");
+
+  header.classList.toggle("has-back", pageName !== "home");
+  backButton.setAttribute(
+    "aria-label",
+    pageName === "home" ? "Dashboard Owner" : "Kembali"
+  );
+
+  $("header-shop-name").textContent = pageTitles[pageName] || "Dashboard Owner";
+
+  $("app-scroll").scrollTo({ top:0, behavior:"instant" });
+
+  if (pageName === "laporan" && currentReport === null && allOrders.length) {
+    updateReport();
+  }
+
+  if (pageName === "lainnya" && selectedShop()) {
+    loadCashierStaff();
+    loadOwnerInvoices();
+  }
+}
+
+function goBackPage() {
+  if (currentPage === "home") return;
+
+  let previousPage = pageHistory.pop();
+
+  if (!previousPage || !pages[previousPage]) {
+    previousPage = "home";
+  }
+
+  navigateToPage(previousPage, {fromBack:true});
+}
+
+$("header-back-button").addEventListener("click", goBackPage);
+
+/* KARTU DASHBOARD */
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => {
+    navigateToPage(button.dataset.page);
+  });
+});
+
+/* TOMBOL PENGATURAN */
+document.querySelectorAll("[data-settings-target]").forEach(button => {
+  button.addEventListener("click", () => {
+    const target = button.dataset.settingsTarget;
+
+    navigateToPage("lainnya");
+
+    requestAnimationFrame(() => {
+      const section = $(target);
+      if (!section) return;
+
+      const top = section.offsetTop - 10;
+      $("app-scroll").scrollTo({top,behavior:"smooth"});
+
+      if (target === "manajemen-kasir") {
+        loadCashierStaff();
+        $("cashier-name").focus({preventScroll:true});
+      } else if (target === "profil-kedai") {
+        $("profile-shop-name").focus({preventScroll:true});
+      } else if (target === "pengaturan-pbjt") {
+        $("shop-pbjt-percent").focus({preventScroll:true});
+      }
+    });
+  });
+});
+
+/* HEADER TETAP: TIDAK ADA EFEK COLLAPSE */
+const header = $("owner-header");
+const appScroll = $("app-scroll");
+
+/* UTILITAS */
+function rupiah(value) {
+  return new Intl.NumberFormat("id-ID",{
+    style:"currency",
+    currency:"IDR",
+    maximumFractionDigits:0
+  }).format(Number(value)||0);
+}
+
+function showStatus(message,error=false) {
+  const status=$("connection-status");
+  if(!status){console[error?"error":"log"](message);return;}
+  status.textContent=message;
+  status.style.background=error?"#fff0ef":"#e8f2ec";
+  status.style.color=error?"#9b2525":"#174c38";
+}
+
+function showMenuMessage(message,error=false) {
+  $("menu-message").textContent=message;
+  $("menu-message").style.color=error?"#b42318":"";
+}
+
+function selectedShop() {
+  return shops.find(shop=>shop.id===shopSelect.value)||null;
+}
+
+function getMenuUrl(slug) {
+  return new URL("menu.html?kedai="+encodeURIComponent(slug),location.href).href;
+}
+
+function clearQr(message) {
+  $("qr-image").hidden=true;
+  $("qr-image").removeAttribute("src");
+  $("menu-url").textContent="";
+  $("qr-status").textContent=message;
+  $("open-menu").href="menu.html";
+}
+
+function escapeHtml(value) {
+  return String(value??"").replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+function setCashierMessage(message,type="") {
+  const el=$("cashier-message");
+  el.textContent=message;
+  el.className="cashier-message"+(type?" "+type:"");
+}
+
+function formatExpiry(value) {
+  if(!value) return "Masa berlaku kode mengikuti batas waktu dari server.";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime())) return "Masa berlaku kode: "+value;
+  return "Kode berlaku sampai "+date.toLocaleString("id-ID",{
+    dateStyle:"medium",
+    timeStyle:"short"
+  })+".";
+}
+
+/* PROFIL HEADER */
+function renderSelectedShop() {
+  const shop=selectedShop();
+
+  /* PENGATURAN PAJAK PBJT OWNER */
+  const pbjtInput = $("shop-pbjt-percent");
+  const pbjtMessage = $("shop-pbjt-message");
+
+  if (pbjtInput) {
+    pbjtInput.value = Number(shop?.tax_percent ?? 0).toString();
+  }
+
+  if (pbjtMessage) {
+    pbjtMessage.textContent = shop
+      ? "Tarif PBJT kedai saat ini: " +
+        Number(shop.tax_percent ?? 0).toLocaleString("id-ID") + "%"
+      : "Pilih kedai terlebih dahulu.";
+  }
+
+  /* PENGATURAN WAKTU PEMBAYARAN OWNER */
+  const paymentTiming = $("owner-payment-timing");
+  const paymentTimingMessage = $("owner-payment-timing-message");
+
+  if (paymentTiming) {
+    paymentTiming.value = String(
+      shop?.preparation_before_payment === true
+    );
+  }
+
+  if (paymentTimingMessage) {
+    paymentTimingMessage.textContent =
+      shop?.preparation_before_payment === true
+        ? "Pesanan dapat dipersiapkan sebelum pembayaran dikonfirmasi."
+        : "Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
+  }
+
+  /* IDENTITAS KEDAI PADA HEADER */
+  $("header-shop-name").textContent =
+    pageTitles[currentPage] || "Dashboard Owner";
+
+  const headerLogo=$("header-shop-logo");
+  const fallbackSvg=$("header-profile-fallback-svg");
+
+  if(shop&&shop.logo_url){
+    headerLogo.src=shop.logo_url;
+    headerLogo.hidden=false;
+    fallbackSvg.hidden=true;
+    headerLogo.onerror=()=>{
+      headerLogo.hidden=true;
+      fallbackSvg.hidden=false;
+    };
+  }else{
+    headerLogo.removeAttribute("src");
+    headerLogo.hidden=true;
+    fallbackSvg.hidden=false;
+  }
+
+  $("shop-details").textContent=shop
+    ?"Kedai: "+shop.name+" · Slug: "+shop.slug
+    :"Belum ada kedai yang dipilih.";
+
+  $("make-qr").disabled=!shop;
+  $("qr-title").textContent=shop?"QR Menu "+shop.name:"QR Menu KopiHub";
+  clearQr(shop?"Tekan Buat QR Menu.":"Pilih kedai terlebih dahulu.");
+
+  $("profile-shop-name").value=shop?.name||"";
+  $("profile-shop-description").value=shop?.description||"";
+  $("profile-shop-logo").value="";
+  $("profile-message").textContent="";
+
+  if(shop?.logo_url){
+    $("profile-logo-image").src=shop.logo_url;
+    $("profile-logo-preview").hidden=false;
+  }else{
+    $("profile-logo-image").removeAttribute("src");
+    $("profile-logo-preview").hidden=true;
+  }
+
+  $("save-shop-profile").disabled=!shop;
+}
+
+/* LOAD SUPABASE */
+async function loadShops() {
+  try{
+    if(!window.supabase) throw new Error("Library Supabase tidak termuat.");
+
+    client=window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const {data:sessionData,error:sessionError}=await client.auth.getSession();
+    if(sessionError) throw sessionError;
+
+    if(!sessionData.session){
+      showStatus("Silakan login terlebih dahulu.",true);
+      $("shop-details").textContent="Silakan login melalui halaman akun.";
+      $("sales-chart").innerHTML='<p class="muted">Silakan login untuk melihat grafik.</p>';
+      $("report-message").textContent="Silakan login terlebih dahulu.";
+      return;
+    }
+
+    const userId=sessionData.session.user.id;
+
+    const {data:memberships,error:memberError}=await client
+      .from("kh_shop_members")
+      .select("shop_id, role")
+      .eq("user_id",userId);
+
+    if(memberError) throw memberError;
+
+    const ownerMemberships=(memberships||[]).filter(
+      member=>String(member.role||"").toLowerCase()==="owner"
+    );
+
+    const uniqueShopIds=[
+      ...new Set(ownerMemberships.map(m=>m.shop_id).filter(Boolean))
+    ];
+
+    if(uniqueShopIds.length!==1){
+      shops=[];
+      $("shop-details").textContent=uniqueShopIds.length===0
+        ?"Akun ini belum memiliki kedai. Hubungi administrator KopiHub."
+        :"Akun ini terhubung ke lebih dari satu kedai. Administrator perlu memperbaiki hubungan akun dan kedai.";
+
+      $("header-shop-name").textContent="Dashboard Owner";
+      clearQr("Akun belum terhubung ke satu kedai.");
+      $("menu-list").textContent="Kedai belum dapat dimuat.";
+      $("sales-chart").innerHTML='<p class="muted">Grafik belum tersedia.</p>';
+      $("report-message").textContent="Akun Owner belum terhubung dengan tepat satu kedai.";
+      showStatus("Akses dashboard memerlukan tepat satu kedai untuk akun owner.",true);
+      return;
+    }
+
+    const shopId=uniqueShopIds[0];
+
+    const {data:shop,error:shopError}=await client
+      .from("kh_shops")
+      .select("id,name,slug,is_active,timezone,logo_url,description,preparation_before_payment,tax_percent")
+      .eq("id",shopId)
+      .maybeSingle();
+
+    if(shopError) throw shopError;
+    if(!shop) throw new Error("Data kedai tidak ditemukan.");
+
+    shops=[shop];
+    shopSelect.replaceChildren();
+
+    const option=document.createElement("option");
+    option.value=shop.id;
+    option.textContent=shop.name;
+    shopSelect.appendChild(option);
+    shopSelect.value=shop.id;
+    shopSelect.disabled=true;
+
+    renderSelectedShop();
+    showStatus("Dashboard terhubung ke kedai milik akun ini.");
+
+    await refreshMenu();
+    await loadOrders();
+    await loadCashierStaff();
+
+  }catch(error){
+    console.error("Gagal memuat dashboard:",error);
+    showStatus("Gagal memuat kedai: "+error.message,true);
+  }
+}
+
+/* =========================
+   MANAJEMEN KASIR
+========================= */
+
+/*
+  Semua tindakan manajemen kasir menggunakan Edge Function.
+  Jangan melakukan insert/update langsung ke tabel kh_cashier_staff dari browser.
+
+  Keamanan tetap wajib diperiksa di Edge Function:
+  - Sesi pengguna valid.
+  - Owner memiliki keanggotaan aktif.
+  - Owner berhak mengakses shopId yang diminta.
+*/
+
+async function callCashierFunction(body) {
+  if (!client) {
+    throw new Error("Koneksi Supabase belum siap.");
+  }
+
+  const { data, error } = await client.functions.invoke(
+    CASHIER_FUNCTION,
+    { body }
+  );
+
+  if (error) {
+    let detail = error.message || "Permintaan ke server gagal.";
+
+    try {
+      if (error.context && typeof error.context.json === "function") {
+        const responseBody = await error.context.json();
+
+        if (responseBody?.error) {
+          detail = responseBody.error;
+        } else if (responseBody?.message) {
+          detail = responseBody.message;
+        }
+      }
+    } catch (_) {}
+
+    throw new Error(detail);
+  }
+
+  if (!data) {
+    throw new Error("Server tidak mengirimkan respons.");
+  }
+
+  if (data.success === false) {
+    throw new Error(
+      data.error || data.message || "Permintaan gagal."
+    );
+  }
+
+  return data;
+}
+
+async function callCashierManagementFunction(body) {
+  if (!client) {
+    throw new Error("Koneksi Supabase belum siap.");
+  }
+
+  const { data, error } = await client.functions.invoke(
+    CASHIER_MANAGEMENT_FUNCTION,
+    { body }
+  );
+
+  if (error) {
+    let detail = error.message || "Permintaan ke server gagal.";
+
+    try {
+      if (error.context && typeof error.context.json === "function") {
+        const responseBody = await error.context.json();
+
+        if (responseBody?.error) {
+          detail = responseBody.error;
+        } else if (responseBody?.message) {
+          detail = responseBody.message;
+        }
+      }
+    } catch (_) {}
+
+    throw new Error(detail);
+  }
+
+  if (!data) {
+    throw new Error("Server tidak mengirimkan respons.");
+  }
+
+  if (data.success === false) {
+    throw new Error(data.error || data.message || "Permintaan gagal.");
+  }
+
+  return data;
+}
+
+async function loadCashierStaff() {
+  const shop = selectedShop();
+
+  if (!client || !shop) return;
+
+  if (cashierRequestBusy) return;
+
+  cashierRequestBusy = true;
+
+  const refreshButton = $("refresh-cashiers");
+  if (refreshButton) refreshButton.disabled = true;
+
+  $("cashier-list-status").textContent = "Memuat daftar kasir...";
+  $("cashier-list").innerHTML =
+    '<div class="cashier-empty">Mengambil data kasir dari server...</div>';
+
+  try {
+    const data = await callCashierManagementFunction({
+      action: "list_staff",
+      shopId: shop.id
+    });
+
+    if (selectedShop()?.id !== shop.id) return;
+
+    cashierStaff = Array.isArray(data.staff)
+      ? data.staff
+      : [];
+
+    renderCashierStaff();
+
+    $("cashier-list-status").textContent =
+      cashierStaff.length + " identitas kasir terdaftar.";
+
+  } catch (error) {
+    console.error("Gagal memuat kasir:", error);
+
+    $("cashier-list-status").textContent =
+      "Daftar kasir gagal dimuat.";
+
+    $("cashier-list").textContent = "";
+
+    const errorBox = document.createElement("div");
+    errorBox.className = "cashier-empty";
+    errorBox.textContent = error.message;
+
+    $("cashier-list").appendChild(errorBox);
+
+  } finally {
+    cashierRequestBusy = false;
+
+    if (refreshButton) {
+      refreshButton.disabled = false;
+    }
+  }
+}
+
+function getCashierStatus(staff) {
+  const status = String(staff.status || "").toLowerCase();
+
+  if (status === "disabled") {
+    return {label:"Nonaktif",className:"disabled"};
+  }
+
+  if (status === "pending_pin") {
+    return {label:"Menunggu aktivasi PIN",className:"pending"};
+  }
+
+  if (status === "active") {
+    return {label:"Aktif",className:"active"};
+  }
+
+  return {label:status || "Tidak diketahui",className:""};
+}
+
+function renderCashierStaff() {
+  const container = $("cashier-list");
+
+  container.replaceChildren();
+
+  if (!cashierStaff.length) {
+    const empty = document.createElement("div");
+    empty.className = "cashier-empty";
+    empty.textContent =
+      "Belum ada identitas kasir. Gunakan formulir di atas untuk membuat kasir pertama.";
+    container.appendChild(empty);
+    return;
+  }
+
+  cashierStaff.forEach(staff => {
+    const card = document.createElement("article");
+    card.className = "cashier-card";
+
+    const top = document.createElement("div");
+    top.className = "cashier-card-top";
+
+    const identity = document.createElement("div");
+    identity.style.minWidth = "0";
+
+    const name = document.createElement("div");
+    name.className = "cashier-card-name";
+    name.textContent = staff.full_name || "Kasir";
+
+    const code = document.createElement("div");
+    code.className = "cashier-code";
+    code.textContent = "ID Kasir: " + (staff.staff_code || "—");
+
+    identity.append(name, code);
+
+    const status = getCashierStatus(staff);
+
+    const badges = document.createElement("div");
+    badges.className = "cashier-badges";
+
+    const statusBadge = document.createElement("span");
+    statusBadge.className = "cashier-badge " + status.className;
+    statusBadge.textContent = status.label;
+
+    const pinBadge = document.createElement("span");
+    pinBadge.className = "cashier-badge";
+    pinBadge.textContent = staff.pin_set_at
+      ? "PIN sudah dibuat"
+      : "PIN belum dibuat";
+
+    badges.append(statusBadge, pinBadge);
+    identity.appendChild(badges);
+
+    top.appendChild(identity);
+    card.appendChild(top);
+
+    const created = document.createElement("p");
+    created.className = "muted";
+    created.style.fontSize = "12px";
+    created.style.margin = "10px 0 0";
+
+    created.textContent = staff.created_at
+      ? "Dibuat: " + new Date(staff.created_at)
+          .toLocaleDateString("id-ID", {dateStyle:"medium"})
+      : "";
+
+    card.appendChild(created);
+
+    if (String(staff.status || "").toLowerCase() !== "disabled") {
+      const actions = document.createElement("div");
+      actions.className = "cashier-actions";
+
+      if (staff.status === "active") {
+        const reset = document.createElement("button");
+        reset.type = "button";
+        reset.textContent = "Reset PIN";
+
+        reset.addEventListener("click", () => {
+          resetCashierPin(staff, reset);
+        });
+
+        actions.appendChild(reset);
+      }
+
+      const disable = document.createElement("button");
+      disable.type = "button";
+      disable.className = "danger";
+      disable.textContent = "Nonaktifkan Kasir";
+
+      disable.addEventListener("click", () => {
+        disableCashier(staff);
+      });
+
+      actions.appendChild(disable);
+      card.appendChild(actions);
+    }
+
+    container.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
+
 
 /* KONFIGURASI */
 const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";

@@ -5840,23 +5840,32 @@ function closeOwnerOrderDetail() {
       getDateKey(order.created_at, formatter) === todayKey
     );
 
-    const paidOrders = todaysOrders.filter(isPaid);
-    const unpaidOrders = todaysOrders.filter(order => !isPaid(order));
+// =========================================
+// TOTAL OMZET DAN PENJUALAN SEPANJANG MASA
+// =========================================
 
-    const totalValue = todaysOrders.reduce(
-      (sum, order) => sum + orderValue(order),
-      0
-    );
+const allPaidOrders = orders.filter(isPaid);
 
-    const paidValue = paidOrders.reduce(
-      (sum, order) => sum + orderValue(order),
-      0
-    );
-    $("summary-income").textContent = rupiah(paidValue);
-    $("summary-sales").textContent = rupiah(totalValue);
-    $("transaction-order-count").textContent = todaysOrders.length;
-    $("transaction-paid-count").textContent = paidOrders.length;
-    $("transaction-unpaid-count").textContent = unpaidOrders.length;
+const allTimeSalesValue = orders.reduce(
+  (sum, order) => sum + orderValue(order),
+  0
+);
+
+const allTimePaidValue = allPaidOrders.reduce(
+  (sum, order) => sum + orderValue(order),
+  0
+);
+
+$("summary-income").textContent = rupiah(allTimePaidValue);
+$("summary-sales").textContent = rupiah(allTimeSalesValue);
+
+// Statistik jumlah pesanan tetap khusus hari ini.
+const paidOrders = todaysOrders.filter(isPaid);
+const unpaidOrders = todaysOrders.filter(order => !isPaid(order));
+
+$("transaction-order-count").textContent = todaysOrders.length;
+$("transaction-paid-count").textContent = paidOrders.length;
+$("transaction-unpaid-count").textContent = unpaidOrders.length;
 
     renderSalesChart(orders, formatter, todayKey);
     updateReport();

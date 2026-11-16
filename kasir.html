@@ -1547,7 +1547,8 @@ button:disabled{opacity:.5;cursor:wait}
   <div class="auth-footer">KopiHub · Sistem operasional mitra</div>
 </section>
 
-<!-- DASHBOARD -->
+
+<!-- DASHBOARD KASIR KOPIHUB -->
 <main class="container" id="dashboard-view" hidden>
 
   <section class="welcome">
@@ -1556,34 +1557,24 @@ button:disabled{opacity:.5;cursor:wait}
       <p id="shop-name">Menghubungkan ke kedai...</p>
       <p id="cashier-name" style="margin-top:3px"></p>
     </div>
-    <div class="live-indicator"><span class="live-dot"></span>Sesi Aktif</div>
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      Sesi Aktif
+    </div>
   </section>
 
   <div id="notice" class="notice" role="status" aria-live="polite">
     Menghubungkan ke sistem kasir...
   </div>
 
-  <!-- NAVIGASI UTAMA -->
-  <nav class="main-nav" aria-label="Navigasi dashboard kasir">
-    <button class="nav-btn active" data-page="home" type="button">
-      <span class="nav-icon">⌂</span>Beranda
-    </button>
-    <button class="nav-btn" data-page="orders" type="button">
-      <span class="nav-icon">▤</span>Pesanan
-    </button>
-    <button class="nav-btn" data-page="pos" type="button">
-      <span class="nav-icon">＋</span>Buat Pesanan
-    </button>
-    <button class="nav-btn" data-page="activity" type="button">
-      <span class="nav-icon">◷</span>Aktivitas
-    </button>
-    <button class="nav-btn" data-page="account" type="button">
-      <span class="nav-icon">○</span>Akun
-    </button>
-  </nav>
+  <!-- POS -->
+  <button class="pos-open-btn" id="open-pos-btn" type="button">
+    <span>＋</span>
+    Buat Pesanan POS
+  </button>
 
-  <!-- BERANDA -->
-  <section class="page-section" id="page-home">
+  <!-- TIGA KARTU RINGKASAN -->
+  <section class="page-section">
 
     <div class="section-heading">
       <h2>Ringkasan Pesanan</h2>
@@ -1591,152 +1582,83 @@ button:disabled{opacity:.5;cursor:wait}
     </div>
 
     <div class="stats">
-      <button class="stat" type="button" data-order-filter="new">
+
+      <button class="stat" type="button"
+        data-order-filter="new">
         <div class="stat-top">
-          <div class="stat-label">Pesanan Baru</div>
+          <div class="stat-label">Pesanan Masuk Hari Ini</div>
           <div class="stat-icon">＋</div>
         </div>
-        <div class="stat-value" id="stat-new">—</div>
-        <div class="stat-hint">Belum diterima kasir</div>
+        <div class="stat-value" id="stat-new">0</div>
+        <div class="stat-hint">Menunggu diterima kasir</div>
       </button>
 
-      <button class="stat" type="button" data-order-filter="processing">
+      <button class="stat" type="button"
+        data-order-filter="processing">
         <div class="stat-top">
-          <div class="stat-label">Diproses</div>
+          <div class="stat-label">Pesanan Diproses</div>
           <div class="stat-icon">◷</div>
         </div>
-        <div class="stat-value" id="stat-processing">—</div>
-        <div class="stat-hint">Pesanan sedang dibuat</div>
+        <div class="stat-value" id="stat-processing">0</div>
+        <div class="stat-hint">Menjadi tanggung jawab kamu</div>
       </button>
 
-      <button class="stat" type="button" data-order-filter="ready">
+      <button class="stat" type="button"
+        data-order-filter="completed">
         <div class="stat-top">
-          <div class="stat-label">Siap Diantar</div>
+          <div class="stat-label">Pesanan Selesai</div>
           <div class="stat-icon">✓</div>
         </div>
-        <div class="stat-value" id="stat-ready">—</div>
-        <div class="stat-hint">Menunggu penyelesaian</div>
+        <div class="stat-value" id="stat-completed">0</div>
+        <div class="stat-hint">Riwayat pesanan selesai</div>
       </button>
 
-      <button class="stat" type="button" data-order-filter="payment">
-        <div class="stat-top">
-          <div class="stat-label">Menunggu Pembayaran</div>
-          <div class="stat-icon">Rp</div>
-        </div>
-        <div class="stat-value" id="stat-payment">—</div>
-        <div class="stat-hint">Menunggu konfirmasi kasir</div>
-      </button>
     </div>
-
-    <div class="section-heading">
-      <h2>Akses Cepat</h2>
-    </div>
-
-    <div class="action-grid">
-      <button class="action-card orange" id="home-create-order" type="button">
-        <span class="action-icon">＋</span>
-        <span class="action-copy">
-          <strong>Buat Pesanan</strong>
-          <span>Buat pesanan langsung melalui POS</span>
-        </span>
-      </button>
-
-      <button class="action-card" id="home-all-orders" type="button">
-        <span class="action-icon">▤</span>
-        <span class="action-copy">
-          <strong>Semua Pesanan</strong>
-          <span>Lihat dan kelola pesanan kedai</span>
-        </span>
-      </button>
-    </div>
-
-    <div class="content-card">
-      <div class="section-heading">
-        <h2>Pesanan Terbaru</h2>
-        <button class="text-button" id="home-view-all" type="button">Lihat semua</button>
-      </div>
-      <div class="orders" id="home-recent-orders">
-        <div class="empty">Sedang memuat pesanan...</div>
-      </div>
-    </div>
-
   </section>
 
-  <!-- PESANAN -->
-  <section class="page-section" id="page-orders" hidden>
+  <!-- DAFTAR PESANAN -->
+  <section class="content-card" id="order-list-panel" hidden>
 
     <div class="section-heading">
       <h2 id="list-heading">Semua Pesanan</h2>
-      <span id="order-count">Memuat...</span>
+      <span id="order-count">0 pesanan</span>
     </div>
 
     <div class="filter-row">
-      <button class="filter-btn active" data-filter="all" type="button">Semua</button>
-      <button class="filter-btn" data-filter="new" type="button">Baru</button>
-      <button class="filter-btn" data-filter="processing" type="button">Diproses</button>
-      <button class="filter-btn" data-filter="ready" type="button">Siap Diantar</button>
-      <button class="filter-btn" data-filter="payment" type="button">Menunggu Pembayaran</button>
-      <button class="filter-btn" data-filter="completed" type="button">Selesai</button>
+      <button class="filter-btn active"
+        data-filter="all" type="button">Semua</button>
+
+      <button class="filter-btn"
+        data-filter="new" type="button">Pesanan Masuk</button>
+
+      <button class="filter-btn"
+        data-filter="processing" type="button">Diproses</button>
+
+      <button class="filter-btn"
+        data-filter="completed" type="button">Selesai</button>
     </div>
 
     <div class="toolbar">
       <input class="field" id="search" type="search"
-        placeholder="Cari nomor pesanan atau meja..." aria-label="Cari pesanan">
+        placeholder="Cari nomor pesanan, meja, atau menu..."
+        aria-label="Cari pesanan">
 
-      <button class="refresh-btn" id="refresh-btn" type="button"
-        aria-label="Muat ulang pesanan">↻</button>
-
-      <select class="field" id="status-filter" aria-label="Filter status">
-        <option value="all">Semua Status</option>
-        <option value="awaiting_confirmation">Pesanan Baru</option>
-        <option value="processing">Diproses</option>
-        <option value="ready_for_delivery">Siap Diantar</option>
-        <option value="payment">Menunggu Pembayaran</option>
-        <option value="completed">Selesai</option>
-      </select>
+      <button class="refresh-btn" id="refresh-btn"
+        type="button" aria-label="Muat ulang pesanan">↻</button>
     </div>
 
     <section class="orders" id="orders">
-      <div class="empty">Sedang memuat pesanan...</div>
+      <div class="empty">Pesanan akan ditampilkan di sini.</div>
     </section>
 
   </section>
 
-  <!-- HALAMAN POS -->
-  <section class="page-section" id="page-pos" hidden>
-    <div class="content-card">
-      <div class="section-heading">
-        <h2>Buat Pesanan Langsung</h2>
-      </div>
-      <p class="auth-desc">
-        Buat pesanan pelanggan secara langsung melalui kasir.
-        Pesanan yang dibuat akan langsung menjadi tanggung jawab kasir yang membuatnya.
-      </p>
-      <button class="pos-open-btn" id="open-pos-btn" type="button">
-        <span>＋</span> Mulai Buat Pesanan
-      </button>
-    </div>
-  </section>
+  <!-- PROFIL KASIR -->
+  <section class="page-section">
 
-  <!-- AKTIVITAS -->
-  <section class="page-section" id="page-activity" hidden>
-    <div class="content-card">
-      <div class="section-heading">
-        <h2>Aktivitas Kasir</h2>
-      </div>
-      <div class="empty">
-        Riwayat aktivitas kasir belum tersedia.
-        <br>
-        Halaman ini akan menampilkan aktivitas setelah fitur riwayat aktivitas tersedia pada sistem.
-      </div>
-    </div>
-  </section>
-
-  <!-- AKUN -->
-  <section class="page-section" id="page-account" hidden>
     <div class="section-heading">
-      <h2>Akun Kasir</h2>
-      <span>Informasi sesi aktif</span>
+      <h2>Profil Kasir</h2>
+      <span>Informasi akun dan shift</span>
     </div>
 
     <div class="account-card">
@@ -1764,15 +1686,16 @@ button:disabled{opacity:.5;cursor:wait}
     </div>
 
     <div class="account-note">
-      Akun ini digunakan untuk menjalankan tugas operasional kasir.
-      Jaga kerahasiaan PIN pribadi dan akhiri shift setelah selesai bekerja.
+      Jaga kerahasiaan PIN pribadi. Akhiri shift setelah selesai bekerja.
     </div>
 
     <div class="content-card" style="margin-top:18px">
-      <button class="btn btn-danger btn-block" id="end-shift-btn" type="button">
+      <button class="btn btn-danger btn-block"
+        id="end-shift-btn" type="button">
         Akhiri Shift / Keluar
       </button>
     </div>
+
   </section>
 
   <footer class="footer">
@@ -2660,8 +2583,10 @@ async function loadOrders(silent=false){
   }
 }
 
+
 /* TIGA RINGKASAN PESANAN */
 function updateStats(){
+
   const todayOrders = allOrders.filter(order=>
     isToday(order.created_at)
   );
@@ -2676,7 +2601,7 @@ function updateStats(){
     isMine(order)
   );
 
-  const completedOrders = todayOrders.filter(order=>
+  const completedOrders = allOrders.filter(order=>
     order.order_status === "completed"
   );
 
@@ -2685,18 +2610,28 @@ function updateStats(){
   el("stat-completed").textContent = completedOrders.length;
 }
 
+
 /* FILTER KARTU */
 function updateFilterButtons(){
+
   const headings = {
     all:"Semua Pesanan",
     new:"Pesanan Masuk Hari Ini",
     processing:"Pesanan Diproses",
-    completed:"Pesanan Selesai"
+    completed:"Riwayat Pesanan Selesai"
   };
 
   el("list-heading").textContent =
     headings[activeFilter] || "Daftar Pesanan";
+
+  document.querySelectorAll("[data-filter]").forEach(button=>{
+    button.classList.toggle(
+      "active",
+      button.dataset.filter === activeFilter
+    );
+  });
 }
+
 
 /* RINCIAN MENU */
 function renderItems(items){
@@ -2909,8 +2844,10 @@ function renderOrder(order){
   );
 }
 
+
 /* DAFTAR PESANAN */
 function renderOrders(){
+
   if(!cashierSession || !el("orders")) return;
 
   const search = el("search")
@@ -2918,6 +2855,7 @@ function renderOrders(){
     : "";
 
   const visible = allOrders.filter(order=>{
+
     const searchableValues = [
       orderNumber(order),
       order.table_label,
@@ -2946,7 +2884,6 @@ function renderOrders(){
 
     }else if(activeFilter === "completed"){
       matchesGroup =
-        isToday(order.created_at) &&
         order.order_status === "completed";
     }
 
@@ -2984,6 +2921,190 @@ function handleOrderAction(event){
   }
 }
   
+/* MENERIMA PESANAN */
+async function acceptOrder(orderId){
+
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+
+  if(!order || busyOrderIds.has(String(orderId))) return;
+
+  if(
+    order.order_status !== "awaiting_confirmation" ||
+    assignmentOf(order)
+  ){
+    showNotice(
+      "Pesanan ini sudah tidak tersedia untuk diterima.",
+      true
+    );
+    return;
+  }
+
+  busyOrderIds.add(String(orderId));
+  renderOrders();
+
+  try{
+
+    await cashierAPI("accept_order",{
+      sessionToken:cashierSession.sessionToken,
+      orderId:order.id
+    });
+
+    showNotice(
+      "Pesanan #" + orderNumber(order) +
+      " berhasil diterima dan menjadi tanggung jawab kamu."
+    );
+
+    await loadOrders(true);
+
+  }catch(error){
+
+    showNotice(
+      error.message || "Gagal menerima pesanan.",
+      true
+    );
+
+  }finally{
+
+    busyOrderIds.delete(String(orderId));
+    renderOrders();
+  }
+}
+
+/* SELESAIKAN PESANAN BAYAR DI AWAL */
+async function changeOrderStatus(orderId){
+
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+
+  if(!order || !isMine(order)){
+    showNotice(
+      "Pesanan ini bukan tanggung jawab kasir yang sedang login.",
+      true
+    );
+    return;
+  }
+
+  if(
+    order.order_status !== "processing" ||
+    !isPaid(order)
+  ){
+    showNotice(
+      "Pesanan belum memenuhi syarat untuk diselesaikan.",
+      true
+    );
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Selesaikan pesanan #" +
+    orderNumber(order) +
+    "?\n\nPastikan pesanan sudah disajikan kepada pelanggan."
+  );
+
+  if(!confirmed || busyOrderIds.has(String(orderId))) return;
+
+  busyOrderIds.add(String(orderId));
+  renderOrders();
+
+  try{
+
+    await cashierAPI("update_order_status",{
+      sessionToken:cashierSession.sessionToken,
+      orderId:order.id,
+      orderStatus:"completed"
+    });
+
+    showNotice(
+      "Pesanan #" + orderNumber(order) +
+      " berhasil diselesaikan."
+    );
+
+    await loadOrders(true);
+
+  }catch(error){
+
+    showNotice(
+      error.message || "Gagal menyelesaikan pesanan.",
+      true
+    );
+
+  }finally{
+
+    busyOrderIds.delete(String(orderId));
+    renderOrders();
+  }
+}
+
+/* KONFIRMASI PEMBAYARAN BAYAR DI AKHIR */
+async function confirmCashPayment(orderId){
+
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+
+  if(!order || !isMine(order)){
+    showNotice(
+      "Pesanan ini bukan tanggung jawab kamu.",
+      true
+    );
+    return;
+  }
+
+  if(
+    order.order_status !== "processing" ||
+    !isWaitingPayment(order)
+  ){
+    showNotice(
+      "Pesanan ini tidak lagi menunggu pembayaran tunai.",
+      true
+    );
+    return;
+  }
+
+  const confirmed = window.confirm(
+    "Pastikan pembayaran benar-benar sudah diterima.\n\n" +
+    "Pesanan: #" + orderNumber(order) + "\n" +
+    "Total: " + rupiah(orderTotal(order)) +
+    "\n\nKonfirmasi pembayaran sekarang?"
+  );
+
+  if(!confirmed || busyOrderIds.has(String(orderId))) return;
+
+  busyOrderIds.add(String(orderId));
+  renderOrders();
+
+  try{
+
+    await cashierAPI("confirm_cash_payment",{
+      sessionToken:cashierSession.sessionToken,
+      orderId:order.id
+    });
+
+    showNotice(
+      "Pembayaran pesanan #" +
+      orderNumber(order) +
+      " berhasil dikonfirmasi."
+    );
+
+    await loadOrders(true);
+
+  }catch(error){
+
+    showNotice(
+      error.message || "Gagal mengonfirmasi pembayaran.",
+      true
+    );
+
+  }finally{
+
+    busyOrderIds.delete(String(orderId));
+    renderOrders();
+  }
+}
+
 /* SERAH TERIMA PESANAN */
 async function handoverOrder(orderId){
   const order = allOrders.find(item=>

@@ -1921,7 +1921,21 @@ function updateOwnerStickyTitle() {
 }
 
   
-function updateGlobalBackButton() {
+/* =========================================
+
+   TOMBOL KEMBALI GLOBAL & JUDUL TOOLBAR STICKY
+
+   - Mengatur visibilitas tombol Kembali
+
+   - Mempertahankan toolbar agar selalu tampil
+
+   - Memperbarui judul sesuai halaman dan submenu aktif
+
+   - Menjaga navigasi halaman dan panel tetap konsisten
+
+========================================= */
+
+  function updateGlobalBackButton() {
   const hasPageHistory = pageHistory.length > 0;
 
   const orderDetailPanel = $("owner-order-detail-panel");
@@ -1955,24 +1969,27 @@ function updateGlobalBackButton() {
     hasReportPanelHistory ||
     hasSettingsPanelHistory;
 
-  if (ownerHeader) {
-    ownerHeader.classList.toggle("has-back", hasHistory);
+  /* TOMBOL KEMBALI TOOLBAR */
+  if (headerBackButton) {
+    headerBackButton.hidden = !hasHistory;
+
+    headerBackButton.setAttribute(
+      "aria-label",
+      "Kembali"
+    );
   }
-if (headerBackButton) {
-  headerBackButton.hidden = !hasHistory;
-  headerBackButton.setAttribute(
-    "aria-label",
-    hasHistory ? "Kembali" : "Dashboard Owner"
-  );
+
+  /* TOOLBAR SELALU TAMPIL */
+  const ownerPageToolbar = $("owner-page-toolbar");
+
+  if (ownerPageToolbar) {
+    ownerPageToolbar.hidden = false;
+  }
+
+  /* PERBARUI JUDUL HALAMAN */
+  updateOwnerStickyTitle();
 }
 
-const ownerPageToolbar = $("owner-page-toolbar");
-
-if (ownerPageToolbar) {
-  ownerPageToolbar.hidden = false;
-}
-  
-  
 /* PINDAH HALAMAN UTAMA */
 function navigateToPage(pageName, options = {}) {
   if (!pages[pageName]) return;

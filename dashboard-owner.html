@@ -889,15 +889,73 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
 <!-- TRANSAKSI -->
 <section class="page" id="page-transaksi" hidden>
-  <h1 class="page-heading" id="transaction-page-heading">Pesanan</h1>
+  <h1 class="page-heading" id="transaction-page-heading">Transaksi</h1>
   <p class="page-description" id="transaction-page-description">
-    Pantau seluruh riwayat transaksi kedai sejak bergabung sebagai mitra KopiHub.
+    Pantau informasi dan riwayat transaksi kedai Anda.
   </p>
 
-  <section class="panel" id="transaction-summary-panel">
+  <!-- MENU UTAMA TRANSAKSI -->
+  <div id="transaction-home-panel">
+    <section class="panel">
+      <h2>Transaksi Kedai</h2>
+      <p class="muted">
+        Pilih informasi transaksi, riwayat pesanan, atau akses Dashboard Kasir.
+      </p>
+
+      <div class="dashboard-menu-grid">
+        <button
+          class="dashboard-menu-card"
+          id="open-transaction-summary"
+          type="button"
+        >
+          <span class="card-icon">📊</span>
+          <span>
+            <span class="card-title">Informasi Transaksi</span>
+            <span class="card-description">
+              Ringkasan jumlah pesanan, transaksi lunas, dan belum dibayar
+            </span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+
+        <button
+          class="dashboard-menu-card"
+          id="open-transaction-history"
+          type="button"
+        >
+          <span class="card-icon">🧾</span>
+          <span>
+            <span class="card-title">Riwayat Transaksi</span>
+            <span class="card-description">
+              Lihat seluruh pesanan dan rincian transaksi kedai
+            </span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+
+        <button
+          class="dashboard-menu-card"
+          id="open-transaction-cashier"
+          type="button"
+        >
+          <span class="card-icon">🧑‍💼</span>
+          <span>
+            <span class="card-title">Dashboard Kasir</span>
+            <span class="card-description">
+              Kelola pesanan dan konfirmasi pembayaran
+            </span>
+          </span>
+          <span class="card-arrow">›</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- INFORMASI TRANSAKSI -->
+  <section class="panel" id="transaction-summary-panel" hidden>
     <h2>Informasi Transaksi</h2>
     <p class="muted">
-      Riwayat transaksi hanya dapat dilihat oleh Owner.
+      Ringkasan transaksi kedai pada hari ini.
       Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
     </p>
 
@@ -929,16 +987,25 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </div>
   </section>
 
-  <section class="panel" id="transaction-history-panel">
+  <!-- RIWAYAT TRANSAKSI -->
+  <section class="panel" id="transaction-history-panel" hidden>
     <h2>Riwayat Transaksi</h2>
-    <p class="muted">Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.</p>
+    <p class="muted">
+      Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.
+    </p>
 
     <div class="transaction-filters">
       <label for="transaction-start-date">Dari tanggal</label>
       <input type="date" id="transaction-start-date">
+
       <label for="transaction-end-date">Sampai tanggal</label>
       <input type="date" id="transaction-end-date">
-      <button type="button" class="action-link" id="transaction-reset-filter">
+
+      <button
+        type="button"
+        class="action-link"
+        id="transaction-reset-filter"
+      >
         Reset Tanggal
       </button>
     </div>
@@ -946,27 +1013,36 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     <p class="muted" id="transaction-result-count" aria-live="polite">
       Memuat riwayat transaksi...
     </p>
+
     <div id="transaction-list">
       <p class="muted">Memuat riwayat transaksi...</p>
     </div>
   </section>
 
-  <section class="panel" id="transaction-cashier-panel">
+  <!-- DASHBOARD KASIR -->
+  <section class="panel" id="transaction-cashier-panel" hidden>
     <h2>Dashboard Kasir</h2>
     <p class="muted">
-      Untuk menangani pesanan dan pembayaran, gunakan Dashboard Kasir.
+      Gunakan Dashboard Kasir untuk menerima pesanan,
+      memproses pesanan, dan mengonfirmasi pembayaran pelanggan.
     </p>
-    <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
+    <a href="kasir.html" class="action-link primary">
+      Buka Dashboard Kasir
+    </a>
   </section>
 
-  <section class="panel owner-order-detail-panel" id="owner-order-detail-panel" hidden>
+  <!-- DETAIL PESANAN -->
+  <section
+    class="panel owner-order-detail-panel"
+    id="owner-order-detail-panel"
+    hidden
+  >
     <div class="owner-order-detail-header">
       <h2>Detail Pesanan</h2>
     </div>
     <div id="owner-order-detail-content"></div>
   </section>
 </section>
-
 <!-- LAPORAN -->
 <section class="page" id="page-laporan" hidden>
   <h1 class="page-heading">Laporan Penjualan</h1>

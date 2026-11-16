@@ -1044,12 +1044,60 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   </section>
 </section>
 <!-- LAPORAN -->
-<section class="page" id="page-laporan" hidden>
-  <h1 class="page-heading">Laporan Penjualan</h1>
-  <p class="page-description">Pantau omzet, produk terjual, dan metode pembayaran kedai.</p>
 
-  <section class="panel" id="sales-report-panel">
-    <p class="muted">Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.</p>
+<section class="page" id="page-laporan" hidden>
+  <h1 class="page-heading" id="report-page-heading">Laporan Penjualan</h1>
+  <p class="page-description" id="report-page-description">
+    Pantau omzet, produk terjual, dan metode pembayaran kedai.
+  </p>
+
+  <!-- MENU PILIHAN LAPORAN -->
+  <div class="dashboard-menu-grid" id="report-home-panel">
+
+    <button class="dashboard-menu-card" id="open-report-summary" type="button">
+      <span class="card-icon">📊</span>
+      <span>
+        <span class="card-title">Ringkasan Penjualan</span>
+        <span class="card-description">Omzet dan jumlah transaksi</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-report-products" type="button">
+      <span class="card-icon">☕</span>
+      <span>
+        <span class="card-title">Rincian Penjualan Produk</span>
+        <span class="card-description">Jumlah dan nilai penjualan produk</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-report-payments" type="button">
+      <span class="card-icon">💳</span>
+      <span>
+        <span class="card-title">Metode Pembayaran</span>
+        <span class="card-description">Rekap berdasarkan metode pembayaran</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-report-download" type="button">
+      <span class="card-icon">📥</span>
+      <span>
+        <span class="card-title">Unduh Laporan</span>
+        <span class="card-description">Unduh laporan Excel dan PDF</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+  </div>
+
+  <!-- PANEL RINGKASAN PENJUALAN -->
+  <section class="panel" id="report-summary-panel" hidden>
+
+    <p class="muted">
+      Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.
+    </p>
 
     <div class="report-filter">
       <div class="field">
@@ -1074,56 +1122,192 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </div>
 
     <div class="button-stack">
-      <button class="primary" id="refresh-sales-report" type="button">Tampilkan Laporan</button>
+      <button class="primary" id="refresh-sales-report" type="button">
+        Tampilkan Laporan
+      </button>
     </div>
 
     <p class="muted" id="report-period-label">Periode: Hari Ini</p>
 
     <div class="stats">
-      <div class="stat"><div class="stat-label">Nilai Seluruh Pesanan</div><div class="stat-number" id="report-order-value">—</div></div>
-      <div class="stat"><div class="stat-label">Omzet Sudah Dibayar</div><div class="stat-number" id="report-paid-sales">—</div></div>
-      <div class="stat"><div class="stat-label">Nilai Belum Dibayar</div><div class="stat-number" id="report-unpaid-sales">—</div></div>
-      <div class="stat"><div class="stat-label">Pesanan Lunas</div><div class="stat-number" id="report-paid-count">—</div></div>
-      <div class="stat"><div class="stat-label">Pesanan Belum Lunas</div><div class="stat-number" id="report-unpaid-count">—</div></div>
-      <div class="stat"><div class="stat-label">Jumlah Produk Terjual</div><div class="stat-number" id="report-products-sold">—</div></div>
+      <div class="stat">
+        <div class="stat-label">Nilai Seluruh Pesanan</div>
+        <div class="stat-number" id="report-order-value">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Omzet Sudah Dibayar</div>
+        <div class="stat-number" id="report-paid-sales">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Nilai Belum Dibayar</div>
+        <div class="stat-number" id="report-unpaid-sales">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Pesanan Lunas</div>
+        <div class="stat-number" id="report-paid-count">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Pesanan Belum Lunas</div>
+        <div class="stat-number" id="report-unpaid-count">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Jumlah Produk Terjual</div>
+        <div class="stat-number" id="report-products-sold">—</div>
+      </div>
     </div>
+
+  </section>
+
+  <!-- PANEL RINCIAN PRODUK -->
+  <section class="panel" id="report-products-panel" hidden>
 
     <h3 class="report-section-title">Rincian Penjualan Produk</h3>
+
     <div class="report-table-wrap">
       <table class="report-table">
-        <thead><tr><th>Nama Produk</th><th>Jumlah</th><th>Nilai Penjualan</th></tr></thead>
-        <tbody id="report-product-list"><tr><td colspan="3">Laporan belum dimuat.</td></tr></tbody>
+        <thead>
+          <tr>
+            <th>Nama Produk</th>
+            <th>Jumlah</th>
+            <th>Nilai Penjualan</th>
+          </tr>
+        </thead>
+
+        <tbody id="report-product-list">
+          <tr>
+            <td colspan="3">Laporan belum dimuat.</td>
+          </tr>
+        </tbody>
       </table>
     </div>
+
+  </section>
+
+  <!-- PANEL METODE PEMBAYARAN -->
+  <section class="panel" id="report-payments-panel" hidden>
 
     <h3 class="report-section-title">Metode Pembayaran</h3>
+
     <div class="report-table-wrap">
       <table class="report-table">
-        <thead><tr><th>Metode</th><th>Jumlah Transaksi</th><th>Nilai</th></tr></thead>
-        <tbody id="report-payment-methods"><tr><td colspan="3">Data metode pembayaran belum tersedia.</td></tr></tbody>
+        <thead>
+          <tr>
+            <th>Metode</th>
+            <th>Jumlah Transaksi</th>
+            <th>Nilai</th>
+          </tr>
+        </thead>
+
+        <tbody id="report-payment-methods">
+          <tr>
+            <td colspan="3">Data metode pembayaran belum tersedia.</td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
+  </section>
+
+  <!-- PANEL UNDUH LAPORAN -->
+  <section class="panel" id="report-download-panel" hidden>
+
     <div class="report-note" id="report-data-note">
-      Laporan menggunakan status pembayaran pada tabel kh_orders. Rincian produk dibaca dari kolom items.
+      Laporan menggunakan status pembayaran pada tabel kh_orders.
+      Rincian produk dibaca dari kolom items.
     </div>
 
     <div class="report-actions">
-      <button class="primary" id="download-report-excel" type="button" disabled>Unduh Excel</button>
-      <button class="primary" id="download-report-pdf" type="button" disabled>Unduh PDF</button>
+      <button class="primary" id="download-report-excel" type="button" disabled>
+        Unduh Excel
+      </button>
+
+      <button class="primary" id="download-report-pdf" type="button" disabled>
+        Unduh PDF
+      </button>
     </div>
 
-    <p id="report-message" class="muted" role="status">Laporan akan diperbarui saat data pesanan dimuat.</p>
+    <p id="report-message" class="muted" role="status">
+      Laporan akan diperbarui saat data pesanan dimuat.
+    </p>
+
   </section>
+
 </section>
 
 <!-- LAINNYA -->
 <section class="page" id="page-lainnya" hidden>
-  <h1 class="page-heading">Pengaturan Kedai</h1>
-  <p class="page-description">Pengaturan dan informasi pengelolaan kedai Anda.</p>
+
+  <h1 class="page-heading" id="settings-page-heading">Pengaturan Kedai</h1>
+  <p class="page-description" id="settings-page-description">
+    Pengaturan dan informasi pengelolaan kedai Anda.
+  </p>
+
+  <!-- MENU PILIHAN PENGATURAN -->
+  <div class="dashboard-menu-grid" id="settings-home-panel">
+
+    <button class="dashboard-menu-card" id="open-settings-profile" type="button">
+      <span class="card-icon">🏪</span>
+      <span>
+        <span class="card-title">Identitas Kedai</span>
+        <span class="card-description">Nama, deskripsi, dan logo kedai</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-settings-pbjt" type="button">
+      <span class="card-icon">🧾</span>
+      <span>
+        <span class="card-title">Pajak PBJT</span>
+        <span class="card-description">Pengaturan tarif PBJT kedai</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-settings-cashier" type="button">
+      <span class="card-icon">👥</span>
+      <span>
+        <span class="card-title">Manajemen Kasir</span>
+        <span class="card-description">Identitas dan akses staf kasir</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-settings-timing" type="button">
+      <span class="card-icon">⏱️</span>
+      <span>
+        <span class="card-title">Waktu Pembayaran</span>
+        <span class="card-description">Bayar di awal atau di akhir</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-settings-invoices" type="button">
+      <span class="card-icon">💳</span>
+      <span>
+        <span class="card-title">Tagihan KopiHub</span>
+        <span class="card-description">Kewajiban biaya layanan dan pembayaran</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+    <button class="dashboard-menu-card" id="open-settings-account" type="button">
+      <span class="card-icon">🔐</span>
+      <span>
+        <span class="card-title">Akun</span>
+        <span class="card-description">Keluar dari akun Owner</span>
+      </span>
+      <span class="card-arrow">›</span>
+    </button>
+
+  </div>
 
   <!-- PROFIL KEDAI -->
-  <section class="panel" id="profil-kedai">
+  <section class="panel" id="profil-kedai" hidden>
     <h2>Profil Kedai</h2>
     <p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
 
@@ -1158,7 +1342,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   </section>
 
   <!-- PBJT -->
-  <section class="panel" id="pengaturan-pbjt">
+  <section class="panel" id="pengaturan-pbjt" hidden>
     <h2>Pengaturan Pajak PBJT</h2>
     <p class="muted">
       Atur tarif PBJT yang berlaku untuk kedai ini.
@@ -1183,7 +1367,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   </section>
 
   <!-- TAGIHAN KOPIHUB -->
-  <section class="panel" id="tagihan-kopihub">
+  <section class="panel" id="tagihan-kopihub" hidden>
     <h2>Tagihan KopiHub</h2>
     <p class="muted">
       Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
@@ -1201,7 +1385,7 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   </section>
 
   <!-- MANAJEMEN KASIR -->
-  <section class="panel" id="manajemen-kasir">
+  <section class="panel" id="manajemen-kasir" hidden>
     <h2>Manajemen Kasir</h2>
     <p class="muted">Buat identitas staf kasir yang bertugas di kedai Anda.</p>
 
@@ -1263,8 +1447,8 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </p>
   </section>
 
-  <!-- PENGATURAN WAKTU PEMBAYARAN -->
-  <section class="panel">
+  <!-- WAKTU PEMBAYARAN -->
+  <section class="panel" id="pengaturan-waktu-pembayaran" hidden>
     <h2>Waktu Pembayaran</h2>
     <p class="muted">Tentukan kapan pelanggan harus membayar pesanannya.</p>
 
@@ -1278,41 +1462,13 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
     </p>
   </section>
 
-  <!-- PENGATURAN -->
-  <section class="panel">
-    <h2>Pengaturan Kedai</h2>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="profil-kedai">
-      <div class="settings-icon">🏪</div>
-      <div class="settings-info"><strong>Identitas Kedai</strong><span>Nama dan logo kedai</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="pengaturan-pbjt">
-      <div class="settings-icon">🧾</div>
-      <div class="settings-info"><strong>Pajak PBJT</strong><span>Atur tarif pajak kedai</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="manajemen-kasir">
-      <div class="settings-icon">👥</div>
-      <div class="settings-info"><strong>Manajemen Kasir</strong><span>Identitas dan akses staf kasir</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-
-    <button class="settings-item settings-item-button" type="button" data-settings-target="tagihan-kopihub">
-      <div class="settings-icon">💳</div>
-      <div class="settings-info"><strong>Tagihan KopiHub</strong><span>Kewajiban biaya layanan dan pembayaran</span></div>
-      <div class="settings-arrow">›</div>
-    </button>
-  </section>
-
   <!-- AKUN -->
-  <section class="panel">
+  <section class="panel" id="pengaturan-akun" hidden>
     <h2>Akun</h2>
     <p class="muted">Keluar dari akun Owner KopiHub pada perangkat ini.</p>
     <button class="danger" id="logout" type="button">Keluar dari Akun</button>
   </section>
+
 </section>
 
 <footer>KopiHub © 2026 · Dashboard Owner Coffee Shop</footer>

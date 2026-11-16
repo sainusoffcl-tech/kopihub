@@ -3809,6 +3809,21 @@ document.querySelectorAll("[data-filter]").forEach(button=>{
   });
 });
 
+/* PENCARIAN PESANAN */
+el("search").addEventListener("input",()=>{
+  renderOrders();
+});
+
+/* MUAT ULANG PESANAN */
+el("refresh-btn").addEventListener("click",()=>{
+  loadOrders();
+});
+
+/* AKHIRI SHIFT */
+el("end-shift-btn").addEventListener("click",()=>{
+  endShift();
+});
+
 /* TUTUP MODAL DENGAN ESC */
 document.addEventListener("keydown",event=>{
   if(

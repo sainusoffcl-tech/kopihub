@@ -4275,6 +4275,66 @@ $("open-menu-availability")?.addEventListener("click", () => {
 
 
 // =========================================
+// PRATINJAU FOTO PRODUK
+// =========================================
+
+let menuImageObjectUrl = null;
+
+function setMenuImagePreview(source) {
+  const preview = $("menu-image-preview");
+  const wrapper = $("menu-image-preview-wrap");
+
+  if (!preview || !wrapper || !source) {
+    clearMenuImagePreview();
+    return;
+  }
+
+  if (menuImageObjectUrl) {
+    URL.revokeObjectURL(menuImageObjectUrl);
+    menuImageObjectUrl = null;
+  }
+
+  preview.src = source;
+  wrapper.hidden = false;
+}
+
+function clearMenuImagePreview() {
+  const preview = $("menu-image-preview");
+  const wrapper = $("menu-image-preview-wrap");
+
+  if (menuImageObjectUrl) {
+    URL.revokeObjectURL(menuImageObjectUrl);
+    menuImageObjectUrl = null;
+  }
+
+  if (preview) {
+    preview.removeAttribute("src");
+  }
+
+  if (wrapper) {
+    wrapper.hidden = true;
+  }
+}
+
+// Tampilkan pratinjau saat Owner memilih foto.
+$("menu-image")?.addEventListener("change", event => {
+  const file = event.target.files?.[0];
+
+  if (!file) {
+    clearMenuImagePreview();
+    return;
+  }
+
+  if (menuImageObjectUrl) {
+    URL.revokeObjectURL(menuImageObjectUrl);
+    menuImageObjectUrl = null;
+  }
+
+  menuImageObjectUrl = URL.createObjectURL(file);
+  setMenuImagePreview(menuImageObjectUrl);
+});
+
+// =========================================
 // RESET FORM MENU
 // =========================================
 

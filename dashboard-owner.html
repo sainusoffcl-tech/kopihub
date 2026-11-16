@@ -972,6 +972,126 @@ textarea:focus {
 }
 
 
+/* =====================================================
+   KOPIHUB — GLASSMORPHISM BACKGROUND ENHANCEMENT
+   ===================================================== */
+
+/* Latar utama */
+html,
+body {
+  background-color: #eef1e9 !important;
+}
+
+/* Latar area yang benar-benar di-scroll */
+#app-scroll {
+  background:
+    radial-gradient(
+      ellipse 85% 45% at 5% 8%,
+      rgba(173, 199, 177, 0.58),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 75% 42% at 100% 23%,
+      rgba(233, 154, 72, 0.19),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 85% 48% at 48% 60%,
+      rgba(205, 220, 205, 0.52),
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 70% 42% at 8% 95%,
+      rgba(233, 220, 192, 0.55),
+      transparent 75%
+    ),
+    linear-gradient(
+      145deg,
+      #f3f1e8 0%,
+      #e9efe7 48%,
+      #f4eee3 100%
+    ) !important;
+
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Konten tidak menutupi latar gradasi */
+#app-scroll main {
+  background: transparent !important;
+}
+
+/* Kartu kaca lebih menyatu dengan latar */
+.panel,
+.stat,
+.summary-card,
+.chart-panel,
+.home-kpi-card,
+.dashboard-menu-card,
+.owner-order-card,
+.cashier-card,
+.invoice-card {
+  background: rgba(255, 255, 255, 0.40) !important;
+
+  -webkit-backdrop-filter:
+    blur(21px) saturate(165%);
+  backdrop-filter:
+    blur(21px) saturate(165%);
+
+  border: 1px solid rgba(255, 255, 255, 0.76) !important;
+
+  box-shadow:
+    0 10px 34px rgba(31, 66, 48, 0.065),
+    0 2px 8px rgba(31, 66, 48, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+/* Laporan tetap mempunyai karakter oranye */
+#report-home-panel,
+#report-summary-panel,
+#report-products-panel,
+#report-payments-panel,
+#report-download-panel {
+  background: rgba(255, 250, 240, 0.43) !important;
+
+  border-color:
+    rgba(233, 154, 72, 0.58) !important;
+}
+
+/* Header tetap hijau solid */
+.owner-header {
+  background: #123b2c !important;
+}
+
+/* Mega Footer tetap hijau solid */
+.kopihub-footer {
+  background: #123b2c !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Layar iPhone */
+@media (max-width: 649px) {
+  #app-scroll {
+    background-attachment: scroll;
+  }
+
+  .panel,
+  .stat,
+  .summary-card,
+  .chart-panel,
+  .home-kpi-card,
+  .dashboard-menu-card,
+  .owner-order-card,
+  .cashier-card,
+  .invoice-card {
+    -webkit-backdrop-filter:
+      blur(18px) saturate(155%);
+    backdrop-filter:
+      blur(18px) saturate(155%);
+  }
+}
+
 </style>
 </head>
 

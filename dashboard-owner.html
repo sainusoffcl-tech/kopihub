@@ -1609,6 +1609,8 @@ function updateGlobalBackButton() {
     );
   }
 }
+
+  
 /* PINDAH HALAMAN UTAMA */
 function navigateToPage(pageName, options = {}) {
   if (!pages[pageName]) return;
@@ -1627,13 +1629,11 @@ function navigateToPage(pageName, options = {}) {
     pageHistory = [];
   }
 
-  /* Saat masuk Kelola Menu dari halaman lain,
-     mulai dari halaman utama Kelola Menu. */
+  /* MASUK KELOLA MENU */
   if (
     pageName === "menu" &&
     previousPage !== "menu"
   ) {
-    currentMenuPanel = "menu-home-panel";
     menuPanelHistory = [];
 
     showMenuPanel(
@@ -1643,6 +1643,7 @@ function navigateToPage(pageName, options = {}) {
     );
   }
 
+  /* TAMPILKAN HALAMAN TUJUAN */
   Object.entries(pages).forEach(([name, element]) => {
     if (element) {
       element.hidden = name !== pageName;
@@ -1651,8 +1652,7 @@ function navigateToPage(pageName, options = {}) {
 
   currentPage = pageName;
 
-  /* Saat masuk Transaksi dari halaman lain,
-     mulai dari tiga kartu utama Transaksi. */
+  /* MASUK TRANSAKSI */
   if (
     pageName === "transaksi" &&
     previousPage !== "transaksi"
@@ -1661,6 +1661,34 @@ function navigateToPage(pageName, options = {}) {
 
     showTransactionPanel(
       "transaction-home-panel",
+      true,
+      true
+    );
+  }
+
+  /* MASUK LAPORAN */
+  if (
+    pageName === "laporan" &&
+    previousPage !== "laporan"
+  ) {
+    reportPanelHistory = [];
+
+    showReportPanel(
+      "report-home-panel",
+      true,
+      true
+    );
+  }
+
+  /* MASUK PENGATURAN KEDAI */
+  if (
+    pageName === "lainnya" &&
+    previousPage !== "lainnya"
+  ) {
+    settingsPanelHistory = [];
+
+    showSettingsPanel(
+      "settings-home-panel",
       true,
       true
     );
@@ -1680,24 +1708,21 @@ function navigateToPage(pageName, options = {}) {
     });
   }
 
-  if (pageName === "laporan") {
-    if (currentReport === null && allOrders.length > 0) {
-      updateReport();
-    }
-  }
-
-  if (pageName === "lainnya" && selectedShop()) {
-    loadCashierStaff();
-    loadOwnerInvoices();
+  /* PERBARUI LAPORAN */
+  if (
+    pageName === "laporan" &&
+    currentReport === null &&
+    allOrders.length > 0
+  ) {
+    updateReport();
   }
 }
 
 
 /* TOMBOL KEMBALI GLOBAL */
 function goBackPage() {
-  /* PRIORITAS PERTAMA:
-     Kembali dari Detail Pesanan ke Riwayat Transaksi. */
 
+  /* PRIORITAS 1: DETAIL TRANSAKSI */
   const orderDetailPanel = $("owner-order-detail-panel");
 
   if (
@@ -1710,9 +1735,7 @@ function goBackPage() {
     return;
   }
 
-  /* PRIORITAS KEDUA:
-     Kembali dari panel turunan Transaksi. */
-
+  /* PRIORITAS 2: PANEL TRANSAKSI */
   if (
     currentPage === "transaksi" &&
     transactionPanelHistory.length > 0
@@ -1729,9 +1752,7 @@ function goBackPage() {
     return;
   }
 
-  /* PRIORITAS KETIGA:
-     Kembali dari panel turunan Kelola Menu. */
-
+  /* PRIORITAS 3: PANEL KELOLA MENU */
   if (
     currentPage === "menu" &&
     menuPanelHistory.length > 0
@@ -1748,9 +1769,41 @@ function goBackPage() {
     return;
   }
 
-  /* PRIORITAS KEEMPAT:
-     Kembali ke halaman utama sebelumnya. */
+  /* PRIORITAS 4: PANEL LAPORAN */
+  if (
+    currentPage === "laporan" &&
+    reportPanelHistory.length > 0
+  ) {
+    const previousPanel = reportPanelHistory.pop();
 
+    showReportPanel(
+      previousPanel,
+      true,
+      true
+    );
+
+    updateGlobalBackButton();
+    return;
+  }
+
+  /* PRIORITAS 5: PANEL PENGATURAN */
+  if (
+    currentPage === "lainnya" &&
+    settingsPanelHistory.length > 0
+  ) {
+    const previousPanel = settingsPanelHistory.pop();
+
+    showSettingsPanel(
+      previousPanel,
+      true,
+      true
+    );
+
+    updateGlobalBackButton();
+    return;
+  }
+
+  /* PRIORITAS 6: HALAMAN SEBELUMNYA */
   if (pageHistory.length === 0) {
     navigateToPage("home", {
       replace: true

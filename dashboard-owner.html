@@ -770,7 +770,29 @@ button:disabled{opacity:.55;cursor:not-allowed}
 </header>
 
 <div id="app-scroll">
-<main>
+
+  <div class="owner-page-toolbar" id="owner-page-toolbar" hidden>
+    <button
+      class="header-back-button"
+      id="header-back-button"
+      type="button"
+      aria-label="Kembali"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M15 18l-6-6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span>Kembali</span>
+    </button>
+  </div>
+
+  <main>
   <select id="shop-select" hidden aria-hidden="true"></select>
   <div id="connection-status" hidden></div>
   <div id="shop-details" hidden></div>

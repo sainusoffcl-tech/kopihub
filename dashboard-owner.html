@@ -3625,7 +3625,7 @@ async function refreshMenu() {
 
       client
         .from("kh_products")
-        .select("id,shop_id,category_id,name,description,price,is_available,created_at")
+        .select("id,shop_id,category_id,name,description,price,is_available,image_url,created_at")
         .eq("shop_id", shop.id)
         .order("created_at", { ascending: false })
     ]);

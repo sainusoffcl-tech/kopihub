@@ -4925,6 +4925,7 @@ const sourceLabel = getOrderSourceLabel(order);
 }
 
 
+/* BUKA DETAIL PESANAN OWNER */
 function openOwnerOrderDetail(orderId) {
   const order = allOrders.find(item =>
     String(item.id) === String(orderId)
@@ -4937,54 +4938,64 @@ function openOwnerOrderDetail(orderId) {
   if (!detailPanel) return;
 
   ownerSelectedOrderId = order.id;
-  ownerOrderListScrollTop = appScroll.scrollTop;
+
+  ownerOrderListScrollTop = appScroll
+    ? appScroll.scrollTop
+    : 0;
+
+  currentTransactionPanel = "transaction-history-panel";
 
   [
     "transaction-page-heading",
     "transaction-page-description",
+    "transaction-home-panel",
     "transaction-summary-panel",
     "transaction-history-panel",
     "transaction-cashier-panel"
   ].forEach(id => {
     const element = $(id);
-    if (element) element.hidden = true;
+
+    if (element) {
+      element.hidden = true;
+    }
   });
 
   detailPanel.hidden = false;
+
   updateGlobalBackButton();
   renderOwnerOrderDetail(order);
 
-  appScroll.scrollTo({
-    top: 0,
-    behavior: "instant"
-  });
+  if (appScroll) {
+    appScroll.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }
 }
 
+
+/* TUTUP DETAIL PESANAN OWNER */
 function closeOwnerOrderDetail() {
   const detailPanel = $("owner-order-detail-panel");
 
   if (!detailPanel) return;
 
   detailPanel.hidden = true;
-
-  [
-    "transaction-page-heading",
-    "transaction-page-description",
-    "transaction-summary-panel",
-    "transaction-history-panel",
-    "transaction-cashier-panel"
-  ].forEach(id => {
-    const element = $(id);
-    if (element) element.hidden = false;
-  });
-
   ownerSelectedOrderId = null;
 
+  showTransactionPanel(
+    "transaction-history-panel",
+    true,
+    true
+  );
+
   requestAnimationFrame(() => {
-    appScroll.scrollTo({
-      top: ownerOrderListScrollTop,
-      behavior: "instant"
-    });
+    if (appScroll) {
+      appScroll.scrollTo({
+        top: ownerOrderListScrollTop,
+        behavior: "instant"
+      });
+    }
   });
 }
 

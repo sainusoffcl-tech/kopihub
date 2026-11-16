@@ -1956,46 +1956,6 @@ document.querySelectorAll("[data-page]").forEach(button => {
   });
 });
   
-  /* =========================================
-   NAVIGASI PENGATURAN KEDAI
-========================================= */
-
-document.querySelectorAll("[data-settings-target]").forEach(button => {
-  button.addEventListener("click", () => {
-    const target = button.dataset.settingsTarget;
-
-    navigateToPage("lainnya");
-
-    requestAnimationFrame(() => {
-      const section = $(target);
-
-      if (!section || !appScroll) return;
-
-      const top = section.offsetTop - 10;
-
-      appScroll.scrollTo({
-        top,
-        behavior: "smooth"
-      });
-
-      let focusTarget = null;
-
-      if (target === "manajemen-kasir") {
-        loadCashierStaff();
-        focusTarget = $("cashier-name");
-      } else if (target === "profil-kedai") {
-        focusTarget = $("profile-shop-name");
-      } else if (target === "pengaturan-pbjt") {
-        focusTarget = $("shop-pbjt-percent");
-      }
-
-      if (focusTarget) {
-        focusTarget.focus({ preventScroll: true });
-      }
-    });
-  });
-});
-
 /* =========================================
    HEADER TETAP
    TIDAK ADA COLLAPSE SAAT SCROLL

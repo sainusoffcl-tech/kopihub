@@ -4287,10 +4287,13 @@ $("open-menu-availability")?.addEventListener("click", () => {
 // RESET FORM MENU
 // =========================================
 
+
 function resetMenuForm() {
   editingProductId = null;
 
   $("menu-form").reset();
+
+  clearMenuImagePreview();
 
   $("save-menu").textContent = "Simpan Menu";
 
@@ -4298,7 +4301,6 @@ function resetMenuForm() {
 
   $("cancel-edit").hidden = false;
 }
-
 
 // =========================================
 // EDIT MENU
@@ -4348,6 +4350,16 @@ function startEdit(id) {
   $("menu-available").value =
     String(Boolean(product.is_available));
 
+  // Kosongkan pilihan file baru.
+  $("menu-image").value = "";
+
+  // Tampilkan foto produk yang sudah tersimpan.
+  if (product.image_url) {
+    setMenuImagePreview(product.image_url);
+  } else {
+    clearMenuImagePreview();
+  }
+
   $("save-menu").textContent = "Simpan Perubahan";
 
   $("cancel-edit").hidden = false;
@@ -4356,8 +4368,6 @@ function startEdit(id) {
 
   showMenuPanel("menu-form-panel", false);
 }
-
-
 
 // =========================================
 // SIMPAN MENU + FOTO PRODUK KOPIHUB

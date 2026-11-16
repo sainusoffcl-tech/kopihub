@@ -3140,7 +3140,6 @@ async function handoverOrder(orderId){
 
   busyOrderIds.add(String(orderId));
   renderOrders();
-  renderHomeRecentOrders();
 
   try{
     await cashierAPI("handover_order",{
@@ -3167,7 +3166,6 @@ async function handoverOrder(orderId){
   }finally{
     busyOrderIds.delete(String(orderId));
     renderOrders();
-    renderHomeRecentOrders();
   }
 }
 
@@ -3675,10 +3673,9 @@ async function submitPosOrder(){
 
     await loadOrders(true);
 
-    activeFilter = "all";
-    updateFilterButtons();
-    showPage("orders");
-
+        activeFilter = "all";
+    openOrderGroup("all");
+  
   }catch(error){
     showPosNotice(
       error.message ||

@@ -2585,13 +2585,13 @@ function renderSelectedShop() {
         : "Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
   }
 
-  /* JUDUL HEADER */
+  /* NAMA KEDAI PADA HEADER GLOBAL */
 
   const headerTitle = $("header-shop-name");
 
   if (headerTitle) {
     headerTitle.textContent =
-      pageTitles[currentPage] || "Dashboard Owner";
+      shop?.name || "Kedai belum tersedia";
   }
 
   /*
@@ -2606,7 +2606,6 @@ function renderSelectedShop() {
       ? "Kedai: " + shop.name + " · Slug: " + shop.slug
       : "Belum ada kedai yang dipilih.";
   }
-
   /* QR MENU */
 
   const makeQrButton = $("make-qr");

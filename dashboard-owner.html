@@ -2110,12 +2110,6 @@ function goBackPage() {
   });
 
   currentPage = previousPage;
-
-  if ($("header-shop-name")) {
-    $("header-shop-name").textContent =
-      pageTitles[previousPage] || "Dashboard Owner";
-  }
-
   updateGlobalBackButton();
 
   if (appScroll) {

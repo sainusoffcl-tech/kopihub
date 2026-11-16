@@ -734,6 +734,229 @@ button:disabled{opacity:.55;cursor:not-allowed}
     gap: 24px;
   }
 }
+
+
+/* =====================================================
+   KOPIHUB OWNER — GLOBAL GLASSMORPHISM
+   Berlaku untuk seluruh kartu dan panel dashboard
+   ===================================================== */
+
+:root {
+  --glass-background: rgba(255, 255, 255, 0.68);
+  --glass-background-hover: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.82);
+  --glass-shadow:
+    0 8px 28px rgba(18, 59, 44, 0.075),
+    0 2px 8px rgba(18, 59, 44, 0.035);
+  --glass-shadow-hover:
+    0 12px 32px rgba(18, 59, 44, 0.12),
+    0 3px 10px rgba(18, 59, 44, 0.05);
+  --glass-blur: 16px;
+}
+
+/* Latar dashboard */
+body {
+  background:
+    radial-gradient(
+      circle at 8% 5%,
+      rgba(233, 154, 72, 0.075),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 95% 35%,
+      rgba(23, 76, 56, 0.065),
+      transparent 34%
+    ),
+    #faf9f5;
+}
+
+/* Semua kartu dan panel */
+:where(
+  .panel,
+  .stat,
+  .summary-card,
+  .chart-panel,
+  .home-kpi-card,
+  .dashboard-menu-card,
+  .owner-order-card,
+  .cashier-card,
+  .invoice-card,
+  [class*="card"],
+  [class*="panel"],
+  [class*="stat"]
+) {
+  background: var(--glass-background) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow);
+  border-radius: 18px;
+  color: var(--text);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Efek interaksi kartu */
+@media (hover: hover) {
+  :where(
+    .panel,
+    .stat,
+    .summary-card,
+    .chart-panel,
+    .home-kpi-card,
+    .dashboard-menu-card,
+    .owner-order-card,
+    .cashier-card,
+    .invoice-card,
+    [class*="card"],
+    [class*="panel"],
+    [class*="stat"]
+  ):hover {
+    background: var(--glass-background-hover) !important;
+    box-shadow: var(--glass-shadow-hover);
+  }
+}
+
+/* Kartu yang dapat diklik */
+.dashboard-menu-card {
+  cursor: pointer;
+}
+
+/* Teks dalam kartu tetap jelas */
+:where(
+  .panel,
+  .stat,
+  .summary-card,
+  .chart-panel,
+  .home-kpi-card,
+  .dashboard-menu-card,
+  .owner-order-card,
+  .cashier-card,
+  .invoice-card,
+  [class*="card"],
+  [class*="panel"],
+  [class*="stat"]
+) :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  strong,
+  span,
+  label,
+  small
+) {
+  color: inherit;
+}
+
+/* Judul dan angka penting */
+:where(
+  .panel,
+  .stat,
+  .summary-card,
+  .chart-panel,
+  .home-kpi-card,
+  .dashboard-menu-card,
+  .owner-order-card,
+  .cashier-card,
+  .invoice-card,
+  [class*="card"],
+  [class*="panel"],
+  [class*="stat"]
+) :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  strong
+) {
+  color: #174c38;
+}
+
+/* Kartu laporan dengan aksen identitas oranye */
+.report-home-panel,
+.report-summary-panel,
+.report-products-panel,
+.report-payments-panel,
+.report-download-panel {
+  border-color: rgba(233, 154, 72, 0.48) !important;
+}
+
+/* Input tetap nyaman dibaca */
+input,
+select,
+textarea {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Header tetap solid hijau gelap */
+.owner-header {
+  background: #123b2c !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Mega Footer tetap solid hijau gelap */
+.kopihub-footer {
+  background: #123b2c !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  border: none !important;
+}
+
+/* Jangan mengubah perilaku elemen tersembunyi */
+[hidden] {
+  display: none !important;
+}
+
+/* Optimasi perangkat iPhone */
+@media (max-width: 600px) {
+  :where(
+    .panel,
+    .stat,
+    .summary-card,
+    .chart-panel,
+    .home-kpi-card,
+    .dashboard-menu-card,
+    .owner-order-card,
+    .cashier-card,
+    .invoice-card,
+    [class*="card"],
+    [class*="panel"],
+    [class*="stat"]
+  ) {
+    border-radius: 16px;
+    -webkit-backdrop-filter: blur(13px) saturate(145%);
+    backdrop-filter: blur(13px) saturate(145%);
+  }
+}
+
+/* Hormati preferensi pengurangan animasi */
+@media (prefers-reduced-motion: reduce) {
+  :where(
+    .panel,
+    .stat,
+    .summary-card,
+    .chart-panel,
+    .home-kpi-card,
+    .dashboard-menu-card,
+    .owner-order-card,
+    .cashier-card,
+    .invoice-card,
+    [class*="card"],
+    [class*="panel"],
+    [class*="stat"]
+  ) {
+    transition: none;
+  }
+}
+
 </style>
 </head>
 

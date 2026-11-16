@@ -4289,11 +4289,6 @@ function setMenuImagePreview(source) {
     return;
   }
 
-  if (menuImageObjectUrl) {
-    URL.revokeObjectURL(menuImageObjectUrl);
-    menuImageObjectUrl = null;
-  }
-
   preview.src = source;
   wrapper.hidden = false;
 }
@@ -4316,22 +4311,28 @@ function clearMenuImagePreview() {
   }
 }
 
-// Tampilkan pratinjau saat Owner memilih foto.
 $("menu-image")?.addEventListener("change", event => {
   const file = event.target.files?.[0];
-
-  if (!file) {
-    clearMenuImagePreview();
-    return;
-  }
 
   if (menuImageObjectUrl) {
     URL.revokeObjectURL(menuImageObjectUrl);
     menuImageObjectUrl = null;
   }
 
+  if (!file) {
+    clearMenuImagePreview();
+    return;
+  }
+
   menuImageObjectUrl = URL.createObjectURL(file);
-  setMenuImagePreview(menuImageObjectUrl);
+
+  const preview = $("menu-image-preview");
+  const wrapper = $("menu-image-preview-wrap");
+
+  if (preview && wrapper) {
+    preview.src = menuImageObjectUrl;
+    wrapper.hidden = false;
+  }
 });
 
 // =========================================

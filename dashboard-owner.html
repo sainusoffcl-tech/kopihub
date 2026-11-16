@@ -1879,16 +1879,21 @@ function updateGlobalBackButton() {
   if (ownerHeader) {
     ownerHeader.classList.toggle("has-back", hasHistory);
   }
-
-  if (headerBackButton) {
-    headerBackButton.hidden = !hasHistory;
-    headerBackButton.setAttribute(
-      "aria-label",
-      hasHistory ? "Kembali" : "Dashboard Owner"
-    );
-  }
+if (headerBackButton) {
+  headerBackButton.hidden = !hasHistory;
+  headerBackButton.setAttribute(
+    "aria-label",
+    hasHistory ? "Kembali" : "Dashboard Owner"
+  );
 }
 
+const ownerPageToolbar = $("owner-page-toolbar");
+
+if (ownerPageToolbar) {
+  ownerPageToolbar.hidden = !hasHistory;
+}
+}
+  
   
 /* PINDAH HALAMAN UTAMA */
 function navigateToPage(pageName, options = {}) {

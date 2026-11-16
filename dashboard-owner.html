@@ -734,7 +734,52 @@ button:disabled{opacity:.55;cursor:not-allowed}
     gap: 24px;
   }
 }
+/* TOOLBAR TOMBOL KEMBALI — STICKY */
+.owner-page-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 90;
 
+  display: flex;
+  align-items: center;
+
+  min-height: 54px;
+  padding: 8px 17px;
+
+  background: rgba(239, 243, 235, 0.78);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.75);
+
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+}
+
+.owner-page-toolbar[hidden] {
+  display: none !important;
+}
+
+.owner-page-toolbar .header-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 38px;
+  padding: 8px 13px;
+
+  color: #174c38;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.owner-page-toolbar .header-back-button svg {
+  width: 18px;
+  height: 18px;
+}
 </style>
 </head>
 

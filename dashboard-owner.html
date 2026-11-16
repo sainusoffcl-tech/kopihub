@@ -1846,6 +1846,81 @@ let settingsPanelHistory = [];
   lainnya: "Pengaturan Kedai"
 };
 
+
+/* =========================================
+   JUDUL DINAMIS TOOLBAR OWNER
+========================================= */
+
+function updateOwnerStickyTitle() {
+  const titleElement = $("owner-page-title");
+
+  if (!titleElement) return;
+
+  let title = "Dashboard Owner";
+
+  if (currentPage === "home") {
+    title = "Dashboard Owner";
+  }
+
+  else if (currentPage === "menu") {
+    const menuTitles = {
+      "menu-home-panel": "Kelola Menu",
+      "menu-form-panel":
+        $("menu-form-title")?.textContent.trim() || "Formulir Menu",
+      "menu-list-panel": "Daftar Produk",
+      "menu-qr-panel": "QR Menu Kedai",
+      "menu-category-panel": "Kategori Menu",
+      "product-stock-panel": "Stok Produk",
+      "menu-availability-panel": "Ketersediaan Menu"
+    };
+
+    title = menuTitles[currentMenuPanel] || "Kelola Menu";
+  }
+
+  else if (currentPage === "transaksi") {
+    const transactionTitles = {
+      "transaction-home-panel": "Transaksi",
+      "transaction-summary-panel": "Informasi Transaksi",
+      "transaction-history-panel": "Riwayat Transaksi",
+      "transaction-cashier-panel": "Dashboard Kasir",
+      "owner-order-detail-panel": "Detail Pesanan"
+    };
+
+    title =
+      transactionTitles[currentTransactionPanel] || "Transaksi";
+  }
+
+  else if (currentPage === "laporan") {
+    const reportTitles = {
+      "report-home-panel": "Laporan Penjualan",
+      "report-summary-panel": "Ringkasan Penjualan",
+      "report-products-panel": "Rincian Penjualan Produk",
+      "report-payments-panel": "Metode Pembayaran",
+      "report-download-panel": "Unduh Laporan"
+    };
+
+    title = reportTitles[currentReportPanel] || "Laporan Penjualan";
+  }
+
+  else if (currentPage === "lainnya") {
+    const settingsTitles = {
+      "settings-home-panel": "Pengaturan Kedai",
+      "profil-kedai": "Identitas Kedai",
+      "pengaturan-pbjt": "Pengaturan Pajak PBJT",
+      "manajemen-kasir": "Manajemen Kasir",
+      "pengaturan-waktu-pembayaran": "Pengaturan Waktu Pembayaran",
+      "tagihan-kopihub": "Tagihan KopiHub",
+      "pengaturan-akun": "Pengaturan Akun"
+    };
+
+    title =
+      settingsTitles[currentSettingsPanel] || "Pengaturan Kedai";
+  }
+
+  titleElement.textContent = title;
+}
+
+  
 function updateGlobalBackButton() {
   const hasPageHistory = pageHistory.length > 0;
 

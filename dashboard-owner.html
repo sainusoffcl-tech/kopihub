@@ -4358,8 +4358,9 @@ function startEdit(id) {
 }
 
 
+
 // =========================================
-// SIMPAN MENU
+// SIMPAN MENU + FOTO PRODUK KOPIHUB
 // =========================================
 
 $("menu-form")?.addEventListener("submit", async event => {
@@ -4368,21 +4369,19 @@ $("menu-form")?.addEventListener("submit", async event => {
   const shop = selectedShop();
 
   const name = $("menu-name").value.trim();
-
   const categoryId = $("menu-category").value;
-
   const price = Number($("menu-price").value);
 
   const description =
     $("menu-description").value.trim();
 
+  const imageFile =
+    $("menu-image")?.files?.[0] || null;
+
   const save = $("save-menu");
 
   if (!shop || !client) {
-    showMenuMessage(
-      "Pilih kedai terlebih dahulu.",
-      true
-    );
+    showMenuMessage("Pilih kedai terlebih dahulu.", true);
     return;
   }
 
@@ -4391,10 +4390,7 @@ $("menu-form")?.addEventListener("submit", async event => {
       item => String(item.id) === String(categoryId)
     )
   ) {
-    showMenuMessage(
-      "Pilih kategori yang valid.",
-      true
-    );
+    showMenuMessage("Pilih kategori yang valid.", true);
     return;
   }
 
@@ -4405,15 +4401,36 @@ $("menu-form")?.addEventListener("submit", async event => {
     price <= 0 ||
     price > 100000000
   ) {
-    showMenuMessage(
-      "Nama menu atau harga tidak valid.",
-      true
-    );
+    showMenuMessage("Nama menu atau harga tidak valid.", true);
     return;
   }
 
-  const wasEditing = Boolean(editingProductId);
+  // VALIDASI FOTO
+  if (imageFile) {
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
 
+    if (!allowedTypes.includes(imageFile.type)) {
+      showMenuMessage(
+        "Format foto harus JPG, PNG, atau WebP.",
+        true
+      );
+      return;
+    }
+
+    if (imageFile.size > 10 * 1024 * 1024) {
+      showMenuMessage(
+        "Ukuran foto maksimal 10 MB.",
+        true
+      );
+      return;
+    }
+  }
+
+  const wasEditing = Boolean(editingProductId);
   const productId = editingProductId;
 
   if (wasEditing) {
@@ -4432,7 +4449,6 @@ $("menu-form")?.addEventListener("submit", async event => {
   }
 
   save.disabled = true;
-
   showMenuMessage("Menyimpan menu...");
 
   try {
@@ -4457,7 +4473,6 @@ $("menu-form")?.addEventListener("submit", async event => {
         .eq("shop_id", shop.id)
         .select("id")
         .maybeSingle();
-
     } else {
       result = await client
         .from("kh_products")
@@ -4476,9 +4491,78 @@ $("menu-form")?.addEventListener("submit", async event => {
       );
     }
 
-    // Pastikan kedai tidak berubah selama proses penyimpanan.
+    const savedProductId = result.data.id;
+
+    // Pastikan kedai tidak berubah.
     if (String(selectedShop()?.id) !== String(shop.id)) {
-      return;
+      throw new Error(
+        "Pilihan kedai berubah. Silakan periksa kembali."
+      );
+    }
+
+    // UNGGAH FOTO JIKA ADA
+    if (imageFile) {
+      showMenuMessage("Mengunggah foto menu...");
+
+      const extensionMap = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp"
+      };
+
+      const extension = extensionMap[imageFile.type];
+
+      const filePath =
+        `${shop.id}/${savedProductId}/` +
+        `${Date.now()}-${Math.random().toString(36).slice(2, 10)}.${extension}`;
+
+      const { error: uploadError } = await client.storage
+        .from("product-images")
+        .upload(filePath, imageFile, {
+          contentType: imageFile.type,
+          cacheControl: "3600",
+          upsert: false
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: publicData } = client.storage
+        .from("product-images")
+        .getPublicUrl(filePath);
+
+      if (!publicData?.publicUrl) {
+        throw new Error("URL foto tidak berhasil diperoleh.");
+      }
+
+      // SIMPAN URL FOTO KE KH_PRODUCTS
+      const { data: imageResult, error: imageError } =
+        await client
+          .from("kh_products")
+          .update({
+            image_url: publicData.publicUrl
+          })
+          .eq("id", savedProductId)
+          .eq("shop_id", shop.id)
+          .select("id")
+          .maybeSingle();
+
+      if (imageError) {
+        throw imageError;
+      }
+
+      if (!imageResult?.id) {
+        throw new Error(
+          "Foto sudah diunggah, tetapi URL belum tersimpan ke produk."
+        );
+      }
+    }
+
+    if (String(selectedShop()?.id) !== String(shop.id)) {
+      throw new Error(
+        "Pilihan kedai berubah. Silakan muat ulang data menu."
+      );
     }
 
     resetMenuForm();
@@ -4488,9 +4572,11 @@ $("menu-form")?.addEventListener("submit", async event => {
     showMenuHome();
 
     showMenuMessage(
-      wasEditing
-        ? "Menu berhasil diperbarui."
-        : "Menu berhasil disimpan."
+      imageFile
+        ? "Menu dan foto berhasil disimpan."
+        : wasEditing
+          ? "Menu berhasil diperbarui."
+          : "Menu berhasil disimpan."
     );
 
   } catch (error) {

@@ -1563,9 +1563,15 @@ let settingsPanelHistory = [];
   lainnya: "Pengaturan Kedai"
 };
 
-/* PERBARUI TOMBOL KEMBALI HEADER */
 function updateGlobalBackButton() {
   const hasPageHistory = pageHistory.length > 0;
+
+  const orderDetailPanel = $("owner-order-detail-panel");
+
+  const hasOrderDetail =
+    currentPage === "transaksi" &&
+    orderDetailPanel &&
+    !orderDetailPanel.hidden;
 
   const hasMenuPanelHistory =
     currentPage === "menu" &&
@@ -1575,18 +1581,21 @@ function updateGlobalBackButton() {
     currentPage === "transaksi" &&
     transactionPanelHistory.length > 0;
 
-  const orderDetailPanel = $("owner-order-detail-panel");
+  const hasReportPanelHistory =
+    currentPage === "laporan" &&
+    reportPanelHistory.length > 0;
 
-  const hasOrderDetail =
-    currentPage === "transaksi" &&
-    orderDetailPanel &&
-    !orderDetailPanel.hidden;
+  const hasSettingsPanelHistory =
+    currentPage === "lainnya" &&
+    settingsPanelHistory.length > 0;
 
   const hasHistory =
     hasPageHistory ||
+    hasOrderDetail ||
     hasMenuPanelHistory ||
     hasTransactionPanelHistory ||
-    hasOrderDetail;
+    hasReportPanelHistory ||
+    hasSettingsPanelHistory;
 
   if (ownerHeader) {
     ownerHeader.classList.toggle("has-back", hasHistory);
@@ -1600,8 +1609,6 @@ function updateGlobalBackButton() {
     );
   }
 }
-
-
 /* PINDAH HALAMAN UTAMA */
 function navigateToPage(pageName, options = {}) {
   if (!pages[pageName]) return;
@@ -1946,7 +1953,178 @@ document.querySelectorAll("[data-settings-target]").forEach(button => {
   Tidak ada listener scroll untuk mengecilkan header.
 */
 
-/* =========================================
+  /* =========================================
+   NAVIGASI PANEL LAPORAN PENJUALAN
+========================================= */
+
+function showReportPanel(
+  panelId,
+  fromBack = false,
+  skipScroll = false
+) {
+  const panels = [
+    "report-home-panel",
+    "report-summary-panel",
+    "report-products-panel",
+    "report-payments-panel",
+    "report-download-panel"
+  ];
+
+  if (!panels.includes(panelId)) {
+    console.warn("Panel laporan tidak ditemukan:", panelId);
+    return;
+  }
+
+  const previousPanel =
+    currentReportPanel || "report-home-panel";
+
+  if (!fromBack && panelId !== previousPanel) {
+    reportPanelHistory.push(previousPanel);
+  }
+
+  currentReportPanel = panelId;
+
+  panels.forEach(id => {
+    const element = $(id);
+    if (element) {
+      element.hidden = id !== panelId;
+    }
+  });
+
+  const isHome = panelId === "report-home-panel";
+
+  if ($("report-page-heading")) {
+    $("report-page-heading").hidden = !isHome;
+  }
+
+  if ($("report-page-description")) {
+    $("report-page-description").hidden = !isHome;
+  }
+
+  updateGlobalBackButton();
+
+  if (!skipScroll && appScroll) {
+    appScroll.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }
+}
+
+/* TOMBOL PILIHAN LAPORAN */
+
+$("open-report-summary")?.addEventListener("click", () => {
+  showReportPanel("report-summary-panel");
+});
+
+$("open-report-products")?.addEventListener("click", () => {
+  showReportPanel("report-products-panel");
+});
+
+$("open-report-payments")?.addEventListener("click", () => {
+  showReportPanel("report-payments-panel");
+});
+
+$("open-report-download")?.addEventListener("click", () => {
+  showReportPanel("report-download-panel");
+});
+
+  /* =========================================
+   NAVIGASI PANEL PENGATURAN KEDAI
+========================================= */
+
+function showSettingsPanel(
+  panelId,
+  fromBack = false,
+  skipScroll = false
+) {
+  const panels = [
+    "settings-home-panel",
+    "profil-kedai",
+    "pengaturan-pbjt",
+    "manajemen-kasir",
+    "pengaturan-waktu-pembayaran",
+    "tagihan-kopihub",
+    "pengaturan-akun"
+  ];
+
+  if (!panels.includes(panelId)) {
+    console.warn("Panel pengaturan tidak ditemukan:", panelId);
+    return;
+  }
+
+  const previousPanel =
+    currentSettingsPanel || "settings-home-panel";
+
+  if (!fromBack && panelId !== previousPanel) {
+    settingsPanelHistory.push(previousPanel);
+  }
+
+  currentSettingsPanel = panelId;
+
+  panels.forEach(id => {
+    const element = $(id);
+    if (element) {
+      element.hidden = id !== panelId;
+    }
+  });
+
+  const isHome = panelId === "settings-home-panel";
+
+  if ($("settings-page-heading")) {
+    $("settings-page-heading").hidden = !isHome;
+  }
+
+  if ($("settings-page-description")) {
+    $("settings-page-description").hidden = !isHome;
+  }
+
+  if (panelId === "manajemen-kasir" && selectedShop()) {
+    loadCashierStaff();
+  }
+
+  if (panelId === "tagihan-kopihub" && selectedShop()) {
+    loadOwnerInvoices();
+  }
+
+  updateGlobalBackButton();
+
+  if (!skipScroll && appScroll) {
+    appScroll.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }
+}
+
+/* TOMBOL PILIHAN PENGATURAN */
+
+$("open-settings-profile")?.addEventListener("click", () => {
+  showSettingsPanel("profil-kedai");
+});
+
+$("open-settings-pbjt")?.addEventListener("click", () => {
+  showSettingsPanel("pengaturan-pbjt");
+});
+
+$("open-settings-cashier")?.addEventListener("click", () => {
+  showSettingsPanel("manajemen-kasir");
+});
+
+$("open-settings-timing")?.addEventListener("click", () => {
+  showSettingsPanel("pengaturan-waktu-pembayaran");
+});
+
+$("open-settings-invoices")?.addEventListener("click", () => {
+  showSettingsPanel("tagihan-kopihub");
+});
+
+$("open-settings-account")?.addEventListener("click", () => {
+  showSettingsPanel("pengaturan-akun");
+});
+  
+  
+  /* =========================================
    UTILITAS
 ========================================= */
 

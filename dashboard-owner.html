@@ -601,7 +601,139 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
   margin: 8px 0 0;
   line-height: 1.4;
 }
+/* =========================================
+   MEGA FOOTER GLOBAL KOPIHUB
+========================================= */
+.kopihub-footer {
+  width: 100%;
+  margin-top: 28px;
+  padding: 30px 16px 24px;
+  background: #123b2c;
+  color: #ffffff;
+  font-size: 13px;
+}
 
+.kopihub-footer-inner {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.kopihub-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.kopihub-footer-logo {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: #faf9f5;
+  color: #174c38;
+  font-size: 23px;
+  font-weight: 850;
+}
+
+.kopihub-footer-name {
+  margin: 0;
+  color: #ffffff;
+  font-size: 23px;
+  font-weight: 850;
+  letter-spacing: -0.7px;
+}
+
+.kopihub-footer-tagline {
+  margin-top: 2px;
+  color: #d5e4da;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.kopihub-footer-description {
+  max-width: 540px;
+  margin: 0 0 22px;
+  color: #d5e4da;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.kopihub-footer-divider {
+  height: 1px;
+  margin: 20px 0;
+  background: rgba(255,255,255,.17);
+}
+
+.kopihub-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 26px 18px;
+}
+
+.kopihub-footer-group h3 {
+  margin: 0 0 12px;
+  color: #e99a48;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.kopihub-footer-group ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kopihub-footer-group li {
+  color: #d5e4da;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.kopihub-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.kopihub-footer-copyright {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.kopihub-footer-rights {
+  color: #d5e4da;
+  font-size: 11px;
+}
+
+.kopihub-footer-closing {
+  margin: 17px 0 0;
+  color: #d5e4da;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-align: center;
+}
+
+@media (min-width: 650px) {
+  .kopihub-footer {
+    padding: 36px 24px 28px;
+  }
+
+  .kopihub-footer-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
 </style>
 </head>
 

@@ -734,8 +734,12 @@ button:disabled{opacity:.55;cursor:not-allowed}
     gap: 24px;
   }
 }
+
 /* =========================================
    TOOLBAR STICKY KOPIHUB
+   - Menempel langsung di bawah header
+   - Tombol kembali minimalis tanpa kotak
+   - Judul halaman rata kanan
 ========================================= */
 
 .owner-page-toolbar {
@@ -750,6 +754,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
   width: 100%;
   min-height: 54px;
+  height: auto;
   margin: 0;
   padding: 8px 17px;
 
@@ -760,11 +765,13 @@ button:disabled{opacity:.55;cursor:not-allowed}
   backdrop-filter: blur(20px) saturate(160%);
 }
 
+/* SEMBUNYIKAN TOOLBAR JIKA DIPERLUKAN */
+
 .owner-page-toolbar[hidden] {
   display: none !important;
 }
 
-/* TOMBOL KEMBALI MINIMALIS */
+/* TOMBOL KEMBALI TANPA LATAR PUTIH */
 
 .owner-page-toolbar .header-back-button {
   display: inline-flex;
@@ -774,6 +781,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   gap: 6px;
 
   width: auto;
+  height: auto;
   min-height: 38px;
   margin: 0;
   padding: 6px 0;
@@ -791,9 +799,15 @@ button:disabled{opacity:.55;cursor:not-allowed}
 }
 
 .owner-page-toolbar .header-back-button svg {
+  display: block;
   width: 18px;
   height: 18px;
   flex: 0 0 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* JUDUL HALAMAN RATA KANAN */
@@ -801,6 +815,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .owner-sticky-title {
   flex: 1;
   min-width: 0;
+  height: auto;
   margin: 0;
 
   color: #174c38;
@@ -811,26 +826,14 @@ button:disabled{opacity:.55;cursor:not-allowed}
   text-align: right;
   overflow-wrap: anywhere;
 }
-/* =========================================
-   JUDUL DINAMIS TOOLBAR STICKY
-========================================= */
 
-.owner-sticky-title {
-  flex: 1;
-  min-width: 0;
-  margin: 0 0 0 12px;
-  color: #174c38;
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-}
+/* SEMBUNYIKAN JUDUL DAN DESKRIPSI LAMA */
 
-/* SEMBUNYIKAN JUDUL DAN DESKRIPSI HALAMAN UTAMA */
 .page > .page-heading,
 .page > .page-description {
   display: none !important;
 }
+
 </style>
 </head>
 

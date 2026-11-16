@@ -2637,15 +2637,6 @@ async function submitPosOrder(){
   }
 }
 
-/* AKTIVITAS */
-/*
-  Belum ada endpoint riwayat aktivitas kasir
-  yang tersedia pada integrasi ini.
-
-  Halaman Aktivitas menampilkan informasi bahwa
-  riwayat aktivitas belum tersedia. Tidak ada
-  endpoint atau tabel baru yang dibuat di sini.
-*/
 
 /* AKHIRI SHIFT */
 async function endShift(){
@@ -2690,14 +2681,7 @@ async function endShift(){
 }
 
 /* EVENT PESANAN */
-el("orders").addEventListener("click",handleOrderAction);
-
-/* EVENT PESANAN TERBARU DI BERANDA */
-el("home-recent-orders").addEventListener(
-  "click",
-  handleOrderAction
-);
-
+el("orders").addEventListener("click",
 /* EVENT POS */
 el("open-pos-btn").addEventListener("click",openPos);
 
@@ -2753,39 +2737,6 @@ el("submit-pos-btn").addEventListener(
   submitPosOrder
 );
 
-/* EVENT DASHBOARD */
-el("refresh-btn").addEventListener("click",()=>{
-  loadOrders();
-});
-
-el("header-refresh").addEventListener("click",()=>{
-  loadOrders();
-});
-
-el("search").addEventListener("input",renderOrders);
-
-el("status-filter").addEventListener("change",()=>{
-  const value = el("status-filter").value;
-
-  if(value === "awaiting_confirmation"){
-    activeFilter = "new";
-  }else if(value === "processing"){
-    activeFilter = "processing";
-  }else if(value === "ready_for_delivery"){
-    activeFilter = "ready";
-  }else if(value === "payment"){
-    activeFilter = "payment";
-  }else if(value === "completed"){
-    activeFilter = "completed";
-  }else{
-    activeFilter = "all";
-  }
-
-  updateFilterButtons();
-  renderOrders();
-});
-
-el("end-shift-btn").addEventListener("click",endShift);
 
 /* FILTER STATUS DI HALAMAN PESANAN */
 document.querySelectorAll("[data-filter]").forEach(button=>{
@@ -2801,16 +2752,7 @@ document.querySelectorAll("[data-filter]").forEach(button=>{
     renderOrders();
   });
 });
-
-/* HEADER COLLAPSING */
-window.addEventListener("scroll",()=>{
-  const currentY = window.scrollY || 0;
-
-  el("header-shell").classList.toggle(
-    "collapsed",
-    currentY > 35
-  );
-},{passive:true});
+});
 
 /* TUTUP MODAL DENGAN ESC */
 document.addEventListener("keydown",event=>{

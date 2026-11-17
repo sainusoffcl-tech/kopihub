@@ -2795,8 +2795,16 @@ async function enterDashboard(){
       : "Informasi tidak tersedia";
   }
 
-  /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
-  await loadOrders(true);
+ /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
+const ordersLoaded = await loadOrders(true);
+
+if(ordersLoaded && cashierSession){
+  showNotice(
+    "Terhubung ke sistem kasir. " +
+    allOrders.length +
+    " pesanan diterima dari server."
+  );
+}
 
   /* JANGAN BUAT TIMER JIKA SESI SUDAH BERAKHIR */
   if(!cashierSession) return;

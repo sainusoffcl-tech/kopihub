@@ -1719,72 +1719,131 @@ body {
         </button>
       </div>
 
-      <!-- PROFIL KEDAI -->
-      <section class="panel" id="profil-kedai" hidden>
-        <h2>Profil Kedai</h2>
-        <p class="muted">Atur identitas kedai yang akan dilihat pelanggan.</p>
+    
+<!-- PROFIL KEDAI -->
+<section class="panel" id="profil-kedai" hidden>
+  <h2>Identitas Kedai</h2>
+  <p class="muted">Kelola profil dan jam operasional kedai Anda.</p>
 
-        <form id="shop-profile-form">
-          <div class="field">
-            <label for="profile-shop-name">Nama Kedai</label>
-            <input id="profile-shop-name" type="text" maxlength="120" required placeholder="Contoh: Ontal Kopi">
-          </div>
-
-          <div class="field">
-            <label for="profile-shop-description">Deskripsi Kedai</label>
-            <textarea id="profile-shop-description" rows="3" maxlength="1000" placeholder="Ceritakan sedikit tentang kedai Anda"></textarea>
-          </div>
-
-          <div class="field">
-            <label for="profile-shop-logo">Logo Kedai</label>
-            <input id="profile-shop-logo" type="file" accept="image/png,image/jpeg,image/webp">
-            <p class="muted">Format PNG, JPG, atau WebP. Maksimal 2 MB.</p>
-          </div>
-
-          <div id="profile-logo-preview" hidden>
-            <img id="profile-logo-image" alt="Pratinjau logo kedai"
-              style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px">
-            <button type="button" id="remove-shop-logo" class="danger" style="margin-top:10px">Hapus Logo</button>
-          </div>
-
-          <div class="button-stack">
-            <button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button>
-          </div>
-         <p id="profile-message" class="muted" role="status"></p>
-</form>
-
-<!-- JAM OPERASIONAL KEDAI -->
-<div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--border)">
-  <h3>Jam Operasional Kedai</h3>
-  <p class="muted">
-    Atur jam buka dan tutup kedai untuk setiap hari.
-    Hari yang ditandai tutup tidak menerima pesanan maupun transaksi POS.
-  </p>
-
-  <p id="operating-hours-timezone" class="muted">
-    Zona waktu kedai akan ditampilkan di sini.
-  </p>
-
-  <form id="operating-hours-form">
-    <div id="operating-hours-list"></div>
-
+  <!-- TAB IDENTITAS KEDAI -->
+  <div class="identity-tabs">
     <button
-      type="submit"
-      class="primary"
-      id="save-operating-hours"
-      style="margin-top:12px"
+      type="button"
+      class="identity-tab active"
+      id="identity-tab-profile"
     >
-      Simpan Jam Operasional
+      Profil Kedai
     </button>
 
-    <p
-      id="operating-hours-message"
-      class="muted"
-      role="status"
-      aria-live="polite"
-    ></p>
-  </form>
-</div>
+    <button
+      type="button"
+      class="identity-tab"
+      id="identity-tab-hours"
+    >
+      Jam Operasional
+    </button>
+  </div>
+
+  <!-- KONTEN PROFIL KEDAI -->
+  <div id="identity-profile-content">
+    <form id="shop-profile-form">
+      <div class="field">
+        <label for="profile-shop-name">Nama Kedai</label>
+        <input
+          id="profile-shop-name"
+          type="text"
+          maxlength="120"
+          required
+          placeholder="Contoh: Ontal Kopi"
+        >
+      </div>
+
+      <div class="field">
+        <label for="profile-shop-description">Deskripsi Kedai</label>
+        <textarea
+          id="profile-shop-description"
+          rows="3"
+          maxlength="1000"
+          placeholder="Ceritakan sedikit tentang kedai Anda"
+        ></textarea>
+      </div>
+
+      <div class="field">
+        <label for="profile-shop-logo">Logo Kedai</label>
+        <input
+          id="profile-shop-logo"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+        >
+        <p class="muted">
+          Format PNG, JPG, atau WebP. Maksimal 2 MB.
+        </p>
+      </div>
+
+      <div id="profile-logo-preview" hidden>
+        <img
+          id="profile-logo-image"
+          alt="Pratinjau logo kedai"
+          style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"
+        >
+
+        <button
+          type="button"
+          id="remove-shop-logo"
+          class="danger"
+          style="margin-top:10px"
+        >
+          Hapus Logo
+        </button>
+      </div>
+
+      <div class="button-stack">
+        <button
+          class="primary"
+          id="save-shop-profile"
+          type="submit"
+        >
+          Simpan Profil Kedai
+        </button>
+      </div>
+
+      <p id="profile-message" class="muted" role="status"></p>
+    </form>
+  </div>
+
+  <!-- KONTEN JAM OPERASIONAL -->
+  <div id="identity-hours-content" hidden>
+    <h3>Jam Operasional Kedai</h3>
+
+    <p class="muted">
+      Atur jam buka dan tutup kedai untuk setiap hari.
+      Hari yang ditandai tutup tidak menerima pesanan maupun transaksi POS.
+    </p>
+
+    <p id="operating-hours-timezone" class="muted">
+      Zona waktu kedai akan ditampilkan di sini.
+    </p>
+
+    <form id="operating-hours-form">
+      <div id="operating-hours-list"></div>
+
+      <button
+        type="submit"
+        class="primary"
+        id="save-operating-hours"
+        style="margin-top:12px"
+      >
+        Simpan Jam Operasional
+      </button>
+
+      <p
+        id="operating-hours-message"
+        class="muted"
+        role="status"
+        aria-live="polite"
+      ></p>
+    </form>
+  </div>
 </section>
 
       <!-- PBJT -->

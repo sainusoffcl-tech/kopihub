@@ -1589,9 +1589,42 @@ body {
           <div class="button-stack">
             <button class="primary" id="save-shop-profile" type="submit">Simpan Profil Kedai</button>
           </div>
-          <p id="profile-message" class="muted" role="status"></p>
-        </form>
-      </section>
+         <p id="profile-message" class="muted" role="status"></p>
+</form>
+
+<!-- JAM OPERASIONAL KEDAI -->
+<div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--border)">
+  <h3>Jam Operasional Kedai</h3>
+  <p class="muted">
+    Atur jam buka dan tutup kedai untuk setiap hari.
+    Hari yang ditandai tutup tidak menerima pesanan maupun transaksi POS.
+  </p>
+
+  <p id="operating-hours-timezone" class="muted">
+    Zona waktu kedai akan ditampilkan di sini.
+  </p>
+
+  <form id="operating-hours-form">
+    <div id="operating-hours-list"></div>
+
+    <button
+      type="submit"
+      class="primary"
+      id="save-operating-hours"
+      style="margin-top:12px"
+    >
+      Simpan Jam Operasional
+    </button>
+
+    <p
+      id="operating-hours-message"
+      class="muted"
+      role="status"
+      aria-live="polite"
+    ></p>
+  </form>
+</div>
+</section>
 
       <!-- PBJT -->
       <section class="panel" id="pengaturan-pbjt" hidden>

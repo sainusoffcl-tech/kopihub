@@ -2720,32 +2720,53 @@ function isToday(dateValue){
   }
 }
 
-/* MEMBUKA DAFTAR DARI KARTU DASHBOARD */
+/* MEMBUKA HALAMAN KATEGORI PESANAN */
 function openOrderGroup(group){
+
   activeFilter = group || "all";
 
   if(el("search")){
     el("search").value = "";
   }
 
+  el("dashboard-home-page").hidden = true;
   el("order-list-panel").hidden = false;
+  el("profile-page").hidden = true;
 
   updateFilterButtons();
   renderOrders();
 
-  el("order-list-panel").scrollIntoView({
-    behavior:"smooth",
-    block:"start"
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
   });
 }
 
-/* EVENT KARTU PESANAN */
-document.querySelectorAll("[data-order-filter]").forEach(button=>{
-  button.addEventListener("click",()=>{
-    openOrderGroup(button.dataset.orderFilter);
-  });
-});
+/* KEMBALI KE DASHBOARD UTAMA */
+function returnToDashboardHome(){
 
+  el("dashboard-home-page").hidden = false;
+  el("order-list-panel").hidden = true;
+  el("profile-page").hidden = true;
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+/* MEMBUKA PROFIL KASIR */
+function openCashierProfile(){
+
+  el("dashboard-home-page").hidden = true;
+  el("order-list-panel").hidden = true;
+  el("profile-page").hidden = false;
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
 /* MASUK DASHBOARD */
 async function enterDashboard(){
   if(!cashierSession){
@@ -2919,29 +2940,21 @@ function updateStats(){
 }
 
 
-/* FILTER KARTU */
+/* JUDUL HALAMAN PESANAN */
 function updateFilterButtons(){
 
   const headings = {
-    all:"Semua Pesanan",
-    new:"Pesanan Masuk Hari Ini",
+    new:"Pesanan Masuk",
     processing:"Pesanan Diproses",
-    completed:"Riwayat Pesanan Selesai"
+    completed:"Riwayat Pesanan"
   };
 
   el("list-heading").textContent =
     headings[activeFilter] || "Daftar Pesanan";
 
-  document.querySelectorAll("[data-filter]").forEach(button=>{
-    button.classList.toggle(
-      "active",
-      button.dataset.filter === activeFilter
-    );
-  });
 }
 
-
-/* RINCIAN MENU */
+  /* RINCIAN MENU */
 function renderItems(items){
   if(!items.length){
     return '<div class="item-row"><span>Rincian menu tidak tersedia</span></div>';

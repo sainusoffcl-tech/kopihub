@@ -3997,11 +3997,13 @@ async function refreshMenu() {
 
     categorySelect.disabled = !categories.length;
 
-    
     renderProducts();
-    renderCategories();
+renderCategories();
+renderMenuAvailability();
 
-    return true;
+return true;
+    
+    
 
   } catch (error) {
     if (

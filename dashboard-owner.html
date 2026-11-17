@@ -2537,7 +2537,9 @@ function showSettingsPanel(
   if (panelId === "manajemen-kasir" && selectedShop()) {
     loadCashierStaff();
   }
-
+if (panelId === "profil-kedai" && selectedShop()) {
+  loadOperatingHours();
+}
   if (panelId === "tagihan-kopihub" && selectedShop()) {
     loadOwnerInvoices();
   }

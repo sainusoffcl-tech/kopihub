@@ -600,6 +600,107 @@ button:disabled{opacity:.55;cursor:not-allowed}
   line-height:1.5;
 }
 
+/* IDENTITAS KEDAI - TAB */
+.identity-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 5px;
+  background: #f0f3ef;
+  border-radius: 12px;
+  margin: 18px 0;
+}
+
+.identity-tab {
+  width: 100%;
+  padding: 12px 7px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #53645a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.identity-tab.active {
+  background: #174c38;
+  color: #fff;
+  box-shadow: 0 2px 7px rgba(18,59,44,.15);
+}
+
+.operating-timezone-box {
+  display: grid;
+  gap: 5px;
+  padding: 13px;
+  margin: 15px 0;
+  border-radius: 11px;
+  background: #f3f7f3;
+  color: #174c38;
+}
+
+.operating-timezone-box span {
+  color: #748078;
+  font-size: 11px;
+}
+
+.operating-timezone-box strong {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+/* KARTU JADWAL HARIAN */
+.operating-day-card {
+  padding: 14px;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: #fff;
+}
+
+.operating-day-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  color: var(--dark);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.operating-day-status {
+  margin: 0;
+}
+
+.operating-time-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.operating-time-fields .field {
+  min-width: 0;
+  margin: 0;
+}
+
+.operating-time-fields label {
+  font-size: 12px;
+}
+
+.operating-time-fields input {
+  margin-bottom: 0;
+}
+
+.operating-day-closed {
+  padding: 11px;
+  margin-top: 10px;
+  border-radius: 9px;
+  background: #f5f6f4;
+  color: #748078;
+  font-size: 12px;
+}
+
 [hidden]{display:none!important}
 
 @media(min-width:650px){
@@ -2613,6 +2714,43 @@ if (panelId === "profil-kedai" && selectedShop()) {
     });
   }
 }
+
+  
+/* TAB IDENTITAS KEDAI */
+
+function showIdentityTab(tab) {
+  const profileContent = $("identity-profile-content");
+  const hoursContent = $("identity-hours-content");
+  const profileButton = $("identity-tab-profile");
+  const hoursButton = $("identity-tab-hours");
+
+  const showHours = tab === "hours";
+
+  profileContent.hidden = showHours;
+  hoursContent.hidden = !showHours;
+
+  profileButton.classList.toggle("active", !showHours);
+  hoursButton.classList.toggle("active", showHours);
+
+  if (showHours && selectedShop()) {
+    loadOperatingHours();
+  }
+
+  if (appScroll) {
+    appScroll.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }
+}
+
+$("identity-tab-profile")?.addEventListener("click", () => {
+  showIdentityTab("profile");
+});
+
+$("identity-tab-hours")?.addEventListener("click", () => {
+  showIdentityTab("hours");
+});
 
 /* TOMBOL PILIHAN PENGATURAN */
 

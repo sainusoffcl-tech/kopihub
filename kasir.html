@@ -720,7 +720,191 @@ button:disabled{opacity:.5;cursor:wait}
   font-size:13px;
   line-height:1.6;
 }
+/* =================================
+   KARTU PESANAN RINGKAS
+================================= */
 
+.order-card{
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+}
+
+.order-card .order-head{
+  margin-bottom:0;
+}
+
+.order-card .assignment{
+  margin:0;
+}
+
+.order-brief{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.order-brief span{
+  padding:7px 9px;
+  border-radius:9px;
+  background:#f3f5f1;
+  color:#59665e;
+  font-size:10px;
+  font-weight:750;
+}
+
+.order-card .total-row{
+  margin-top:0;
+}
+
+.order-detail-btn{
+  width:100%;
+  min-height:42px;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:white;
+  color:var(--green);
+  font-size:11px;
+  font-weight:850;
+}
+
+/* =================================
+   MODAL DETAIL PESANAN
+================================= */
+
+.order-detail-overlay{
+  position:fixed;
+  inset:0;
+  z-index:120;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:0;
+  background:rgba(10,25,17,.58);
+}
+
+.order-detail-panel{
+  width:100%;
+  max-width:620px;
+  max-height:92dvh;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:18px 16px calc(24px + env(safe-area-inset-bottom));
+  border-radius:22px 22px 0 0;
+  background:var(--cream);
+  box-shadow:0 -10px 35px rgba(0,0,0,.18);
+}
+
+.order-detail-head{
+  position:sticky;
+  top:-18px;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:-18px -16px 17px;
+  padding:16px;
+  border-bottom:1px solid var(--border);
+  background:rgba(250,249,245,.97);
+  backdrop-filter:blur(12px);
+}
+
+.order-detail-head h2{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+}
+
+.order-detail-close{
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:white;
+  color:var(--green);
+  font-size:21px;
+}
+
+.order-detail-body{
+  padding:2px 0;
+}
+
+.order-detail-summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.order-detail-number{
+  font-size:20px;
+  font-weight:950;
+  overflow-wrap:anywhere;
+}
+
+.order-detail-time{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.order-detail-section{
+  margin-top:13px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:white;
+}
+
+.order-detail-section h3{
+  margin:0 0 11px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.order-detail-meta{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+
+.order-detail-total{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:13px;
+  padding:15px;
+  border-radius:14px;
+  background:#eaf2ec;
+}
+
+.order-detail-total strong{
+  color:var(--green);
+  font-size:19px;
+  font-weight:950;
+}
+
+.order-detail-actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:9px;
+  margin-top:15px;
+}
+
+.order-detail-actions .btn{
+  width:100%;
+}
+
+@media(max-width:600px){
+  .orders{
+    grid-template-columns:1fr;
+  }
+}
 /* =================================
    PROFIL KASIR
 ================================= */

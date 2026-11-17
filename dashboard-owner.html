@@ -2910,6 +2910,7 @@ const operatingDays = [
   { day: 6, name: "Sabtu" }
 ];
 
+
 function renderOperatingHoursRows(schedule = []) {
   const container = $("operating-hours-list");
   if (!container) return;
@@ -2921,28 +2922,37 @@ function renderOperatingHoursRows(schedule = []) {
       item => Number(item.day_of_week) === day.day
     );
 
-    const row = document.createElement("div");
-    row.style.cssText =
-      "padding:13px 0;border-bottom:1px solid var(--border)";
+    const card = document.createElement("div");
+    card.className = "operating-day-card";
 
-    const heading = document.createElement("strong");
-    heading.textContent = day.name;
-    heading.style.display = "block";
-    heading.style.marginBottom = "8px";
+    const heading = document.createElement("div");
+    heading.className = "operating-day-heading";
 
-    const controls = document.createElement("div");
-    controls.style.cssText =
-      "display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center";
+    const dayName = document.createElement("strong");
+    dayName.textContent = day.name;
 
     const status = document.createElement("select");
     status.id = "operating-status-" + day.day;
     status.required = true;
     status.style.margin = "0";
+    status.setAttribute("aria-label", "Status " + day.name);
     status.innerHTML = `
       <option value="">Pilih status</option>
       <option value="open">Buka</option>
       <option value="closed">Tutup</option>
     `;
+
+    heading.append(dayName, status);
+
+    const timeFields = document.createElement("div");
+    timeFields.className = "operating-time-fields";
+
+    const openGroup = document.createElement("div");
+    openGroup.className = "field";
+
+    const openLabel = document.createElement("label");
+    openLabel.textContent = "Jam buka";
+    openLabel.htmlFor = "operating-open-" + day.day;
 
     const open = document.createElement("input");
     open.type = "time";
@@ -2950,17 +2960,36 @@ function renderOperatingHoursRows(schedule = []) {
     open.setAttribute("aria-label", "Jam buka " + day.name);
     open.style.margin = "0";
 
+    openGroup.append(openLabel, open);
+
+    const closeGroup = document.createElement("div");
+    closeGroup.className = "field";
+
+    const closeLabel = document.createElement("label");
+    closeLabel.textContent = "Jam tutup";
+    closeLabel.htmlFor = "operating-close-" + day.day;
+
     const close = document.createElement("input");
     close.type = "time";
     close.id = "operating-close-" + day.day;
     close.setAttribute("aria-label", "Jam tutup " + day.name);
     close.style.margin = "0";
 
+    closeGroup.append(closeLabel, close);
+    timeFields.append(openGroup, closeGroup);
+
+    const closedMessage = document.createElement("p");
+    closedMessage.className = "operating-day-closed";
+    closedMessage.textContent = "Kedai tutup pada hari ini.";
+    closedMessage.hidden = true;
+
     if (saved) {
       status.value = saved.is_open ? "open" : "closed";
+
       open.value = saved.open_time
         ? String(saved.open_time).slice(0, 5)
         : "";
+
       close.value = saved.close_time
         ? String(saved.close_time).slice(0, 5)
         : "";
@@ -2974,14 +3003,17 @@ function renderOperatingHoursRows(schedule = []) {
 
       open.required = isOpen;
       close.required = isOpen;
+
+      timeFields.hidden = !isOpen;
+      closedMessage.hidden = isOpen || status.value === "";
+
     }
 
     status.addEventListener("change", updateTimeInputs);
     updateTimeInputs();
 
-    controls.append(status, open, close);
-    row.append(heading, controls);
-    container.appendChild(row);
+    card.append(heading, timeFields, closedMessage);
+    container.appendChild(card);
   });
 }
 

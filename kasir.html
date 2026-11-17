@@ -4098,8 +4098,9 @@ async function submitPosOrder(){
 
     await loadOrders(true);
 
-        activeFilter = "all";
-    openOrderGroup("all");
+activeFilter = "processing";
+openOrderGroup("processing");
+activePage = "orders";
   
   }catch(error){
     showPosNotice(

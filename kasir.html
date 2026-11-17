@@ -2704,8 +2704,6 @@ document.querySelectorAll("[data-order-filter]").forEach(button=>{
   });
 });
 
-
-
 /* MASUK DASHBOARD */
 async function enterDashboard(){
   if(!cashierSession){
@@ -2733,26 +2731,28 @@ async function enterDashboard(){
     cashierSession.session.cashier_id ||
     "Informasi tidak tersedia";
 
-/* INFORMASI STATUS AKUN DAN SHIFT */
-const accountStatus = el("account-status");
-const shiftStatus = el("account-shift-status");
-const sessionExpiry = el("account-session-expiry");
+  /* INFORMASI STATUS AKUN DAN SHIFT */
+  const accountStatus = el("account-status");
+  const shiftStatus = el("account-shift-status");
+  const sessionExpiry = el("account-session-expiry");
 
-if(accountStatus){
-  accountStatus.textContent = "Aktif";
+  if(accountStatus){
+    accountStatus.textContent = "Aktif";
+  }
+
+  if(shiftStatus){
+    shiftStatus.textContent = "Shift berlangsung";
+  }
+
+  if(sessionExpiry){
+    const expiry = cashierSession.session.expires_at;
+
+    sessionExpiry.textContent = expiry
+      ? readableDate(expiry)
+      : "Informasi tidak tersedia";
+  }
 }
 
-if(shiftStatus){
-  shiftStatus.textContent = "Shift berlangsung";
-}
-
-if(sessionExpiry){
-  const expiry = cashierSession.session.expires_at;
-
-  sessionExpiry.textContent = expiry
-    ? readableDate(expiry)
-    : "Informasi tidak tersedia";
-}
 /* MEMUAT PESANAN */
 async function loadOrders(silent=false){
   if(!cashierSession || loading) return;
@@ -2828,7 +2828,6 @@ async function loadOrders(silent=false){
     }
   }
 }
-
 
 /* TIGA RINGKASAN PESANAN */
 function updateStats(){

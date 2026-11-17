@@ -3746,10 +3746,26 @@ async function endShift(){
   }
 }
 
-
-/* EVENT PESANAN */
-el("orders").addEventListener("click", event=>{
+/* EVENT PESANAN DAN MODAL DETAIL */
+el("orders").addEventListener("click",event=>{
   handleOrderAction(event);
+});
+
+el("order-detail-content").addEventListener("click",event=>{
+  if(event.target.closest("#detail-close-bottom")){
+    closeOrderDetail();
+    return;
+  }
+
+  handleOrderAction(event);
+});
+
+el("close-order-detail").addEventListener("click",closeOrderDetail);
+
+el("order-detail-overlay").addEventListener("click",event=>{
+  if(event.target === el("order-detail-overlay")){
+    closeOrderDetail();
+  }
 });
 
 /* EVENT POS */
@@ -3843,14 +3859,17 @@ el("end-shift-btn").addEventListener("click",()=>{
 
 /* TUTUP MODAL DENGAN ESC */
 document.addEventListener("keydown",event=>{
-  if(
-    event.key === "Escape" &&
-    !el("pos-overlay").hidden
-  ){
+  if(event.key !== "Escape") return;
+
+  if(!el("order-detail-overlay").hidden){
+    closeOrderDetail();
+    return;
+  }
+
+  if(!el("pos-overlay").hidden){
     closePos();
   }
 });
-
 /* PEMULIHAN SESI */
 async function initialize(){
   if(!window.supabase || !db){

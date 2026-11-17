@@ -2664,6 +2664,244 @@ function formatExpiry(value) {
 }
 
 /* =========================================
+   JAM OPERASIONAL KEDAI
+========================================= */
+
+const operatingDays = [
+  { day: 0, name: "Minggu" },
+  { day: 1, name: "Senin" },
+  { day: 2, name: "Selasa" },
+  { day: 3, name: "Rabu" },
+  { day: 4, name: "Kamis" },
+  { day: 5, name: "Jumat" },
+  { day: 6, name: "Sabtu" }
+];
+
+function renderOperatingHoursRows(schedule = []) {
+  const container = $("operating-hours-list");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  operatingDays.forEach(day => {
+    const saved = schedule.find(
+      item => Number(item.day_of_week) === day.day
+    );
+
+    const row = document.createElement("div");
+    row.style.cssText =
+      "padding:13px 0;border-bottom:1px solid var(--border)";
+
+    const heading = document.createElement("strong");
+    heading.textContent = day.name;
+    heading.style.display = "block";
+    heading.style.marginBottom = "8px";
+
+    const controls = document.createElement("div");
+    controls.style.cssText =
+      "display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center";
+
+    const status = document.createElement("select");
+    status.id = "operating-status-" + day.day;
+    status.required = true;
+    status.style.margin = "0";
+    status.innerHTML = `
+      <option value="">Pilih status</option>
+      <option value="open">Buka</option>
+      <option value="closed">Tutup</option>
+    `;
+
+    const open = document.createElement("input");
+    open.type = "time";
+    open.id = "operating-open-" + day.day;
+    open.setAttribute("aria-label", "Jam buka " + day.name);
+    open.style.margin = "0";
+
+    const close = document.createElement("input");
+    close.type = "time";
+    close.id = "operating-close-" + day.day;
+    close.setAttribute("aria-label", "Jam tutup " + day.name);
+    close.style.margin = "0";
+
+    if (saved) {
+      status.value = saved.is_open ? "open" : "closed";
+      open.value = saved.open_time
+        ? String(saved.open_time).slice(0, 5)
+        : "";
+      close.value = saved.close_time
+        ? String(saved.close_time).slice(0, 5)
+        : "";
+    }
+
+    function updateTimeInputs() {
+      const isOpen = status.value === "open";
+
+      open.disabled = !isOpen;
+      close.disabled = !isOpen;
+
+      open.required = isOpen;
+      close.required = isOpen;
+    }
+
+    status.addEventListener("change", updateTimeInputs);
+    updateTimeInputs();
+
+    controls.append(status, open, close);
+    row.append(heading, controls);
+    container.appendChild(row);
+  });
+}
+
+async function loadOperatingHours() {
+  const shop = selectedShop();
+  const message = $("operating-hours-message");
+  const timezoneLabel = $("operating-hours-timezone");
+  const saveButton = $("save-operating-hours");
+
+  if (!shop || !client) {
+    if (message) {
+      message.textContent = "Pilih kedai terlebih dahulu.";
+    }
+    return;
+  }
+
+  if (timezoneLabel) {
+    timezoneLabel.textContent =
+      "Zona waktu kedai: " +
+      (shop.timezone || "Asia/Jayapura");
+  }
+
+  if (message) {
+    message.textContent = "Memuat jadwal operasional...";
+  }
+
+  if (saveButton) saveButton.disabled = true;
+
+  try {
+    const { data, error } = await client
+      .from("kh_shop_operating_hours")
+      .select(
+        "day_of_week,open_time,close_time,is_open"
+      )
+      .eq("shop_id", shop.id)
+      .order("day_of_week");
+
+    if (error) throw error;
+
+    renderOperatingHoursRows(data || []);
+
+    if (message) {
+      message.textContent = data?.length
+        ? "Jadwal operasional berhasil dimuat."
+        : "Jadwal belum diatur. Silakan atur jam operasional setiap hari.";
+    }
+  } catch (error) {
+    console.error("Gagal memuat jam operasional:", error);
+
+    if (message) {
+      message.textContent =
+        "Gagal memuat jadwal: " +
+        (error.message || "Terjadi kesalahan.");
+    }
+  } finally {
+    if (saveButton) {
+      saveButton.disabled = !selectedShop();
+    }
+  }
+}
+
+/* SIMPAN JADWAL OPERASIONAL */
+
+$("operating-hours-form")?.addEventListener(
+  "submit",
+  async event => {
+    event.preventDefault();
+
+    const shop = selectedShop();
+    const message = $("operating-hours-message");
+    const saveButton = $("save-operating-hours");
+
+    if (!client || !shop) {
+      message.textContent = "Pilih kedai terlebih dahulu.";
+      return;
+    }
+
+    const rows = [];
+
+    for (const day of operatingDays) {
+      const status = $("operating-status-" + day.day);
+      const open = $("operating-open-" + day.day);
+      const close = $("operating-close-" + day.day);
+
+      if (!status || !open || !close || !status.value) {
+        message.textContent =
+          "Pilih status Buka atau Tutup untuk setiap hari.";
+        return;
+      }
+
+      const isOpen = status.value === "open";
+
+      if (isOpen) {
+        if (!open.value || !close.value) {
+          message.textContent =
+            "Jam buka dan tutup wajib diisi untuk " +
+            day.name + ".";
+          return;
+        }
+
+        if (close.value <= open.value) {
+          message.textContent =
+            "Jam tutup harus lebih besar daripada jam buka pada " +
+            day.name + ".";
+          return;
+        }
+      }
+
+      rows.push({
+        shop_id: shop.id,
+        day_of_week: day.day,
+        is_open: isOpen,
+        open_time: isOpen ? open.value : null,
+        close_time: isOpen ? close.value : null,
+        updated_at: new Date().toISOString()
+      });
+    }
+
+    saveButton.disabled = true;
+    message.textContent = "Menyimpan jam operasional...";
+
+    try {
+      const { error } = await client
+        .from("kh_shop_operating_hours")
+        .upsert(rows, {
+          onConflict: "shop_id,day_of_week"
+        });
+
+      if (error) throw error;
+
+      message.textContent =
+        "Jam operasional berhasil disimpan.";
+
+      await loadOperatingHours();
+
+      message.textContent =
+        "Jam operasional berhasil disimpan.";
+    } catch (error) {
+      console.error(
+        "Gagal menyimpan jam operasional:",
+        error
+      );
+
+      message.textContent =
+        "Gagal menyimpan jadwal: " +
+        (error.message || "Terjadi kesalahan.");
+    } finally {
+      saveButton.disabled = !selectedShop();
+    }
+  }
+);
+
+/* =========================================
    IDENTITAS DAN PENGATURAN KEDAI
 ========================================= */
 

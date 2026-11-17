@@ -539,6 +539,66 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .invoice-empty{padding:22px 14px;text-align:center;border:1px dashed #cbd7ce;border-radius:12px;color:var(--muted);font-size:13px}
 .invoice-refresh{margin-bottom:12px}
 
+  /* KETERSEDIAAN MENU */
+.availability-list{
+  display:grid;
+  gap:11px;
+  margin-top:15px;
+}
+.availability-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:#fff;
+}
+.availability-info{
+  min-width:0;
+  flex:1;
+}
+.availability-name{
+  display:block;
+  color:var(--dark);
+  font-size:14px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.availability-detail{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+.availability-status{
+  display:inline-block;
+  margin-top:7px;
+  padding:4px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:750;
+}
+.availability-status.available{
+  background:#e4f4e9;
+  color:#21683a;
+}
+.availability-status.unavailable{
+  background:#fff0ef;
+  color:#a72d2d;
+}
+.availability-toggle{
+  flex:0 0 auto;
+  width:auto;
+  min-width:105px;
+  padding:10px 12px;
+  font-size:12px;
+}
+.availability-message{
+  margin-top:12px;
+  font-size:13px;
+  line-height:1.5;
+}
 
 [hidden]{display:none!important}
 

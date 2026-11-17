@@ -2415,20 +2415,37 @@ el("login-form").addEventListener("submit",async event=>{
 /* =====================================================
    DASHBOARD KASIR KOPIHUB - DESAIN KARTU SATU HALAMAN
    ===================================================== */
-
-
-/* FORMAT TANGGAL HARI INI */
+/* HITUNG HARI INI BERDASARKAN TIMEZONE KEDAI */
 function isToday(dateValue){
   if(!dateValue) return false;
 
   const date = new Date(dateValue);
-  const now = new Date();
 
-  return (
-    date.getFullYear() === now.getFullYear() &&
-    date.getMonth() === now.getMonth() &&
-    date.getDate() === now.getDate()
-  );
+  if(Number.isNaN(date.getTime())) return false;
+
+  const timezone =
+    cashierSession?.shop?.timezone || "Asia/Jakarta";
+
+  try{
+    const formatter = new Intl.DateTimeFormat("en-CA",{
+      timeZone:timezone,
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit"
+    });
+
+    return formatter.format(date) === formatter.format(new Date());
+
+  }catch(error){
+    /* Fallback jika timezone kedai tidak valid */
+    const formatter = new Intl.DateTimeFormat("en-CA",{
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit"
+    });
+
+    return formatter.format(date) === formatter.format(new Date());
+  }
 }
 
 /* MEMBUKA DAFTAR DARI KARTU DASHBOARD */

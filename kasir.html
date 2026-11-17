@@ -2665,21 +2665,16 @@ function renderItems(items){
     );
   }).join("");
 }
-
-/* KARTU PESANAN */
-function renderOrder(order){
+/* TOMBOL TINDAKAN PESANAN */
+function renderOrderActions(order){
   const status = order.order_status;
   const mine = isMine(order);
   const assignment = assignmentOf(order);
   const busy = busyOrderIds.has(String(order.id));
-  const note = getOrderNote(order);
 
   let actions = "";
 
-  if(
-    status === "awaiting_confirmation" &&
-    !assignment
-  ){
+  if(status === "awaiting_confirmation" && !assignment){
     actions +=
       '<button class="btn btn-green" data-accept="' +
       escapeHTML(order.id) + '"' +
@@ -2687,22 +2682,14 @@ function renderOrder(order){
       '>Terima Pesanan</button>';
   }
 
-  if(
-    mine &&
-    status === "processing" &&
-    isWaitingPayment(order)
-  ){
+  if(mine && status === "processing" && isWaitingPayment(order)){
     actions +=
       '<button class="btn btn-orange" data-payment="' +
       escapeHTML(order.id) + '"' +
       (busy ? " disabled" : "") +
       '>Konfirmasi Pembayaran</button>';
 
-  }else if(
-    mine &&
-    status === "processing" &&
-    isPaid(order)
-  ){
+  }else if(mine && status === "processing" && isPaid(order)){
     actions +=
       '<button class="btn btn-green" data-status="' +
       escapeHTML(order.id) + '"' +
@@ -2710,10 +2697,7 @@ function renderOrder(order){
       '>Selesai</button>';
   }
 
-  if(
-    mine &&
-    !["completed","cancelled"].includes(status)
-  ){
+  if(mine && !["completed","cancelled"].includes(status)){
     actions +=
       '<button class="btn btn-light" data-handover="' +
       escapeHTML(order.id) + '"' +
@@ -2721,29 +2705,23 @@ function renderOrder(order){
       '>Serah Terima</button>';
   }
 
-  const assignmentClass = mine
-    ? "assignment mine"
-    : "assignment";
+  return actions;
+}
 
-  const paymentText = isPaid(order)
-    ? "Sudah Dibayar"
-    : isWaitingPayment(order)
-      ? "Menunggu Pembayaran"
-      : (order.payment_status || "Belum tersedia");
+/* KARTU PESANAN RINGKAS */
+function renderOrder(order){
+  const status = order.order_status;
 
-  const paymentClass = isPaid(order)
-    ? "payment-paid"
-    : "payment-unpaid";
+  let displayStatus = STATUS_LABELS[status] || status;
+
+  if(status === "processing" && isWaitingPayment(order)){
+    displayStatus = "Menunggu Pembayaran";
+  }
 
   const table =
     order.table_label ||
     order.table_number ||
-    "—";
-
-  const sourceText =
-    order.order_source === "pos"
-      ? "Dibuat Kasir (POS)"
-      : "Pesanan QR";
+    "Tanpa nomor meja";
 
   const orderTypeLabel =
     order.order_type === "dine_in"
@@ -2752,14 +2730,18 @@ function renderOrder(order){
         ? "Takeaway"
         : order.order_type || "—";
 
-  let displayStatus = STATUS_LABELS[status] || status;
+  const sourceText =
+    order.order_source === "pos"
+      ? "POS Kasir"
+      : "Pesanan QR";
 
-  if(
-    status === "processing" &&
-    isWaitingPayment(order)
-  ){
-    displayStatus = "Menunggu Pembayaran";
-  }
+  const totalQty = order.items.reduce((sum,item)=>{
+    return sum + itemQty(item);
+  },0);
+
+  const assignmentClass = isMine(order)
+    ? "assignment mine"
+    : "assignment";
 
   return (
     '<article class="order-card">' +
@@ -2769,14 +2751,9 @@ function renderOrder(order){
           '<div class="order-number">#' +
             escapeHTML(orderNumber(order)) +
           '</div>' +
-
           '<div class="order-time">' +
             escapeHTML(readableDate(order.created_at)) +
           '</div>' +
-
-          '<span class="source-tag">' +
-            escapeHTML(sourceText) +
-          '</span>' +
         '</div>' +
 
         '<span class="badge ' + escapeHTML(status) + '">' +
@@ -2788,14 +2765,96 @@ function renderOrder(order){
         escapeHTML(orderAssignmentLabel(order)) +
       '</div>' +
 
-      '<div class="info-grid">' +
+      '<div class="order-brief">' +
+        '<span>' + escapeHTML(table) + '</span>' +
+        '<span>' + escapeHTML(orderTypeLabel) + '</span>' +
+        '<span>' + totalQty + ' item</span>' +
+        '<span>' + escapeHTML(sourceText) + '</span>' +
+      '</div>' +
 
-        '<div>' +
-          '<div class="info-label">Meja</div>' +
-          '<div class="info-value">' +
-            escapeHTML(table) +
-          '</div>' +
+      '<div class="total-row">' +
+        '<span class="total-label">Total Pesanan</span>' +
+        '<span class="total-price">' +
+          rupiah(orderTotal(order)) +
+        '</span>' +
+      '</div>' +
+
+      '<button type="button" class="order-detail-btn" ' +
+        'data-detail="' + escapeHTML(order.id) + '">' +
+        'Lihat Detail Pesanan →' +
+      '</button>' +
+
+    '</article>'
+  );
+}
+
+  /* MEMBUKA DETAIL PESANAN */
+function openOrderDetail(orderId){
+  const order = allOrders.find(item=>
+    String(item.id) === String(orderId)
+  );
+
+  if(!order) return;
+
+  const status = order.order_status;
+
+  let displayStatus = STATUS_LABELS[status] || status;
+
+  if(status === "processing" && isWaitingPayment(order)){
+    displayStatus = "Menunggu Pembayaran";
+  }
+
+  const table =
+    order.table_label ||
+    order.table_number ||
+    "—";
+
+  const orderTypeLabel =
+    order.order_type === "dine_in"
+      ? "Dine-in"
+      : order.order_type === "takeaway"
+        ? "Takeaway"
+        : order.order_type || "—";
+
+  const paymentText = isPaid(order)
+    ? "Sudah Dibayar"
+    : isWaitingPayment(order)
+      ? "Menunggu Pembayaran"
+      : (order.payment_status || "Belum tersedia");
+
+  const paymentClass = isPaid(order)
+    ? "payment-paid"
+    : "payment-unpaid";
+
+  const note = getOrderNote(order);
+  const actions = renderOrderActions(order);
+
+  el("order-detail-content").innerHTML =
+    '<div class="order-detail-summary">' +
+
+      '<div>' +
+        '<div class="order-detail-number">#' +
+          escapeHTML(orderNumber(order)) +
         '</div>' +
+        '<div class="order-detail-time">' +
+          escapeHTML(readableDate(order.created_at)) +
+        '</div>' +
+      '</div>' +
+
+      '<span class="badge ' + escapeHTML(status) + '">' +
+        escapeHTML(displayStatus) +
+      '</span>' +
+
+    '</div>' +
+
+    '<div class="assignment ' +
+      (isMine(order) ? "mine" : "") + '">' +
+      escapeHTML(orderAssignmentLabel(order)) +
+    '</div>' +
+
+    '<div class="order-detail-section">' +
+      '<h3>Informasi Pesanan</h3>' +
+      '<div class="order-detail-meta">' +
 
         '<div>' +
           '<div class="info-label">Jenis Pesanan</div>' +
@@ -2805,41 +2864,49 @@ function renderOrder(order){
         '</div>' +
 
         '<div>' +
-          '<div class="info-label">Nomor Pesanan</div>' +
+          '<div class="info-label">Meja</div>' +
           '<div class="info-value">' +
-            escapeHTML(orderNumber(order)) +
+            escapeHTML(table) +
           '</div>' +
         '</div>' +
 
         '<div>' +
-          '<div class="info-label">Pembayaran</div>' +
+          '<div class="info-label">Sumber Pesanan</div>' +
+          '<div class="info-value">' +
+            (order.order_source === "pos"
+              ? "Dibuat Kasir (POS)"
+              : "Pesanan QR") +
+          '</div>' +
+        '</div>' +
+
+        '<div>' +
+          '<div class="info-label">Metode Pembayaran</div>' +
           '<div class="info-value">' +
             escapeHTML(order.payment_method || "—") +
           '</div>' +
         '</div>' +
 
       '</div>' +
+    '</div>' +
 
+    '<div class="order-detail-section">' +
+      '<h3>Rincian Menu</h3>' +
       '<div class="items">' +
-        '<div class="items-title">Rincian Pesanan</div>' +
         renderItems(order.items) +
       '</div>' +
+    '</div>' +
 
-      (
-        note
-          ? '<div class="order-note"><strong>Catatan:</strong> ' +
-              escapeHTML(note) +
-            '</div>'
-          : ''
-      ) +
+    (note
+      ? '<div class="order-detail-section">' +
+          '<h3>Catatan Pesanan</h3>' +
+          '<div class="order-note">' +
+            escapeHTML(note) +
+          '</div>' +
+        '</div>'
+      : '') +
 
-      '<div class="total-row">' +
-        '<span class="total-label">Total Pesanan</span>' +
-        '<span class="total-price">' +
-          rupiah(orderTotal(order)) +
-        '</span>' +
-      '</div>' +
-
+    '<div class="order-detail-section">' +
+      '<h3>Pembayaran</h3>' +
       '<div class="payment-line">' +
         'Status pembayaran: ' +
         '<span class="' + paymentClass + '">' +
@@ -2847,18 +2914,38 @@ function renderOrder(order){
         '</span>' +
       '</div>' +
 
-      (
-        actions
-          ? '<div class="order-actions">' + actions + '</div>'
-          : ''
-      ) +
+      '<div class="order-detail-total">' +
+        '<span class="total-label">Total Pesanan</span>' +
+        '<strong>' + rupiah(orderTotal(order)) + '</strong>' +
+      '</div>' +
+    '</div>' +
 
-    '</article>'
-  );
+    (actions
+      ? '<div class="order-detail-actions">' +
+          actions +
+        '</div>'
+      : '') +
+
+    '<button type="button" class="btn btn-light btn-block" ' +
+      'id="detail-close-bottom" style="margin-top:10px">' +
+      'Tutup Detail' +
+    '</button>';
+
+  el("order-detail-overlay").hidden = false;
+  document.body.style.overflow = "hidden";
 }
 
+/* MENUTUP DETAIL PESANAN */
+function closeOrderDetail(){
+  if(el("order-detail-overlay")){
+    el("order-detail-overlay").hidden = true;
+  }
 
-/* DAFTAR PESANAN */
+  if(el("pos-overlay").hidden){
+    document.body.style.overflow = "";
+  }
+}
+  /* DAFTAR PESANAN */
 function renderOrders(){
 
   if(!cashierSession || !el("orders")) return;
@@ -2918,18 +3005,31 @@ function renderOrders(){
 
 /* EVENT TINDAKAN PESANAN */
 function handleOrderAction(event){
+  const detail = event.target.closest("[data-detail]");
   const accept = event.target.closest("[data-accept]");
   const status = event.target.closest("[data-status]");
   const payment = event.target.closest("[data-payment]");
   const handover = event.target.closest("[data-handover]");
 
+  if(detail){
+    openOrderDetail(detail.dataset.detail);
+    return;
+  }
+
   if(accept){
+    closeOrderDetail();
     acceptOrder(accept.dataset.accept);
+
   }else if(status){
+    closeOrderDetail();
     changeOrderStatus(status.dataset.status);
+
   }else if(payment){
+    closeOrderDetail();
     confirmCashPayment(payment.dataset.payment);
+
   }else if(handover){
+    closeOrderDetail();
     handoverOrder(handover.dataset.handover);
   }
 }

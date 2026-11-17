@@ -2503,6 +2503,16 @@ async function enterDashboard(){
     cashierSession.session.cashier_id ||
     "Informasi tidak tersedia";
 
+  /* INFORMASI STATUS AKUN DAN SHIFT */
+el("account-status").textContent = "Aktif";
+el("account-shift-status").textContent = "Shift berlangsung";
+
+const expiry = cashierSession.session.expires_at;
+
+el("account-session-expiry").textContent =
+  expiry
+    ? readableDate(expiry)
+    : "Informasi tidak tersedia";
   el("order-list-panel").hidden = true;
 
   showNotice("Memverifikasi sesi kasir dan memuat pesanan...");

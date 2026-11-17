@@ -1577,10 +1577,14 @@ button:disabled{opacity:.5;cursor:wait}
         <small>DASHBOARD OPERASIONAL KASIR</small>
       </div>
       <div class="header-right">
-        <span class="header-staff" id="header-staff"></span>
-        <button class="header-icon-btn" id="header-refresh" type="button"
-          aria-label="Muat ulang" title="Muat ulang" hidden>↻</button>
-      </div>
+  <button class="header-icon-btn" id="header-profile"
+    type="button" aria-label="Profil kasir"
+    title="Profil kasir" hidden>♙</button>
+
+  <button class="header-icon-btn" id="header-refresh"
+    type="button" aria-label="Muat ulang"
+    title="Muat ulang" hidden>↻</button>
+</div>
     </div>
   </div>
   <div class="header-subline">SATU PLATFORM, BANYAK CERITA</div>
@@ -1735,91 +1739,108 @@ button:disabled{opacity:.5;cursor:wait}
 <!-- DASHBOARD KASIR KOPIHUB -->
 <main class="container" id="dashboard-view" hidden>
 
-  <section class="welcome">
-    <div>
-      <h1>Pesanan Kedai</h1>
-      <p id="shop-name">Menghubungkan ke kedai...</p>
-      <p id="cashier-name" style="margin-top:3px"></p>
+  <!-- HALAMAN UTAMA -->
+  <section id="dashboard-home-page">
+
+    <section class="welcome">
+      <div>
+        <h1>Dashboard Kasir</h1>
+        <p id="shop-name">Menghubungkan ke kedai...</p>
+        <p id="cashier-name" style="margin-top:3px"></p>
+      </div>
+
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        Sesi Aktif
+      </div>
+    </section>
+
+    <div id="notice" class="notice" role="status"
+      aria-live="polite">
+      Menghubungkan ke sistem kasir...
     </div>
-    <div class="live-indicator">
-      <span class="live-dot"></span>
-      Sesi Aktif
-    </div>
+
+    <!-- POS -->
+    <button class="pos-open-btn" id="open-pos-btn" type="button">
+      <span>＋</span>
+      Buat Pesanan POS
+    </button>
+
+    <!-- RINGKASAN PESANAN -->
+    <section class="page-section">
+
+      <div class="section-heading">
+        <h2>Ringkasan Pesanan</h2>
+        <span>Perkembangan pesanan kedai</span>
+      </div>
+
+      <div class="stats">
+
+        <button class="stat" type="button"
+          data-order-filter="new">
+
+          <div class="stat-top">
+            <div class="stat-label">Pesanan Masuk</div>
+            <div class="stat-icon">＋</div>
+          </div>
+
+          <div class="stat-value" id="stat-new">0</div>
+          <div class="stat-hint">
+            Menunggu diterima kasir
+          </div>
+
+          <div class="stat-hint">Lihat Pesanan →</div>
+        </button>
+
+        <button class="stat" type="button"
+          data-order-filter="processing">
+
+          <div class="stat-top">
+            <div class="stat-label">Pesanan Diproses</div>
+            <div class="stat-icon">◷</div>
+          </div>
+
+          <div class="stat-value" id="stat-processing">0</div>
+          <div class="stat-hint">
+            Menjadi tanggung jawab kamu
+          </div>
+
+          <div class="stat-hint">Lihat Pesanan →</div>
+        </button>
+
+        <button class="stat" type="button"
+          data-order-filter="completed">
+
+          <div class="stat-top">
+            <div class="stat-label">Riwayat Pesanan</div>
+            <div class="stat-icon">✓</div>
+          </div>
+
+          <div class="stat-value" id="stat-completed">0</div>
+          <div class="stat-hint">
+            Pesanan yang sudah selesai
+          </div>
+
+          <div class="stat-hint">Lihat Riwayat →</div>
+        </button>
+
+      </div>
+    </section>
+
   </section>
 
-  <div id="notice" class="notice" role="status" aria-live="polite">
-    Menghubungkan ke sistem kasir...
-  </div>
+  <!-- HALAMAN DAFTAR PESANAN -->
+  <section class="content-card dashboard-subpage"
+    id="order-list-panel" hidden>
 
-  <!-- POS -->
-  <button class="pos-open-btn" id="open-pos-btn" type="button">
-    <span>＋</span>
-    Buat Pesanan POS
-  </button>
-
-  <!-- TIGA KARTU RINGKASAN -->
-  <section class="page-section">
+    <button class="auth-back" type="button"
+      id="orders-back-btn">
+      ← Kembali ke Dashboard
+    </button>
 
     <div class="section-heading">
-      <h2>Ringkasan Pesanan</h2>
-      <span>Perkembangan pesanan kedai</span>
-    </div>
-
-    <div class="stats">
-
-      <button class="stat" type="button"
-        data-order-filter="new">
-        <div class="stat-top">
-          <div class="stat-label">Pesanan Masuk Hari Ini</div>
-          <div class="stat-icon">＋</div>
-        </div>
-        <div class="stat-value" id="stat-new">0</div>
-        <div class="stat-hint">Menunggu diterima kasir</div>
-      </button>
-
-      <button class="stat" type="button"
-        data-order-filter="processing">
-        <div class="stat-top">
-          <div class="stat-label">Pesanan Diproses</div>
-          <div class="stat-icon">◷</div>
-        </div>
-        <div class="stat-value" id="stat-processing">0</div>
-        <div class="stat-hint">Menjadi tanggung jawab kamu</div>
-      </button>
-
-      <button class="stat" type="button"
-        data-order-filter="completed">
-        <div class="stat-top">
-          <div class="stat-label">Pesanan Selesai</div>
-          <div class="stat-icon">✓</div>
-        </div>
-        <div class="stat-value" id="stat-completed">0</div>
-        <div class="stat-hint">Riwayat pesanan selesai</div>
-      </button>
-
-    </div>
-  </section>
-
-  <!-- DAFTAR PESANAN -->
-  <section class="content-card" id="order-list-panel" hidden>
-
-    <div class="section-heading">
-      <h2 id="list-heading">Semua Pesanan</h2>
+      <h2 id="list-heading">Daftar Pesanan</h2>
       <span id="order-count">0 pesanan</span>
-    </div>
-
-    <div class="filter-row">
-      <button class="filter-btn active"
-        data-filter="all" type="button">Semua</button>
-
-      <button class="filter-btn"
-        data-filter="new" type="button">Pesanan Masuk</button>
-
-      <button class="filter-btn"
-        data-filter="processing" type="button">Diproses</button>
-
-      <button class="filter-btn"
-        data-filter="completed" type="button">Selesai</button>
     </div>
 
     <div class="toolbar">
@@ -1832,91 +1853,112 @@ button:disabled{opacity:.5;cursor:wait}
     </div>
 
     <section class="orders" id="orders">
-      <div class="empty">Pesanan akan ditampilkan di sini.</div>
+      <div class="empty">
+        Pesanan akan ditampilkan di sini.
+      </div>
     </section>
 
   </section>
 
-  <!-- PROFIL KASIR -->
-  <section class="page-section">
+  <!-- HALAMAN PROFIL KASIR -->
+  <section class="dashboard-subpage" id="profile-page" hidden>
 
-    <div class="section-heading">
-      <h2>Profil Kasir</h2>
-      <span>Informasi akun dan shift</span>
-    </div>
+    <button class="auth-back" type="button"
+      id="profile-back-btn">
+      ← Kembali ke Dashboard
+    </button>
 
-    <div class="account-card">
-      <div class="account-avatar">K</div>
-      <div class="account-copy">
-        <div class="account-label">Nama Kedai</div>
-        <div class="account-value" id="account-shop-name">—</div>
+    <div class="content-card">
+
+      <div class="section-heading">
+        <h2>Profil Kasir</h2>
+        <span>Informasi akun dan shift</span>
       </div>
-    </div>
 
-    <div class="account-card">
-      <div class="account-avatar">○</div>
-      <div class="account-copy">
-        <div class="account-label">Nama Kasir</div>
-        <div class="account-value" id="account-cashier-name">—</div>
+      <div class="profile-identity">
+        <div class="account-avatar">K</div>
+        <div>
+          <div class="account-value"
+            id="account-cashier-name">—</div>
+          <div class="account-label">
+            Kasir KopiHub
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="account-card">
-      <div class="account-avatar">#</div>
-      <div class="account-copy">
-        <div class="account-label">Cashier ID</div>
-        <div class="account-value" id="account-cashier-id">—</div>
+      <div class="account-card">
+        <div class="account-avatar">K</div>
+        <div class="account-copy">
+          <div class="account-label">Nama Kedai</div>
+          <div class="account-value"
+            id="account-shop-name">—</div>
+        </div>
       </div>
-    </div>
-<!-- STATUS AKUN -->
-<div class="account-card">
-  <div class="account-avatar">✓</div>
-  <div class="account-copy">
-    <div class="account-label">Status Akun</div>
-    <div class="account-value" id="account-status">Aktif</div>
-  </div>
-</div>
 
-<!-- STATUS SHIFT -->
-<div class="account-card">
-  <div class="account-avatar">◷</div>
-  <div class="account-copy">
-    <div class="account-label">Status Shift</div>
-    <div class="account-value" id="account-shift-status">
-      Shift berlangsung
-    </div>
-  </div>
-</div>
+      <div class="account-card">
+        <div class="account-avatar">#</div>
+        <div class="account-copy">
+          <div class="account-label">Cashier ID</div>
+          <div class="account-value"
+            id="account-cashier-id">—</div>
+        </div>
+      </div>
 
-<!-- MASA BERLAKU SESI -->
-<div class="account-card">
-  <div class="account-avatar">⌛</div>
-  <div class="account-copy">
-    <div class="account-label">Masa Berlaku Sesi</div>
-    <div class="account-value" id="account-session-expiry">
-      Informasi tidak tersedia
-    </div>
-  </div>
-</div>
-    <div class="account-note">
-      Jaga kerahasiaan PIN pribadi. Akhiri shift setelah selesai bekerja.
-    </div>
+      <div class="account-card">
+        <div class="account-avatar">✓</div>
+        <div class="account-copy">
+          <div class="account-label">Status Akun</div>
+          <div class="account-value"
+            id="account-status">Aktif</div>
+        </div>
+      </div>
 
-    <div class="content-card" style="margin-top:18px">
-      <button class="btn btn-danger btn-block"
-        id="end-shift-btn" type="button">
-        Akhiri Shift / Keluar
-      </button>
+      <div class="account-card">
+        <div class="account-avatar">◷</div>
+        <div class="account-copy">
+          <div class="account-label">Status Shift</div>
+          <div class="account-value"
+            id="account-shift-status">
+            Shift berlangsung
+          </div>
+        </div>
+      </div>
+
+      <div class="account-card">
+        <div class="account-avatar">⌛</div>
+        <div class="account-copy">
+          <div class="account-label">Masa Berlaku Sesi</div>
+          <div class="account-value"
+            id="account-session-expiry">
+            Informasi tidak tersedia
+          </div>
+        </div>
+      </div>
+
+      <div class="account-note">
+        Jaga kerahasiaan PIN pribadi.
+        Akhiri shift setelah selesai bekerja.
+      </div>
+
+      <div style="margin-top:18px">
+        <button class="btn btn-danger btn-block"
+          id="end-shift-btn" type="button">
+          Akhiri Shift / Logout
+        </button>
+      </div>
+
     </div>
 
   </section>
 
+  <!-- FOOTER -->
   <footer class="footer">
     <strong>KopiHub</strong> · Dashboard operasional kasir<br>
     SATU PLATFORM, BANYAK CERITA
   </footer>
 
 </main>
+
 
 <!-- POS MODAL -->
 <section class="pos-overlay" id="pos-overlay" hidden>

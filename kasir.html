@@ -2827,8 +2827,7 @@ if(ordersLoaded && cashierSession){
 }
 /* MEMUAT PESANAN */
 async function loadOrders(silent=false){
-  if(!cashierSession || loading) return;
-
+  if(!cashierSession || loading) return false;
   loading = true;
 
   if(el("refresh-btn")){

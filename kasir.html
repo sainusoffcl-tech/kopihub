@@ -1523,15 +1523,9 @@ button:disabled{opacity:.5;cursor:wait}
 /* =================================
    DESKTOP
 ================================= */
-
-@media(min-width:761px){
-
-  .container{padding-top:27px}
-
-  .stats{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-
+.stats{
+  grid-template-columns:1fr;
+}
   .orders{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
@@ -2381,18 +2375,27 @@ function orderVisibleByFilter(order){
 
 /* TAMPILAN LOGIN / DASHBOARD */
 function showView(view){
+
   el("login-view").hidden = view !== "login";
   el("reset-view").hidden = view !== "reset";
   el("activation-view").hidden = view !== "activation";
   el("dashboard-view").hidden = view !== "dashboard";
-  el("header-refresh").hidden = view !== "dashboard";
 
-  el("header-staff").textContent =
-    view === "dashboard" && cashierSession
-      ? cashierSession.session.staff_name || ""
-      : "";
+  if(el("header-refresh")){
+    el("header-refresh").hidden = view !== "dashboard";
+  }
+
+  if(el("header-profile")){
+    el("header-profile").hidden = view !== "dashboard";
+  }
+
+  if(view === "dashboard"){
+    el("dashboard-home-page").hidden = false;
+    el("order-list-panel").hidden = true;
+    el("profile-page").hidden = true;
+    activePage = "home";
+  }
 }
-
 function saveSession(session){
   cashierSession = session;
   sessionStorage.setItem(
@@ -4228,21 +4231,33 @@ el("submit-pos-btn").addEventListener(
   submitPosOrder
 );
 
-/* FILTER STATUS PESANAN */
-document.querySelectorAll("[data-filter]").forEach(button=>{
+/* NAVIGASI DASHBOARD KASIR */
+
+/* KARTU RINGKASAN PESANAN */
+document.querySelectorAll("[data-order-filter]").forEach(button=>{
   button.addEventListener("click",()=>{
-    activeFilter = button.dataset.filter || "all";
+    const group = button.dataset.orderFilter;
 
-    updateFilterButtons();
-
-    if(el("search")){
-      el("search").value = "";
-    }
-
-    renderOrders();
+    openOrderGroup(group);
+    activePage = "orders";
   });
 });
 
+/* TOMBOL PROFIL DI HEADER */
+el("header-profile").addEventListener("click",()=>{
+  openCashierProfile();
+  activePage = "profile";
+});
+
+/* KEMBALI DARI DAFTAR PESANAN */
+el("orders-back-btn").addEventListener("click",()=>{
+  returnToDashboardHome();
+});
+
+/* KEMBALI DARI PROFIL */
+el("profile-back-btn").addEventListener("click",()=>{
+  returnToDashboardHome();
+});
 /* PENCARIAN PESANAN */
 el("search").addEventListener("input",()=>{
   renderOrders();

@@ -2751,8 +2751,26 @@ async function enterDashboard(){
       ? readableDate(expiry)
       : "Informasi tidak tersedia";
   }
-}
 
+  /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
+  await loadOrders(true);
+
+  /* REFRESH OTOMATIS SETIAP 30 DETIK */
+  if(refreshTimer){
+    clearInterval(refreshTimer);
+  }
+
+  refreshTimer = setInterval(() => {
+    if(!cashierSession){
+      clearInterval(refreshTimer);
+      refreshTimer = null;
+      return;
+    }
+
+    loadOrders(true);
+  }, 30000);
+
+}
 /* MEMUAT PESANAN */
 async function loadOrders(silent=false){
   if(!cashierSession || loading) return;

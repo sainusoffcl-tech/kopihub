@@ -3829,6 +3829,13 @@ el("refresh-btn").addEventListener("click",()=>{
   loadOrders();
 });
 
+/* REFRESH DARI HEADER */
+if(el("header-refresh")){
+  el("header-refresh").addEventListener("click",()=>{
+    loadOrders();
+  });
+}
+
 /* AKHIRI SHIFT */
 el("end-shift-btn").addEventListener("click",()=>{
   endShift();

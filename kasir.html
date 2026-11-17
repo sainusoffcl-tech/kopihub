@@ -1684,7 +1684,36 @@ button:disabled{opacity:.5;cursor:wait}
         <div class="account-value" id="account-cashier-id">—</div>
       </div>
     </div>
+<!-- STATUS AKUN -->
+<div class="account-card">
+  <div class="account-avatar">✓</div>
+  <div class="account-copy">
+    <div class="account-label">Status Akun</div>
+    <div class="account-value" id="account-status">Aktif</div>
+  </div>
+</div>
 
+<!-- STATUS SHIFT -->
+<div class="account-card">
+  <div class="account-avatar">◷</div>
+  <div class="account-copy">
+    <div class="account-label">Status Shift</div>
+    <div class="account-value" id="account-shift-status">
+      Shift berlangsung
+    </div>
+  </div>
+</div>
+
+<!-- MASA BERLAKU SESI -->
+<div class="account-card">
+  <div class="account-avatar">⌛</div>
+  <div class="account-copy">
+    <div class="account-label">Masa Berlaku Sesi</div>
+    <div class="account-value" id="account-session-expiry">
+      Informasi tidak tersedia
+    </div>
+  </div>
+</div>
     <div class="account-note">
       Jaga kerahasiaan PIN pribadi. Akhiri shift setelah selesai bekerja.
     </div>
@@ -1773,7 +1802,6 @@ button:disabled{opacity:.5;cursor:wait}
       Simpan Pesanan
     </button>
   </div>
-</section>
 </section>
 
 <!-- MODAL DETAIL PESANAN -->
@@ -2523,33 +2551,26 @@ async function enterDashboard(){
     cashierSession.session.cashier_id ||
     "Informasi tidak tersedia";
 
-  /* INFORMASI STATUS AKUN DAN SHIFT */
-el("account-status").textContent = "Aktif";
-el("account-shift-status").textContent = "Shift berlangsung";
+/* INFORMASI STATUS AKUN DAN SHIFT */
+const accountStatus = el("account-status");
+const shiftStatus = el("account-shift-status");
+const sessionExpiry = el("account-session-expiry");
 
-const expiry = cashierSession.session.expires_at;
-
-el("account-session-expiry").textContent =
-  expiry
-    ? readableDate(expiry)
-    : "Informasi tidak tersedia";
-  el("order-list-panel").hidden = true;
-
-  showNotice("Memverifikasi sesi kasir dan memuat pesanan...");
-
-  await loadOrders();
-
-  if(refreshTimer){
-    clearInterval(refreshTimer);
-  }
-
-  refreshTimer = setInterval(()=>{
-    if(cashierSession && !loading){
-      loadOrders(true);
-    }
-  },30000);
+if(accountStatus){
+  accountStatus.textContent = "Aktif";
 }
 
+if(shiftStatus){
+  shiftStatus.textContent = "Shift berlangsung";
+}
+
+if(sessionExpiry){
+  const expiry = cashierSession.session.expires_at;
+
+  sessionExpiry.textContent = expiry
+    ? readableDate(expiry)
+    : "Informasi tidak tersedia";
+}
 /* MEMUAT PESANAN */
 async function loadOrders(silent=false){
   if(!cashierSession || loading) return;

@@ -4391,7 +4391,199 @@ function renderProducts() {
   });
 }
 
+// =========================================
+// KETERSEDIAAN MENU
+// =========================================
 
+function renderMenuAvailability(
+  message = "",
+  isError = false
+) {
+  const container = $("menu-availability-content");
+
+  if (!container) return;
+
+  container.replaceChildren();
+
+  const shop = selectedShop();
+
+  if (!shop) {
+    container.textContent = "Pilih kedai terlebih dahulu.";
+    return;
+  }
+
+  const description = document.createElement("p");
+  description.className = "muted";
+  description.textContent =
+    "Atur menu yang tersedia atau habis. " +
+    "Perubahan akan langsung diterapkan pada katalog pelanggan.";
+
+  container.appendChild(description);
+
+  if (message) {
+    const messageElement = document.createElement("p");
+
+    messageElement.className = "availability-message";
+    messageElement.setAttribute("role", "status");
+    messageElement.textContent = message;
+    messageElement.style.color = isError
+      ? "#a72d2d"
+      : "#21683a";
+
+    container.appendChild(messageElement);
+  }
+
+  if (!products.length) {
+    const empty = document.createElement("div");
+
+    empty.className = "cashier-empty";
+    empty.textContent =
+      "Belum ada produk untuk kedai ini. " +
+      "Tambahkan menu terlebih dahulu.";
+
+    container.appendChild(empty);
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "availability-list";
+
+  products.forEach(product => {
+    const card = document.createElement("article");
+    card.className = "availability-card";
+
+    const info = document.createElement("div");
+    info.className = "availability-info";
+
+    const name = document.createElement("strong");
+    name.className = "availability-name";
+    name.textContent = product.name || "Menu tanpa nama";
+
+    const category = categories.find(item =>
+      String(item.id) === String(product.category_id)
+    );
+
+    const detail = document.createElement("div");
+    detail.className = "availability-detail";
+    detail.textContent =
+      (category ? category.name : "Kategori tidak tersedia") +
+      " · " + rupiah(product.price);
+
+    const status = document.createElement("span");
+    status.className = "availability-status " +
+      (product.is_available ? "available" : "unavailable");
+
+    status.textContent = product.is_available
+      ? "Tersedia"
+      : "Habis";
+
+    info.append(name, detail, status);
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = product.is_available
+      ? "danger availability-toggle"
+      : "primary availability-toggle";
+
+    button.textContent = product.is_available
+      ? "Tandai Habis"
+      : "Tersedia";
+
+    button.addEventListener("click", () => {
+      updateProductAvailability(
+        product.id,
+        !Boolean(product.is_available),
+        button
+      );
+    });
+
+    card.append(info, button);
+    list.appendChild(card);
+  });
+
+  container.appendChild(list);
+}
+
+
+// =========================================
+// SIMPAN PERUBAHAN KETERSEDIAAN
+// =========================================
+
+async function updateProductAvailability(
+  productId,
+  nextStatus,
+  button
+) {
+  const shop = selectedShop();
+
+  const product = products.find(item =>
+    String(item.id) === String(productId) &&
+    shop &&
+    String(item.shop_id) === String(shop.id)
+  );
+
+  if (!client || !shop || !product) {
+    renderMenuAvailability(
+      "Produk tidak ditemukan pada kedai yang dipilih.",
+      true
+    );
+    return;
+  }
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Menyimpan...";
+  }
+
+  try {
+    const { data, error } = await client
+      .from("kh_products")
+      .update({
+        is_available: Boolean(nextStatus)
+      })
+      .eq("id", product.id)
+      .eq("shop_id", shop.id)
+      .select("id,is_available")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data?.id) {
+      throw new Error(
+        "Status tidak berubah. Periksa hak akses Owner dan kebijakan RLS."
+      );
+    }
+
+    // Pastikan kedai yang dipilih tidak berubah.
+    if (
+      String(selectedShop()?.id) !== String(shop.id)
+    ) {
+      return;
+    }
+
+    // Perbarui data produk di memori.
+    product.is_available = data.is_available;
+
+    // Perbarui Daftar Produk dan Ketersediaan Menu.
+    renderProducts();
+
+    renderMenuAvailability(
+      "Status " + product.name + " berhasil diubah menjadi " +
+      (data.is_available ? "Tersedia." : "Habis.")
+    );
+
+  } catch (error) {
+    console.error(
+      "Gagal mengubah ketersediaan menu:",
+      error
+    );
+
+    renderMenuAvailability(
+      "Gagal mengubah ketersediaan: " + error.message,
+      true
+    );
+  }
+}
 // =========================================
 // NAVIGASI PANEL KELOLA MENU
 // =========================================

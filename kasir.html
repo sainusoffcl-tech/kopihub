@@ -2755,6 +2755,9 @@ async function enterDashboard(){
   /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
   await loadOrders(true);
 
+  /* JANGAN BUAT TIMER JIKA SESI SUDAH BERAKHIR */
+  if(!cashierSession) return;
+
   /* REFRESH OTOMATIS SETIAP 30 DETIK */
   if(refreshTimer){
     clearInterval(refreshTimer);

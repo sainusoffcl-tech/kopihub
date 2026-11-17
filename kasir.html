@@ -1774,6 +1774,26 @@ button:disabled{opacity:.5;cursor:wait}
     </button>
   </div>
 </section>
+</section>
+
+<!-- MODAL DETAIL PESANAN -->
+<section class="order-detail-overlay" id="order-detail-overlay" hidden>
+  <div class="order-detail-panel"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="order-detail-title">
+
+    <div class="order-detail-head">
+      <h2 id="order-detail-title">Detail Pesanan</h2>
+      <button class="order-detail-close"
+              id="close-order-detail"
+              type="button"
+              aria-label="Tutup">×</button>
+    </div>
+
+    <div class="order-detail-body" id="order-detail-content"></div>
+  </div>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 

@@ -648,6 +648,11 @@ button:disabled{opacity:.55;cursor:not-allowed}
   overflow-wrap: anywhere;
 }
 
+
+/* =========================================
+   JAM OPERASIONAL KOPIHUB
+========================================= */
+
 /* KARTU JADWAL HARIAN */
 .operating-day-card {
   padding: 14px;
@@ -657,6 +662,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   background: #fff;
 }
 
+/* NAMA HARI DAN STATUS */
 .operating-day-heading {
   display: flex;
   justify-content: space-between;
@@ -668,30 +674,90 @@ button:disabled{opacity:.55;cursor:not-allowed}
   font-weight: 800;
 }
 
-.operating-day-status {
-  margin: 0;
+.operating-day-heading strong {
+  min-width: 0;
+  flex: 1;
 }
 
+.operating-day-status {
+  width: auto;
+  max-width: 145px;
+  min-width: 110px;
+  flex: 0 1 145px;
+  margin: 0;
+  padding: 9px 10px;
+}
+
+/* DUA KOLOM INPUT JAM */
 .operating-time-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 10px;
 }
 
+/* KOLOM JAM BUKA DAN TUTUP */
 .operating-time-fields .field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-width: 0;
   margin: 0;
 }
 
+/* LABEL JAM */
 .operating-time-fields label {
+  display: block;
+  width: 100%;
+  margin: 0 0 6px;
   font-size: 12px;
+  text-align: center;
 }
 
-.operating-time-fields input {
-  margin-bottom: 0;
+/* KOTAK INPUT JAM */
+.operating-time-fields input[type="time"] {
+  display: block;
+  width: min(100%, 108px);
+  min-width: 0;
+  height: 36px;
+  padding: 4px 6px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  color: #fff;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
+/* ANGKA JAM RATA TENGAH */
+.operating-time-fields input[type="time"]::-webkit-date-and-time-value {
+  text-align: center;
+  margin: 0;
+}
+
+/* JAM BUKA - HIJAU KOPIHUB */
+.operating-time-fields .field:first-child input[type="time"] {
+  background: #174C38;
+  border: 1px solid #174C38;
+  color: #fff;
+}
+
+/* JAM TUTUP - ORANYE KOPIHUB */
+.operating-time-fields .field:last-child input[type="time"] {
+  background: #E99A48;
+  border: 1px solid #E99A48;
+  color: #fff;
+}
+
+/* INPUT NONAKTIF */
+.operating-time-fields input[type="time"]:disabled {
+  opacity: 0.45;
+}
+
+/* KETERANGAN KEDAI TUTUP */
 .operating-day-closed {
   padding: 11px;
   margin-top: 10px;
@@ -699,32 +765,26 @@ button:disabled{opacity:.55;cursor:not-allowed}
   background: #f5f6f4;
   color: #748078;
   font-size: 12px;
+  text-align: center;
 }
 
-[hidden]{display:none!important}
+/* LAYAR IPHONE KECIL */
+@media (max-width: 380px) {
+  .operating-day-card {
+    padding: 11px;
+  }
 
-@media(min-width:650px){
-  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .report-filter{grid-template-columns:1fr 1fr 1fr;align-items:end}
-  .cashier-actions{grid-template-columns:1fr 1fr}
+  .operating-time-fields {
+    gap: 6px;
+  }
+
+  .operating-time-fields input[type="time"] {
+    width: min(100%, 100px);
+    height: 34px;
+    font-size: 13px;
+  }
 }
-@media(max-width:649px){
-  .business-summary,.stats{width:100%;grid-template-columns:repeat(2,minmax(0,1fr))}
-  .panel,.chart-panel,.summary-card,.stat{min-width:0}
-  .sales-chart{width:100%;gap:4px}
-}
-@media(max-width:380px){
-  .business-summary{gap:8px}
-  .summary-card{padding:12px 10px}
-  .summary-card .stat-number{font-size:17px}
-  .sales-chart{gap:4px}
-  .chart-value{font-size:8px}
-  .chart-label{font-size:10px}
-  .chart-track{height:110px}
-  .report-actions{grid-template-columns:1fr}
-  .dashboard-menu-grid{gap:8px}
-  .dashboard-menu-card{padding:13px 11px;min-height:120px}
-}
+
 /* KARTU TOTAL OMZET DAN TOTAL PENJUALAN */
 .home-kpi-grid {
   display: grid;

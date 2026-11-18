@@ -1,20 +1,10 @@
 @import url("/kopihub/css/design-system.css?v=1.0.0");
+
 /* =========================================
    GLOBAL HEADER KOPIHUB
    Sumber tampilan bersama seluruh halaman
-   REVISI SAFE AREA IPHONE
+   REVISI GLOBAL DESIGN SYSTEM
 ========================================= */
-
-:root {
-  --kh-header-green: #123B2C;
-  --kh-header-green-light: #24543E;
-  --kh-header-cream: #FAF9F5;
-  --kh-header-orange: #E99A48;
-  --kh-header-text: #26372D;
-  --kh-header-muted: #788278;
-  --kh-header-line: #E5E8DF;
-  --kh-header-danger: #A52C2C;
-}
 
 /* =========================================
    GLOBAL HEADER DAN SAFE AREA IPHONE
@@ -23,12 +13,12 @@
 .kh-global-header {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: var(--kh-z-header);
   width: 100%;
   min-width: 0;
   padding-top: env(safe-area-inset-top, 0px);
-  color: var(--kh-header-cream);
-  background: var(--kh-header-green);
+  color: var(--kh-color-background);
+  background: var(--kh-color-primary);
 }
 
 /* Area isi header */
@@ -41,11 +31,11 @@
   width: 100%;
   min-height: 88px;
   padding:
-    12px
+    var(--kh-space-3)
     max(18px, env(safe-area-inset-right, 0px))
-    12px
+    var(--kh-space-3)
     max(18px, env(safe-area-inset-left, 0px));
-  background: var(--kh-header-green);
+  background: var(--kh-color-primary);
 }
 
 /* =========================================
@@ -70,7 +60,7 @@
 .kh-header-logo {
   display: block;
   object-fit: contain;
-  background: var(--kh-header-cream);
+  background: var(--kh-color-background);
 }
 
 .kh-header-logo[hidden] {
@@ -81,8 +71,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--kh-header-orange);
-  background: var(--kh-header-green-light);
+  color: var(--kh-color-accent);
+  background: var(--kh-color-primary-light);
   font-size: 21px;
   font-weight: 900;
   letter-spacing: -1px;
@@ -113,15 +103,15 @@
 }
 
 .kh-header-kopi {
-  color: var(--kh-header-cream);
+  color: var(--kh-color-background);
 }
 
 .kh-header-hub {
-  color: var(--kh-header-orange);
+  color: var(--kh-color-accent);
 }
 
 .kh-header-tagline {
-  color: var(--kh-header-orange);
+  color: var(--kh-color-accent);
   font-size: 8px;
   font-weight: 800;
   letter-spacing: .65px;
@@ -138,7 +128,7 @@
   max-width: 100%;
   margin-top: 3px;
   overflow: hidden;
-  color: var(--kh-header-cream);
+  color: var(--kh-color-background);
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 1px;
@@ -179,8 +169,8 @@
   padding: 0;
   border: 1px solid rgba(250, 249, 245, .2);
   border-radius: 14px;
-  color: var(--kh-header-cream);
-  background: var(--kh-header-green-light);
+  color: var(--kh-color-background);
+  background: var(--kh-color-primary-light);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -201,10 +191,10 @@
 .kh-header-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1100;
-  background: rgba(10, 25, 17, .56);
+  z-index: var(--kh-z-overlay);
+  background: var(--kh-color-overlay);
   opacity: 0;
-  transition: opacity .25s ease;
+  transition: opacity var(--kh-transition-slow);
 }
 
 .kh-header-overlay[hidden] {
@@ -221,7 +211,7 @@
 
 .kh-header-menu {
   position: fixed;
-  z-index: 1101;
+  z-index: calc(var(--kh-z-overlay) + 1);
   left: 0;
   right: 0;
   bottom: 0;
@@ -231,22 +221,26 @@
   max-height: min(82dvh, 760px);
   margin: 0 auto;
   padding:
-    12px
+    var(--kh-space-3)
     max(20px, env(safe-area-inset-right, 0px))
     calc(22px + env(safe-area-inset-bottom, 0px))
     max(20px, env(safe-area-inset-left, 0px));
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  border-radius: 24px 24px 0 0;
-  color: var(--kh-header-text);
-  background: var(--kh-header-cream);
+  border-radius:
+    var(--kh-radius-2xl)
+    var(--kh-radius-2xl)
+    0
+    0;
+  color: var(--kh-color-text);
+  background: var(--kh-color-background);
   box-shadow: 0 -12px 40px rgba(0, 0, 0, .18);
   transform: translateY(105%);
   visibility: hidden;
   transition:
-    transform .28s ease,
-    visibility .28s ease;
+    transform var(--kh-transition-slow),
+    visibility var(--kh-transition-slow);
 }
 
 .kh-header-menu.kh-open {
@@ -266,8 +260,8 @@
   width: 43px;
   height: 5px;
   margin: 0 auto 19px;
-  border-radius: 10px;
-  background: #D5DAD2;
+  border-radius: var(--kh-radius-pill);
+  background: var(--kh-color-border-strong);
 }
 
 /* =========================================
@@ -278,12 +272,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--kh-space-3);
   margin-bottom: 17px;
 }
 
 .kh-header-menu-eyebrow {
-  color: var(--kh-header-orange);
+  color: var(--kh-color-accent);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 1.5px;
@@ -291,8 +285,8 @@
 
 .kh-header-menu-heading h2 {
   margin: 4px 0 0;
-  color: var(--kh-header-green);
-  font-size: 20px;
+  color: var(--kh-color-primary);
+  font-size: var(--kh-font-size-xl);
   font-weight: 850;
 }
 
@@ -306,10 +300,10 @@
   width: 40px;
   height: 40px;
   flex: 0 0 40px;
-  border: 1px solid var(--kh-header-line);
-  border-radius: 12px;
-  color: var(--kh-header-green);
-  background: #FFFFFF;
+  border: 1px solid var(--kh-color-border);
+  border-radius: var(--kh-radius-md);
+  color: var(--kh-color-primary);
+  background: var(--kh-color-surface);
   cursor: pointer;
 }
 
@@ -335,13 +329,13 @@
   width: 100%;
   min-height: 56px;
   padding: 10px 13px;
-  border: 1px solid var(--kh-header-line);
+  border: 1px solid var(--kh-color-border);
   border-radius: 14px;
-  color: var(--kh-header-green);
-  background: #FFFFFF;
+  color: var(--kh-color-primary);
+  background: var(--kh-color-surface);
   text-align: left;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--kh-font-size-md);
   font-weight: 700;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -350,7 +344,7 @@
 .kh-header-menu-item:active,
 .kh-header-menu-item.kh-active {
   border-color: #C9D8CB;
-  background: #EDF3EB;
+  background: var(--kh-color-surface-muted);
 }
 
 .kh-header-menu-item-icon {
@@ -360,8 +354,8 @@
   height: 37px;
   flex: 0 0 37px;
   border-radius: 11px;
-  color: var(--kh-header-green-light);
-  background: #EDF2E9;
+  color: var(--kh-color-primary-light);
+  background: var(--kh-color-surface-muted);
 }
 
 .kh-header-menu-item-icon svg {
@@ -387,12 +381,12 @@
 .kh-header-menu-item.kh-danger {
   margin-top: 7px;
   border-color: #F0D9D6;
-  color: var(--kh-header-danger);
+  color: var(--kh-color-danger);
 }
 
 .kh-header-menu-item.kh-danger .kh-header-menu-item-icon {
-  color: var(--kh-header-danger);
-  background: #FCE8E6;
+  color: var(--kh-color-danger);
+  background: var(--kh-color-danger-bg);
 }
 
 /* =========================================
@@ -402,8 +396,8 @@
 .kh-header-menu-footer {
   margin-top: 19px;
   padding-top: 14px;
-  border-top: 1px solid var(--kh-header-line);
-  color: var(--kh-header-muted);
+  border-top: 1px solid var(--kh-color-border);
+  color: var(--kh-color-text-muted);
   text-align: center;
   font-size: 9px;
   font-weight: 800;
@@ -448,7 +442,7 @@ body.kh-header-menu-open {
   .kh-header-menu {
     bottom: 20px;
     max-height: 82vh;
-    border-radius: 24px;
+    border-radius: var(--kh-radius-2xl);
   }
 
   .kh-header-menu-list {
@@ -476,7 +470,7 @@ body.kh-header-menu-open {
     width: 47px;
     height: 47px;
     flex-basis: 47px;
-    border-radius: 12px;
+    border-radius: var(--kh-radius-md);
   }
 
   .kh-header-wordmark {

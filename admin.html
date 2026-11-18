@@ -6740,6 +6740,19 @@ document.getElementById(
         }
       );
 
+/* =========================================
+   LOGOUT GLOBAL HEADER - ADMIN
+========================================= */
+
+document.addEventListener(
+  "kopihub:logout",
+  async event => {
+    if (event.detail?.role !== "admin") return;
+
+    await logoutAdmin();
+  }
+);
+
     /* =========================================
        PROFIL ADMIN
     ========================================= */

@@ -10,9 +10,13 @@
   >
 
   <meta name="theme-color" content="#173d2e">
-  <meta name="description" content="KopiHub menghubungkan berbagai coffee shop dan pelanggan dalam satu platform. Jelajahi kedai, lihat menu, dan pesan tanpa harus membuat akun.">
+  <meta
+    name="description"
+    content="KopiHub menghubungkan berbagai coffee shop dan pelanggan dalam satu platform. Jelajahi kedai, lihat menu, dan pesan tanpa harus membuat akun."
+  >
 
   <title>KopiHub — One Platform, Many Coffee Stories</title>
+
   <style>
     :root {
       --green: #173d2e;
@@ -27,7 +31,9 @@
       --line: #e4e9e3;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html {
       scroll-behavior: smooth;
@@ -47,7 +53,9 @@
       text-decoration: none;
     }
 
-    button { font: inherit; }
+    button {
+      font: inherit;
+    }
 
     .container {
       width: min(1120px, 90%);
@@ -55,6 +63,7 @@
     }
 
     /* HEADER */
+
     .site-header {
       position: sticky;
       top: 0;
@@ -84,7 +93,9 @@
       white-space: nowrap;
     }
 
-    .brand-hub { color: var(--orange); }
+    .brand-hub {
+      color: var(--orange);
+    }
 
     .nav-links {
       display: flex;
@@ -95,8 +106,9 @@
       font-weight: 650;
     }
 
-    .nav-links a:hover,
-    .footer-links a:hover { color: var(--orange); }
+    .nav-links a:hover {
+      color: var(--orange);
+    }
 
     .nav-actions {
       display: flex;
@@ -117,6 +129,7 @@
     }
 
     /* BUTTONS */
+
     .btn {
       display: inline-flex;
       justify-content: center;
@@ -168,6 +181,7 @@
     }
 
     /* HERO */
+
     .hero {
       position: relative;
       overflow: hidden;
@@ -232,7 +246,9 @@
       letter-spacing: -2.5px;
     }
 
-    h1 span { color: var(--orange); }
+    h1 span {
+      color: var(--orange);
+    }
 
     .hero-copy {
       max-width: 570px;
@@ -310,7 +326,9 @@
       font-size: 23px;
     }
 
-    .shop-title { flex: 1; }
+    .shop-title {
+      flex: 1;
+    }
 
     .shop-title strong {
       display: block;
@@ -359,7 +377,9 @@
       font-size: 11px;
     }
 
-    .menu-item small { color: var(--muted); }
+    .menu-item small {
+      color: var(--muted);
+    }
 
     .preview-bottom {
       display: flex;
@@ -375,8 +395,14 @@
     }
 
     /* GENERAL SECTIONS */
-    .section { padding: 82px 0; }
-    .section-soft { background: var(--cream); }
+
+    .section {
+      padding: 82px 0;
+    }
+
+    .section-soft {
+      background: var(--cream);
+    }
 
     .section-heading {
       max-width: 720px;
@@ -437,7 +463,9 @@
       margin-bottom: 17px;
     }
 
-    .owner .card-symbol { background: var(--orange-soft); }
+    .owner .card-symbol {
+      background: var(--orange-soft);
+    }
 
     .intro-card h3 {
       margin: 0 0 9px;
@@ -458,6 +486,7 @@
     }
 
     /* BENEFITS */
+
     .benefit-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -513,6 +542,7 @@
     }
 
     /* VALUES */
+
     .value-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -552,6 +582,7 @@
     }
 
     /* HOW IT WORKS */
+
     .steps {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -583,6 +614,7 @@
     }
 
     /* PARTNERSHIP */
+
     .partnership {
       display: grid;
       grid-template-columns: 1.1fr .9fr;
@@ -626,7 +658,8 @@
       font-weight: 950;
     }
 
-    /* FINAL CTA + FOOTER */
+    /* FINAL CTA */
+
     .final-cta {
       padding: 72px 0;
       text-align: center;
@@ -645,69 +678,42 @@
       color: var(--muted);
     }
 
-    footer {
-      padding: 42px 0 20px;
-      background: var(--green-deep);
-      color: #dce8e0;
-    }
-
-    .footer-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-
-    .footer-brand .brand { color: white; }
-
-    .footer-brand p {
-      max-width: 310px;
-      color: #b8ccc0;
-      font-size: 13px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: 18px;
-      font-size: 13px;
-    }
-
-    .footer-links a { color: #e2ece5; }
-
-    .footer-tagline {
-      color: var(--orange);
-      font-weight: 800;
-      font-size: 13px;
-    }
-
-    .copyright {
-      margin-top: 28px;
-      padding-top: 17px;
-      border-top: 1px solid rgba(255,255,255,.15);
-      color: #a9beb1;
-      text-align: center;
-      font-size: 11px;
-    }
-
     /* RESPONSIVE */
+
     @media (max-width: 850px) {
-      .nav-links { gap: 15px; }
-      .hero-grid { gap: 30px; }
-      .benefit-grid { grid-template-columns: repeat(2, 1fr); }
-      .steps { grid-template-columns: repeat(2, 1fr); }
+      .nav-links {
+        gap: 15px;
+      }
+
+      .hero-grid {
+        gap: 30px;
+      }
+
+      .benefit-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 680px) {
-      html { scroll-padding-top: 75px; }
+      html {
+        scroll-padding-top: 75px;
+      }
 
       .container {
         width: min(100% - 36px, 540px);
       }
 
-      .nav { min-height: 68px; }
-      .brand { font-size: 27px; }
+      .nav {
+        min-height: 68px;
+      }
+
+      .brand {
+        font-size: 27px;
+      }
 
       .nav-links {
         display: none;
@@ -731,14 +737,18 @@
         border-bottom: 1px solid #eef1ed;
       }
 
-      .nav-actions > .btn { display: none; }
+      .nav-actions > .btn {
+        display: none;
+      }
 
       .menu-toggle {
         display: inline-grid;
         place-items: center;
       }
 
-      .hero { padding: 58px 0 65px; }
+      .hero {
+        padding: 58px 0 65px;
+      }
 
       .hero-grid {
         grid-template-columns: 1fr;
@@ -750,9 +760,17 @@
         letter-spacing: -1.8px;
       }
 
-      .hero-copy { font-size: 15px; }
-      .hero-visual { padding: 15px; }
-      .section { padding: 64px 0; }
+      .hero-copy {
+        font-size: 15px;
+      }
+
+      .hero-visual {
+        padding: 15px;
+      }
+
+      .section {
+        padding: 64px 0;
+      }
 
       .intro-grid,
       .partnership {
@@ -764,7 +782,9 @@
         grid-template-columns: 1fr;
       }
 
-      .benefit { padding: 21px; }
+      .benefit {
+        padding: 21px;
+      }
 
       .owner-callout {
         align-items: flex-start;
@@ -776,10 +796,13 @@
         gap: 12px;
       }
 
-      .step { padding: 15px 12px; }
-      .partnership { padding: 25px 21px; }
-      .footer-top { flex-direction: column; }
-      .footer-links { gap: 13px 19px; }
+      .step {
+        padding: 15px 12px;
+      }
+
+      .partnership {
+        padding: 25px 21px;
+      }
     }
 
     @media (max-width: 380px) {
@@ -788,683 +811,631 @@
         align-items: stretch;
       }
 
-      .hero-buttons .btn { width: 100%; }
-      .steps { grid-template-columns: 1fr; }
-      .menu-preview { gap: 7px; }
+      .hero-buttons .btn {
+        width: 100%;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-preview {
+        gap: 7px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<header class="site-header">
-  <nav class="container nav" aria-label="Navigasi utama">
+  <!-- HEADER -->
+  <header class="site-header">
+    <nav class="container nav" aria-label="Navigasi utama">
 
-    <a href="#beranda" class="brand" aria-label="KopiHub Beranda">
-      <span>Kopi</span><span class="brand-hub">Hub</span>
-    </a>
-
-    <div class="nav-links" id="navLinks">
-      <a href="#beranda">Beranda</a>
-      <a href="#kenali">Kenali KopiHub</a>
-      <a href="#owner">Untuk Owner</a>
-      <a href="#pelanggan">Untuk Pelanggan</a>
-      <a href="#kemitraan">Kemitraan</a>
-      <a href="kasir.html">Login Kasir</a>
-    </div>
-
-    <div class="nav-actions">
-      <a class="btn btn-small btn-kasir" href="kasir.html">
-        Login Kasir
+      <a href="#beranda" class="brand" aria-label="KopiHub Beranda">
+        <span>Kopi</span><span class="brand-hub">Hub</span>
       </a>
 
-      <a class="btn btn-small" href="akun.html">
-        Gabung sebagai Mitra
-      </a>
-
-      <button
-        class="menu-toggle"
-        id="menuToggle"
-        type="button"
-        aria-label="Buka menu"
-        aria-expanded="false"
-        aria-controls="navLinks"
-      >☰</button>
-    </div>
-
-  </nav>
-</header>
-
-<main>
-
-  <!-- HERO -->
-  <section class="hero" id="beranda">
-    <div class="container hero-grid">
-
-      <div>
-        <span class="eyebrow">SATU PLATFORM, BANYAK CERITA</span>
-
-        <h1>
-          Temukan Kopi Favoritmu.
-          <span>Lebih Dekat.</span>
-        </h1>
-
-        <p class="hero-copy">
-          Jelajahi berbagai coffee shop, kenali menu favorit,
-          dan lakukan pemesanan dengan lebih praktis melalui KopiHub.
-          Tanpa perlu membuat akun pelanggan.
-        </p>
-
-        <div class="hero-buttons">
-          <a class="btn" href="#kenali">
-            Jelajahi KopiHub →
-          </a>
-
-          <a class="btn btn-outline-light" href="akun.html">
-            Gabung sebagai Mitra
-          </a>
-        </div>
-
-        <p class="hero-note">
-          Pelanggan bebas memesan. Kedai mengelola pesanan dalam satu sistem.
-        </p>
-      </div>
-
-      <!-- ILUSTRASI MENU -->
-      <div class="hero-visual">
-        <div class="visual-top">
-          <span class="visual-brand">KopiHub</span>
-          <span class="visual-tag">CONTOH TAMPILAN</span>
-        </div>
-
-        <div class="shop-preview">
-
-          <div class="shop-preview-head">
-            <div class="shop-avatar">☕</div>
-
-            <div class="shop-title">
-              <strong>Contoh Coffee Shop</strong>
-              <small>Menu dan informasi kedai</small>
-            </div>
-
-            <span class="open-label">MITRA</span>
-          </div>
-
-          <div class="preview-heading">Menu Favorit</div>
-
-          <div class="menu-preview">
-            <div class="menu-item">
-              <span class="drink">🧋</span>
-              <strong>Es Kopi Susu</strong>
-              <small>Contoh menu</small>
-            </div>
-
-            <div class="menu-item">
-              <span class="drink">🍵</span>
-              <strong>Matcha Latte</strong>
-              <small>Contoh menu</small>
-            </div>
-
-            <div class="menu-item">
-              <span class="drink">☕</span>
-              <strong>Americano</strong>
-              <small>Contoh menu</small>
-            </div>
-
-            <div class="menu-item">
-              <span class="drink">🍫</span>
-              <strong>Chocolate</strong>
-              <small>Contoh menu</small>
-            </div>
-          </div>
-
-          <div class="preview-bottom">
-            <span>Jelajahi menu kedai</span>
-            <span>→</span>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- KENALI KOPIHUB -->
-  <section class="section" id="kenali">
-    <div class="container">
-
-      <div class="section-heading">
-        <span class="kicker">Kenali KopiHub</span>
-
-        <h2>Satu platform untuk kedai dan pelanggan</h2>
-
-        <p>
-          KopiHub menghubungkan berbagai coffee shop dengan pelanggan
-          melalui pengalaman digital yang lebih praktis.
-        </p>
-      </div>
-
-      <div class="intro-grid">
-
-        <article class="intro-card owner">
-          <div class="card-symbol">▣</div>
-
-          <h3>Saya Pemilik Kedai</h3>
-
-          <p>
-            Kelola profil kedai, menu, stok, kasir, pesanan,
-            transaksi, dan laporan melalui sistem yang terintegrasi.
-          </p>
-
-          <a class="text-link" href="#owner">
-            Kenali manfaat untuk Owner →
-          </a>
-        </article>
-
-        <article class="intro-card">
-          <div class="card-symbol">☕</div>
-
-          <h3>Saya Pelanggan</h3>
-
-          <p>
-            Temukan coffee shop mitra, lihat pilihan menu,
-            dan pesan melalui QR Menu tanpa harus login
-            atau membuat akun KopiHub.
-          </p>
-
-          <a class="text-link" href="#pelanggan">
-            Kenali kemudahan untuk pelanggan →
-          </a>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- UNTUK OWNER -->
-  <section class="section section-soft" id="owner">
-    <div class="container">
-
-      <div class="section-heading">
-        <span class="kicker">Untuk Owner Coffee Shop</span>
-
-        <h2>Kelola kedai dalam satu platform</h2>
-
-        <p>
-          KopiHub membantu Owner mengelola kebutuhan digital
-          dan operasional kedainya tanpa harus membangun sistem sendiri.
-        </p>
-      </div>
-
-      <div class="benefit-grid">
-
-        <article class="benefit">
-          <div class="benefit-icon">🏪</div>
-          <h3>Halaman Kedai Digital</h3>
-          <p>
-            Owner memiliki halaman kedai sendiri untuk menampilkan
-            nama, logo, informasi, dan identitas coffee shop.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">▤</div>
-          <h3>Menu Digital & QR</h3>
-          <p>
-            Pelanggan dapat melihat menu, memilih produk,
-            dan melakukan pemesanan melalui smartphone
-            tanpa perlu membuat akun.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">▣</div>
-          <h3>Sistem Kasir & Pesanan</h3>
-          <p>
-            Mendukung pesanan online/QR dan pesanan langsung
-            yang dimasukkan oleh kasir melalui POS.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">⚙</div>
-          <h3>Pengelolaan Kedai</h3>
-          <p>
-            Owner dapat mengelola produk, kategori, harga, stok,
-            ketersediaan menu, profil kedai, dan akun kasir.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">▥</div>
-          <h3>Laporan & Riwayat</h3>
-          <p>
-            Pantau riwayat pesanan, transaksi, sumber pesanan,
-            metode pembayaran, dan ringkasan penjualan.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">↗</div>
-          <h3>Peluang Jangkauan Pelanggan</h3>
-          <p>
-            Kedai menjadi bagian dari jaringan KopiHub dan
-            berpeluang ditemukan oleh pelanggan melalui satu platform.
-          </p>
-        </article>
-
-      </div>
-
-      <div class="owner-callout">
-        <p>
-          <strong>Lebih fokus mengembangkan kedai.</strong><br>
-          Owner tidak perlu membangun aplikasi pemesanan dan sistem
-          kasir sendiri atau mengelola teknologi platform dari awal.
-        </p>
-
-        <a class="btn btn-small" href="akun.html">
-          Daftar sebagai Mitra →
-        </a>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- UNTUK PELANGGAN -->
-  <section class="section" id="pelanggan">
-    <div class="container">
-
-      <div class="section-heading">
-        <span class="kicker">Untuk Pelanggan</span>
-
-        <h2>Menikmati kopi jadi lebih praktis</h2>
-
-        <p>
-          Temukan pilihan coffee shop dan nikmati proses pemesanan
-          yang lebih mudah melalui KopiHub, tanpa harus membuat akun.
-        </p>
-      </div>
-
-      <div class="benefit-grid">
-
-        <article class="benefit">
-          <div class="benefit-icon">🏬</div>
-          <h3>Banyak Kedai dalam Satu Platform</h3>
-          <p>
-            Temukan berbagai coffee shop mitra KopiHub
-            tanpa harus membuka platform yang berbeda.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">☰</div>
-          <h3>Lihat Menu & Harga</h3>
-          <p>
-            Jelajahi pilihan minuman, harga, dan ketersediaan
-            menu sebelum memesan.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">▣</div>
-          <h3>Pesan melalui QR Menu</h3>
-          <p>
-            Pindai QR Menu kedai, pilih produk, lalu kirim pesanan
-            langsung ke sistem kedai tanpa login.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">◎</div>
-          <h3>Pilihan Pembayaran</h3>
-          <p>
-            Gunakan metode pembayaran yang disediakan oleh
-            masing-masing kedai, seperti QRIS, tunai,
-            atau bayar di kasir.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">◷</div>
-          <h3>Pantau Status Pesanan</h3>
-          <p>
-            Ketahui perkembangan pesanan hingga status
-            pesanan siap diantar.
-          </p>
-        </article>
-
-        <article class="benefit">
-          <div class="benefit-icon">☕</div>
-          <h3>Pesan Langsung di Kedai</h3>
-          <p>
-            Jika memesan langsung di counter, kasir akan
-            memasukkan pesanan melalui POS KopiHub.
-          </p>
-        </article>
-
-      </div>
-
-      <div style="text-align:center;margin-top:28px">
-        <a class="btn btn-green" href="menu.html">
-          Lihat Contoh Menu →
-        </a>
-      </div>
-
-      <p style="text-align:center;margin:13px auto 0;color:#78857d;font-size:12px">
-        Pelanggan tidak diwajibkan memiliki akun KopiHub untuk melakukan pemesanan.
-      </p>
-
-    </div>
-  </section>
-
-  <!-- NILAI UTAMA -->
-  <section class="section section-soft" id="nilai">
-    <div class="container">
-
-      <div class="section-heading">
-        <span class="kicker">Nilai Utama KopiHub</span>
-
-        <h2>Apa yang membuat KopiHub berbeda?</h2>
-
-        <p>
-          Bukan hanya tempat memesan kopi. KopiHub dibangun sebagai
-          ekosistem digital yang menghubungkan kedai dan pelanggan.
-        </p>
-      </div>
-
-      <div class="value-grid">
-
-        <article class="value-card">
-          <div class="value-number">01</div>
-          <h3>One Platform</h3>
-          <p>
-            Satu platform untuk banyak coffee shop.
-            Setiap kedai tetap memiliki identitas dan pengelolaannya sendiri.
-          </p>
-        </article>
-
-        <article class="value-card">
-          <div class="value-number">02</div>
-          <h3>One System</h3>
-          <p>
-            Satu sistem terintegrasi untuk pesanan online/QR
-            dan pesanan langsung melalui kasir.
-          </p>
-        </article>
-
-        <article class="value-card">
-          <div class="value-number">03</div>
-          <h3>One Experience</h3>
-          <p>
-            Pengalaman yang lebih praktis bagi pelanggan saat
-            menemukan kedai, melihat menu, dan memesan.
-          </p>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- CARA KERJA -->
-  <section class="section" id="cara-kerja">
-    <div class="container">
-
-      <div class="section-heading">
-        <span class="kicker">Cara Kerja Kemitraan</span>
-
-        <h2>Mulai bergabung dengan langkah sederhana</h2>
-
-        <p>
-          Gambaran perjalanan kedai untuk menjadi bagian dari KopiHub.
-        </p>
-      </div>
-
-      <div class="steps">
-
-        <article class="step">
-          <div class="step-num">LANGKAH 01</div>
-          <h3>Daftarkan Kedai</h3>
-          <p>
-            Owner mengisi informasi kedai dan mengajukan
-            pendaftaran sebagai mitra.
-          </p>
-        </article>
-
-        <article class="step">
-          <div class="step-num">LANGKAH 02</div>
-          <h3>Lengkapi Profil & Menu</h3>
-          <p>
-            Setelah proses kemitraan disetujui, Owner
-            melengkapi profil dan data menu kedai.
-          </p>
-        </article>
-
-        <article class="step">
-          <div class="step-num">LANGKAH 03</div>
-          <h3>Siapkan Tim</h3>
-          <p>
-            Owner mengatur identitas kasir dan menyiapkan
-            alur operasional kedai.
-          </p>
-        </article>
-
-        <article class="step">
-          <div class="step-num">LANGKAH 04</div>
-          <h3>Siap Melayani</h3>
-          <p>
-            Kedai menjalani pemeriksaan dan pengujian
-            sebelum mulai menerima pesanan pelanggan.
-          </p>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- MODEL KEMITRAAN -->
-  <section class="section section-soft" id="kemitraan">
-    <div class="container">
-
-      <div class="partnership">
-
-        <div>
-          <span class="kicker" style="color:#f3bd83">
-            Model Kemitraan
-          </span>
-
-          <h2>Bergabung dan kembangkan kedai bersama KopiHub</h2>
-
-          <p>
-            KopiHub menggunakan model biaya layanan berdasarkan
-            pesanan yang memenuhi ketentuan. Tidak ada biaya
-            langganan bulanan untuk mitra.
-          </p>
-
-          <a class="btn" href="akun.html">
-            Gabung sebagai Mitra →
-          </a>
-        </div>
-
-        <div class="partnership-list">
-
-          <div class="partnership-point">
-            <span class="check">✓</span>
-            <span>
-              Pendaftaran mitra tanpa biaya langganan bulanan.
-            </span>
-          </div>
-
-          <div class="partnership-point">
-            <span class="check">✓</span>
-            <span>
-              Biaya layanan platform menjadi tanggungan Owner,
-              bukan biaya tambahan layanan KopiHub untuk pelanggan.
-            </span>
-          </div>
-
-          <div class="partnership-point">
-            <span class="check">✓</span>
-            <span>
-              Biaya layanan dihitung bulanan dan ditagihkan
-              pada awal bulan berikutnya.
-            </span>
-          </div>
-
-          <div class="partnership-point">
-            <span class="check">✓</span>
-            <span>
-              Ketentuan tarif dan detail kemitraan disampaikan
-              secara transparan sebelum kedai mulai beroperasi.
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-      <p style="max-width:850px;margin:14px auto 0;text-align:center;color:#78857d;font-size:11px">
-        Tarif biaya layanan masih dalam tahap evaluasi dan akan
-        ditetapkan sebelum peluncuran. Pajak belum ditambahkan
-        pada transaksi pelanggan saat ini.
-      </p>
-
-    </div>
-  </section>
-
-  <!-- AJAKAN PENUTUP -->
-  <section class="final-cta">
-    <div class="container">
-
-      <span class="kicker">Mari Menjadi Bagian dari KopiHub</span>
-
-      <h2>
-        Satu platform. Banyak kedai.
-        Lebih banyak cerita kopi.
-      </h2>
-
-      <p>
-        Untuk pemilik kedai yang ingin berkembang dan pelanggan
-        yang ingin menemukan pengalaman kopi berikutnya.
-      </p>
-
-      <a class="btn btn-green" href="akun.html">
-        Daftar sebagai Mitra →
-      </a>
-
-      <a class="btn btn-outline" href="#kenali" style="margin-left:7px">
-        Kenali KopiHub
-      </a>
-
-    </div>
-  </section>
-
-</main>
-
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-
-    <div class="footer-top">
-
-      <div class="footer-brand">
-        <a href="#beranda" class="brand">
-          <span style="color:white">Kopi</span>
-          <span class="brand-hub">Hub</span>
-        </a>
-
-        <p>
-          Platform digital yang menghubungkan coffee shop
-          dan pelanggan dalam satu ekosistem.
-        </p>
-
-        <div class="footer-tagline">
-          One Platform, Many Coffee Stories.
-        </div>
-
-        <small>
-          Menghubungkan kedai, memudahkan pelanggan.
-        </small>
-      </div>
-
-      <div class="footer-links">
+      <div class="nav-links" id="navLinks">
         <a href="#beranda">Beranda</a>
+        <a href="#kenali">Kenali KopiHub</a>
         <a href="#owner">Untuk Owner</a>
         <a href="#pelanggan">Untuk Pelanggan</a>
-        <a href="#cara-kerja">Cara Kerja</a>
-        <a href="akun.html">Daftar Mitra</a>
+        <a href="#kemitraan">Kemitraan</a>
         <a href="kasir.html">Login Kasir</a>
-        <a href="menu.html">Contoh Menu</a>
       </div>
 
-    </div>
+      <div class="nav-actions">
+        <a class="btn btn-small btn-kasir" href="kasir.html">
+          Login Kasir
+        </a>
 
-    <div class="copyright">
-      © 2026 KopiHub. One Platform, Many Coffee Stories.
-    </div>
+        <a class="btn btn-small" href="akun.html">
+          Gabung sebagai Mitra
+        </a>
 
-  </div>
-</footer>
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Buka menu"
+          aria-expanded="false"
+          aria-controls="navLinks"
+        >☰</button>
+      </div>
 
-<script>
-  // Menu navigasi untuk perangkat mobile
-  const menuToggle = document.getElementById("menuToggle");
-  const navLinks = document.getElementById("navLinks");
+    </nav>
+  </header>
 
-  if (menuToggle && navLinks) {
-    menuToggle.addEventListener("click", function () {
-      const isOpen = navLinks.classList.toggle("open");
+  <main>
 
-      menuToggle.setAttribute(
-        "aria-expanded",
-        String(isOpen)
-      );
+    <!-- HERO -->
+    <section class="hero" id="beranda">
+      <div class="container hero-grid">
 
-      menuToggle.setAttribute(
-        "aria-label",
-        isOpen ? "Tutup menu" : "Buka menu"
-      );
+        <div>
+          <span class="eyebrow">SATU PLATFORM, BANYAK CERITA</span>
 
-      menuToggle.textContent = isOpen ? "×" : "☰";
-    });
+          <h1>
+            Temukan Kopi Favoritmu.
+            <span>Lebih Dekat.</span>
+          </h1>
 
-    navLinks.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        navLinks.classList.remove("open");
+          <p class="hero-copy">
+            Jelajahi berbagai coffee shop, kenali menu favorit,
+            dan lakukan pemesanan dengan lebih praktis melalui KopiHub.
+            Tanpa perlu membuat akun pelanggan.
+          </p>
 
-        menuToggle.setAttribute("aria-expanded", "false");
-        menuToggle.setAttribute("aria-label", "Buka menu");
-        menuToggle.textContent = "☰";
+          <div class="hero-buttons">
+            <a class="btn" href="#kenali">
+              Jelajahi KopiHub →
+            </a>
+
+            <a class="btn btn-outline-light" href="akun.html">
+              Gabung sebagai Mitra
+            </a>
+          </div>
+
+          <p class="hero-note">
+            Pelanggan bebas memesan. Kedai mengelola pesanan dalam satu sistem.
+          </p>
+        </div>
+
+        <!-- ILUSTRASI MENU -->
+        <div class="hero-visual">
+          <div class="visual-top">
+            <span class="visual-brand">KopiHub</span>
+            <span class="visual-tag">CONTOH TAMPILAN</span>
+          </div>
+
+          <div class="shop-preview">
+
+            <div class="shop-preview-head">
+              <div class="shop-avatar">☕</div>
+
+              <div class="shop-title">
+                <strong>Contoh Coffee Shop</strong>
+                <small>Menu dan informasi kedai</small>
+              </div>
+
+              <span class="open-label">MITRA</span>
+            </div>
+
+            <div class="preview-heading">Menu Favorit</div>
+
+            <div class="menu-preview">
+              <div class="menu-item">
+                <span class="drink">🧋</span>
+                <strong>Es Kopi Susu</strong>
+                <small>Contoh menu</small>
+              </div>
+
+              <div class="menu-item">
+                <span class="drink">🍵</span>
+                <strong>Matcha Latte</strong>
+                <small>Contoh menu</small>
+              </div>
+
+              <div class="menu-item">
+                <span class="drink">☕</span>
+                <strong>Americano</strong>
+                <small>Contoh menu</small>
+              </div>
+
+              <div class="menu-item">
+                <span class="drink">🍫</span>
+                <strong>Chocolate</strong>
+                <small>Contoh menu</small>
+              </div>
+            </div>
+
+            <div class="preview-bottom">
+              <span>Jelajahi menu kedai</span>
+              <span>→</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- KENALI KOPIHUB -->
+    <section class="section" id="kenali">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="kicker">Kenali KopiHub</span>
+
+          <h2>Satu platform untuk kedai dan pelanggan</h2>
+
+          <p>
+            KopiHub menghubungkan berbagai coffee shop dengan pelanggan
+            melalui pengalaman digital yang lebih praktis.
+          </p>
+        </div>
+
+        <div class="intro-grid">
+
+          <article class="intro-card owner">
+            <div class="card-symbol">▣</div>
+
+            <h3>Saya Pemilik Kedai</h3>
+
+            <p>
+              Kelola profil kedai, menu, stok, kasir, pesanan,
+              transaksi, dan laporan melalui sistem yang terintegrasi.
+            </p>
+
+            <a class="text-link" href="#owner">
+              Kenali manfaat untuk Owner →
+            </a>
+          </article>
+
+          <article class="intro-card">
+            <div class="card-symbol">☕</div>
+
+            <h3>Saya Pelanggan</h3>
+
+            <p>
+              Temukan coffee shop mitra, lihat pilihan menu,
+              dan pesan melalui QR Menu tanpa harus login
+              atau membuat akun KopiHub.
+            </p>
+
+            <a class="text-link" href="#pelanggan">
+              Kenali kemudahan untuk pelanggan →
+            </a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- UNTUK OWNER -->
+    <section class="section section-soft" id="owner">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="kicker">Untuk Owner Coffee Shop</span>
+
+          <h2>Kelola kedai dalam satu platform</h2>
+
+          <p>
+            KopiHub membantu Owner mengelola kebutuhan digital
+            dan operasional kedainya tanpa harus membangun sistem sendiri.
+          </p>
+        </div>
+
+        <div class="benefit-grid">
+
+          <article class="benefit">
+            <div class="benefit-icon">🏪</div>
+            <h3>Halaman Kedai Digital</h3>
+            <p>
+              Owner memiliki halaman kedai sendiri untuk menampilkan
+              nama, logo, informasi, dan identitas coffee shop.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">▤</div>
+            <h3>Menu Digital & QR</h3>
+            <p>
+              Pelanggan dapat melihat menu, memilih produk,
+              dan melakukan pemesanan melalui smartphone
+              tanpa perlu membuat akun.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">▣</div>
+            <h3>Sistem Kasir & Pesanan</h3>
+            <p>
+              Mendukung pesanan online/QR dan pesanan langsung
+              yang dimasukkan oleh kasir melalui POS.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">⚙</div>
+            <h3>Pengelolaan Kedai</h3>
+            <p>
+              Owner dapat mengelola produk, kategori, harga, stok,
+              ketersediaan menu, profil kedai, dan akun kasir.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">▥</div>
+            <h3>Laporan & Riwayat</h3>
+            <p>
+              Pantau riwayat pesanan, transaksi, sumber pesanan,
+              metode pembayaran, dan ringkasan penjualan.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">↗</div>
+            <h3>Peluang Jangkauan Pelanggan</h3>
+            <p>
+              Kedai menjadi bagian dari jaringan KopiHub dan
+              berpeluang ditemukan oleh pelanggan melalui satu platform.
+            </p>
+          </article>
+
+        </div>
+
+        <div class="owner-callout">
+          <p>
+            <strong>Lebih fokus mengembangkan kedai.</strong><br>
+            Owner tidak perlu membangun aplikasi pemesanan dan sistem
+            kasir sendiri atau mengelola teknologi platform dari awal.
+          </p>
+
+          <a class="btn btn-small" href="akun.html">
+            Daftar sebagai Mitra →
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- UNTUK PELANGGAN -->
+    <section class="section" id="pelanggan">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="kicker">Untuk Pelanggan</span>
+
+          <h2>Menikmati kopi jadi lebih praktis</h2>
+
+          <p>
+            Temukan pilihan coffee shop dan nikmati proses pemesanan
+            yang lebih mudah melalui KopiHub, tanpa harus membuat akun.
+          </p>
+        </div>
+
+        <div class="benefit-grid">
+
+          <article class="benefit">
+            <div class="benefit-icon">🏬</div>
+            <h3>Banyak Kedai dalam Satu Platform</h3>
+            <p>
+              Temukan berbagai coffee shop mitra KopiHub
+              tanpa harus membuka platform yang berbeda.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">☰</div>
+            <h3>Lihat Menu & Harga</h3>
+            <p>
+              Jelajahi pilihan minuman, harga, dan ketersediaan
+              menu sebelum memesan.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">▣</div>
+            <h3>Pesan melalui QR Menu</h3>
+            <p>
+              Pindai QR Menu kedai, pilih produk, lalu kirim pesanan
+              langsung ke sistem kedai tanpa login.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">◎</div>
+            <h3>Pilihan Pembayaran</h3>
+            <p>
+              Gunakan metode pembayaran yang disediakan oleh
+              masing-masing kedai, seperti QRIS, tunai,
+              atau bayar di kasir.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">◷</div>
+            <h3>Pantau Status Pesanan</h3>
+            <p>
+              Ketahui perkembangan pesanan hingga status
+              pesanan siap diantar.
+            </p>
+          </article>
+
+          <article class="benefit">
+            <div class="benefit-icon">☕</div>
+            <h3>Pesan Langsung di Kedai</h3>
+            <p>
+              Jika memesan langsung di counter, kasir akan
+              memasukkan pesanan melalui POS KopiHub.
+            </p>
+          </article>
+
+        </div>
+
+        <div style="text-align:center;margin-top:28px">
+          <a class="btn btn-green" href="menu.html">
+            Lihat Contoh Menu →
+          </a>
+        </div>
+
+        <p style="text-align:center;margin:13px auto 0;color:#78857d;font-size:12px">
+          Pelanggan tidak diwajibkan memiliki akun KopiHub untuk melakukan pemesanan.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- NILAI UTAMA -->
+    <section class="section section-soft" id="nilai">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="kicker">Nilai Utama KopiHub</span>
+
+          <h2>Apa yang membuat KopiHub berbeda?</h2>
+
+          <p>
+            Bukan hanya tempat memesan kopi. KopiHub dibangun sebagai
+            ekosistem digital yang menghubungkan kedai dan pelanggan.
+          </p>
+        </div>
+
+        <div class="value-grid">
+
+          <article class="value-card">
+            <div class="value-number">01</div>
+            <h3>One Platform</h3>
+            <p>
+              Satu platform untuk banyak coffee shop.
+              Setiap kedai tetap memiliki identitas dan pengelolaannya sendiri.
+            </p>
+          </article>
+
+          <article class="value-card">
+            <div class="value-number">02</div>
+            <h3>One System</h3>
+            <p>
+              Satu sistem terintegrasi untuk pesanan online/QR
+              dan pesanan langsung melalui kasir.
+            </p>
+          </article>
+
+          <article class="value-card">
+            <div class="value-number">03</div>
+            <h3>One Experience</h3>
+            <p>
+              Pengalaman yang lebih praktis bagi pelanggan saat
+              menemukan kedai, melihat menu, dan memesan.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CARA KERJA -->
+    <section class="section" id="cara-kerja">
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="kicker">Cara Kerja Kemitraan</span>
+
+          <h2>Mulai bergabung dengan langkah sederhana</h2>
+
+          <p>
+            Gambaran perjalanan kedai untuk menjadi bagian dari KopiHub.
+          </p>
+        </div>
+
+        <div class="steps">
+
+          <article class="step">
+            <div class="step-num">LANGKAH 01</div>
+            <h3>Daftarkan Kedai</h3>
+            <p>
+              Owner mengisi informasi kedai dan mengajukan
+              pendaftaran sebagai mitra.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-num">LANGKAH 02</div>
+            <h3>Lengkapi Profil & Menu</h3>
+            <p>
+              Setelah proses kemitraan disetujui, Owner
+              melengkapi profil dan data menu kedai.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-num">LANGKAH 03</div>
+            <h3>Siapkan Tim</h3>
+            <p>
+              Owner mengatur identitas kasir dan menyiapkan
+              alur operasional kedai.
+            </p>
+          </article>
+
+          <article class="step">
+            <div class="step-num">LANGKAH 04</div>
+            <h3>Siap Melayani</h3>
+            <p>
+              Kedai menjalani pemeriksaan dan pengujian
+              sebelum mulai menerima pesanan pelanggan.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MODEL KEMITRAAN -->
+    <section class="section section-soft" id="kemitraan">
+      <div class="container">
+
+        <div class="partnership">
+
+          <div>
+            <span class="kicker" style="color:#f3bd83">
+              Model Kemitraan
+            </span>
+
+            <h2>Bergabung dan kembangkan kedai bersama KopiHub</h2>
+
+            <p>
+              KopiHub menggunakan model biaya layanan berdasarkan
+              pesanan yang memenuhi ketentuan. Tidak ada biaya
+              langganan bulanan untuk mitra.
+            </p>
+
+            <a class="btn" href="akun.html">
+              Gabung sebagai Mitra →
+            </a>
+          </div>
+
+          <div class="partnership-list">
+
+            <div class="partnership-point">
+              <span class="check">✓</span>
+              <span>
+                Pendaftaran mitra tanpa biaya langganan bulanan.
+              </span>
+            </div>
+
+            <div class="partnership-point">
+              <span class="check">✓</span>
+              <span>
+                Biaya layanan platform menjadi tanggungan Owner,
+                bukan biaya tambahan layanan KopiHub untuk pelanggan.
+              </span>
+            </div>
+
+            <div class="partnership-point">
+              <span class="check">✓</span>
+              <span>
+                Biaya layanan dihitung bulanan dan ditagihkan
+                pada awal bulan berikutnya.
+              </span>
+            </div>
+
+            <div class="partnership-point">
+              <span class="check">✓</span>
+              <span>
+                Ketentuan tarif dan detail kemitraan disampaikan
+                secara transparan sebelum kedai mulai beroperasi.
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <p style="max-width:850px;margin:14px auto 0;text-align:center;color:#78857d;font-size:11px">
+          Tarif biaya layanan masih dalam tahap evaluasi dan akan
+          ditetapkan sebelum peluncuran. Pajak belum ditambahkan
+          pada transaksi pelanggan saat ini.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- AJAKAN PENUTUP -->
+    <section class="final-cta">
+      <div class="container">
+
+        <span class="kicker">Mari Menjadi Bagian dari KopiHub</span>
+
+        <h2>
+          Satu platform. Banyak kedai.
+          Lebih banyak cerita kopi.
+        </h2>
+
+        <p>
+          Untuk pemilik kedai yang ingin berkembang dan pelanggan
+          yang ingin menemukan pengalaman kopi berikutnya.
+        </p>
+
+        <a class="btn btn-green" href="akun.html">
+          Daftar sebagai Mitra →
+        </a>
+
+        <a class="btn btn-outline" href="#kenali" style="margin-left:7px">
+          Kenali KopiHub
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER GLOBAL KOPIHUB -->
+  <div data-kopihub-footer></div>
+
+  <!-- NAVIGASI MOBILE -->
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener("click", function () {
+        const isOpen = navLinks.classList.toggle("open");
+
+        menuToggle.setAttribute(
+          "aria-expanded",
+          String(isOpen)
+        );
+
+        menuToggle.setAttribute(
+          "aria-label",
+          isOpen ? "Tutup menu" : "Buka menu"
+        );
+
+        menuToggle.textContent = isOpen ? "×" : "☰";
       });
-    });
-  }
-</script>
 
+      navLinks.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          navLinks.classList.remove("open");
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
-<script src="/kopihub/js/footer.js"></script>
-```
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.setAttribute("aria-label", "Buka menu");
+          menuToggle.textContent = "☰";
+        });
+      });
+    }
+  </script>
 
-Pastikan ketiga script tersebut tetap berada sebelum `</body>`.
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-**3. Simpan perubahan**
+  <!-- SCRIPT UTAMA KOPIHUB -->
+  <script src="script.js"></script>
 
-Tekan **Commit changes** di GitHub.
-
-### Hasil yang akan kita periksa
-
-Setelah GitHub Pages memperbarui halaman, buka:
-
-<Link url="https://sainusoffcl-tech.github.io/kopihub/" title="Buka halaman utama KopiHub"/>
-
-Periksa apakah:
-- Footer tampil dengan latar transparan/terang.
-- Logo bawaan KopiHub tampil jika logo resmi belum tersedia.
-- Lima bagian footer tersusun rapi di desktop dan HP.
-- Tahun copyright terisi otomatis.
-
-**Jangan ubah halaman Dashboard Admin, Owner, Kasir, atau Menu Pelanggan dahulu.** Kita pastikan `index.html` berhasil lebih dulu.
-
-Kalau sudah melakukan perubahan, beri tahu saya hasil tampilannya.
+  <!-- FOOTER GLOBAL LOADER -->
+  <script src="/kopihub/js/footer.js"></script>
 
 </body>
 </html>

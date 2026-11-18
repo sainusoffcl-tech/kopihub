@@ -204,11 +204,18 @@
   }
 
   function getCssUrl() {
-    return new URL(
-      "css/header.css",
-      getBaseUrl()
-    ).href;
-  }
+  const url = new URL(
+    "css/header.css",
+    getBaseUrl()
+  );
+
+  url.searchParams.set(
+    "v",
+    HEADER_VERSION
+  );
+
+  return url.href;
+}
 
   /* =========================================
      MEMUAT CSS

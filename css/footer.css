@@ -1,22 +1,14 @@
 
 /* =========================================
    KOPIHUB - GLOBAL FOOTER
-   BRAND: DARK GREEN, CREAM, ORANGE
 ========================================= */
 
 .kh-global-footer {
   width: 100%;
   padding: 48px 0 20px;
-  background: #FAF9F5;
-  color: #123B2C;
+  background: transparent;
+  color: #123b2c;
   font-family: inherit;
-  box-sizing: border-box;
-}
-
-.kh-global-footer *,
-.kh-global-footer *::before,
-.kh-global-footer *::after {
-  box-sizing: border-box;
 }
 
 .kh-footer-container {
@@ -24,38 +16,28 @@
   margin: 0 auto;
 }
 
-
-/* =========================================
-   SUSUNAN UTAMA
-========================================= */
-
 .kh-footer-main {
   display: grid;
   grid-template-columns: 1.7fr 1fr 1fr 1fr 1fr;
-  gap: 30px;
+  gap: 32px;
   align-items: start;
 }
 
-
-/* =========================================
-   IDENTITAS KOPIHUB
-========================================= */
-
 .kh-footer-brand {
-  max-width: 320px;
-  text-align: left;
+  max-width: 310px;
 }
 
-.kh-footer-brand-header {
-  display: flex;
+/* LOGO GAMBAR DAN TULISAN KOPIHUB */
+
+.kh-footer-logo {
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 14px;
   min-height: 96px;
-  text-align: left;
+  text-decoration: none;
 }
 
-.kh-footer-brand-header img {
+.kh-footer-logo img {
   display: block;
   width: 96px;
   height: 96px;
@@ -64,119 +46,75 @@
   object-position: center;
 }
 
-.kh-footer-brand-header img[hidden] {
+.kh-footer-logo img[hidden] {
   display: none !important;
-}
-
-
-/* LOGO CADANGAN JIKA LOGO RESMI BELUM TERSEDIA */
-
-.kh-footer-logo-fallback {
-  width: 96px;
-  height: 96px;
-  flex: 0 0 96px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 18px;
-  background: #123B2C;
-  color: #E99A48;
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: -2px;
-}
-
-.kh-footer-logo-fallback[hidden] {
-  display: none !important;
-}
-
-
-/* NAMA DAN TAGLINE */
-
-.kh-footer-brand-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  min-width: 0;
 }
 
 .kh-footer-brand-name {
   display: inline-flex;
+  align-items: center;
   white-space: nowrap;
   font-size: 34px;
   font-weight: 800;
   letter-spacing: -1.2px;
-  line-height: 1.1;
 }
 
 .kh-logo-kopi {
-  color: #123B2C;
+  color: #123b2c;
 }
 
 .kh-logo-hub {
-  color: #E99A48;
+  color: #e99a48;
 }
 
+/* TAGLINE */
+
 .kh-footer-tagline {
-  margin: 0;
-  color: #E99A48;
-  font-size: 10px;
+  margin-top: 12px;
+  color: #e99a48;
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: .45px;
-  line-height: 1.5;
-  white-space: nowrap;
+  letter-spacing: .6px;
 }
 
 .kh-footer-description {
-  max-width: 310px;
-  margin: 14px 0 0;
-  color: #64756C;
+  max-width: 300px;
+  margin: 11px 0 0;
+  color: #64756c;
   font-size: 13px;
   line-height: 1.8;
-  text-align: left;
 }
 
-
-/* =========================================
-   KOLOM NAVIGASI
-========================================= */
+/* KOLOM FOOTER */
 
 .kh-footer-column {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
-  text-align: left;
 }
 
 .kh-footer-column h3 {
   margin: 5px 0 7px;
-  color: #123B2C;
+  color: #123b2c;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: .7px;
-  text-align: left;
 }
 
 .kh-footer-column a {
-  display: inline-block;
-  color: #64756C;
+  color: #64756c;
   font-size: 13px;
   line-height: 1.5;
-  text-align: left;
   text-decoration: none;
   transition: color .2s ease;
 }
 
 .kh-footer-column a:hover {
-  color: #E99A48;
+  color: #e99a48;
 }
 
-
-/* =========================================
-   BAGIAN COPYRIGHT
-========================================= */
+/* BAGIAN BAWAH FOOTER */
 
 .kh-footer-bottom {
   display: flex;
@@ -190,26 +128,20 @@
 
 .kh-footer-bottom p {
   margin: 0;
-  color: #7B8981;
+  color: #7b8981;
   font-size: 11px;
-  text-align: left;
 }
 
 .kh-footer-bottom-tagline {
-  color: #123B2C;
+  color: #123b2c;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: .5px;
-  text-align: left;
 }
 
-
-/* =========================================
-   TABLET
-========================================= */
+/* TABLET */
 
 @media (max-width: 900px) {
-
   .kh-footer-main {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 30px 24px;
@@ -219,16 +151,11 @@
     grid-column: 1 / -1;
     max-width: 420px;
   }
-
 }
 
-
-/* =========================================
-   MOBILE
-========================================= */
+/* HP */
 
 @media (max-width: 600px) {
-
   .kh-global-footer {
     padding: 36px 0 18px;
   }
@@ -247,23 +174,19 @@
     max-width: 100%;
   }
 
-  .kh-footer-brand-header {
+  .kh-footer-logo {
     gap: 12px;
+    min-height: 80px;
   }
 
-  .kh-footer-brand-header img,
-  .kh-footer-logo-fallback {
-    width: 82px;
-    height: 82px;
-    flex-basis: 82px;
+  .kh-footer-logo img {
+    width: 80px;
+    height: 80px;
+    flex-basis: 80px;
   }
 
   .kh-footer-brand-name {
     font-size: 30px;
-  }
-
-  .kh-footer-tagline {
-    font-size: 9px;
   }
 
   .kh-footer-column {
@@ -284,30 +207,18 @@
     gap: 9px;
     margin-top: 30px;
   }
-
 }
 
-
-/* =========================================
-   LAYAR SANGAT KECIL
-========================================= */
-
 @media (max-width: 360px) {
+  .kh-footer-main {
+    column-gap: 12px;
+  }
 
   .kh-footer-container {
     width: calc(100% - 28px);
   }
 
-  .kh-footer-main {
-    column-gap: 12px;
-  }
-
   .kh-footer-brand-name {
     font-size: 27px;
   }
-
-  .kh-footer-tagline {
-    font-size: 8px;
-  }
-
 }

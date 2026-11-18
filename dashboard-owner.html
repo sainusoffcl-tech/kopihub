@@ -3366,10 +3366,32 @@ function renderSelectedShop() {
       shop?.name || "Kedai belum tersedia";
   }
 
-  /*
-    Tidak ada lagi logo kedai atau tombol profil
-    pada header global.
-  */
+/* FOTO PROFIL KEDAI PADA HEADER */
+
+const headerLogo = $("header-shop-logo");
+const headerFallback = $("header-profile-fallback");
+const headerProfileButton = $("header-profile-button");
+
+if (headerLogo && headerFallback) {
+  if (shop?.logo_url) {
+    headerLogo.src = shop.logo_url;
+    headerLogo.hidden = false;
+    headerFallback.hidden = true;
+
+    headerLogo.onerror = () => {
+      headerLogo.hidden = true;
+      headerFallback.hidden = false;
+    };
+  } else {
+    headerLogo.removeAttribute("src");
+    headerLogo.hidden = true;
+    headerFallback.hidden = false;
+  }
+}
+
+if (headerProfileButton) {
+  headerProfileButton.disabled = !shop;
+}
 
   const shopDetails = $("shop-details");
 

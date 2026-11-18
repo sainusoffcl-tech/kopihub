@@ -4766,6 +4766,339 @@ if (!client || !client.auth) {
       }
     );
 
+/* =========================================
+   LOGO RESMI KOPIHUB
+   UPLOAD DAN SIMPAN KE SUPABASE
+========================================= */
+
+const platformLogoFile =
+  document.getElementById("platform-logo-file");
+
+const savePlatformLogoButton =
+  document.getElementById("save-platform-logo");
+
+const platformLogoPreview =
+  document.getElementById("platform-logo-preview");
+
+const platformLogoPlaceholder =
+  document.getElementById("platform-logo-placeholder");
+
+const platformLogoStatus =
+  document.getElementById("platform-logo-status");
+
+const platformLogoMessage =
+  document.getElementById("platform-logo-message");
+
+const platformLogoNewPreviewArea =
+  document.getElementById("platform-logo-new-preview-area");
+
+const platformLogoNewPreview =
+  document.getElementById("platform-logo-new-preview");
+
+let selectedPlatformLogoFile = null;
+let platformLogoObjectUrl = null;
+
+function showPlatformLogoMessage(message, type = "") {
+  if (!platformLogoMessage) return;
+
+  platformLogoMessage.textContent = message;
+  platformLogoMessage.className =
+    "settings-message " + type;
+}
+
+/* MEMUAT LOGO RESMI DARI DATABASE */
+
+async function loadPlatformLogo() {
+  if (!client) return;
+
+  if (platformLogoStatus) {
+    platformLogoStatus.textContent =
+      "Memuat logo resmi KopiHub...";
+  }
+
+  try {
+    const { data: logoPath, error } =
+      await client.rpc("kh_get_platform_logo_path");
+
+    if (error) throw error;
+
+    if (!logoPath) {
+      platformLogoPreview.hidden = true;
+      platformLogoPlaceholder.hidden = false;
+
+      platformLogoStatus.textContent =
+        "Logo resmi belum tersedia.";
+
+      return;
+    }
+
+    const { data } = client.storage
+      .from("platform-assets")
+      .getPublicUrl(logoPath);
+
+    if (!data?.publicUrl) {
+      throw new Error(
+        "Alamat logo tidak berhasil dibuat."
+      );
+    }
+
+    platformLogoPreview.onload = () => {
+      platformLogoPreview.hidden = false;
+      platformLogoPlaceholder.hidden = true;
+
+      platformLogoStatus.textContent =
+        "Logo resmi KopiHub berhasil dimuat.";
+    };
+
+    platformLogoPreview.onerror = () => {
+      platformLogoPreview.hidden = true;
+      platformLogoPlaceholder.hidden = false;
+
+      platformLogoStatus.textContent =
+        "Logo tersimpan, tetapi gambar gagal ditampilkan.";
+    };
+
+    platformLogoPreview.src = data.publicUrl;
+
+  } catch (error) {
+    console.error("Gagal memuat logo KopiHub:", error);
+
+    platformLogoStatus.textContent =
+      "Gagal memuat logo: " + error.message;
+  }
+}
+
+/* PRATINJAU LOGO BARU */
+
+platformLogoFile?.addEventListener("change", () => {
+  const file = platformLogoFile.files?.[0];
+
+  selectedPlatformLogoFile = null;
+
+  if (platformLogoObjectUrl) {
+    URL.revokeObjectURL(platformLogoObjectUrl);
+    platformLogoObjectUrl = null;
+  }
+
+  platformLogoNewPreviewArea.hidden = true;
+  showPlatformLogoMessage("");
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "image/png",
+    "image/jpeg",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    platformLogoFile.value = "";
+
+    showPlatformLogoMessage(
+      "Format tidak didukung. Gunakan PNG, JPG, atau WebP.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    platformLogoFile.value = "";
+
+    showPlatformLogoMessage(
+      "Ukuran logo maksimal 5 MB.",
+      "error"
+    );
+
+    return;
+  }
+
+  selectedPlatformLogoFile = file;
+
+  platformLogoObjectUrl =
+    URL.createObjectURL(file);
+
+  platformLogoNewPreview.src =
+    platformLogoObjectUrl;
+
+  platformLogoNewPreviewArea.hidden = false;
+
+  showPlatformLogoMessage(
+    "Logo siap diunggah. Periksa pratinjau sebelum menyimpan."
+  );
+});
+
+/* TOMBOL UNGGAH DAN SIMPAN */
+
+savePlatformLogoButton?.addEventListener(
+  "click",
+  async () => {
+    const file = selectedPlatformLogoFile;
+
+    if (!file) {
+      showPlatformLogoMessage(
+        "Pilih file logo terlebih dahulu.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!client) {
+      showPlatformLogoMessage(
+        "Koneksi Supabase belum tersedia.",
+        "error"
+      );
+
+      return;
+    }
+
+    savePlatformLogoButton.disabled = true;
+
+    const originalButtonText =
+      savePlatformLogoButton.innerHTML;
+
+    savePlatformLogoButton.textContent =
+      "Mengunggah logo...";
+
+    showPlatformLogoMessage(
+      "Sedang mengunggah logo resmi KopiHub..."
+    );
+
+    let uploadedPath = null;
+
+    try {
+      /* PASTIKAN SESI ADMIN AKTIF */
+
+      const {
+        data: authData,
+        error: authError
+      } = await client.auth.getUser();
+
+      if (authError || !authData.user) {
+        throw new Error(
+          "Sesi Admin tidak ditemukan. Silakan login kembali."
+        );
+      }
+
+      /* TENTUKAN EKSTENSI FILE */
+
+      const extension = {
+        "image/png": "png",
+        "image/jpeg": "jpg",
+        "image/webp": "webp"
+      }[file.type];
+
+      if (!extension) {
+        throw new Error("Format gambar tidak didukung.");
+      }
+
+      /* NAMA FILE UNIK AGAR LOGO LAMA TIDAK TERTIMPA */
+
+      const uniqueName =
+        "kopihub-logo-" +
+        Date.now() +
+        "-" +
+        Math.random().toString(36).slice(2, 8) +
+        "." +
+        extension;
+
+      uploadedPath = "brand/" + uniqueName;
+
+      /* UNGGAH KE STORAGE */
+
+      const { error: uploadError } =
+        await client.storage
+          .from("platform-assets")
+          .upload(uploadedPath, file, {
+            cacheControl: "3600",
+            contentType: file.type,
+            upsert: false
+          });
+
+      if (uploadError) throw uploadError;
+
+      showPlatformLogoMessage(
+        "Logo berhasil diunggah. Menyimpan pengaturan..."
+      );
+
+      /* SIMPAN PATH LOGO KE DATABASE */
+
+      const { data: savedData, error: saveError } =
+        await client
+          .from("kh_platform_settings")
+          .update({
+            platform_logo_path: uploadedPath,
+            updated_by: authData.user.id,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", true)
+          .select("platform_logo_path")
+          .maybeSingle();
+
+      if (saveError) throw saveError;
+
+      if (
+        !savedData ||
+        savedData.platform_logo_path !== uploadedPath
+      ) {
+        throw new Error(
+          "Lokasi logo belum berhasil disimpan ke database."
+        );
+      }
+
+      /* PERBARUI LOGO DI DASHBOARD ADMIN */
+
+      await loadPlatformLogo();
+
+      platformLogoFile.value = "";
+      selectedPlatformLogoFile = null;
+
+      if (platformLogoObjectUrl) {
+        URL.revokeObjectURL(platformLogoObjectUrl);
+        platformLogoObjectUrl = null;
+      }
+
+      platformLogoNewPreviewArea.hidden = true;
+
+      showPlatformLogoMessage(
+        "Logo resmi KopiHub berhasil diunggah dan disimpan.",
+        "success"
+      );
+
+      alert(
+        "Logo resmi KopiHub berhasil diperbarui."
+      );
+
+    } catch (error) {
+      console.error(
+        "Gagal menyimpan logo KopiHub:",
+        error
+      );
+
+      showPlatformLogoMessage(
+        "Logo gagal disimpan: " + error.message,
+        "error"
+      );
+
+      /*
+       * LOGO LAMA TIDAK DIHAPUS.
+       * Jika penyimpanan database gagal,
+       * logo lama tetap menjadi logo aktif.
+       */
+
+      await loadPlatformLogo();
+
+    } finally {
+      savePlatformLogoButton.disabled = false;
+      savePlatformLogoButton.innerHTML =
+        originalButtonText;
+
+      refreshIcons();
+    }
+  }
+);
+
     /* =========================================================
        KOPIHUB ADMIN — INTEGRASI KOMISI & PENDAPATAN
        Menggunakan RPC aman untuk data billing yang RLS-nya aktif.

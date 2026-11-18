@@ -1,25 +1,30 @@
 @import url("/kopihub/css/design-system.css?v=1.0.0");
+
 /* =========================================
    KOPIHUB - GLOBAL FOOTER
+   REVISI GLOBAL DESIGN SYSTEM
 ========================================= */
 
 .kh-global-footer {
   width: 100%;
-  padding: 48px 0 20px;
+  padding: var(--kh-space-12) 0 var(--kh-space-5);
   background: transparent;
-  color: #123b2c;
-  font-family: inherit;
+  color: var(--kh-color-primary);
+  font-family: var(--kh-font-family);
 }
 
 .kh-footer-container {
-  width: min(1180px, calc(100% - 40px));
+  width: min(
+    var(--kh-content-max-width),
+    calc(100% - 40px)
+  );
   margin: 0 auto;
 }
 
 .kh-footer-main {
   display: grid;
   grid-template-columns: 1.7fr 1fr 1fr 1fr 1fr;
-  gap: 32px;
+  gap: var(--kh-space-8);
   align-items: start;
 }
 
@@ -55,33 +60,33 @@
   align-items: center;
   white-space: nowrap;
   font-size: 34px;
-  font-weight: 800;
+  font-weight: var(--kh-font-weight-extra-bold);
   letter-spacing: -1.2px;
 }
 
 .kh-logo-kopi {
-  color: #123b2c;
+  color: var(--kh-color-primary);
 }
 
 .kh-logo-hub {
-  color: #e99a48;
+  color: var(--kh-color-accent);
 }
 
 /* TAGLINE */
 
 .kh-footer-tagline {
-  margin-top: 12px;
-  color: #e99a48;
+  margin-top: var(--kh-space-3);
+  color: var(--kh-color-accent);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: var(--kh-font-weight-extra-bold);
   letter-spacing: .6px;
 }
 
 .kh-footer-description {
   max-width: 300px;
   margin: 11px 0 0;
-  color: #64756c;
-  font-size: 13px;
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-font-size-sm);
   line-height: 1.8;
 }
 
@@ -91,27 +96,27 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--kh-space-3);
 }
 
 .kh-footer-column h3 {
   margin: 5px 0 7px;
-  color: #123b2c;
+  color: var(--kh-color-primary);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: var(--kh-font-weight-extra-bold);
   letter-spacing: .7px;
 }
 
 .kh-footer-column a {
-  color: #64756c;
-  font-size: 13px;
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-font-size-sm);
   line-height: 1.5;
   text-decoration: none;
-  transition: color .2s ease;
+  transition: color var(--kh-transition-normal);
 }
 
 .kh-footer-column a:hover {
-  color: #e99a48;
+  color: var(--kh-color-accent);
 }
 
 /* BAGIAN BAWAH FOOTER */
@@ -123,19 +128,19 @@
   gap: 15px;
   margin-top: 38px;
   padding-top: 18px;
-  border-top: 1px solid rgba(18, 59, 44, .12);
+  border-top: 1px solid var(--kh-color-border);
 }
 
 .kh-footer-bottom p {
   margin: 0;
-  color: #7b8981;
-  font-size: 11px;
+  color: var(--kh-color-text-muted);
+  font-size: var(--kh-font-size-xs);
 }
 
 .kh-footer-bottom-tagline {
-  color: #123b2c;
-  font-size: 11px;
-  font-weight: 800;
+  color: var(--kh-color-primary);
+  font-size: var(--kh-font-size-xs);
+  font-weight: var(--kh-font-weight-extra-bold);
   letter-spacing: .5px;
 }
 

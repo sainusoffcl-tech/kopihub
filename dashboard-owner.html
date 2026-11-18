@@ -2706,8 +2706,20 @@ document.querySelectorAll("[data-page]").forEach(button => {
     }
   });
 });
-  
-/* =========================================
+  /* TOMBOL PROFIL HEADER */
+
+$("header-profile-button")?.addEventListener("click", () => {
+  if (!selectedShop()) return;
+
+  if (currentPage !== "lainnya") {
+    navigateToPage("lainnya");
+  }
+
+  showSettingsPanel("profil-kedai");
+  showIdentityTab("profile");
+});
+
+  /* =========================================
    HEADER TETAP
    TIDAK ADA COLLAPSE SAAT SCROLL
 ========================================= */

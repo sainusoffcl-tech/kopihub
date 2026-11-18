@@ -1,96 +1,313 @@
 
-<footer class="kh-global-footer">
-  <div class="kh-footer-container">
+/* =========================================
+   KOPIHUB - GLOBAL FOOTER
+   BRAND: DARK GREEN, CREAM, ORANGE
+========================================= */
 
-    <div class="kh-footer-main">
+.kh-global-footer {
+  width: 100%;
+  padding: 48px 0 20px;
+  background: #FAF9F5;
+  color: #123B2C;
+  font-family: inherit;
+  box-sizing: border-box;
+}
 
-      <!-- IDENTITAS KOPIHUB -->
-      <div class="kh-footer-brand">
+.kh-global-footer *,
+.kh-global-footer *::before,
+.kh-global-footer *::after {
+  box-sizing: border-box;
+}
 
-        <div class="kh-footer-brand-header">
-
-          <img
-            id="kh-footer-logo-image"
-            src=""
-            alt="Logo Resmi KopiHub"
-            hidden
-          >
-
-          <div
-            id="kh-footer-logo-fallback"
-            class="kh-footer-logo-fallback"
-          >
-            KH
-          </div>
-
-          <div class="kh-footer-brand-text">
-            <div class="kh-footer-brand-name">
-              <span class="kh-logo-kopi">Kopi</span><span class="kh-logo-hub">Hub</span>
-            </div>
-
-            <div class="kh-footer-tagline">
-              SATU PLATFORM, BANYAK CERITA
-            </div>
-          </div>
-
-        </div>
-
-        <p class="kh-footer-description">
-          Platform digital untuk membantu kedai kopi mengelola
-          operasional dan mengembangkan bisnis.
-        </p>
-
-      </div>
+.kh-footer-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
 
 
-      <!-- PLATFORM -->
-      <div class="kh-footer-column">
-        <h3>PLATFORM</h3>
-        <a href="/kopihub/index.html#tentang">Tentang KopiHub</a>
-        <a href="/kopihub/index.html#fitur">Fitur Platform</a>
-        <a href="/kopihub/index.html#mitra">Untuk Mitra Kedai</a>
-      </div>
+/* =========================================
+   SUSUNAN UTAMA
+========================================= */
+
+.kh-footer-main {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr 1fr 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
 
 
-      <!-- BANTUAN -->
-      <div class="kh-footer-column">
-        <h3>BANTUAN</h3>
-        <a href="/kopihub/bantuan.html">Pusat Bantuan</a>
-        <a href="/kopihub/panduan.html">Panduan Penggunaan</a>
-        <a href="/kopihub/kontak.html">Hubungi Kami</a>
-      </div>
+/* =========================================
+   IDENTITAS KOPIHUB
+========================================= */
+
+.kh-footer-brand {
+  max-width: 320px;
+  text-align: left;
+}
+
+.kh-footer-brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  min-height: 96px;
+  text-align: left;
+}
+
+.kh-footer-brand-header img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  flex: 0 0 96px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.kh-footer-brand-header img[hidden] {
+  display: none !important;
+}
 
 
-      <!-- INFORMASI -->
-      <div class="kh-footer-column">
-        <h3>INFORMASI</h3>
-        <a href="/kopihub/kebijakan-privasi.html">Kebijakan Privasi</a>
-        <a href="/kopihub/syarat-ketentuan.html">Syarat dan Ketentuan</a>
-      </div>
+/* LOGO CADANGAN JIKA LOGO RESMI BELUM TERSEDIA */
+
+.kh-footer-logo-fallback {
+  width: 96px;
+  height: 96px;
+  flex: 0 0 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: #123B2C;
+  color: #E99A48;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -2px;
+}
+
+.kh-footer-logo-fallback[hidden] {
+  display: none !important;
+}
 
 
-      <!-- KONEKSI -->
-      <div class="kh-footer-column">
-        <h3>KONEKSI</h3>
-        <a href="#" data-footer-social="instagram">Instagram</a>
-        <a href="#" data-footer-social="email">Email</a>
-      </div>
+/* NAMA DAN TAGLINE */
 
-    </div>
+.kh-footer-brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+
+.kh-footer-brand-name {
+  display: inline-flex;
+  white-space: nowrap;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  line-height: 1.1;
+}
+
+.kh-logo-kopi {
+  color: #123B2C;
+}
+
+.kh-logo-hub {
+  color: #E99A48;
+}
+
+.kh-footer-tagline {
+  margin: 0;
+  color: #E99A48;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .45px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.kh-footer-description {
+  max-width: 310px;
+  margin: 14px 0 0;
+  color: #64756C;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: left;
+}
 
 
-    <!-- BAGIAN BAWAH -->
-    <div class="kh-footer-bottom">
+/* =========================================
+   KOLOM NAVIGASI
+========================================= */
 
-      <p>
-        © <span data-year></span> KopiHub. All rights reserved.
-      </p>
+.kh-footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+}
 
-      <div class="kh-footer-bottom-tagline">
-        SATU PLATFORM, BANYAK CERITA
-      </div>
+.kh-footer-column h3 {
+  margin: 5px 0 7px;
+  color: #123B2C;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .7px;
+  text-align: left;
+}
 
-    </div>
+.kh-footer-column a {
+  display: inline-block;
+  color: #64756C;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  text-decoration: none;
+  transition: color .2s ease;
+}
 
-  </div>
-</footer>
+.kh-footer-column a:hover {
+  color: #E99A48;
+}
+
+
+/* =========================================
+   BAGIAN COPYRIGHT
+========================================= */
+
+.kh-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 38px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(18, 59, 44, .12);
+}
+
+.kh-footer-bottom p {
+  margin: 0;
+  color: #7B8981;
+  font-size: 11px;
+  text-align: left;
+}
+
+.kh-footer-bottom-tagline {
+  color: #123B2C;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  text-align: left;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .kh-footer-main {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 30px 24px;
+  }
+
+  .kh-footer-brand {
+    grid-column: 1 / -1;
+    max-width: 420px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .kh-global-footer {
+    padding: 36px 0 18px;
+  }
+
+  .kh-footer-container {
+    width: calc(100% - 36px);
+  }
+
+  .kh-footer-main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 18px;
+  }
+
+  .kh-footer-brand {
+    grid-column: 1 / -1;
+    max-width: 100%;
+  }
+
+  .kh-footer-brand-header {
+    gap: 12px;
+  }
+
+  .kh-footer-brand-header img,
+  .kh-footer-logo-fallback {
+    width: 82px;
+    height: 82px;
+    flex-basis: 82px;
+  }
+
+  .kh-footer-brand-name {
+    font-size: 30px;
+  }
+
+  .kh-footer-tagline {
+    font-size: 9px;
+  }
+
+  .kh-footer-column {
+    gap: 11px;
+  }
+
+  .kh-footer-column h3 {
+    font-size: 11px;
+  }
+
+  .kh-footer-column a {
+    font-size: 12px;
+  }
+
+  .kh-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+    margin-top: 30px;
+  }
+
+}
+
+
+/* =========================================
+   LAYAR SANGAT KECIL
+========================================= */
+
+@media (max-width: 360px) {
+
+  .kh-footer-container {
+    width: calc(100% - 28px);
+  }
+
+  .kh-footer-main {
+    column-gap: 12px;
+  }
+
+  .kh-footer-brand-name {
+    font-size: 27px;
+  }
+
+  .kh-footer-tagline {
+    font-size: 8px;
+  }
+
+}

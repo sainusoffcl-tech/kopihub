@@ -3189,15 +3189,23 @@ function renderSelectedShop() {
         ? "Pesanan dapat dipersiapkan sebelum pembayaran dikonfirmasi."
         : "Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
   }
+/* NAMA KEDAI UNTUK GLOBAL HEADER KOPIHUB */
 
-  /* NAMA KEDAI PADA HEADER GLOBAL */
+const shopName = shop?.name || "";
 
-  const headerTitle = $("header-shop-name");
+window.KopiHubOwnerShopName = shopName;
 
-  if (headerTitle) {
-    headerTitle.textContent =
-      shop?.name || "Kedai belum tersedia";
-  }
+if (window.KopiHubHeader?.setShopName) {
+  window.KopiHubHeader.setShopName(shopName);
+}
+
+document.dispatchEvent(
+  new CustomEvent("kopihub:shop-name", {
+    detail: {
+      name: shopName
+    }
+  })
+);
 
 /* FOTO PROFIL KEDAI PADA HEADER */
 
@@ -8812,13 +8820,86 @@ if (logoutButton) {
   });
 }
 
+/* =========================================
+   INTEGRASI GLOBAL HEADER — OWNER
+========================================= */
+
+document.addEventListener("kopihub:navigate", event => {
+  const detail = event.detail || {};
+
+  if (detail.role !== "owner") return;
+
+  switch (detail.action || detail.page) {
+    case "home":
+    case "dashboard":
+      navigateToPage("home");
+      break;
+
+    case "menu":
+      navigateToPage("menu");
+      break;
+
+    case "transactions":
+    case "transaksi":
+      navigateToPage("transaksi");
+      break;
+
+    case "reports":
+    case "laporan":
+      navigateToPage("laporan");
+      break;
+
+    case "identity":
+      if (!selectedShop()) return;
+
+      navigateToPage("lainnya");
+      showSettingsPanel("profil-kedai");
+      showIdentityTab("profile");
+      break;
+
+    case "cashiers":
+      if (!selectedShop()) return;
+
+      navigateToPage("lainnya");
+      showSettingsPanel("manajemen-kasir");
+      break;
+  }
+});
+
+/* LOGOUT DARI GLOBAL HEADER */
+
+document.addEventListener("kopihub:logout", async event => {
+  if (event.detail?.role !== "owner") return;
+
+  if (!client) {
+    alert("Sesi belum tersedia. Silakan muat ulang halaman.");
+    return;
+  }
+
+  try {
+    const { error } = await client.auth.signOut();
+
+    if (error) throw error;
+
+    window.location.replace("akun.html");
+
+  } catch (error) {
+    console.error("Gagal logout Owner:", error);
+    alert("Logout gagal: " + error.message);
+  }
+});
 
 /* MULAI DASHBOARD OWNER */
 navigateToPage("home");
 loadShops();
 
 </script>
+
+<!-- PEMANGGIL GLOBAL HEADER KOPIHUB -->
+<script src="/kopihub/js/header.js"></script>
+
 <!-- PEMANGGIL FOOTER GLOBAL KOPIHUB -->
 <script src="/kopihub/js/footer.js"></script>
-    </body>
+
+</body>
 </html>

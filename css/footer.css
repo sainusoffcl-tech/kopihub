@@ -47,7 +47,7 @@
 }
 
 .kh-footer-logo img[hidden] {
-  display: none;
+  display: none !important;
 }
 
 .kh-footer-brand-name {

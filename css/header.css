@@ -2,6 +2,7 @@
 /* =========================================
    GLOBAL HEADER KOPIHUB
    Sumber tampilan bersama seluruh halaman
+   REVISI SAFE AREA IPHONE
 ========================================= */
 
 :root {
@@ -15,16 +16,22 @@
   --kh-header-danger: #A52C2C;
 }
 
+/* =========================================
+   GLOBAL HEADER DAN SAFE AREA IPHONE
+========================================= */
+
 .kh-global-header {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 1000;
   width: 100%;
   min-width: 0;
+  padding-top: env(safe-area-inset-top, 0px);
   color: var(--kh-header-cream);
   background: var(--kh-header-green);
 }
 
-/* Area status bar iPhone dan safe area */
+/* Area isi header */
 
 .kh-header-bar {
   display: flex;
@@ -34,12 +41,16 @@
   width: 100%;
   min-height: 88px;
   padding:
-    max(12px, env(safe-area-inset-top, 0px))
+    12px
     max(18px, env(safe-area-inset-right, 0px))
     12px
     max(18px, env(safe-area-inset-left, 0px));
   background: var(--kh-header-green);
 }
+
+/* =========================================
+   IDENTITAS KOPIHUB
+========================================= */
 
 .kh-header-identity {
   display: flex;
@@ -81,6 +92,10 @@
   display: none !important;
 }
 
+/* =========================================
+   NAMA DAN TAGLINE KOPIHUB
+========================================= */
+
 .kh-header-brand {
   display: flex;
   flex-direction: column;
@@ -114,7 +129,9 @@
   white-space: nowrap;
 }
 
-/* NAMA KEDAI KHUSUS HEADER OWNER */
+/* =========================================
+   NAMA KEDAI KHUSUS HEADER OWNER
+========================================= */
 
 .kh-header-shop-name {
   display: block;
@@ -135,6 +152,10 @@
   display: none !important;
 }
 
+/* =========================================
+   LABEL PERAN
+========================================= */
+
 .kh-header-role {
   margin-top: 3px;
   color: rgba(250, 249, 245, .76);
@@ -144,6 +165,10 @@
   line-height: 1.4;
   text-transform: uppercase;
 }
+
+/* =========================================
+   TOMBOL HAMBURGER
+========================================= */
 
 .kh-header-menu-button {
   display: grid;
@@ -169,7 +194,9 @@
   background: #315C45;
 }
 
-/* Lapisan gelap di belakang menu */
+/* =========================================
+   LAPISAN GELAP DI BELAKANG MENU
+========================================= */
 
 .kh-header-overlay {
   position: fixed;
@@ -188,7 +215,9 @@
   opacity: 1;
 }
 
-/* Panel navigasi */
+/* =========================================
+   PANEL NAVIGASI
+========================================= */
 
 .kh-header-menu {
   position: fixed;
@@ -229,6 +258,10 @@
   pointer-events: none;
 }
 
+/* =========================================
+   HANDLE MENU
+========================================= */
+
 .kh-header-menu-handle {
   width: 43px;
   height: 5px;
@@ -236,6 +269,10 @@
   border-radius: 10px;
   background: #D5DAD2;
 }
+
+/* =========================================
+   JUDUL MENU
+========================================= */
 
 .kh-header-menu-heading {
   display: flex;
@@ -259,6 +296,10 @@
   font-weight: 850;
 }
 
+/* =========================================
+   TOMBOL TUTUP MENU
+========================================= */
+
 .kh-header-close-button {
   display: grid;
   place-items: center;
@@ -277,7 +318,9 @@
   height: 20px;
 }
 
-/* Daftar navigasi */
+/* =========================================
+   DAFTAR NAVIGASI
+========================================= */
 
 .kh-header-menu-list {
   display: grid;
@@ -337,6 +380,10 @@
   color: #9AA69B;
 }
 
+/* =========================================
+   TOMBOL KELUAR
+========================================= */
+
 .kh-header-menu-item.kh-danger {
   margin-top: 7px;
   border-color: #F0D9D6;
@@ -347,6 +394,10 @@
   color: var(--kh-header-danger);
   background: #FCE8E6;
 }
+
+/* =========================================
+   FOOTER MENU
+========================================= */
 
 .kh-header-menu-footer {
   margin-top: 19px;
@@ -359,14 +410,18 @@
   letter-spacing: 1px;
 }
 
-/* Kunci scroll halaman saat menu terbuka */
+/* =========================================
+   KUNCI SCROLL SAAT MENU TERBUKA
+========================================= */
 
 body.kh-header-menu-open {
   overflow: hidden !important;
   touch-action: none;
 }
 
-/* Tablet dan desktop */
+/* =========================================
+   TABLET DAN DESKTOP
+========================================= */
 
 @media (min-width: 761px) {
   .kh-header-bar {
@@ -401,7 +456,9 @@ body.kh-header-menu-open {
   }
 }
 
-/* iPhone layar kecil */
+/* =========================================
+   IPHONE LAYAR KECIL
+========================================= */
 
 @media (max-width: 380px) {
   .kh-header-bar {
@@ -437,6 +494,10 @@ body.kh-header-menu-open {
     flex-basis: 42px;
   }
 }
+
+/* =========================================
+   AKSESIBILITAS
+========================================= */
 
 @media (prefers-reduced-motion: reduce) {
   .kh-header-overlay,

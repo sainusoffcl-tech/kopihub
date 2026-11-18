@@ -3092,15 +3092,17 @@ function renderOperatingHoursRows(schedule = []) {
     dayName.textContent = day.name;
 
     const status = document.createElement("select");
-    status.id = "operating-status-" + day.day;
-    status.required = true;
-    status.style.margin = "0";
-    status.setAttribute("aria-label", "Status " + day.name);
-    status.innerHTML = `
-      <option value="">Pilih status</option>
-      <option value="open">Buka</option>
-      <option value="closed">Tutup</option>
-    `;
+status.className = "operating-day-status";
+status.id = "operating-status-" + day.day;
+status.required = true;
+status.style.margin = "0";
+status.setAttribute("aria-label", "Status " + day.name);
+
+status.innerHTML = `
+  <option value="">Pilih status</option>
+  <option value="open">Buka</option>
+  <option value="closed">Tutup</option>
+`;
 
     heading.append(dayName, status);
 

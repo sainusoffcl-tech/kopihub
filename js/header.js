@@ -7,7 +7,7 @@
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.1.0";
+  const HEADER_VERSION = "1.2.0";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =
@@ -422,7 +422,32 @@
 
     refreshIcons(root);
   }
+/* =========================================
+   NAMA KEDAI OWNER
+========================================= */
 
+function setShopName(root, value) {
+  const shopName = root?.querySelector(
+    "[data-kh-shop-name]"
+  );
+
+  const roleLabel = root?.querySelector(
+    "[data-kh-role-label]"
+  );
+
+  if (!shopName) return;
+
+  const name = String(value || "").trim();
+
+  shopName.textContent = name;
+  shopName.hidden = !name;
+
+  /* Owner menampilkan nama kedai,
+     bukan label OWNER KEDAI. */
+  if (roleLabel) {
+    roleLabel.hidden = true;
+  }
+}
   /* =========================================
      MEMBUKA MENU
   ========================================= */

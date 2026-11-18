@@ -7693,7 +7693,109 @@ $("share-qr").addEventListener("click", async () => {
 /* =====================================================
    PROFIL KEDAI OWNER
    ===================================================== */
+/* =====================================================
+   OPTIMASI GAMBAR LOGO KEDAI
+   ===================================================== */
 
+async function optimizeShopLogo(file) {
+  const MAX_DIMENSION = 512;
+  const QUALITY = 0.82;
+
+  let imageBitmap = null;
+  let imageElement = null;
+
+  try {
+    if (typeof createImageBitmap === "function") {
+      imageBitmap = await createImageBitmap(file);
+    } else {
+      imageElement = await new Promise((resolve, reject) => {
+        const objectUrl = URL.createObjectURL(file);
+        const image = new Image();
+
+        image.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+          resolve(image);
+        };
+
+        image.onerror = () => {
+          URL.revokeObjectURL(objectUrl);
+          reject(new Error("Gambar tidak dapat dibaca."));
+        };
+
+        image.src = objectUrl;
+      });
+    }
+
+    const source = imageBitmap || imageElement;
+
+    const originalWidth = source.width;
+    const originalHeight = source.height;
+
+    if (!originalWidth || !originalHeight) {
+      throw new Error("Ukuran gambar tidak valid.");
+    }
+
+    const scale = Math.min(
+      1,
+      MAX_DIMENSION / Math.max(
+        originalWidth,
+        originalHeight
+      )
+    );
+
+    const width = Math.max(
+      1,
+      Math.round(originalWidth * scale)
+    );
+
+    const height = Math.max(
+      1,
+      Math.round(originalHeight * scale)
+    );
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      return file;
+    }
+
+    context.drawImage(source, 0, 0, width, height);
+
+    const compressedBlob = await new Promise(resolve => {
+      canvas.toBlob(
+        resolve,
+        "image/webp",
+        QUALITY
+      );
+    });
+
+    if (
+      !compressedBlob ||
+      compressedBlob.size >= file.size
+    ) {
+      return file;
+    }
+
+    return compressedBlob;
+
+  } catch (error) {
+    console.warn(
+      "Optimasi logo tidak berhasil, menggunakan gambar asli:",
+      error
+    );
+
+    return file;
+
+  } finally {
+    if (imageBitmap) {
+      imageBitmap.close();
+    }
+  }
+}
 /* HAPUS LOGO KEDAI */
 $("remove-shop-logo").addEventListener("click", () => {
   $("profile-shop-logo").value = "";

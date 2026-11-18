@@ -1,0 +1,425 @@
+
+/* =========================================
+   GLOBAL HEADER KOPIHUB
+   Sumber tampilan bersama seluruh halaman
+========================================= */
+
+:root {
+  --kh-header-green: #123B2C;
+  --kh-header-green-light: #24543E;
+  --kh-header-cream: #FAF9F5;
+  --kh-header-orange: #E99A48;
+  --kh-header-text: #26372D;
+  --kh-header-muted: #788278;
+  --kh-header-line: #E5E8DF;
+  --kh-header-danger: #A52C2C;
+}
+
+.kh-global-header {
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  min-width: 0;
+  color: var(--kh-header-cream);
+  background: var(--kh-header-green);
+}
+
+/* Area status bar iPhone dan safe area */
+
+.kh-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  min-height: 88px;
+  padding:
+    max(12px, env(safe-area-inset-top, 0px))
+    max(18px, env(safe-area-inset-right, 0px))
+    12px
+    max(18px, env(safe-area-inset-left, 0px));
+  background: var(--kh-header-green);
+}
+
+.kh-header-identity {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.kh-header-logo,
+.kh-header-logo-fallback {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  border-radius: 14px;
+}
+
+.kh-header-logo {
+  display: block;
+  object-fit: contain;
+  background: var(--kh-header-cream);
+}
+
+.kh-header-logo[hidden] {
+  display: none !important;
+}
+
+.kh-header-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--kh-header-orange);
+  background: var(--kh-header-green-light);
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.kh-header-logo-fallback[hidden] {
+  display: none !important;
+}
+
+.kh-header-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  gap: 2px;
+}
+
+.kh-header-wordmark {
+  white-space: nowrap;
+  font-size: 27px;
+  font-weight: 850;
+  letter-spacing: -1.1px;
+  line-height: 1.05;
+}
+
+.kh-header-kopi {
+  color: var(--kh-header-cream);
+}
+
+.kh-header-hub {
+  color: var(--kh-header-orange);
+}
+
+.kh-header-tagline {
+  color: var(--kh-header-orange);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .65px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.kh-header-role {
+  margin-top: 3px;
+  color: rgba(250, 249, 245, .76);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.1px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.kh-header-menu-button {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  padding: 0;
+  border: 1px solid rgba(250, 249, 245, .2);
+  border-radius: 14px;
+  color: var(--kh-header-cream);
+  background: var(--kh-header-green-light);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kh-header-menu-button svg {
+  width: 23px;
+  height: 23px;
+}
+
+.kh-header-menu-button:active {
+  background: #315C45;
+}
+
+/* Lapisan gelap di belakang menu */
+
+.kh-header-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(10, 25, 17, .56);
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+
+.kh-header-overlay[hidden] {
+  display: none !important;
+}
+
+.kh-header-overlay.kh-visible {
+  opacity: 1;
+}
+
+/* Panel navigasi */
+
+.kh-header-menu {
+  position: fixed;
+  z-index: 1101;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 620px;
+  max-height: min(82vh, 760px);
+  max-height: min(82dvh, 760px);
+  margin: 0 auto;
+  padding:
+    12px
+    max(20px, env(safe-area-inset-right, 0px))
+    calc(22px + env(safe-area-inset-bottom, 0px))
+    max(20px, env(safe-area-inset-left, 0px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 24px 24px 0 0;
+  color: var(--kh-header-text);
+  background: var(--kh-header-cream);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, .18);
+  transform: translateY(105%);
+  visibility: hidden;
+  transition:
+    transform .28s ease,
+    visibility .28s ease;
+}
+
+.kh-header-menu.kh-open {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.kh-header-menu[aria-hidden="true"] {
+  pointer-events: none;
+}
+
+.kh-header-menu-handle {
+  width: 43px;
+  height: 5px;
+  margin: 0 auto 19px;
+  border-radius: 10px;
+  background: #D5DAD2;
+}
+
+.kh-header-menu-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.kh-header-menu-eyebrow {
+  color: var(--kh-header-orange);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.5px;
+}
+
+.kh-header-menu-heading h2 {
+  margin: 4px 0 0;
+  color: var(--kh-header-green);
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.kh-header-close-button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border: 1px solid var(--kh-header-line);
+  border-radius: 12px;
+  color: var(--kh-header-green);
+  background: #FFFFFF;
+  cursor: pointer;
+}
+
+.kh-header-close-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Daftar navigasi */
+
+.kh-header-menu-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.kh-header-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 13px;
+  border: 1px solid var(--kh-header-line);
+  border-radius: 14px;
+  color: var(--kh-header-green);
+  background: #FFFFFF;
+  text-align: left;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kh-header-menu-item:active,
+.kh-header-menu-item.kh-active {
+  border-color: #C9D8CB;
+  background: #EDF3EB;
+}
+
+.kh-header-menu-item-icon {
+  display: grid;
+  place-items: center;
+  width: 37px;
+  height: 37px;
+  flex: 0 0 37px;
+  border-radius: 11px;
+  color: var(--kh-header-green-light);
+  background: #EDF2E9;
+}
+
+.kh-header-menu-item-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.kh-header-menu-item-label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.kh-header-menu-item-arrow {
+  width: 16px;
+  height: 16px;
+  color: #9AA69B;
+}
+
+.kh-header-menu-item.kh-danger {
+  margin-top: 7px;
+  border-color: #F0D9D6;
+  color: var(--kh-header-danger);
+}
+
+.kh-header-menu-item.kh-danger .kh-header-menu-item-icon {
+  color: var(--kh-header-danger);
+  background: #FCE8E6;
+}
+
+.kh-header-menu-footer {
+  margin-top: 19px;
+  padding-top: 14px;
+  border-top: 1px solid var(--kh-header-line);
+  color: var(--kh-header-muted);
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* Kunci scroll halaman saat menu terbuka */
+
+body.kh-header-menu-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+/* Tablet dan desktop */
+
+@media (min-width: 761px) {
+  .kh-header-bar {
+    min-height: 92px;
+    padding-right: max(28px, env(safe-area-inset-right, 0px));
+    padding-left: max(28px, env(safe-area-inset-left, 0px));
+  }
+
+  .kh-header-logo,
+  .kh-header-logo-fallback {
+    width: 60px;
+    height: 60px;
+    flex-basis: 60px;
+  }
+
+  .kh-header-wordmark {
+    font-size: 30px;
+  }
+
+  .kh-header-tagline {
+    font-size: 9px;
+  }
+
+  .kh-header-menu {
+    bottom: 20px;
+    max-height: 82vh;
+    border-radius: 24px;
+  }
+
+  .kh-header-menu-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* iPhone layar kecil */
+
+@media (max-width: 380px) {
+  .kh-header-bar {
+    gap: 9px;
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+
+  .kh-header-identity {
+    gap: 9px;
+  }
+
+  .kh-header-logo,
+  .kh-header-logo-fallback {
+    width: 47px;
+    height: 47px;
+    flex-basis: 47px;
+    border-radius: 12px;
+  }
+
+  .kh-header-wordmark {
+    font-size: 24px;
+  }
+
+  .kh-header-tagline {
+    font-size: 7px;
+    letter-spacing: .45px;
+  }
+
+  .kh-header-menu-button {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kh-header-overlay,
+  .kh-header-menu {
+    transition: none;
+  }
+}

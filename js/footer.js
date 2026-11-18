@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const FOOTER_VERSION = "1.0.1";
+  const FOOTER_VERSION = "1.0.2";
 
 const FOOTER_HTML =
   "/kopihub/components/footer.html";

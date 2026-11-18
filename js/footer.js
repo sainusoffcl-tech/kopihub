@@ -6,8 +6,13 @@
 (() => {
   "use strict";
 
-  const FOOTER_HTML = "/kopihub/components/footer.html";
-  const FOOTER_CSS = "/kopihub/css/footer.css";
+  const FOOTER_VERSION = "1.0.1";
+
+const FOOTER_HTML =
+  "/kopihub/components/footer.html";
+
+const FOOTER_CSS =
+  "/kopihub/css/footer.css?v=" + FOOTER_VERSION;
 
   const SUPABASE_URL =
     "https://ozcliasebeydgyvgluht.supabase.co";

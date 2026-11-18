@@ -2820,100 +2820,215 @@ main,
 
         </section>
 
-        <!-- PENGATURAN PLATFORM -->
-        <section id="settings-section" hidden>
+        
+<!-- PENGATURAN PLATFORM -->
+<section id="settings-section" hidden>
 
-          <p class="muted">
-            Kelola ketentuan dan tarif layanan yang berlaku untuk seluruh kedai mitra KopiHub.
-          </p>
+  <p class="muted">
+    Kelola ketentuan dan tarif layanan yang berlaku untuk seluruh kedai mitra KopiHub.
+  </p>
 
-          <div class="settings-card">
+  <!-- BIAYA LAYANAN KOPIHUB -->
+  <div class="settings-card">
 
-            <div class="settings-heading">
-              <div class="settings-icon">
-                <i data-lucide="wallet"></i>
-              </div>
+    <div class="settings-heading">
+      <div class="settings-icon">
+        <i data-lucide="wallet"></i>
+      </div>
 
-              <div>
-                <h3>Biaya Layanan KopiHub</h3>
-                <p>
-                  Tarif yang dibebankan kepada Owner untuk setiap pesanan
-                  yang berhasil dibayar.
-                </p>
-              </div>
-            </div>
+      <div>
+        <h3>Biaya Layanan KopiHub</h3>
+        <p>
+          Tarif yang dibebankan kepada Owner untuk setiap pesanan
+          yang berhasil dibayar.
+        </p>
+      </div>
+    </div>
 
-            <span class="settings-rate-label">
-              Tarif aktif per pesanan paid
-            </span>
+    <span class="settings-rate-label">
+      Tarif aktif per pesanan paid
+    </span>
 
-            <div class="settings-rate" id="current-service-fee">
-              Memuat tarif...
-            </div>
+    <div class="settings-rate" id="current-service-fee">
+      Memuat tarif...
+    </div>
 
-            <p class="muted" id="service-fee-updated">
-              Mengambil data dari database...
-            </p>
+    <p class="muted" id="service-fee-updated">
+      Mengambil data dari database...
+    </p>
 
-            <div class="settings-note">
-              Biaya layanan merupakan kewajiban Owner kedai, bukan biaya
-              tambahan pelanggan. Perubahan tarif hanya berlaku untuk
-              konfirmasi pembayaran berikutnya. Catatan biaya yang sudah
-              tercatat tidak berubah.
-            </div>
+    <div class="settings-note">
+      Biaya layanan merupakan kewajiban Owner kedai, bukan biaya
+      tambahan pelanggan. Perubahan tarif hanya berlaku untuk
+      konfirmasi pembayaran berikutnya. Catatan biaya yang sudah
+      tercatat tidak berubah.
+    </div>
 
-            <button type="button" class="action-button" id="edit-service-fee">
-              <i data-lucide="pencil"></i>
-              Ubah Tarif
-            </button>
+    <button type="button" class="action-button" id="edit-service-fee">
+      <i data-lucide="pencil"></i>
+      Ubah Tarif
+    </button>
 
-            <div class="settings-form" id="service-fee-form" hidden>
+    <div class="settings-form" id="service-fee-form" hidden>
 
-              <label for="service-fee-input">
-                Tarif baru per pesanan (Rupiah)
-              </label>
+      <label for="service-fee-input">
+        Tarif baru per pesanan (Rupiah)
+      </label>
 
-              <input
-                type="number"
-                id="service-fee-input"
-                min="1"
-                step="1"
-                inputmode="numeric"
-                placeholder="Contoh: 3000"
-              >
+      <input
+        type="number"
+        id="service-fee-input"
+        min="1"
+        step="1"
+        inputmode="numeric"
+        placeholder="Contoh: 3000"
+      >
 
-              <p class="muted">
-                Tarif yang sama akan berlaku untuk seluruh kedai mitra.
-              </p>
+      <p class="muted">
+        Tarif yang sama akan berlaku untuk seluruh kedai mitra.
+      </p>
 
-              <div>
-                <button
-                  type="button"
-                  class="action-button"
-                  id="save-service-fee">
-                  <i data-lucide="save"></i>
-                  Simpan Tarif
-                </button>
+      <div>
+        <button
+          type="button"
+          class="action-button"
+          id="save-service-fee">
+          <i data-lucide="save"></i>
+          Simpan Tarif
+        </button>
 
-                <button
-                  type="button"
-                  class="action-button"
-                  id="cancel-service-fee">
-                  Batal
-                </button>
-              </div>
+        <button
+          type="button"
+          class="action-button"
+          id="cancel-service-fee">
+          Batal
+        </button>
+      </div>
 
-                            <div
-                class="settings-message"
-                id="service-fee-message"
-                aria-live="polite">
-              </div>
+      <div
+        class="settings-message"
+        id="service-fee-message"
+        aria-live="polite">
+      </div>
 
-            </div>
+    </div>
 
-          </div>
+  </div>
+  <!-- SELESAI KARTU BIAYA LAYANAN -->
 
-        </section>
+
+  <!-- LOGO RESMI KOPIHUB -->
+  <div class="settings-card platform-logo-card">
+
+    <div class="settings-heading">
+      <div class="settings-icon">
+        <i data-lucide="image"></i>
+      </div>
+
+      <div>
+        <h3>Identitas Platform</h3>
+        <p>
+          Kelola logo resmi yang digunakan di seluruh
+          halaman KopiHub.
+        </p>
+      </div>
+    </div>
+
+    <div class="platform-logo-preview-area">
+
+      <span class="settings-rate-label">
+        Logo Resmi Saat Ini
+      </span>
+
+      <div class="platform-logo-preview">
+
+        <img
+          id="platform-logo-preview"
+          src=""
+          alt="Logo Resmi KopiHub"
+          hidden
+        >
+
+        <div
+          id="platform-logo-placeholder"
+          class="platform-logo-placeholder">
+          <i data-lucide="image"></i>
+          <span>Logo belum tersedia</span>
+        </div>
+
+      </div>
+
+      <p class="muted" id="platform-logo-status">
+        Memuat logo resmi KopiHub...
+      </p>
+
+    </div>
+
+    <div class="settings-form">
+
+      <label for="platform-logo-file">
+        Pilih Logo Baru
+      </label>
+
+      <input
+        type="file"
+        id="platform-logo-file"
+        accept="image/png,image/jpeg,image/webp"
+      >
+
+      <p class="muted">
+        Format PNG, JPG/JPEG, atau WebP.
+        Maksimal ukuran file 5 MB.
+      </p>
+
+      <div
+        class="platform-logo-new-preview-area"
+        id="platform-logo-new-preview-area"
+        hidden>
+
+        <span class="settings-rate-label">
+          Pratinjau Logo Baru
+        </span>
+
+        <img
+          id="platform-logo-new-preview"
+          alt="Pratinjau Logo Baru"
+        >
+
+      </div>
+
+      <button
+        type="button"
+        class="action-button"
+        id="save-platform-logo">
+        <i data-lucide="upload"></i>
+        Unggah dan Simpan Logo
+      </button>
+
+      <p
+        class="settings-message"
+        id="platform-logo-message"
+        aria-live="polite">
+      </p>
+
+    </div>
+
+    <div class="settings-note">
+      Penggantian logo resmi hanya dapat dilakukan
+      oleh Admin KopiHub. Logo ini digunakan bersama
+      oleh Dashboard Admin, Dashboard Owner,
+      Dashboard Kasir, dan Menu Pelanggan.
+    </div>
+
+  </div>
+  <!-- SELESAI KARTU LOGO RESMI KOPIHUB -->
+
+</section>
+<!-- SELESAI PENGATURAN PLATFORM -->
+
+
+<!-- PENGGUNA & AKSES -->
+
 
   <!-- PENGGUNA & AKSES -->
 <section id="users-section" hidden>

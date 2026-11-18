@@ -1,224 +1,96 @@
 
-/* =========================================
-   KOPIHUB - GLOBAL FOOTER
-========================================= */
+<footer class="kh-global-footer">
+  <div class="kh-footer-container">
 
-.kh-global-footer {
-  width: 100%;
-  padding: 48px 0 20px;
-  background: transparent;
-  color: #123b2c;
-  font-family: inherit;
-}
+    <div class="kh-footer-main">
 
-.kh-footer-container {
-  width: min(1180px, calc(100% - 40px));
-  margin: 0 auto;
-}
+      <!-- IDENTITAS KOPIHUB -->
+      <div class="kh-footer-brand">
 
-.kh-footer-main {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr 1fr 1fr 1fr;
-  gap: 32px;
-  align-items: start;
-}
+        <div class="kh-footer-brand-header">
 
-.kh-footer-brand {
-  max-width: 310px;
-}
+          <img
+            id="kh-footer-logo-image"
+            src=""
+            alt="Logo Resmi KopiHub"
+            hidden
+          >
 
-/* LOGO GAMBAR DAN TULISAN KOPIHUB */
+          <div
+            id="kh-footer-logo-fallback"
+            class="kh-footer-logo-fallback"
+          >
+            KH
+          </div>
 
-.kh-footer-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  min-height: 96px;
-  text-decoration: none;
-}
+          <div class="kh-footer-brand-text">
+            <div class="kh-footer-brand-name">
+              <span class="kh-logo-kopi">Kopi</span><span class="kh-logo-hub">Hub</span>
+            </div>
 
-.kh-footer-logo img {
-  display: block;
-  width: 96px;
-  height: 96px;
-  flex: 0 0 96px;
-  object-fit: contain;
-  object-position: center;
-}
+            <div class="kh-footer-tagline">
+              SATU PLATFORM, BANYAK CERITA
+            </div>
+          </div>
 
-.kh-footer-logo img[hidden] {
-  display: none !important;
-}
+        </div>
 
-.kh-footer-brand-name {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  font-size: 34px;
-  font-weight: 800;
-  letter-spacing: -1.2px;
-}
+        <p class="kh-footer-description">
+          Platform digital untuk membantu kedai kopi mengelola
+          operasional dan mengembangkan bisnis.
+        </p>
 
-.kh-logo-kopi {
-  color: #123b2c;
-}
+      </div>
 
-.kh-logo-hub {
-  color: #e99a48;
-}
 
-/* TAGLINE */
+      <!-- PLATFORM -->
+      <div class="kh-footer-column">
+        <h3>PLATFORM</h3>
+        <a href="/kopihub/index.html#tentang">Tentang KopiHub</a>
+        <a href="/kopihub/index.html#fitur">Fitur Platform</a>
+        <a href="/kopihub/index.html#mitra">Untuk Mitra Kedai</a>
+      </div>
 
-.kh-footer-tagline {
-  margin-top: 12px;
-  color: #e99a48;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .6px;
-}
 
-.kh-footer-description {
-  max-width: 300px;
-  margin: 11px 0 0;
-  color: #64756c;
-  font-size: 13px;
-  line-height: 1.8;
-}
+      <!-- BANTUAN -->
+      <div class="kh-footer-column">
+        <h3>BANTUAN</h3>
+        <a href="/kopihub/bantuan.html">Pusat Bantuan</a>
+        <a href="/kopihub/panduan.html">Panduan Penggunaan</a>
+        <a href="/kopihub/kontak.html">Hubungi Kami</a>
+      </div>
 
-/* KOLOM FOOTER */
 
-.kh-footer-column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-}
+      <!-- INFORMASI -->
+      <div class="kh-footer-column">
+        <h3>INFORMASI</h3>
+        <a href="/kopihub/kebijakan-privasi.html">Kebijakan Privasi</a>
+        <a href="/kopihub/syarat-ketentuan.html">Syarat dan Ketentuan</a>
+      </div>
 
-.kh-footer-column h3 {
-  margin: 5px 0 7px;
-  color: #123b2c;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: .7px;
-}
 
-.kh-footer-column a {
-  color: #64756c;
-  font-size: 13px;
-  line-height: 1.5;
-  text-decoration: none;
-  transition: color .2s ease;
-}
+      <!-- KONEKSI -->
+      <div class="kh-footer-column">
+        <h3>KONEKSI</h3>
+        <a href="#" data-footer-social="instagram">Instagram</a>
+        <a href="#" data-footer-social="email">Email</a>
+      </div>
 
-.kh-footer-column a:hover {
-  color: #e99a48;
-}
+    </div>
 
-/* BAGIAN BAWAH FOOTER */
 
-.kh-footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  margin-top: 38px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(18, 59, 44, .12);
-}
+    <!-- BAGIAN BAWAH -->
+    <div class="kh-footer-bottom">
 
-.kh-footer-bottom p {
-  margin: 0;
-  color: #7b8981;
-  font-size: 11px;
-}
+      <p>
+        © <span data-year></span> KopiHub. All rights reserved.
+      </p>
 
-.kh-footer-bottom-tagline {
-  color: #123b2c;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .5px;
-}
+      <div class="kh-footer-bottom-tagline">
+        SATU PLATFORM, BANYAK CERITA
+      </div>
 
-/* TABLET */
+    </div>
 
-@media (max-width: 900px) {
-  .kh-footer-main {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 30px 24px;
-  }
-
-  .kh-footer-brand {
-    grid-column: 1 / -1;
-    max-width: 420px;
-  }
-}
-
-/* HP */
-
-@media (max-width: 600px) {
-  .kh-global-footer {
-    padding: 36px 0 18px;
-  }
-
-  .kh-footer-container {
-    width: calc(100% - 36px);
-  }
-
-  .kh-footer-main {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 18px;
-  }
-
-  .kh-footer-brand {
-    grid-column: 1 / -1;
-    max-width: 100%;
-  }
-
-  .kh-footer-logo {
-    gap: 12px;
-    min-height: 80px;
-  }
-
-  .kh-footer-logo img {
-    width: 80px;
-    height: 80px;
-    flex-basis: 80px;
-  }
-
-  .kh-footer-brand-name {
-    font-size: 30px;
-  }
-
-  .kh-footer-column {
-    gap: 11px;
-  }
-
-  .kh-footer-column h3 {
-    font-size: 11px;
-  }
-
-  .kh-footer-column a {
-    font-size: 12px;
-  }
-
-  .kh-footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 9px;
-    margin-top: 30px;
-  }
-}
-
-@media (max-width: 360px) {
-  .kh-footer-main {
-    column-gap: 12px;
-  }
-
-  .kh-footer-container {
-    width: calc(100% - 28px);
-  }
-
-  .kh-footer-brand-name {
-    font-size: 27px;
-  }
-}
+  </div>
+</footer>

@@ -3358,6 +3358,30 @@ try {
       refreshIcons();
     }
 
+/* =========================================
+   SAMBUNGAN GLOBAL HEADER - ADMIN
+========================================= */
+
+document.addEventListener(
+  "kopihub:navigate",
+  event => {
+    const detail = event.detail || {};
+
+    if (detail.role !== "admin") return;
+
+    const page = detail.page;
+
+    if (page === "users") {
+      alert(
+        "Halaman Pengguna & Akses belum tersedia."
+      );
+      return;
+    }
+
+    showPage(page);
+  }
+);
+
     /* =========================================
        TOMBOL KEMBALI HEADER GLOBAL
     ========================================= */

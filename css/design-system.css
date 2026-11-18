@@ -1,0 +1,466 @@
+
+/* =====================================================
+   KOPIHUB GLOBAL DESIGN SYSTEM
+   Versi: 1.0.0
+
+   SUMBER STANDAR VISUAL SELURUH PLATFORM KOPIHUB
+
+   Digunakan oleh:
+   - Dashboard Admin
+   - Dashboard Owner
+   - Dashboard Kasir
+   - Menu Pelanggan
+   - Halaman Publik KopiHub
+
+   Prinsip:
+   - Satu standar warna
+   - Satu standar tipografi
+   - Satu standar komponen
+   - Responsif untuk HP, tablet, dan desktop
+   - Tidak mengubah fungsi JavaScript halaman
+===================================================== */
+
+
+/* =====================================================
+   1. WARNA UTAMA KOPIHUB
+===================================================== */
+
+:root {
+
+  /* BRAND */
+  --kh-color-primary: #123B2C;
+  --kh-color-primary-light: #24543E;
+  --kh-color-primary-dark: #0D2E22;
+
+  --kh-color-accent: #E99A48;
+  --kh-color-accent-light: #F5B66F;
+  --kh-color-accent-dark: #CC7D2D;
+
+  /* BACKGROUND */
+  --kh-color-background: #FAF9F5;
+  --kh-color-surface: #FFFFFF;
+  --kh-color-surface-soft: #F3F4EF;
+  --kh-color-surface-muted: #EDF2E9;
+
+  /* TEXT */
+  --kh-color-text: #26372D;
+  --kh-color-text-secondary: #64756C;
+  --kh-color-text-muted: #788278;
+  --kh-color-text-inverse: #FAF9F5;
+
+  /* BORDER */
+  --kh-color-border: #E5E8DF;
+  --kh-color-border-strong: #D5DCD1;
+
+  /* STATUS */
+  --kh-color-success: #247A4A;
+  --kh-color-success-bg: #EAF5ED;
+
+  --kh-color-warning: #A96818;
+  --kh-color-warning-bg: #FFF4E3;
+
+  --kh-color-danger: #A52C2C;
+  --kh-color-danger-bg: #FCE8E6;
+
+  --kh-color-info: #28658A;
+  --kh-color-info-bg: #EAF3F9;
+
+  /* OVERLAY */
+  --kh-color-overlay: rgba(10, 25, 17, .56);
+
+
+  /* ===================================================
+     2. TIPOGRAFI
+  =================================================== */
+
+  --kh-font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  --kh-font-size-xs: 11px;
+  --kh-font-size-sm: 13px;
+  --kh-font-size-md: 14px;
+  --kh-font-size-base: 15px;
+  --kh-font-size-lg: 17px;
+  --kh-font-size-xl: 20px;
+  --kh-font-size-2xl: 24px;
+  --kh-font-size-3xl: 30px;
+
+  --kh-font-weight-normal: 400;
+  --kh-font-weight-medium: 500;
+  --kh-font-weight-semibold: 600;
+  --kh-font-weight-bold: 700;
+  --kh-font-weight-extra-bold: 800;
+
+  --kh-line-height-tight: 1.2;
+  --kh-line-height-normal: 1.5;
+  --kh-line-height-relaxed: 1.7;
+
+
+  /* ===================================================
+     3. SPACING / JARAK
+  =================================================== */
+
+  --kh-space-1: 4px;
+  --kh-space-2: 8px;
+  --kh-space-3: 12px;
+  --kh-space-4: 16px;
+  --kh-space-5: 20px;
+  --kh-space-6: 24px;
+  --kh-space-7: 28px;
+  --kh-space-8: 32px;
+  --kh-space-10: 40px;
+  --kh-space-12: 48px;
+
+
+  /* ===================================================
+     4. RADIUS / SUDUT
+  =================================================== */
+
+  --kh-radius-sm: 8px;
+  --kh-radius-md: 12px;
+  --kh-radius-lg: 16px;
+  --kh-radius-xl: 20px;
+  --kh-radius-2xl: 24px;
+  --kh-radius-pill: 999px;
+
+
+  /* ===================================================
+     5. SHADOW / BAYANGAN
+  =================================================== */
+
+  --kh-shadow-sm:
+    0 2px 8px rgba(18, 59, 44, .05);
+
+  --kh-shadow-md:
+    0 5px 18px rgba(18, 59, 44, .08);
+
+  --kh-shadow-lg:
+    0 12px 32px rgba(18, 59, 44, .12);
+
+
+  /* ===================================================
+     6. UKURAN KOMPONEN
+  =================================================== */
+
+  --kh-control-height-sm: 38px;
+  --kh-control-height-md: 46px;
+  --kh-control-height-lg: 52px;
+
+  --kh-content-max-width: 1180px;
+
+  --kh-page-padding-mobile: 18px;
+  --kh-page-padding-tablet: 24px;
+  --kh-page-padding-desktop: 32px;
+
+
+  /* ===================================================
+     7. TRANSISI
+  =================================================== */
+
+  --kh-transition-fast: .15s ease;
+  --kh-transition-normal: .2s ease;
+  --kh-transition-slow: .3s ease;
+
+
+  /* ===================================================
+     8. LAPISAN / Z-INDEX
+  =================================================== */
+
+  --kh-z-content: 1;
+  --kh-z-sticky: 100;
+  --kh-z-header: 1000;
+  --kh-z-overlay: 1100;
+  --kh-z-modal: 1200;
+  --kh-z-toast: 1300;
+
+
+  /* ===================================================
+     9. KOMPATIBILITAS GLOBAL HEADER LAMA
+  =================================================== */
+
+  --kh-header-green: var(--kh-color-primary);
+  --kh-header-green-light: var(--kh-color-primary-light);
+  --kh-header-cream: var(--kh-color-background);
+  --kh-header-orange: var(--kh-color-accent);
+  --kh-header-text: var(--kh-color-text);
+  --kh-header-muted: var(--kh-color-text-muted);
+  --kh-header-line: var(--kh-color-border);
+  --kh-header-danger: var(--kh-color-danger);
+
+}
+
+
+/* =====================================================
+   10. STANDAR DASAR KOMPONEN KOPIHUB
+
+   Kelas di bawah ini digunakan saat halaman
+   disesuaikan dengan Global Design System.
+   Tidak memaksa perubahan pada kelas lama.
+===================================================== */
+
+
+/* AREA KONTEN */
+
+.kh-ui-container {
+  width: min(
+    var(--kh-content-max-width),
+    calc(100% - 36px)
+  );
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.kh-ui-section {
+  margin-bottom: var(--kh-space-6);
+}
+
+
+/* TYPOGRAPHY */
+
+.kh-ui-title {
+  margin: 0;
+  color: var(--kh-color-primary);
+  font-family: var(--kh-font-family);
+  font-size: var(--kh-font-size-2xl);
+  font-weight: var(--kh-font-weight-extra-bold);
+  line-height: var(--kh-line-height-tight);
+}
+
+.kh-ui-subtitle {
+  margin: var(--kh-space-2) 0 0;
+  color: var(--kh-color-text-secondary);
+  font-size: var(--kh-font-size-sm);
+  line-height: var(--kh-line-height-relaxed);
+}
+
+.kh-ui-label {
+  color: var(--kh-color-text);
+  font-size: var(--kh-font-size-sm);
+  font-weight: var(--kh-font-weight-semibold);
+}
+
+
+/* CARD */
+
+.kh-ui-card {
+  min-width: 0;
+  padding: var(--kh-space-5);
+  border: 1px solid var(--kh-color-border);
+  border-radius: var(--kh-radius-lg);
+  color: var(--kh-color-text);
+  background: var(--kh-color-surface);
+  box-shadow: var(--kh-shadow-sm);
+}
+
+.kh-ui-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kh-space-3);
+  margin-bottom: var(--kh-space-4);
+}
+
+
+/* BUTTON */
+
+.kh-ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kh-space-2);
+  min-height: var(--kh-control-height-md);
+  padding: 0 var(--kh-space-4);
+  border: 1px solid transparent;
+  border-radius: var(--kh-radius-md);
+  font-family: var(--kh-font-family);
+  font-size: var(--kh-font-size-sm);
+  font-weight: var(--kh-font-weight-bold);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--kh-transition-normal),
+    border-color var(--kh-transition-normal),
+    color var(--kh-transition-normal);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kh-ui-button-primary {
+  color: var(--kh-color-text-inverse);
+  background: var(--kh-color-primary);
+}
+
+.kh-ui-button-primary:hover {
+  background: var(--kh-color-primary-light);
+}
+
+.kh-ui-button-secondary {
+  color: var(--kh-color-primary);
+  border-color: var(--kh-color-border);
+  background: var(--kh-color-surface);
+}
+
+.kh-ui-button-accent {
+  color: #FFFFFF;
+  background: var(--kh-color-accent-dark);
+}
+
+.kh-ui-button-danger {
+  color: #FFFFFF;
+  background: var(--kh-color-danger);
+}
+
+.kh-ui-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+
+/* INPUT / SELECT / TEXTAREA */
+
+.kh-ui-input,
+.kh-ui-select,
+.kh-ui-textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--kh-color-border-strong);
+  border-radius: var(--kh-radius-md);
+  outline: none;
+  color: var(--kh-color-text);
+  background: var(--kh-color-surface);
+  font-family: var(--kh-font-family);
+  font-size: var(--kh-font-size-base);
+  transition:
+    border-color var(--kh-transition-normal),
+    box-shadow var(--kh-transition-normal);
+}
+
+.kh-ui-input,
+.kh-ui-select {
+  min-height: var(--kh-control-height-md);
+  padding: 0 var(--kh-space-3);
+}
+
+.kh-ui-textarea {
+  min-height: 100px;
+  padding: var(--kh-space-3);
+  resize: vertical;
+}
+
+.kh-ui-input:focus,
+.kh-ui-select:focus,
+.kh-ui-textarea:focus {
+  border-color: var(--kh-color-primary);
+  box-shadow: 0 0 0 3px rgba(18, 59, 44, .10);
+}
+
+
+/* BADGE / STATUS */
+
+.kh-ui-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 25px;
+  padding: 4px 10px;
+  border-radius: var(--kh-radius-pill);
+  font-size: var(--kh-font-size-xs);
+  font-weight: var(--kh-font-weight-bold);
+}
+
+.kh-ui-badge-success {
+  color: var(--kh-color-success);
+  background: var(--kh-color-success-bg);
+}
+
+.kh-ui-badge-warning {
+  color: var(--kh-color-warning);
+  background: var(--kh-color-warning-bg);
+}
+
+.kh-ui-badge-danger {
+  color: var(--kh-color-danger);
+  background: var(--kh-color-danger-bg);
+}
+
+.kh-ui-badge-info {
+  color: var(--kh-color-info);
+  background: var(--kh-color-info-bg);
+}
+
+
+/* DIVIDER */
+
+.kh-ui-divider {
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: var(--kh-color-border);
+}
+
+
+/* FOCUS ACCESSIBILITY */
+
+.kh-ui-button:focus-visible,
+.kh-ui-input:focus-visible,
+.kh-ui-select:focus-visible,
+.kh-ui-textarea:focus-visible {
+  outline: 3px solid rgba(233, 154, 72, .45);
+  outline-offset: 2px;
+}
+
+
+/* =====================================================
+   11. RESPONSIVE
+===================================================== */
+
+@media (min-width: 761px) {
+
+  .kh-ui-container {
+    width: min(
+      var(--kh-content-max-width),
+      calc(100% - 56px)
+    );
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .kh-ui-card {
+    padding: var(--kh-space-4);
+    border-radius: var(--kh-radius-md);
+  }
+
+  .kh-ui-title {
+    font-size: var(--kh-font-size-xl);
+  }
+
+  .kh-ui-container {
+    width: calc(100% - 36px);
+  }
+
+}
+
+
+/* =====================================================
+   12. REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+}

@@ -3331,8 +3331,9 @@ try {
       }
 
       if (page === "settings") {
-        loadPlatformSettings();
-      }
+  loadPlatformSettings();
+  loadPlatformLogo();
+}
 
       if (page === "platformTransactions") {
         if (typeof loadPlatformTransactions === "function") {

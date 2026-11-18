@@ -7,7 +7,7 @@
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.2.0";
+  const HEADER_VERSION = "1.2.1";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =

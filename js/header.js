@@ -173,6 +173,25 @@ cashier: {
   ]
 },
 
+customer: {
+  label: "MENU PELANGGAN",
+  title: "Menu",
+  items: [
+    {
+      id: "shop-home",
+      label: "Beranda Kedai",
+      icon: "store"
+    },
+    {
+      id: "customer-orders",
+      label: "Pesanan Saya",
+      icon: "receipt-text"
+    }
+  ]
+}
+};
+
+
   /* =========================================
      PEMETAAN HALAMAN ADMIN
   ========================================= */

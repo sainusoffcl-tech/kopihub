@@ -7863,41 +7863,53 @@ $("shop-profile-form").addEventListener("submit", async event => {
       ? null
       : originalLogoUrl;
 
-    /* UNGGAH LOGO BARU */
-    if (file) {
-      const safeName = file.name.replace(
-        /[^a-zA-Z0-9._-]/g,
-        "-"
-      );
+    /* UNGGAH LOGO BARU DENGAN OPTIMASI */
 
-      uploadedFilePath =
-        shop.id + "/" + Date.now() + "-" + safeName;
+if (file) {
+  const optimizedLogo = await optimizeShopLogo(file);
 
-      const { error: uploadError } = await client.storage
-        .from("shop-logos")
-        .upload(uploadedFilePath, file, {
-          contentType: file.type,
-          cacheControl: "3600",
-          upsert: false
-        });
+  const isWebP = optimizedLogo.type === "image/webp";
 
-      if (uploadError) {
-        throw uploadError;
-      }
+  const extension = isWebP
+    ? "webp"
+    : file.type === "image/png"
+      ? "png"
+      : "jpg";
 
-      const { data: publicData } = client.storage
-        .from("shop-logos")
-        .getPublicUrl(uploadedFilePath);
+  const contentType = isWebP
+    ? "image/webp"
+    : file.type;
 
-      if (!publicData?.publicUrl) {
-        throw new Error(
-          "Alamat logo yang diunggah tidak berhasil diperoleh."
-        );
-      }
+  uploadedFilePath =
+    shop.id + "/" +
+    Date.now() +
+    "-logo." +
+    extension;
 
-      logoUrl = publicData.publicUrl;
-    }
+  const { error: uploadError } = await client.storage
+    .from("shop-logos")
+    .upload(uploadedFilePath, optimizedLogo, {
+      contentType,
+      cacheControl: "3600",
+      upsert: false
+    });
 
+  if (uploadError) {
+    throw uploadError;
+  }
+
+  const { data: publicData } = client.storage
+    .from("shop-logos")
+    .getPublicUrl(uploadedFilePath);
+
+  if (!publicData?.publicUrl) {
+    throw new Error(
+      "Alamat logo yang diunggah tidak berhasil diperoleh."
+    );
+  }
+
+  logoUrl = publicData.publicUrl;
+}
     /* SIMPAN KE DATABASE */
     const { data: updatedData, error: updateError } =
       await client

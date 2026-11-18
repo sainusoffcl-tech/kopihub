@@ -9,6 +9,12 @@
 <style>
 
 
+/* =================================
+   KOPIHUB DASHBOARD KASIR
+   CSS KHUSUS HALAMAN KASIR
+   Header dan Footer menggunakan CSS Global
+================================= */
+
 :root{
   --green:#123b2c;
   --green2:#174c38;
@@ -22,123 +28,6 @@
   --red:#b83232;
   --shadow:0 5px 20px rgba(18,59,44,.045);
   --radius:18px;
-}
-
-*{box-sizing:border-box}
-
-html{
-  scroll-behavior:smooth;
-  -webkit-text-size-adjust:100%;
-}
-
-body{
-  margin:0;
-  background:var(--cream);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
-
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-button:disabled{opacity:.5;cursor:wait}
-[hidden]{display:none!important}
-
-/* =================================
-   HEADER KOPIHUB
-================================= */
-
-.header-shell{
-  position:sticky;
-  top:0;
-  z-index:50;
-  background:var(--green);
-  color:white;
-  box-shadow:0 4px 18px rgba(0,0,0,.10);
-}
-
-.topbar{
-  min-height:72px;
-  padding:13px 18px;
-  transition:.2s;
-}
-
-.topbar-inner{
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-
-.brand{
-  min-width:0;
-  font-size:25px;
-  font-weight:950;
-  letter-spacing:-1px;
-  line-height:1.1;
-}
-
-.brand span{color:var(--orange)}
-
-.brand small{
-  display:block;
-  margin-top:5px;
-  color:rgba(255,255,255,.72);
-  font-size:9px;
-  font-weight:750;
-  letter-spacing:1.5px;
-}
-
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:9px;
-}
-
-.header-staff{
-  max-width:130px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#f3eee3;
-  font-size:12px;
-  font-weight:700;
-}
-
-.header-icon-btn{
-  width:40px;
-  height:40px;
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:13px;
-  background:rgba(255,255,255,.09);
-  color:white;
-  font-size:19px;
-}
-
-.header-subline{
-  max-width:1100px;
-  margin:auto;
-  padding:0 18px 11px;
-  color:rgba(255,255,255,.65);
-  font-size:9px;
-  letter-spacing:1.5px;
-}
-
-.header-shell.collapsed .topbar{
-  min-height:54px;
-  padding:8px 18px;
-}
-
-.header-shell.collapsed .brand{font-size:20px}
-.header-shell.collapsed .brand small{display:none}
-
-.header-shell.collapsed .header-subline{
-  height:0;
-  padding:0;
-  opacity:0;
-  overflow:hidden;
 }
 
 /* =================================
@@ -216,13 +105,17 @@ button:disabled{opacity:.5;cursor:wait}
    NAVIGASI
 ================================= */
 
-.main-nav{display:none!important}
+.main-nav{
+  display:none!important;
+}
 
 /* =================================
    JUDUL BAGIAN
 ================================= */
 
-.page-section{min-width:0}
+.page-section{
+  min-width:0;
+}
 
 .section-heading{
   display:flex;
@@ -277,7 +170,9 @@ button:disabled{opacity:.5;cursor:wait}
   box-shadow:0 2px 10px rgba(18,59,44,.07);
 }
 
-.stat-top{display:contents}
+.stat-top{
+  display:contents;
+}
 
 .stat-label{
   grid-column:1;
@@ -350,7 +245,9 @@ button:disabled{opacity:.5;cursor:wait}
   transition:transform .15s;
 }
 
-.action-card:active{transform:scale(.99)}
+.action-card:active{
+  transform:scale(.99);
+}
 
 .action-icon{
   display:flex;
@@ -371,7 +268,9 @@ button:disabled{opacity:.5;cursor:wait}
   color:#a66327;
 }
 
-.action-copy{min-width:0}
+.action-copy{
+  min-width:0;
+}
 
 .action-copy strong{
   display:block;
@@ -454,14 +353,18 @@ button:disabled{opacity:.5;cursor:wait}
   transition:transform .15s,background .15s;
 }
 
-.btn:active{transform:scale(.98)}
+.btn:active{
+  transform:scale(.98);
+}
 
 .btn-green{
   background:var(--green);
   color:white;
 }
 
-.btn-green:hover{background:var(--green2)}
+.btn-green:hover{
+  background:var(--green2);
+}
 
 .btn-orange{
   background:var(--orange);
@@ -480,7 +383,9 @@ button:disabled{opacity:.5;cursor:wait}
   color:var(--red);
 }
 
-.btn-block{width:100%}
+.btn-block{
+  width:100%;
+}
 
 /* =================================
    DAFTAR PESANAN
@@ -597,7 +502,9 @@ button:disabled{opacity:.5;cursor:wait}
   overflow-wrap:anywhere;
 }
 
-.items{padding:14px 0}
+.items{
+  padding:14px 0;
+}
 
 .items-title{
   margin-bottom:8px;
@@ -618,7 +525,9 @@ button:disabled{opacity:.5;cursor:wait}
   overflow-wrap:anywhere;
 }
 
-.item-row span:last-child{white-space:nowrap}
+.item-row span:last-child{
+  white-space:nowrap;
+}
 
 .order-note{
   margin-bottom:12px;
@@ -674,7 +583,9 @@ button:disabled{opacity:.5;cursor:wait}
   margin-top:15px;
 }
 
-.order-actions .btn{flex:1 1 125px}
+.order-actions .btn{
+  flex:1 1 125px;
+}
 
 .source-tag{
   display:inline-block;
@@ -857,11 +768,24 @@ button:disabled{opacity:.5;cursor:wait}
   margin-top:15px;
 }
 
-.order-detail-actions .btn{width:100%}
+.order-detail-actions .btn{
+  width:100%;
+}
 
 /* =================================
    PROFIL KASIR
 ================================= */
+
+.profile-identity{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-bottom:16px;
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:#f8faf7;
+}
 
 .account-card{
   display:flex;
@@ -889,7 +813,9 @@ button:disabled{opacity:.5;cursor:wait}
   font-weight:900;
 }
 
-.account-copy{min-width:0}
+.account-copy{
+  min-width:0;
+}
 
 .account-label{
   color:var(--muted);
@@ -913,6 +839,152 @@ button:disabled{opacity:.5;cursor:wait}
 }
 
 /* =================================
+   PENGATURAN PRIBADI KASIR
+================================= */
+
+#settings-page{
+  min-width:0;
+}
+
+#settings-page .content-card{
+  padding:17px;
+}
+
+.settings-card{
+  min-width:0;
+  margin-bottom:14px;
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:white;
+}
+
+.settings-card:last-child{
+  margin-bottom:0;
+}
+
+.settings-card h3{
+  margin:0 0 6px;
+  color:var(--green);
+  font-size:14px;
+  font-weight:900;
+}
+
+.settings-card p{
+  margin:0 0 13px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+
+.settings-card > p:last-child{
+  margin-top:13px;
+  margin-bottom:0;
+}
+
+.settings-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  min-width:0;
+  padding:13px 0;
+  border-top:1px solid #eff1ec;
+}
+
+.settings-row:first-of-type{
+  border-top:0;
+}
+
+.settings-row > div{
+  flex:1;
+  min-width:0;
+}
+
+.settings-row strong{
+  display:block;
+  color:var(--text);
+  font-size:12px;
+  font-weight:850;
+  line-height:1.5;
+}
+
+.settings-row small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.5;
+}
+
+.settings-row select{
+  flex:0 0 auto;
+  max-width:125px;
+  min-height:39px;
+  padding:8px 27px 8px 10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+  background:white;
+  color:var(--green);
+  font-size:11px;
+  font-weight:750;
+}
+
+.settings-row select:focus{
+  border-color:#6b9b7e;
+  box-shadow:0 0 0 3px rgba(33,98,71,.08);
+}
+
+.settings-row input[type="checkbox"]{
+  position:relative;
+  flex:0 0 46px;
+  width:46px;
+  height:26px;
+  margin:0;
+  appearance:none;
+  -webkit-appearance:none;
+  border:1px solid #cbd3cb;
+  border-radius:30px;
+  outline:none;
+  background:#dfe4df;
+  cursor:pointer;
+  transition:background .2s,border-color .2s;
+}
+
+.settings-row input[type="checkbox"]::before{
+  content:"";
+  position:absolute;
+  top:2px;
+  left:2px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:white;
+  box-shadow:0 1px 4px rgba(0,0,0,.18);
+  transition:transform .2s;
+}
+
+.settings-row input[type="checkbox"]:checked{
+  border-color:var(--green2);
+  background:var(--green2);
+}
+
+.settings-row input[type="checkbox"]:checked::before{
+  transform:translateX(20px);
+}
+
+.settings-row input[type="checkbox"]:focus-visible{
+  outline:3px solid rgba(33,98,71,.2);
+  outline-offset:3px;
+}
+
+.settings-card > p:last-child{
+  padding-top:12px;
+  border-top:1px solid #eff1ec;
+}
+
+/* =================================
    NAVIGASI HALAMAN
 ================================= */
 
@@ -933,7 +1005,9 @@ button:disabled{opacity:.5;cursor:wait}
   font-weight:850;
 }
 
-.page-back-btn:active{transform:scale(.985)}
+.page-back-btn:active{
+  transform:scale(.985);
+}
 
 .page-title{
   margin-bottom:18px;
@@ -952,20 +1026,6 @@ button:disabled{opacity:.5;cursor:wait}
   color:var(--muted);
   font-size:11px;
   line-height:1.5;
-}
-
-/* =================================
-   FOOTER
-================================= */
-
-.footer{
-  margin-top:30px;
-  padding:25px 15px 12px;
-  border-top:1px solid var(--border);
-  color:var(--muted);
-  text-align:center;
-  font-size:11px;
-  line-height:1.8;
 }
 
 /* =================================
@@ -999,7 +1059,9 @@ button:disabled{opacity:.5;cursor:wait}
   letter-spacing:-1px;
 }
 
-.auth-brand strong span{color:var(--orange)}
+.auth-brand strong span{
+  color:var(--orange);
+}
 
 .auth-brand p{
   margin:7px 0 0;
@@ -1020,7 +1082,9 @@ button:disabled{opacity:.5;cursor:wait}
   line-height:1.6;
 }
 
-.form-group{margin-bottom:15px}
+.form-group{
+  margin-bottom:15px;
+}
 
 .form-group label{
   display:block;
@@ -1106,8 +1170,14 @@ button:disabled{opacity:.5;cursor:wait}
   box-shadow:0 7px 18px rgba(18,59,44,.13);
 }
 
-.pos-open-btn:active{transform:scale(.985)}
-.pos-open-btn span{font-size:21px;line-height:1}
+.pos-open-btn:active{
+  transform:scale(.985);
+}
+
+.pos-open-btn span{
+  font-size:21px;
+  line-height:1;
+}
 
 .pos-overlay{
   position:fixed;
@@ -1168,7 +1238,9 @@ button:disabled{opacity:.5;cursor:wait}
   font-size:20px;
 }
 
-.pos-section{margin-bottom:18px}
+.pos-section{
+  margin-bottom:18px;
+}
 
 .pos-label{
   display:block;
@@ -1314,7 +1386,9 @@ button:disabled{opacity:.5;cursor:wait}
   border-bottom:1px solid #eff0eb;
 }
 
-.pos-cart-row:last-child{border-bottom:0}
+.pos-cart-row:last-child{
+  border-bottom:0;
+}
 
 .pos-cart-name{
   font-size:12px;
@@ -1401,6 +1475,173 @@ button:disabled{opacity:.5;cursor:wait}
 }
 
 /* =================================
+   MODE GELAP
+   Class: cashier-dark
+   Diaktifkan melalui JavaScript
+================================= */
+
+body.cashier-dark{
+  --cream:#101b15;
+  --white:#19271f;
+  --text:#edf3ee;
+  --muted:#a4b2a8;
+  --border:#304238;
+  --shadow:0 5px 20px rgba(0,0,0,.18);
+  background:#101b15;
+  color:#edf3ee;
+}
+
+body.cashier-dark .container,
+body.cashier-dark #dashboard-view{
+  color:#edf3ee;
+}
+
+body.cashier-dark .content-card,
+body.cashier-dark .settings-card,
+body.cashier-dark .account-card,
+body.cashier-dark .stat,
+body.cashier-dark .order-card,
+body.cashier-dark .empty,
+body.cashier-dark .field,
+body.cashier-dark .refresh-btn,
+body.cashier-dark .form-control,
+body.cashier-dark .form-group input,
+body.cashier-dark .auth-card{
+  border-color:var(--border);
+  background:#19271f;
+  color:#edf3ee;
+}
+
+body.cashier-dark .settings-card h3,
+body.cashier-dark .section-heading h2,
+body.cashier-dark .page-title h2{
+  color:#dcebe0;
+}
+
+body.cashier-dark .settings-row strong,
+body.cashier-dark .account-value,
+body.cashier-dark .stat-value,
+body.cashier-dark .order-number,
+body.cashier-dark .info-value,
+body.cashier-dark .items-title{
+  color:#edf3ee;
+}
+
+body.cashier-dark .settings-row{
+  border-color:#304238;
+}
+
+body.cashier-dark .settings-row select{
+  border-color:#405448;
+  background:#24362b;
+  color:#edf3ee;
+}
+
+body.cashier-dark .settings-row input[type="checkbox"]{
+  border-color:#53665a;
+  background:#405448;
+}
+
+body.cashier-dark .settings-row input[type="checkbox"]:checked{
+  border-color:#4d9a70;
+  background:#28734d;
+}
+
+body.cashier-dark .profile-identity,
+body.cashier-dark .assignment,
+body.cashier-dark .order-note,
+body.cashier-dark .order-brief span,
+body.cashier-dark .account-note{
+  background:#24362b;
+  color:#c6d5ca;
+}
+
+body.cashier-dark .stat-icon,
+body.cashier-dark .account-avatar{
+  background:#294234;
+  color:#c5e3ce;
+}
+
+body.cashier-dark .badge{
+  background:#304238;
+  color:#d6e4d9;
+}
+
+body.cashier-dark .auth-back,
+body.cashier-dark .text-button,
+body.cashier-dark .page-back-btn,
+body.cashier-dark .order-detail-btn{
+  color:#b7dec4;
+}
+
+body.cashier-dark .page-back-btn,
+body.cashier-dark .order-detail-btn{
+  border-color:var(--border);
+  background:#19271f;
+}
+
+body.cashier-dark .order-detail-panel,
+body.cashier-dark .pos-panel{
+  background:#101b15;
+}
+
+body.cashier-dark .order-detail-head,
+body.cashier-dark .pos-panel-head{
+  border-color:var(--border);
+  background:rgba(25,39,31,.97);
+}
+
+body.cashier-dark .order-detail-section,
+body.cashier-dark .pos-cart,
+body.cashier-dark .pos-product,
+body.cashier-dark .pos-type{
+  border-color:var(--border);
+  background:#19271f;
+  color:#edf3ee;
+}
+
+body.cashier-dark .pos-type.active{
+  background:#294234;
+  color:#d6e9dc;
+}
+
+body.cashier-dark .order-detail-total{
+  background:#294234;
+}
+
+body.cashier-dark .order-detail-total strong{
+  color:#d6e9dc;
+}
+
+body.cashier-dark .pos-category{
+  border-color:var(--border);
+  background:#19271f;
+  color:#d6e4d9;
+}
+
+body.cashier-dark .pos-category.active{
+  background:var(--green2);
+  color:white;
+}
+
+body.cashier-dark .live-indicator{
+  background:#294234;
+  color:#bce1c8;
+}
+
+body.cashier-dark .notice{
+  border-color:#365c43;
+  background:#203a2a;
+  color:#c4e4cd;
+}
+
+body.cashier-dark .notice.error{
+  border-color:#70403d;
+  background:#402522;
+  color:#ffd2ce;
+}
+
+/* =================================
    RESPONSIVE TABLET DAN IPHONE
 ================================= */
 
@@ -1416,7 +1657,9 @@ button:disabled{opacity:.5;cursor:wait}
     margin-bottom:20px;
   }
 
-  .welcome h1{font-size:23px}
+  .welcome h1{
+    font-size:23px;
+  }
 
   .stats{
     grid-template-columns:1fr;
@@ -1428,7 +1671,9 @@ button:disabled{opacity:.5;cursor:wait}
     padding:16px;
   }
 
-  .stat-label{font-size:12px}
+  .stat-label{
+    font-size:12px;
+  }
 
   .stat-icon{
     width:40px;
@@ -1441,9 +1686,13 @@ button:disabled{opacity:.5;cursor:wait}
     font-size:27px;
   }
 
-  .action-grid{grid-template-columns:1fr}
+  .action-grid{
+    grid-template-columns:1fr;
+  }
 
-  .orders{grid-template-columns:1fr}
+  .orders{
+    grid-template-columns:1fr;
+  }
 
   .toolbar{
     grid-template-columns:minmax(0,1fr) 43px;
@@ -1454,19 +1703,41 @@ button:disabled{opacity:.5;cursor:wait}
     grid-row:2;
   }
 
-  .welcome h1{font-size:22px}
+  .welcome h1{
+    font-size:22px;
+  }
 
-  .order-card{padding:16px}
+  .order-card{
+    padding:16px;
+  }
 
-  .content-card{padding:14px}
+  .content-card{
+    padding:14px;
+  }
 
-  .pos-panel{max-height:95dvh}
+  .pos-panel{
+    max-height:95dvh;
+  }
 
-  .auth-wrap{margin:22px auto}
+  .auth-wrap{
+    margin:22px auto;
+  }
 
-  .auth-card{padding:22px}
+  .auth-card{
+    padding:22px;
+  }
 
-  .pos-open-btn{min-height:58px}
+  .pos-open-btn{
+    min-height:58px;
+  }
+
+  .settings-card{
+    padding:14px;
+  }
+
+  .settings-row{
+    gap:10px;
+  }
 }
 
 /* =================================
@@ -1480,20 +1751,38 @@ button:disabled{opacity:.5;cursor:wait}
     padding-left:12px;
   }
 
-  .brand{font-size:23px}
+  .welcome{
+    gap:7px;
+  }
 
-  .welcome{gap:7px}
-
-  .welcome h1{font-size:20px}
+  .welcome h1{
+    font-size:20px;
+  }
 
   .live-indicator{
     padding:7px 9px;
     font-size:9px;
   }
 
-  .order-card{padding:14px}
+  .order-card{
+    padding:14px;
+  }
 
-  .auth-card{padding:20px}
+  .auth-card{
+    padding:20px;
+  }
+
+  .settings-row select{
+    max-width:112px;
+  }
+
+  .settings-row strong{
+    font-size:11px;
+  }
+
+  .settings-row small{
+    font-size:9px;
+  }
 }
 
 /* =================================
@@ -1502,13 +1791,21 @@ button:disabled{opacity:.5;cursor:wait}
 
 @media(min-width:761px){
 
-  .container{padding-top:27px}
+  .container{
+    padding-top:27px;
+  }
 
-  .stats{grid-template-columns:1fr}
+  .stats{
+    grid-template-columns:1fr;
+  }
 
-  .orders{grid-template-columns:1fr}
+  .orders{
+    grid-template-columns:1fr;
+  }
 
-  .auth-wrap{margin-top:48px}
+  .auth-wrap{
+    margin-top:48px;
+  }
 
   .pos-overlay{
     align-items:center;
@@ -1535,6 +1832,8 @@ button:disabled{opacity:.5;cursor:wait}
     animation:none!important;
   }
 }
+
+
  <style> 
 </head>
 

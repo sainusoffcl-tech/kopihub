@@ -1,34 +1,81 @@
 
 /* =========================================
    GLOBAL HEADER KOPIHUB
-   Versi awal: 1.0.0
+   Versi: 1.1.0
 ========================================= */
 
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.0.0";
+  const HEADER_VERSION = "1.1.0";
   const BASE_PATH = "/kopihub/";
 
-  const SUPABASE_URL = "https://ozcliasebeydgyvgluht.supabase.co";
+  const SUPABASE_URL =
+    "https://ozcliasebeydgyvgluht.supabase.co";
+
   const SUPABASE_PUBLIC_KEY =
     "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+  /* =========================================
+     KONFIGURASI MENU BERDASARKAN PERAN
+  ========================================= */
 
   const ROLE_CONFIG = {
     admin: {
       label: "ADMIN KOPIHUB",
       title: "Menu Admin",
       items: [
-        { id: "dashboard", label: "Dashboard", icon: "layout-dashboard" },
-        { id: "partners", label: "Kedai Mitra", icon: "store" },
-        { id: "applications", label: "Pendaftaran Mitra", icon: "clipboard-check" },
-        { id: "users", label: "Pengguna & Akses", icon: "users" },
-        { id: "orders", label: "Pesanan Platform", icon: "receipt-text" },
-        { id: "transactions", label: "Transaksi Platform", icon: "credit-card" },
-        { id: "revenue", label: "Komisi & Pendapatan", icon: "wallet" },
-        { id: "settings", label: "Pengaturan Platform", icon: "settings" },
-        { id: "audit", label: "Audit Log", icon: "history" },
-        { id: "logout", label: "Keluar dari Admin", icon: "log-out", danger: true }
+        {
+          id: "dashboard",
+          label: "Dashboard",
+          icon: "layout-dashboard"
+        },
+        {
+          id: "partners",
+          label: "Kedai Mitra",
+          icon: "store"
+        },
+        {
+          id: "applications",
+          label: "Pendaftaran Mitra",
+          icon: "clipboard-check"
+        },
+        {
+          id: "users",
+          label: "Pengguna & Akses",
+          icon: "users"
+        },
+        {
+          id: "orders",
+          label: "Pesanan Platform",
+          icon: "receipt-text"
+        },
+        {
+          id: "transactions",
+          label: "Transaksi Platform",
+          icon: "credit-card"
+        },
+        {
+          id: "revenue",
+          label: "Komisi & Pendapatan",
+          icon: "wallet"
+        },
+        {
+          id: "settings",
+          label: "Pengaturan Platform",
+          icon: "settings"
+        },
+        {
+          id: "audit",
+          label: "Audit Log",
+          icon: "history"
+        },
+        {
+          id: "logout",
+          label: "Keluar dari Admin",
+          icon: "log-out",
+          danger: true
+        }
       ]
     },
 
@@ -36,13 +83,42 @@
       label: "OWNER KEDAI",
       title: "Menu Owner",
       items: [
-        { id: "home", label: "Beranda", icon: "layout-dashboard" },
-        { id: "menu", label: "Menu Kedai", icon: "coffee" },
-        { id: "transactions", label: "Transaksi", icon: "receipt-text" },
-        { id: "reports", label: "Laporan", icon: "chart-no-axes-combined" },
-        { id: "identity", label: "Identitas Kedai", icon: "store" },
-        { id: "cashiers", label: "Manajemen Kasir", icon: "users" },
-        { id: "logout", label: "Keluar", icon: "log-out", danger: true }
+        {
+          id: "home",
+          label: "Beranda",
+          icon: "layout-dashboard"
+        },
+        {
+          id: "menu",
+          label: "Menu Kedai",
+          icon: "coffee"
+        },
+        {
+          id: "transactions",
+          label: "Transaksi",
+          icon: "receipt-text"
+        },
+        {
+          id: "reports",
+          label: "Laporan",
+          icon: "chart-no-axes-combined"
+        },
+        {
+          id: "identity",
+          label: "Identitas Kedai",
+          icon: "store"
+        },
+        {
+          id: "cashiers",
+          label: "Manajemen Kasir",
+          icon: "users"
+        },
+        {
+          id: "logout",
+          label: "Keluar",
+          icon: "log-out",
+          danger: true
+        }
       ]
     },
 
@@ -50,9 +126,22 @@
       label: "KASIR KEDAI",
       title: "Menu Kasir",
       items: [
-        { id: "orders", label: "Pesanan", icon: "receipt-text" },
-        { id: "pos", label: "Buat Pesanan", icon: "shopping-bag" },
-        { id: "logout", label: "Keluar dari Kasir", icon: "log-out", danger: true }
+        {
+          id: "orders",
+          label: "Pesanan",
+          icon: "receipt-text"
+        },
+        {
+          id: "pos",
+          label: "Buat Pesanan",
+          icon: "shopping-bag"
+        },
+        {
+          id: "logout",
+          label: "Keluar dari Kasir",
+          icon: "log-out",
+          danger: true
+        }
       ]
     },
 
@@ -60,51 +149,117 @@
       label: "MENU PELANGGAN",
       title: "Menu",
       items: [
-        { id: "shop-home", label: "Beranda Kedai", icon: "store" },
-        { id: "customer-orders", label: "Pesanan Saya", icon: "receipt-text" }
+        {
+          id: "shop-home",
+          label: "Beranda Kedai",
+          icon: "store"
+        },
+        {
+          id: "customer-orders",
+          label: "Pesanan Saya",
+          icon: "receipt-text"
+        }
       ]
     }
   };
 
+  /* =========================================
+     PEMETAAN HALAMAN ADMIN
+     
+     ID menu Global Header tidak selalu sama
+     dengan nama halaman internal Admin.
+  ========================================= */
+
+  const ADMIN_PAGE_MAP = {
+    dashboard: "dashboard",
+    partners: "shops",
+    applications: "applications",
+    users: "users",
+    orders: "orders",
+    transactions: "platformTransactions",
+    revenue: "commission",
+    settings: "settings"
+  };
+
+  /* =========================================
+     URL KOMPONEN
+  ========================================= */
+
   function getBaseUrl() {
-    return new URL(BASE_PATH, window.location.origin);
+    return new URL(
+      BASE_PATH,
+      window.location.origin
+    );
   }
 
   function getHeaderUrl() {
-    return new URL("components/header.html", getBaseUrl()).href;
+    return new URL(
+      "components/header.html",
+      getBaseUrl()
+    ).href;
   }
 
   function getCssUrl() {
-    return new URL("css/header.css", getBaseUrl()).href;
+    return new URL(
+      "css/header.css",
+      getBaseUrl()
+    ).href;
   }
 
-  function loadStylesheet() {
-    const href = getCssUrl();
+  /* =========================================
+     MEMUAT CSS
+  ========================================= */
 
-    if (document.querySelector(`link[data-kh-header-css="${HEADER_VERSION}"]`)) {
-      return;
-    }
+  function loadStylesheet() {
+    const existing = document.querySelector(
+      `link[data-kh-header-css="${HEADER_VERSION}"]`
+    );
+
+    if (existing) return;
 
     const link = document.createElement("link");
+
     link.rel = "stylesheet";
-    link.href = href;
+    link.href = getCssUrl();
     link.dataset.khHeaderCss = HEADER_VERSION;
+
     document.head.appendChild(link);
   }
 
+  /* =========================================
+     ICON LUCIDE
+  ========================================= */
+
   function refreshIcons(container) {
-    if (window.lucide && typeof window.lucide.createIcons === "function") {
+    if (
+      window.lucide &&
+      typeof window.lucide.createIcons === "function"
+    ) {
       window.lucide.createIcons({
         root: container
       });
     }
   }
 
+  /* =========================================
+     MEMUAT LOGO RESMI KOPIHUB
+  ========================================= */
+
   async function loadOfficialLogo(root) {
-    const image = root.querySelector("[data-kh-logo]");
-    const fallback = root.querySelector("[data-kh-logo-fallback]");
+    const image = root.querySelector(
+      "[data-kh-logo]"
+    );
+
+    const fallback = root.querySelector(
+      "[data-kh-logo-fallback]"
+    );
 
     if (!image || !fallback) return;
+
+    function showFallback() {
+      image.hidden = true;
+      fallback.hidden = false;
+    }
 
     try {
       const response = await fetch(
@@ -114,25 +269,35 @@
           headers: {
             "Content-Type": "application/json",
             "apikey": SUPABASE_PUBLIC_KEY,
-            "Authorization": `Bearer ${SUPABASE_PUBLIC_KEY}`
+            "Authorization":
+              `Bearer ${SUPABASE_PUBLIC_KEY}`
           },
           body: "{}"
         }
       );
 
       if (!response.ok) {
-        throw new Error("Logo platform belum dapat dimuat.");
+        throw new Error(
+          "Logo platform belum dapat dimuat."
+        );
       }
 
       const path = await response.json();
 
-      if (typeof path !== "string" || !path.trim()) {
-        throw new Error("Path logo belum tersedia.");
+      if (
+        typeof path !== "string" ||
+        !path.trim()
+      ) {
+        throw new Error(
+          "Path logo belum tersedia."
+        );
       }
 
       const safePath = path
         .split("/")
-        .map(segment => encodeURIComponent(segment))
+        .map(segment =>
+          encodeURIComponent(segment)
+        )
         .join("/");
 
       const logoUrl =
@@ -144,65 +309,142 @@
       };
 
       image.onerror = () => {
-        image.hidden = true;
-        fallback.hidden = false;
+        showFallback();
       };
 
       image.src = logoUrl;
+
     } catch (error) {
-      image.hidden = true;
-      fallback.hidden = false;
-      console.warn("[KopiHub Header] Logo:", error.message);
+      showFallback();
+
+      console.warn(
+        "[KopiHub Header] Logo:",
+        error.message
+      );
     }
   }
 
+  /* =========================================
+     MEMBUAT DAFTAR MENU
+  ========================================= */
+
   function renderMenu(root, role) {
-    const config = ROLE_CONFIG[role] || ROLE_CONFIG.customer;
-    const list = root.querySelector("[data-kh-menu-list]");
-    const roleLabel = root.querySelector("[data-kh-role-label]");
-    const menuTitle = root.querySelector("[data-kh-menu-title]");
+    const config =
+      ROLE_CONFIG[role] ||
+      ROLE_CONFIG.customer;
 
-    if (!list) return;
+    const list = root.querySelector(
+      "[data-kh-menu-list]"
+    );
 
-    roleLabel.textContent = config.label;
-    menuTitle.textContent = config.title;
+    const roleLabel = root.querySelector(
+      "[data-kh-role-label]"
+    );
+
+    const menuTitle = root.querySelector(
+      "[data-kh-menu-title]"
+    );
+
+    if (!list) {
+      console.warn(
+        "[KopiHub Header] Elemen daftar menu tidak ditemukan."
+      );
+      return;
+    }
+
+    if (roleLabel) {
+      roleLabel.textContent = config.label;
+    }
+
+    if (menuTitle) {
+      menuTitle.textContent = config.title;
+    }
+
     list.replaceChildren();
 
     config.items.forEach(item => {
-      const button = document.createElement("button");
+      const button =
+        document.createElement("button");
+
       button.type = "button";
-      button.className = "kh-header-menu-item";
-      if (item.danger) button.classList.add("kh-danger");
+      button.className =
+        "kh-header-menu-item";
+
+      if (item.danger) {
+        button.classList.add("kh-danger");
+      }
+
       button.dataset.khAction = item.id;
 
-      const icon = document.createElement("span");
-      icon.className = "kh-header-menu-item-icon";
+      const icon =
+        document.createElement("span");
 
-      const iconElement = document.createElement("i");
-      iconElement.setAttribute("data-lucide", item.icon);
+      icon.className =
+        "kh-header-menu-item-icon";
+
+      const iconElement =
+        document.createElement("i");
+
+      iconElement.setAttribute(
+        "data-lucide",
+        item.icon
+      );
+
       icon.appendChild(iconElement);
 
-      const label = document.createElement("span");
-      label.className = "kh-header-menu-item-label";
+      const label =
+        document.createElement("span");
+
+      label.className =
+        "kh-header-menu-item-label";
+
       label.textContent = item.label;
 
-      const arrow = document.createElement("i");
-      arrow.className = "kh-header-menu-item-arrow";
-      arrow.setAttribute("data-lucide", "chevron-right");
+      const arrow =
+        document.createElement("i");
 
-      button.append(icon, label, arrow);
+      arrow.className =
+        "kh-header-menu-item-arrow";
+
+      arrow.setAttribute(
+        "data-lucide",
+        "chevron-right"
+      );
+
+      button.append(
+        icon,
+        label,
+        arrow
+      );
+
       list.appendChild(button);
     });
 
     refreshIcons(root);
   }
 
+  /* =========================================
+     MEMBUKA MENU
+  ========================================= */
+
   function openMenu(root) {
-    const menu = root.querySelector("[data-kh-menu]");
-    const overlay = root.querySelector("[data-kh-overlay]");
-    const openButton = root.querySelector("[data-kh-menu-open]");
+    const menu = root.querySelector(
+      "[data-kh-menu]"
+    );
+
+    const overlay = root.querySelector(
+      "[data-kh-overlay]"
+    );
+
+    const openButton = root.querySelector(
+      "[data-kh-menu-open]"
+    );
 
     if (!menu || !overlay) return;
+
+    if (menu.classList.contains("kh-open")) {
+      return;
+    }
 
     overlay.hidden = false;
 
@@ -211,33 +453,64 @@
       menu.classList.add("kh-open");
     });
 
-    menu.setAttribute("aria-hidden", "false");
+    menu.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
     menu.inert = false;
 
     if (openButton) {
-      openButton.setAttribute("aria-expanded", "true");
+      openButton.setAttribute(
+        "aria-expanded",
+        "true"
+      );
     }
 
-    document.body.classList.add("kh-header-menu-open");
+    document.body.classList.add(
+      "kh-header-menu-open"
+    );
   }
 
+  /* =========================================
+     MENUTUP MENU
+  ========================================= */
+
   function closeMenu(root) {
-    const menu = root.querySelector("[data-kh-menu]");
-    const overlay = root.querySelector("[data-kh-overlay]");
-    const openButton = root.querySelector("[data-kh-menu-open]");
+    const menu = root.querySelector(
+      "[data-kh-menu]"
+    );
+
+    const overlay = root.querySelector(
+      "[data-kh-overlay]"
+    );
+
+    const openButton = root.querySelector(
+      "[data-kh-menu-open]"
+    );
 
     if (!menu || !overlay) return;
 
     menu.classList.remove("kh-open");
     overlay.classList.remove("kh-visible");
-    menu.setAttribute("aria-hidden", "true");
+
+    menu.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
     menu.inert = true;
 
     if (openButton) {
-      openButton.setAttribute("aria-expanded", "false");
+      openButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
     }
 
-    document.body.classList.remove("kh-header-menu-open");
+    document.body.classList.remove(
+      "kh-header-menu-open"
+    );
 
     window.setTimeout(() => {
       if (!menu.classList.contains("kh-open")) {
@@ -246,82 +519,227 @@
     }, 300);
   }
 
-  function sendNavigation(root, role, action) {
+  /* =========================================
+     PEMBERITAHUAN FITUR AUDIT LOG
+  ========================================= */
+
+  function showAuditNotice(root) {
     closeMenu(root);
 
-    if (action === "logout") {
-      document.dispatchEvent(
-        new CustomEvent("kopihub:logout", {
-          detail: { role }
-        })
-      );
-      return;
-    }
-
-    document.dispatchEvent(
-      new CustomEvent("kopihub:navigate", {
-        detail: {
-          role,
-          page: action
-        }
-      })
+    window.alert(
+      "Fitur Audit Log belum tersedia. " +
+      "Fitur ini akan diaktifkan pada tahap pengembangan berikutnya."
     );
   }
 
-  function bindEvents(root, role) {
-    const openButton = root.querySelector("[data-kh-menu-open]");
-    const closeButton = root.querySelector("[data-kh-menu-close]");
-    const overlay = root.querySelector("[data-kh-overlay]");
-    const list = root.querySelector("[data-kh-menu-list]");
+  /* =========================================
+     MENGIRIM NAVIGASI DAN LOGOUT
 
-    openButton?.addEventListener("click", () => openMenu(root));
-    closeButton?.addEventListener("click", () => closeMenu(root));
-    overlay?.addEventListener("click", () => closeMenu(root));
+     Navigasi dikirim sebagai event:
+     kopihub:navigate
 
-    list?.addEventListener("click", event => {
-      const button = event.target.closest("[data-kh-action]");
-      if (!button) return;
+     Logout dikirim sebagai event:
+     kopihub:logout
 
-      sendNavigation(root, role, button.dataset.khAction);
-    });
+     Admin akan disambungkan ke fungsi
+     showPage() dan logoutAdmin() aslinya.
+  ========================================= */
 
-    document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        closeMenu(root);
-      }
-    });
+  function sendNavigation(root, role, action) {
+    if (action === "audit" && role === "admin") {
+      showAuditNotice(root);
+      return;
+    }
+
+    closeMenu(root);
+
+    /* LOGOUT */
+
+    if (action === "logout") {
+      document.dispatchEvent(
+        new CustomEvent(
+          "kopihub:logout",
+          {
+            detail: {
+              role: role
+            }
+          }
+        )
+      );
+
+      return;
+    }
+
+    /* PEMETAAN HALAMAN ADMIN */
+
+    let page = action;
+
+    if (role === "admin") {
+      page = ADMIN_PAGE_MAP[action];
+    }
+
+    if (!page) {
+      console.warn(
+        "[KopiHub Header] Tujuan menu tidak dikenal:",
+        role,
+        action
+      );
+
+      return;
+    }
+
+    /* KIRIM PERINTAH NAVIGASI */
+
+    document.dispatchEvent(
+      new CustomEvent(
+        "kopihub:navigate",
+        {
+          detail: {
+            role: role,
+            page: page,
+            action: action
+          }
+        }
+      )
+    );
   }
 
-  async function initializeHeader(placeholder) {
-    if (placeholder.dataset.khHeaderLoaded === "true") return;
+  /* =========================================
+     EVENT MENU
+  ========================================= */
 
-    const role = (placeholder.dataset.role || "customer").toLowerCase();
+  function bindEvents(root, role) {
+    const openButton = root.querySelector(
+      "[data-kh-menu-open]"
+    );
+
+    const closeButton = root.querySelector(
+      "[data-kh-menu-close]"
+    );
+
+    const overlay = root.querySelector(
+      "[data-kh-overlay]"
+    );
+
+    const list = root.querySelector(
+      "[data-kh-menu-list]"
+    );
+
+    openButton?.addEventListener(
+      "click",
+      () => openMenu(root)
+    );
+
+    closeButton?.addEventListener(
+      "click",
+      () => closeMenu(root)
+    );
+
+    overlay?.addEventListener(
+      "click",
+      () => closeMenu(root)
+    );
+
+    list?.addEventListener(
+      "click",
+      event => {
+        const button = event.target.closest(
+          "[data-kh-action]"
+        );
+
+        if (!button || !list.contains(button)) {
+          return;
+        }
+
+        sendNavigation(
+          root,
+          role,
+          button.dataset.khAction
+        );
+      }
+    );
+
+    /* TOMBOL ESCAPE */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+        if (event.key === "Escape") {
+          closeMenu(root);
+        }
+      }
+    );
+  }
+
+  /* =========================================
+     INISIALISASI GLOBAL HEADER
+  ========================================= */
+
+  async function initializeHeader(placeholder) {
+    if (
+      placeholder.dataset.khHeaderLoaded === "true"
+    ) {
+      return;
+    }
+
+    if (
+      placeholder.dataset.khHeaderLoading === "true"
+    ) {
+      return;
+    }
+
+    placeholder.dataset.khHeaderLoading = "true";
+
+    const role = (
+      placeholder.dataset.role || "customer"
+    ).toLowerCase();
 
     loadStylesheet();
 
     try {
-      const response = await fetch(getHeaderUrl(), {
-        cache: "no-cache"
-      });
+      const response = await fetch(
+        getHeaderUrl(),
+        {
+          cache: "no-cache"
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("File header.html tidak dapat dimuat.");
+        throw new Error(
+          "File header.html tidak dapat dimuat."
+        );
       }
 
-      placeholder.innerHTML = await response.text();
-      placeholder.dataset.khHeaderLoaded = "true";
+      placeholder.innerHTML =
+        await response.text();
 
-      const root = placeholder.querySelector("[data-kh-header-root]");
+      const root = placeholder.querySelector(
+        "[data-kh-header-root]"
+      );
+
       if (!root) {
-        throw new Error("Struktur Global Header tidak ditemukan.");
+        throw new Error(
+          "Struktur Global Header tidak ditemukan."
+        );
       }
 
       renderMenu(root, role);
+
       bindEvents(root, role);
+
       loadOfficialLogo(root);
+
       refreshIcons(root);
+
+      placeholder.dataset.khHeaderLoaded =
+        "true";
+
     } catch (error) {
-      console.error("[KopiHub Header]", error);
+      console.error(
+        "[KopiHub Header]",
+        error
+      );
+
       placeholder.innerHTML = `
         <div style="
           padding:16px;
@@ -332,30 +750,63 @@
           Header KopiHub belum dapat dimuat.
         </div>
       `;
+
+    } finally {
+      placeholder.dataset.khHeaderLoading =
+        "false";
     }
   }
 
+  /* =========================================
+     MENJALANKAN GLOBAL HEADER
+  ========================================= */
+
   function start() {
     document
-      .querySelectorAll("[data-kopihub-header]")
-      .forEach(initializeHeader);
+      .querySelectorAll(
+        "[data-kopihub-header]"
+      )
+      .forEach(placeholder => {
+        initializeHeader(placeholder);
+      });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start);
+    document.addEventListener(
+      "DOMContentLoaded",
+      start,
+      { once: true }
+    );
   } else {
     start();
   }
 
+  /* =========================================
+     API GLOBAL HEADER
+  ========================================= */
+
   window.KopiHubHeader = {
     version: HEADER_VERSION,
+
     open() {
-      const root = document.querySelector("[data-kh-header-root]");
-      if (root) openMenu(root);
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
+
+      if (root) {
+        openMenu(root);
+      }
     },
+
     close() {
-      const root = document.querySelector("[data-kh-header-root]");
-      if (root) closeMenu(root);
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
+
+      if (root) {
+        closeMenu(root);
+      }
     }
   };
+
 })();

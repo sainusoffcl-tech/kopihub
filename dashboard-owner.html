@@ -1645,45 +1645,18 @@ a,
 </head>
 
 
+
 <body>
 
+<!-- GLOBAL HEADER KOPIHUB -->
 <div data-kopihub-header data-role="owner"></div>
-  <div class="owner-header-inner">
-    <div class="owner-brand-area">
-      <div class="brand">Kopi<span>Hub</span></div>
-      <div class="header-shop-name" id="header-shop-name">
-        Kedai belum tersedia
-      </div>
-    </div>
 
-    <button
-      class="profile-icon-button"
-      id="header-profile-button"
-      type="button"
-      aria-label="Buka Identitas Kedai"
-      title="Identitas Kedai"
-    >
-      <img
-        id="header-shop-logo"
-        alt="Logo kedai"
-        hidden
-      >
-
-      <svg
-        id="header-profile-fallback"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path d="M20 21a8 8 0 0 0-16 0"></path>
-        <circle cx="12" cy="8" r="4"></circle>
-      </svg>
-    </button>
-  </div>
-</header>
-
+<!-- AREA KONTEN DASHBOARD OWNER -->
 <div id="app-scroll">
 
+  <!-- TOOLBAR HALAMAN -->
   <div class="owner-page-toolbar" id="owner-page-toolbar" hidden>
+
     <button
       class="header-back-button"
       id="header-back-button"
@@ -1706,6 +1679,7 @@ a,
     <h1 class="owner-sticky-title" id="owner-page-title">
       Dashboard Owner
     </h1>
+
   </div>
 
   <main>
@@ -1715,74 +1689,55 @@ a,
  
     
 
-    <!-- DASHBOARD OWNER -->
-    <section class="page" id="page-home">
-      <h1 class="page-heading">Dashboard Owner</h1>
-      <p class="page-description">
-        Pusat pengelolaan dan pemantauan kedai Anda.
+    
+<!-- DASHBOARD OWNER -->
+<section class="page" id="page-home">
+
+  <h1 class="page-heading">Dashboard Owner</h1>
+
+  <p class="page-description">
+    Pusat pengelolaan dan pemantauan kedai Anda.
+  </p>
+
+  <!-- RINGKASAN BISNIS -->
+  <section class="home-kpi-grid">
+
+    <div class="home-kpi-card">
+      <div class="stat-label">Total Omzet</div>
+      <div class="stat-number" id="summary-income">Rp0</div>
+      <p class="muted">
+        Akumulasi Pesanan Lunas Sepanjang Masa
       </p>
+    </div>
 
-      <section class="home-kpi-grid">
-        <div class="home-kpi-card">
-          <div class="stat-label">Total Omzet</div>
-          <div class="stat-number" id="summary-income">Rp0</div>
-          <p class="muted">Akumulasi Pesanan Lunas Sepanjang Masa</p>
-        </div>
+    <div class="home-kpi-card">
+      <div class="stat-label">Total Penjualan</div>
+      <div class="stat-number" id="summary-sales">Rp0</div>
+      <p class="muted">
+        Akumulasi Nilai Pesanan Sepanjang Masa
+      </p>
+    </div>
 
-        <div class="home-kpi-card">
-          <div class="stat-label">Total Penjualan</div>
-          <div class="stat-number" id="summary-sales">Rp0</div>
-          <p class="muted">Akumulasi Nilai Pesanan Sepanjang Masa</p>
-        </div>
-      </section>
+  </section>
 
-      <section class="dashboard-menu-grid" aria-label="Menu Dashboard Owner">
-        <button class="dashboard-menu-card" type="button" data-page="menu">
-          <span class="card-icon">☕</span>
-          <span>
-            <span class="card-title">Kelola Menu</span>
-            <span class="card-description">Produk, kategori, stok, dan ketersediaan</span>
-          </span>
-          <span class="card-arrow">›</span>
-        </button>
+  <!-- GRAFIK PENJUALAN -->
+  <section class="chart-panel">
 
-        <button class="dashboard-menu-card" type="button" data-page="transaksi">
-          <span class="card-icon">🧾</span>
-          <span>
-            <span class="card-title">Transaksi</span>
-            <span class="card-description">Riwayat dan informasi pesanan kedai</span>
-          </span>
-          <span class="card-arrow">›</span>
-        </button>
+    <h2>Grafik Penjualan</h2>
 
-        <button class="dashboard-menu-card" type="button" data-page="laporan">
-          <span class="card-icon">📊</span>
-          <span>
-            <span class="card-title">Laporan Penjualan</span>
-            <span class="card-description">Ringkasan omzet dan penjualan produk</span>
-          </span>
-          <span class="card-arrow">›</span>
-        </button>
+    <p class="muted">
+      Penjualan lunas selama 7 hari terakhir
+    </p>
 
-        <button class="dashboard-menu-card" type="button" data-page="lainnya">
-          <span class="card-icon">⚙️</span>
-          <span>
-            <span class="card-title">Pengaturan Kedai</span>
-            <span class="card-description">Profil, PBJT, kasir, dan tagihan</span>
-          </span>
-          <span class="card-arrow">›</span>
-        </button>
-      </section>
+    <div id="sales-chart" class="sales-chart">
+      <p class="muted">Memuat grafik penjualan...</p>
+    </div>
 
-      <section class="chart-panel">
-        <h2>Grafik Penjualan</h2>
-        <p class="muted">Penjualan lunas selama 7 hari terakhir</p>
-        <div id="sales-chart" class="sales-chart">
-          <p class="muted">Memuat grafik penjualan...</p>
-        </div>
-        <p id="chart-message" class="muted" role="status"></p>
-      </section>
-    </section>
+    <p id="chart-message" class="muted" role="status"></p>
+
+  </section>
+
+</section>
 
     <!-- MENU -->
     <section class="page" id="page-menu" hidden>

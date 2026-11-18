@@ -32,15 +32,17 @@
   }
 
 
-  /* MEMUAT LOGO RESMI */
+  /* MEMUAT LOGO RESMI DARI SUPABASE */
 
   async function loadOfficialLogo(footer) {
     const logo = footer.querySelector("#kh-footer-logo-image");
-    const fallback = footer.querySelector(
-      "#kh-footer-logo-fallback"
-    );
 
-    if (!logo || !fallback) return;
+    if (!logo) {
+      console.error(
+        "KopiHub: Elemen gambar logo tidak ditemukan."
+      );
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -57,12 +59,17 @@
       );
 
       if (!response.ok) {
-        throw new Error("Gagal mengambil logo resmi.");
+        throw new Error(
+          "Gagal mengambil lokasi logo dari Supabase."
+        );
       }
 
       const logoPath = await response.json();
 
-      if (!logoPath) return;
+      if (!logoPath || typeof logoPath !== "string") {
+        logo.hidden = true;
+        return;
+      }
 
       const encodedPath = logoPath
         .split("/")
@@ -76,20 +83,30 @@
 
       logo.onload = () => {
         logo.hidden = false;
-        fallback.hidden = true;
+
+        console.info(
+          "KopiHub: Logo resmi berhasil ditampilkan."
+        );
       };
 
       logo.onerror = () => {
         logo.hidden = true;
-        fallback.hidden = false;
+
+        console.error(
+          "KopiHub: Foto logo gagal ditampilkan."
+        );
       };
 
+      logo.hidden = true;
       logo.src = publicURL;
 
     } catch (error) {
-      console.error("KopiHub: Logo footer gagal dimuat.", error);
+      console.error(
+        "KopiHub: Logo footer gagal dimuat.",
+        error
+      );
+
       logo.hidden = true;
-      fallback.hidden = false;
     }
   }
 
@@ -111,7 +128,9 @@
       });
 
       if (!response.ok) {
-        throw new Error("File footer.html tidak ditemukan.");
+        throw new Error(
+          "File footer.html tidak ditemukan."
+        );
       }
 
       const html = await response.text();
@@ -138,7 +157,10 @@
       });
 
     } catch (error) {
-      console.error("KopiHub: Footer gagal dimuat.", error);
+      console.error(
+        "KopiHub: Footer gagal dimuat.",
+        error
+      );
     }
   }
 

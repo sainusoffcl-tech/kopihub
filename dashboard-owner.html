@@ -7702,11 +7702,11 @@ $("shop-profile-form").addEventListener("submit", async event => {
     file &&
     (
       !["image/png", "image/jpeg", "image/webp"].includes(file.type) ||
-      file.size > 2 * 1024 * 1024
+      file.size > 20 * 1024 * 1024
     )
   ) {
     message.textContent =
-      "Pilih gambar PNG, JPG, atau WebP maksimal 2 MB.";
+  "Pilih gambar JPG, JPEG, PNG, atau WebP dengan ukuran maksimal 20 MB.";
     return;
   }
 

@@ -1640,7 +1640,88 @@ a,
 [hidden] {
   display: none !important;
 }
+/* =========================================
+   PERBAIKAN GLOBAL HEADER - DASHBOARD OWNER
+   Menghindari benturan CSS tombol Owner
+========================================= */
 
+/* Tombol hamburger */
+[data-kopihub-header] .kh-header-menu-button {
+  display: grid !important;
+  place-items: center !important;
+  width: 46px !important;
+  height: 46px !important;
+  padding: 0 !important;
+  color: #FAF9F5 !important;
+  background: #24543E !important;
+}
+
+/* Ikon hamburger */
+[data-kopihub-header] .kh-header-menu-button svg {
+  display: block !important;
+  width: 23px !important;
+  height: 23px !important;
+  stroke: currentColor !important;
+  color: #FAF9F5 !important;
+}
+
+/* Tombol X */
+[data-kopihub-header] .kh-header-close-button {
+  display: grid !important;
+  place-items: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  padding: 0 !important;
+  color: #123B2C !important;
+  background: #FFFFFF !important;
+}
+
+/* Ikon X */
+[data-kopihub-header] .kh-header-close-button svg {
+  display: block !important;
+  width: 20px !important;
+  height: 20px !important;
+  stroke: currentColor !important;
+  color: #123B2C !important;
+}
+
+/* Panel navigasi */
+[data-kopihub-header] #kh-header-menu {
+  color: #26372D !important;
+  background: #FAF9F5 !important;
+}
+
+/* Semua tombol navigasi */
+[data-kopihub-header] #kh-header-menu .kh-header-menu-item {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-height: 56px !important;
+  padding: 10px 13px !important;
+  color: #123B2C !important;
+  background: #FFFFFF !important;
+  text-align: left !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+
+/* Tulisan navigasi */
+[data-kopihub-header] #kh-header-menu .kh-header-menu-item-label {
+  display: block !important;
+  color: inherit !important;
+}
+
+/* Ikon navigasi */
+[data-kopihub-header] #kh-header-menu .kh-header-menu-item-icon {
+  color: #24543E !important;
+}
+
+/* Tombol keluar */
+[data-kopihub-header] #kh-header-menu .kh-header-menu-item.kh-danger {
+  color: #A72D2D !important;
+}
 </style>
 </head>
 

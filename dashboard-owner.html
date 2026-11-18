@@ -822,29 +822,42 @@ button:disabled{opacity:.55;cursor:not-allowed}
   margin: 8px 0 0;
   line-height: 1.4;
 }
+
 /* =========================================
    MEGA FOOTER GLOBAL KOPIHUB
+   CLEAN MODERN — TRANSPARENT LEFT
 ========================================= */
+
 .kopihub-footer {
   width: 100%;
-  margin-top: 48px;
-  padding: 30px 16px 24px;
-  background: #123b2c;
-  color: #ffffff;
+  margin-top: 40px;
+  padding: 32px 20px 26px;
+  background: transparent !important;
+  color: #52645A;
   font-size: 13px;
+  box-shadow: none !important;
+  border-top: 1px solid #E7EBE5;
 }
 
 .kopihub-footer-inner {
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
+
+/* IDENTITAS BRAND */
 
 .kopihub-footer-brand {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
+  text-align: left;
 }
 
 .kopihub-footer-logo {
@@ -854,96 +867,126 @@ button:disabled{opacity:.55;cursor:not-allowed}
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 13px;
-  background: #faf9f5;
-  color: #174c38;
+  border-radius: 12px;
+  background: #174C38;
+  color: #FFFFFF;
   font-size: 23px;
   font-weight: 850;
 }
 
 .kopihub-footer-name {
   margin: 0;
-  color: #ffffff;
+  color: #174C38;
   font-size: 23px;
   font-weight: 850;
   letter-spacing: -0.7px;
 }
 
 .kopihub-footer-tagline {
-  margin-top: 2px;
-  color: #d5e4da;
+  margin-top: 3px;
+  color: #718076;
   font-size: 10px;
   letter-spacing: 1px;
 }
 
 .kopihub-footer-description {
-  max-width: 540px;
-  margin: 0 0 22px;
-  color: #d5e4da;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 0 25px;
+  color: #718076;
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.8;
+  text-align: left;
 }
+
+/* GARIS PEMISAH */
 
 .kopihub-footer-divider {
+  width: 100%;
   height: 1px;
   margin: 20px 0;
-  background: rgba(255,255,255,.17);
+  background: #E5EAE4;
 }
 
+/* DAFTAR TAUTAN */
+
 .kopihub-footer-grid {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 26px 18px;
+  grid-template-columns: 1fr;
+  gap: 25px;
+  text-align: left;
+}
+
+.kopihub-footer-group {
+  width: 100%;
+  text-align: left;
 }
 
 .kopihub-footer-group h3 {
-  margin: 0 0 12px;
-  color: #e99a48;
+  margin: 0 0 13px;
+  color: #174C38;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 1.1px;
+  text-align: left;
 }
 
 .kopihub-footer-group ul {
   display: grid;
-  gap: 10px;
+  gap: 11px;
   margin: 0;
   padding: 0;
   list-style: none;
+  text-align: left;
 }
 
 .kopihub-footer-group li {
-  color: #d5e4da;
-  font-size: 12px;
-  line-height: 1.5;
+  color: #718076;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
 }
 
+/* BAGIAN COPYRIGHT */
+
 .kopihub-footer-bottom {
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 7px;
+  text-align: left;
 }
 
 .kopihub-footer-copyright {
-  color: #ffffff;
-  font-size: 11px;
+  color: #52645A;
+  font-size: 12px;
   font-weight: 700;
+  text-align: left;
 }
 
 .kopihub-footer-rights {
-  color: #d5e4da;
+  color: #89958B;
   font-size: 11px;
+  text-align: left;
 }
 
+/* TAGLINE PENUTUP */
+
 .kopihub-footer-closing {
+  width: 100%;
   margin: 17px 0 0;
-  color: #d5e4da;
+  color: #89958B;
   font-size: 10px;
+  font-weight: 700;
   letter-spacing: 1.2px;
   text-align: left;
 }
+
+/* RESPONSIVE DESKTOP */
 
 @media (min-width: 650px) {
   .kopihub-footer {
@@ -952,7 +995,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
   .kopihub-footer-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 24px;
+    gap: 26px;
   }
 }
 

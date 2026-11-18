@@ -129,46 +129,49 @@
       ]
     },
 
-    cashier: {
-      label: "KASIR KEDAI",
-      title: "Menu Kasir",
-      items: [
-        {
-          id: "orders",
-          label: "Pesanan",
-          icon: "receipt-text"
-        },
-        {
-          id: "pos",
-          label: "Buat Pesanan",
-          icon: "shopping-bag"
-        },
-        {
-          id: "logout",
-          label: "Keluar dari Kasir",
-          icon: "log-out",
-          danger: true
-        }
-      ]
+    
+cashier: {
+  label: "KASIR KEDAI",
+  title: "Menu Kasir",
+  items: [
+    {
+      id: "home",
+      label: "Beranda",
+      icon: "layout-dashboard"
     },
-
-    customer: {
-      label: "MENU PELANGGAN",
-      title: "Menu",
-      items: [
-        {
-          id: "shop-home",
-          label: "Beranda Kedai",
-          icon: "store"
-        },
-        {
-          id: "customer-orders",
-          label: "Pesanan Saya",
-          icon: "receipt-text"
-        }
-      ]
+    {
+      id: "orders",
+      label: "Pesanan",
+      icon: "receipt-text"
+    },
+    {
+      id: "pos",
+      label: "Buat Pesanan (POS)",
+      icon: "shopping-bag"
+    },
+    {
+      id: "profile",
+      label: "Profil Kasir",
+      icon: "user-round"
+    },
+    {
+      id: "settings",
+      label: "Pengaturan",
+      icon: "settings"
+    },
+    {
+      id: "refresh",
+      label: "Muat Ulang Pesanan",
+      icon: "refresh-cw"
+    },
+    {
+      id: "logout",
+      label: "Akhiri Shift",
+      icon: "log-out",
+      danger: true
     }
-  };
+  ]
+},
 
   /* =========================================
      PEMETAAN HALAMAN ADMIN

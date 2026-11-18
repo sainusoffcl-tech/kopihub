@@ -850,41 +850,39 @@ button:disabled{opacity:.55;cursor:not-allowed}
 }
 
 
+
 /* =========================================
-   IDENTITAS BRAND KOPIHUB
+   IDENTITAS VISUAL RESMI KOPIHUB
 ========================================= */
+
 .kopihub-footer-brand {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 15px;
   text-align: left;
 }
 
 .kopihub-footer-logo {
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: #174C38;
-  color: #FFFFFF;
-  font-size: 23px;
-  font-weight: 850;
+  display: block;
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: left center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .kopihub-footer-name {
-  margin: 0;
-  font-size: 23px;
-  font-weight: 850;
-  letter-spacing: -0.7px;
+  display: none;
 }
 
 .kopihub-text-kopi {
-  color: #174C38;
+  color: #173D2E;
 }
 
 .kopihub-text-hub {
@@ -896,6 +894,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   color: #718076;
   font-size: 10px;
   letter-spacing: 1px;
+  text-align: left;
 }
 
 /* GARIS PEMISAH */

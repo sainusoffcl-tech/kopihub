@@ -1,13 +1,17 @@
 
 /* =========================================
    KOPIHUB - GLOBAL FOOTER
+   FOOTER HTML + CSS + OFFICIAL LOGO
 ========================================= */
 
 (() => {
   "use strict";
 
-  const FOOTER_HTML = "/kopihub/components/footer.html";
-  const FOOTER_CSS = "/kopihub/css/footer.css";
+  const FOOTER_HTML =
+    "/kopihub/components/footer.html";
+
+  const FOOTER_CSS =
+    "/kopihub/css/footer.css";
 
   const SUPABASE_URL =
     "https://ozcliasebeydgyvgluht.supabase.co";
@@ -16,14 +20,21 @@
     "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
 
-  /* MEMUAT CSS */
+  /* =========================================
+     MEMUAT CSS
+  ========================================= */
 
   function loadFooterCSS() {
-    if (document.querySelector("[data-kopihub-footer-css]")) {
+    if (
+      document.querySelector(
+        "[data-kopihub-footer-css]"
+      )
+    ) {
       return;
     }
 
     const link = document.createElement("link");
+
     link.rel = "stylesheet";
     link.href = FOOTER_CSS;
     link.dataset.kopihubFooterCss = "true";
@@ -32,21 +43,33 @@
   }
 
 
-  /* MEMUAT LOGO RESMI DARI SUPABASE */
+  /* =========================================
+     MEMUAT LOGO RESMI KOPIHUB
+  ========================================= */
 
   async function loadOfficialLogo(footer) {
-    const logo = footer.querySelector("#kh-footer-logo-image");
+    const logo = footer.querySelector(
+      "#kh-footer-logo-image"
+    );
 
-    if (!logo) {
-      console.error(
-        "KopiHub: Elemen gambar logo tidak ditemukan."
-      );
+    const fallback = footer.querySelector(
+      "#kh-footer-logo-fallback"
+    );
+
+    if (!logo || !fallback) {
       return;
+    }
+
+    function showFallback() {
+      logo.hidden = true;
+      logo.removeAttribute("src");
+      fallback.hidden = false;
     }
 
     try {
       const response = await fetch(
-        SUPABASE_URL + "/rest/v1/rpc/kh_get_platform_logo_path",
+        SUPABASE_URL +
+        "/rest/v1/rpc/kh_get_platform_logo_path",
         {
           method: "POST",
           headers: {
@@ -60,14 +83,17 @@
 
       if (!response.ok) {
         throw new Error(
-          "Gagal mengambil lokasi logo dari Supabase."
+          "Gagal mengambil alamat logo dari Supabase."
         );
       }
 
       const logoPath = await response.json();
 
-      if (!logoPath || typeof logoPath !== "string") {
-        logo.hidden = true;
+      if (
+        typeof logoPath !== "string" ||
+        !logoPath.trim()
+      ) {
+        showFallback();
         return;
       }
 
@@ -83,21 +109,20 @@
 
       logo.onload = () => {
         logo.hidden = false;
-
-        console.info(
-          "KopiHub: Logo resmi berhasil ditampilkan."
-        );
+        fallback.hidden = true;
       };
 
       logo.onerror = () => {
-        logo.hidden = true;
-
         console.error(
-          "KopiHub: Foto logo gagal ditampilkan."
+          "KopiHub: File logo tidak berhasil dimuat."
         );
+
+        showFallback();
       };
 
       logo.hidden = true;
+      fallback.hidden = false;
+
       logo.src = publicURL;
 
     } catch (error) {
@@ -106,54 +131,75 @@
         error
       );
 
-      logo.hidden = true;
+      showFallback();
     }
   }
 
 
-  /* MEMUAT FOOTER HTML */
+  /* =========================================
+     MEMUAT FOOTER HTML
+  ========================================= */
 
   async function loadFooter() {
     const placeholders = document.querySelectorAll(
       "[data-kopihub-footer]"
     );
 
-    if (!placeholders.length) return;
+    if (!placeholders.length) {
+      return;
+    }
 
     loadFooterCSS();
 
     try {
-      const response = await fetch(FOOTER_HTML, {
-        cache: "no-cache"
-      });
+      const response = await fetch(
+        FOOTER_HTML,
+        {
+          cache: "no-cache"
+        }
+      );
 
       if (!response.ok) {
         throw new Error(
-          "File footer.html tidak ditemukan."
+          "File components/footer.html tidak ditemukan."
         );
       }
 
       const html = await response.text();
 
       placeholders.forEach((placeholder) => {
-        if (placeholder.dataset.footerLoaded === "true") {
+
+        if (
+          placeholder.dataset.footerLoaded === "true"
+        ) {
           return;
         }
 
         placeholder.innerHTML = html;
-        placeholder.dataset.footerLoaded = "true";
 
         const footer = placeholder.querySelector(
           ".kh-global-footer"
         );
 
-        if (!footer) return;
+        if (!footer) {
+          return;
+        }
 
-        footer.querySelectorAll("[data-year]").forEach((element) => {
-          element.textContent = new Date().getFullYear();
+        placeholder.dataset.footerLoaded = "true";
+
+        /* TAHUN OTOMATIS */
+
+        footer.querySelectorAll(
+          "[data-year]"
+        ).forEach((element) => {
+          element.textContent =
+            new Date().getFullYear();
         });
 
+        /* LOGO RESMI */
+
         loadOfficialLogo(footer);
+
       });
 
     } catch (error) {
@@ -165,12 +211,21 @@
   }
 
 
-  /* MENJALANKAN FOOTER */
+  /* =========================================
+     MENJALANKAN FOOTER
+  ========================================= */
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", loadFooter);
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      loadFooter
+    );
+
   } else {
+
     loadFooter();
+
   }
 
 })();

@@ -1,7 +1,7 @@
 
 /* =========================================
    GLOBAL HEADER KOPIHUB
-   Versi: 1.1.0
+   Versi: 1.2.0
 ========================================= */
 
 (() => {
@@ -15,6 +15,13 @@
 
   const SUPABASE_PUBLIC_KEY =
     "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
+
+  /* =========================================
+     DATA NAMA KEDAI OWNER
+  ========================================= */
+
+  window.KopiHubOwnerShopName =
+    window.KopiHubOwnerShopName || "";
 
   /* =========================================
      KONFIGURASI MENU BERDASARKAN PERAN
@@ -165,9 +172,6 @@
 
   /* =========================================
      PEMETAAN HALAMAN ADMIN
-     
-     ID menu Global Header tidak selalu sama
-     dengan nama halaman internal Admin.
   ========================================= */
 
   const ADMIN_PAGE_MAP = {
@@ -238,6 +242,34 @@
       window.lucide.createIcons({
         root: container
       });
+    }
+  }
+
+  /* =========================================
+     NAMA KEDAI OWNER
+  ========================================= */
+
+  function setShopName(root, value) {
+    const shopName = root?.querySelector(
+      "[data-kh-shop-name]"
+    );
+
+    const roleLabel = root?.querySelector(
+      "[data-kh-role-label]"
+    );
+
+    if (!shopName) return;
+
+    const name = String(value || "").trim();
+
+    shopName.textContent = name;
+    shopName.hidden = !name;
+
+    /* Owner menggunakan nama kedai
+       sebagai identitas pada header. */
+
+    if (roleLabel) {
+      roleLabel.hidden = true;
     }
   }
 
@@ -354,6 +386,12 @@
 
     if (roleLabel) {
       roleLabel.textContent = config.label;
+
+      if (role === "owner") {
+        roleLabel.hidden = true;
+      } else {
+        roleLabel.hidden = false;
+      }
     }
 
     if (menuTitle) {
@@ -422,32 +460,7 @@
 
     refreshIcons(root);
   }
-/* =========================================
-   NAMA KEDAI OWNER
-========================================= */
 
-function setShopName(root, value) {
-  const shopName = root?.querySelector(
-    "[data-kh-shop-name]"
-  );
-
-  const roleLabel = root?.querySelector(
-    "[data-kh-role-label]"
-  );
-
-  if (!shopName) return;
-
-  const name = String(value || "").trim();
-
-  shopName.textContent = name;
-  shopName.hidden = !name;
-
-  /* Owner menampilkan nama kedai,
-     bukan label OWNER KEDAI. */
-  if (roleLabel) {
-    roleLabel.hidden = true;
-  }
-}
   /* =========================================
      MEMBUKA MENU
   ========================================= */
@@ -559,15 +572,6 @@ function setShopName(root, value) {
 
   /* =========================================
      MENGIRIM NAVIGASI DAN LOGOUT
-
-     Navigasi dikirim sebagai event:
-     kopihub:navigate
-
-     Logout dikirim sebagai event:
-     kopihub:logout
-
-     Admin akan disambungkan ke fungsi
-     showPage() dan logoutAdmin() aslinya.
   ========================================= */
 
   function sendNavigation(root, role, action) {
@@ -577,8 +581,6 @@ function setShopName(root, value) {
     }
 
     closeMenu(root);
-
-    /* LOGOUT */
 
     if (action === "logout") {
       document.dispatchEvent(
@@ -594,8 +596,6 @@ function setShopName(root, value) {
 
       return;
     }
-
-    /* PEMETAAN HALAMAN ADMIN */
 
     let page = action;
 
@@ -613,8 +613,6 @@ function setShopName(root, value) {
       return;
     }
 
-    /* KIRIM PERINTAH NAVIGASI */
-
     document.dispatchEvent(
       new CustomEvent(
         "kopihub:navigate",
@@ -626,6 +624,29 @@ function setShopName(root, value) {
           }
         }
       )
+    );
+  }
+
+  /* =========================================
+     EVENT NAMA KEDAI
+  ========================================= */
+
+  function bindShopNameEvents(root, role) {
+    if (role !== "owner") return;
+
+    setShopName(
+      root,
+      window.KopiHubOwnerShopName
+    );
+
+    document.addEventListener(
+      "kopihub:shop-name",
+      event => {
+        setShopName(
+          root,
+          event.detail?.name || ""
+        );
+      }
     );
   }
 
@@ -683,8 +704,6 @@ function setShopName(root, value) {
         );
       }
     );
-
-    /* TOMBOL ESCAPE */
 
     document.addEventListener(
       "keydown",
@@ -749,6 +768,8 @@ function setShopName(root, value) {
       }
 
       renderMenu(root, role);
+
+      bindShopNameEvents(root, role);
 
       bindEvents(root, role);
 
@@ -830,6 +851,19 @@ function setShopName(root, value) {
 
       if (root) {
         closeMenu(root);
+      }
+    },
+
+    setShopName(name) {
+      window.KopiHubOwnerShopName =
+        String(name || "");
+
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
+
+      if (root) {
+        setShopName(root, name);
       }
     }
   };

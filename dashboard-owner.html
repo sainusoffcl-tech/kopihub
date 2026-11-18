@@ -1054,16 +1054,47 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .page > .page-description {
   display: none !important;
 }
-/* MENCEGAH ZOOM GESTURE DI HALAMAN */
-html,
-body {
-  touch-action: pan-x pan-y;
+/* =========================================
+   STABILISASI UKURAN DASHBOARD OWNER
+========================================= */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   overscroll-behavior: none;
 }
 
-/* MENCEGAH ZOOM SAAT INTERAKSI */
+body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
+/* AREA SCROLL UTAMA */
 #app-scroll {
   touch-action: pan-x pan-y;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* CEGAH ZOOM TIDAK SENGAJA SAAT KETUK TOMBOL */
+button,
+a,
+.identity-tab,
+.settings-item-button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* PERTAHANKAN UKURAN HEADER */
+.owner-header {
+  height: calc(var(--header-height) + env(safe-area-inset-top));
+  min-height: calc(var(--header-height) + env(safe-area-inset-top));
+}
+
+.owner-header-inner {
+  height: var(--header-height);
+  min-height: var(--header-height);
 }
 
   /* PASTIKAN SEMUA ELEMEN DENGAN ATRIBUT HIDDEN BENAR-BENAR TERSEMBUNYI */

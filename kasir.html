@@ -4795,7 +4795,10 @@ el("submit-pos-btn").addEventListener(
   submitPosOrder
 );
 
-/* NAVIGASI DASHBOARD KASIR */
+/* =========================================
+   NAVIGASI DASHBOARD KASIR
+   INTEGRASI GLOBAL HEADER KOPIHUB
+========================================= */
 
 /* KARTU RINGKASAN PESANAN */
 document.querySelectorAll("[data-order-filter]").forEach(button=>{
@@ -4803,61 +4806,171 @@ document.querySelectorAll("[data-order-filter]").forEach(button=>{
     const group = button.dataset.orderFilter;
 
     openOrderGroup(group);
-    activePage = "orders";
   });
 });
 
-/* TOMBOL PROFIL DI HEADER */
-el("header-profile").addEventListener("click",()=>{
-  openCashierProfile();
-  activePage = "profile";
+
+/* =========================================
+   EVENT NAVIGASI GLOBAL HEADER
+========================================= */
+
+document.addEventListener("kopihub:navigate",event=>{
+
+  const detail = event.detail || {};
+
+  /* Hanya menerima navigasi untuk Kasir */
+  if(detail.role !== "cashier") return;
+
+  const action = detail.action || detail.page;
+
+  switch(action){
+
+    /* BERANDA */
+    case "home":
+      returnToDashboardHome();
+      break;
+
+    /* PESANAN */
+    case "orders":
+      openOrderGroup("all");
+      break;
+
+    /* BUAT PESANAN POS */
+    case "pos":
+      openPos();
+      break;
+
+    /* PROFIL KASIR */
+    case "profile":
+      openCashierProfile();
+      break;
+
+    /* PENGATURAN KASIR */
+    case "settings":
+      openCashierSettings();
+      break;
+
+    /* MUAT ULANG PESANAN */
+    case "refresh":
+      if(!loading){
+        loadOrders();
+      }
+      break;
+
+    default:
+      console.warn(
+        "[KopiHub Kasir] Navigasi tidak dikenal:",
+        action
+      );
+  }
+
 });
 
-/* KEMBALI DARI DAFTAR PESANAN */
-el("orders-back-btn").addEventListener("click",()=>{
-  returnToDashboardHome();
+
+/* =========================================
+   EVENT LOGOUT GLOBAL HEADER
+========================================= */
+
+document.addEventListener("kopihub:logout",event=>{
+
+  const detail = event.detail || {};
+
+  if(detail.role !== "cashier") return;
+
+  endShift();
+
 });
 
-/* KEMBALI DARI PROFIL */
-el("profile-back-btn").addEventListener("click",()=>{
-  returnToDashboardHome();
-});
-/* PENCARIAN PESANAN */
-el("search").addEventListener("input",()=>{
-  renderOrders();
-});
 
-/* MUAT ULANG PESANAN */
-el("refresh-btn").addEventListener("click",()=>{
-  loadOrders();
-});
+/* =========================================
+   KEMBALI DARI HALAMAN PESANAN
+========================================= */
 
-/* REFRESH DARI HEADER */
-if(el("header-refresh")){
-  el("header-refresh").addEventListener("click",()=>{
-    loadOrders();
+if(el("orders-back-btn")){
+  el("orders-back-btn").addEventListener("click",()=>{
+    returnToDashboardHome();
   });
 }
 
-/* AKHIRI SHIFT */
-el("end-shift-btn").addEventListener("click",()=>{
-  endShift();
-});
 
-/* TUTUP MODAL DENGAN ESC */
+/* =========================================
+   KEMBALI DARI PROFIL
+========================================= */
+
+if(el("profile-back-btn")){
+  el("profile-back-btn").addEventListener("click",()=>{
+    returnToDashboardHome();
+  });
+}
+
+
+/* =========================================
+   KEMBALI DARI PENGATURAN
+========================================= */
+
+if(el("settings-back-btn")){
+  el("settings-back-btn").addEventListener("click",()=>{
+    returnToDashboardHome();
+  });
+}
+
+
+/* =========================================
+   PENCARIAN PESANAN
+========================================= */
+
+if(el("search")){
+  el("search").addEventListener("input",()=>{
+    renderOrders();
+  });
+}
+
+
+/* =========================================
+   MUAT ULANG PESANAN DARI HALAMAN
+========================================= */
+
+if(el("refresh-btn")){
+  el("refresh-btn").addEventListener("click",()=>{
+    if(!loading){
+      loadOrders();
+    }
+  });
+}
+
+
+/* =========================================
+   AKHIRI SHIFT DARI HALAMAN PROFIL
+========================================= */
+
+if(el("end-shift-btn")){
+  el("end-shift-btn").addEventListener("click",()=>{
+    endShift();
+  });
+}
+
+
+/* =========================================
+   TUTUP MODAL DENGAN TOMBOL ESC
+========================================= */
+
 document.addEventListener("keydown",event=>{
+
   if(event.key !== "Escape") return;
 
-  if(!el("order-detail-overlay").hidden){
+  const detailOverlay = el("order-detail-overlay");
+  const posOverlay = el("pos-overlay");
+
+  if(detailOverlay && !detailOverlay.hidden){
     closeOrderDetail();
     return;
   }
 
-  if(!el("pos-overlay").hidden){
+  if(posOverlay && !posOverlay.hidden){
     closePos();
   }
-});
 
+});
 /* PEMULIHAN SESI */
 async function initialize(){
   if(!window.supabase || !db){

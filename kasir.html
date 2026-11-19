@@ -2336,8 +2336,8 @@ body.cashier-dark .notice.error{
 "use strict";
 
 /*
-  KopiHub Cashier Dashboard V8
-  Backend: cashier-access / individual-cashier-v8
+  KopiHub Cashier Dashboard V9
+  Backend: cashier-access / individual-cashier-v12
 
   Semua autentikasi, PIN, sesi, validasi produk, harga,
   pembuatan pesanan, assignment dan perubahan status
@@ -2370,15 +2370,22 @@ const STATUS_LABELS = {
   cancelled:"Dibatalkan"
 };
 
+/*
+  ALUR STATUS BARU:
+  Pesanan Baru -> Diproses -> Selesai
+
+  Status ready_for_delivery tetap dikenali
+  untuk kompatibilitas data pesanan lama.
+*/
 const NEXT_STATUS = {
   awaiting_confirmation:"processing",
-  processing:"ready_for_delivery",
+  processing:"completed",
   ready_for_delivery:"completed"
 };
 
 const STATUS_BUTTON_LABELS = {
   awaiting_confirmation:"Mulai Proses",
-  processing:"Tandai Siap Diantar",
+  processing:"Selesaikan Pesanan",
   ready_for_delivery:"Selesaikan Pesanan"
 };
 
@@ -2389,6 +2396,7 @@ let loading = false;
 let activeFilter = "all";
 let refreshTimer = null;
 let activePage = "home";
+
 /* =========================================
    PREFERENSI PRIBADI KASIR
 ========================================= */
@@ -2559,7 +2567,7 @@ function notifyIncomingOrders(orders){
     showIncomingOrderNotification(order);
   });
 }
-   
+
 /* POS STATE */
 let posProducts = [];
 let posCategories = [];
@@ -2590,14 +2598,23 @@ function rupiah(value){
 
 function readableDate(value){
   if(!value) return "Waktu tidak tersedia";
+
   const date = new Date(value);
-  if(Number.isNaN(date.getTime())) return "Waktu tidak tersedia";
-  return date.toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});
+
+  if(Number.isNaN(date.getTime())){
+    return "Waktu tidak tersedia";
+  }
+
+  return date.toLocaleString("id-ID",{
+    dateStyle:"medium",
+    timeStyle:"short"
+  });
 }
 
 function showNotice(message,isError=false){
   const notice = el("notice");
   if(!notice) return;
+
   notice.textContent = message;
   notice.className = isError ? "notice error" : "notice";
 }
@@ -2605,6 +2622,7 @@ function showNotice(message,isError=false){
 function showAuthNotice(id,message,isError=false){
   const notice = el(id);
   if(!notice) return;
+
   notice.hidden = false;
   notice.textContent = message;
   notice.className = isError ? "notice error" : "notice";
@@ -2612,13 +2630,16 @@ function showAuthNotice(id,message,isError=false){
 
 function showPosNotice(message,isError=false){
   const notice = el("pos-notice");
+  if(!notice) return;
+
   notice.hidden = false;
   notice.textContent = message;
   notice.className = isError ? "notice error" : "notice";
 }
 
 function hidePosNotice(){
-  el("pos-notice").hidden = true;
+  const notice = el("pos-notice");
+  if(notice) notice.hidden = true;
 }
 
 function setBusy(buttonId,busy,label){
@@ -2631,9 +2652,12 @@ function setBusy(buttonId,busy,label){
     if(!button.dataset.originalText){
       button.dataset.originalText = button.textContent;
     }
+
     button.textContent = label || "Memproses...";
   }else{
-    button.textContent = button.dataset.originalText || button.textContent;
+    button.textContent =
+      button.dataset.originalText || button.textContent;
+
     delete button.dataset.originalText;
   }
 }
@@ -2714,7 +2738,9 @@ function getOrderNote(order){
 }
 
 function isCashOrder(order){
-  const method = String(order.payment_method || "").toLowerCase();
+  const method = String(
+    order.payment_method || ""
+  ).toLowerCase();
 
   return [
     "cashier",
@@ -2725,7 +2751,9 @@ function isCashOrder(order){
 }
 
 function isPaid(order){
-  const status = String(order.payment_status || "").toLowerCase();
+  const status = String(
+    order.payment_status || ""
+  ).toLowerCase();
 
   return [
     "paid",
@@ -2736,7 +2764,9 @@ function isPaid(order){
 }
 
 function isWaitingPayment(order){
-  const status = String(order.payment_status || "").toLowerCase();
+  const status = String(
+    order.payment_status || ""
+  ).toLowerCase();
 
   return (
     isCashOrder(order) &&
@@ -2856,8 +2886,10 @@ function showView(view){
     activePage = "home";
   }
 }
+
 function saveSession(session){
   cashierSession = session;
+
   sessionStorage.setItem(
     SESSION_STORAGE_KEY,
     JSON.stringify(session)
@@ -2866,12 +2898,17 @@ function saveSession(session){
 
 function clearSession(){
   cashierSession = null;
+
   sessionStorage.removeItem(SESSION_STORAGE_KEY);
 
   allOrders = [];
   posProducts = [];
   posCategories = [];
   posCart.clear();
+
+  /* Reset snapshot agar sesi berikutnya tidak membaca
+     pesanan lama sebagai pesanan baru. */
+  hasInitialOrderSnapshot = false;
 
   if(refreshTimer){
     clearInterval(refreshTimer);
@@ -3150,6 +3187,7 @@ el("login-form").addEventListener("submit",async event=>{
 /* =====================================================
    DASHBOARD KASIR KOPIHUB - DESAIN KARTU SATU HALAMAN
    ===================================================== */
+
 /* HITUNG HARI INI BERDASARKAN TIMEZONE KEDAI */
 function isToday(dateValue){
   if(!dateValue) return false;
@@ -3211,6 +3249,9 @@ function returnToDashboardHome(){
   el("dashboard-home-page").hidden = false;
   el("order-list-panel").hidden = true;
   el("profile-page").hidden = true;
+  el("settings-page").hidden = true;
+
+  activePage = "home";
 
   window.scrollTo({
     top:0,
@@ -3224,6 +3265,9 @@ function openCashierProfile(){
   el("dashboard-home-page").hidden = true;
   el("order-list-panel").hidden = true;
   el("profile-page").hidden = false;
+  el("settings-page").hidden = true;
+
+  activePage = "profile";
 
   window.scrollTo({
     top:0,
@@ -3244,11 +3288,12 @@ function openCashierSettings(){
   applyCashierPreferences();
 
   window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+    top:0,
+    behavior:"smooth"
   });
 }
-   /* MASUK DASHBOARD */
+
+/* MASUK DASHBOARD */
 async function enterDashboard(){
   if(!cashierSession){
     showView("login");
@@ -3296,16 +3341,19 @@ async function enterDashboard(){
       : "Informasi tidak tersedia";
   }
 
- /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
-const ordersLoaded = await loadOrders(true);
+  /* MUAT PREFERENSI PRIBADI KASIR */
+  loadCashierPreferences();
 
-if(ordersLoaded && cashierSession){
-  showNotice(
-    "Terhubung ke sistem kasir. " +
-    allOrders.length +
-    " pesanan diterima dari server."
-  );
-}
+  /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
+  const ordersLoaded = await loadOrders(true);
+
+  if(ordersLoaded && cashierSession){
+    showNotice(
+      "Terhubung ke sistem kasir. " +
+      allOrders.length +
+      " pesanan diterima dari server."
+    );
+  }
 
   /* JANGAN BUAT TIMER JIKA SESI SUDAH BERAKHIR */
   if(!cashierSession) return;
@@ -3323,12 +3371,12 @@ if(ordersLoaded && cashierSession){
     }
 
     loadOrders(true);
-  }, 30000);
-
+  },30000);
 }
-/* MEMUAT PESANAN */
+   /* MEMUAT PESANAN */
 async function loadOrders(silent=false){
   if(!cashierSession || loading) return false;
+
   loading = true;
 
   if(el("refresh-btn")){
@@ -3350,32 +3398,30 @@ async function loadOrders(silent=false){
       );
     }
 
-   const previousOrders = allOrders;
+    const previousOrders = allOrders;
+    const normalizedOrders = result.orders.map(normalizeOrder);
 
-const incomingOrders = result.orders
-  .map(normalizeOrder)
-  .filter(order => {
-
-    const existed = previousOrders.some(
-      oldOrder =>
+    const incomingOrders = normalizedOrders.filter(order=>{
+      const existed = previousOrders.some(oldOrder=>
         String(oldOrder.id) === String(order.id)
-    );
+      );
 
-    return (
-      !existed &&
-      order.order_status === "awaiting_confirmation" &&
-      !assignmentOf(order)
-    );
-  });
+      return (
+        !existed &&
+        order.order_status === "awaiting_confirmation" &&
+        !assignmentOf(order)
+      );
+    });
 
-allOrders = result.orders.map(normalizeOrder);
+    allOrders = normalizedOrders;
 
-/* MUAT PERTAMA TIDAK MEMBUNYIKAN PESANAN LAMA */
-if(hasInitialOrderSnapshot){
-  notifyIncomingOrders(incomingOrders);
-}else{
-  hasInitialOrderSnapshot = true;
-} );
+    /* Pemuatan pertama hanya membuat snapshot.
+       Pesanan lama tidak akan membunyikan notifikasi. */
+    if(hasInitialOrderSnapshot){
+      notifyIncomingOrders(incomingOrders);
+    }else{
+      hasInitialOrderSnapshot = true;
+    }
 
     updateStats();
     renderOrders();
@@ -3387,7 +3433,9 @@ if(hasInitialOrderSnapshot){
         " pesanan diterima dari server."
       );
     }
-return true;
+
+    return true;
+
   }catch(error){
 
     if(
@@ -3413,6 +3461,8 @@ return true;
       }
     }
 
+    return false;
+
   }finally{
     loading = false;
 
@@ -3425,7 +3475,6 @@ return true;
     }
   }
 }
-
 /* TIGA RINGKASAN PESANAN */
 function updateStats(){
 
@@ -3457,14 +3506,19 @@ function updateStats(){
 function updateFilterButtons(){
 
   const headings = {
+    all:"Daftar Pesanan",
     new:"Pesanan Masuk",
     processing:"Pesanan Diproses",
-    completed:"Riwayat Pesanan"
+    ready:"Pesanan Siap Diantar",
+    payment:"Menunggu Pembayaran",
+    completed:"Riwayat Pesanan",
+    mine:"Pesanan Saya"
   };
 
-  el("list-heading").textContent =
-    headings[activeFilter] || "Daftar Pesanan";
-
+  if(el("list-heading")){
+    el("list-heading").textContent =
+      headings[activeFilter] || "Daftar Pesanan";
+  }
 }
 
   /* RINCIAN MENU */
@@ -3495,6 +3549,7 @@ function renderOrderActions(order){
 
   let actions = "";
 
+  /* Pesanan online baru */
   if(status === "awaiting_confirmation" && !assignment){
     actions +=
       '<button class="btn btn-green" data-accept="' +
@@ -3503,19 +3558,28 @@ function renderOrderActions(order){
       '>Terima Pesanan</button>';
   }
 
+  /* Bayar di Akhir: konfirmasi pembayaran.
+     Backend akan sekaligus menyelesaikan pesanan. */
   if(mine && status === "processing" && isWaitingPayment(order)){
     actions +=
       '<button class="btn btn-orange" data-payment="' +
       escapeHTML(order.id) + '"' +
       (busy ? " disabled" : "") +
       '>Konfirmasi Pembayaran</button>';
+  }
 
-  }else if(mine && status === "processing" && isPaid(order)){
+  /* POS sudah lunas: selesaikan setelah disajikan.
+     Kompatibel juga dengan pesanan lama berstatus siap diantar. */
+  if(
+    mine &&
+    ["processing","ready_for_delivery"].includes(status) &&
+    isPaid(order)
+  ){
     actions +=
       '<button class="btn btn-green" data-status="' +
       escapeHTML(order.id) + '"' +
       (busy ? " disabled" : "") +
-      '>Selesai</button>';
+      '>Selesaikan Pesanan</button>';
   }
 
   if(mine && !["completed","cancelled"].includes(status)){
@@ -3528,87 +3592,78 @@ function renderOrderActions(order){
 
   return actions;
 }
+   /* DAFTAR PESANAN */
+function renderOrders(){
 
-/* KARTU PESANAN RINGKAS */
-function renderOrder(order){
-  const status = order.order_status;
+  if(!cashierSession || !el("orders")) return;
 
-  let displayStatus = STATUS_LABELS[status] || status;
+  const search = el("search")
+    ? el("search").value.trim().toLowerCase()
+    : "";
 
-  if(status === "processing" && isWaitingPayment(order)){
-    displayStatus = "Menunggu Pembayaran";
+  const visible = allOrders.filter(order=>{
+
+    const searchableValues = [
+      orderNumber(order),
+      order.table_label,
+      order.table_number,
+      order.order_type,
+      order.order_note,
+      ...order.items.map(itemName)
+    ];
+
+    const matchesSearch = searchableValues.some(value=>
+      String(value || "").toLowerCase().includes(search)
+    );
+
+    let matchesGroup = true;
+
+    if(activeFilter === "new"){
+      matchesGroup =
+        isToday(order.created_at) &&
+        order.order_status === "awaiting_confirmation" &&
+        !assignmentOf(order);
+
+    }else if(activeFilter === "processing"){
+      matchesGroup =
+        order.order_status === "processing" &&
+        isMine(order);
+
+    }else if(activeFilter === "ready"){
+      matchesGroup =
+        order.order_status === "ready_for_delivery" &&
+        isMine(order);
+
+    }else if(activeFilter === "payment"){
+      matchesGroup =
+        isWaitingPayment(order) &&
+        isMine(order);
+
+    }else if(activeFilter === "completed"){
+      matchesGroup =
+        order.order_status === "completed";
+
+    }else if(activeFilter === "mine"){
+      matchesGroup = isMine(order);
+    }
+
+    return matchesSearch && matchesGroup;
+  });
+
+  if(el("order-count")){
+    el("order-count").textContent =
+      visible.length + " pesanan";
   }
 
-  const table =
-    order.table_label ||
-    order.table_number ||
-    "Tanpa nomor meja";
+  if(!visible.length){
+    el("orders").innerHTML =
+      '<div class="empty">Tidak ada pesanan pada kategori ini.</div>';
+    return;
+  }
 
-  const orderTypeLabel =
-    order.order_type === "dine_in"
-      ? "Dine-in"
-      : order.order_type === "takeaway"
-        ? "Takeaway"
-        : order.order_type || "—";
-
-  const sourceText =
-    order.order_source === "pos"
-      ? "POS Kasir"
-      : "Pesanan QR";
-
-  const totalQty = order.items.reduce((sum,item)=>{
-    return sum + itemQty(item);
-  },0);
-
-  const assignmentClass = isMine(order)
-    ? "assignment mine"
-    : "assignment";
-
-  return (
-    '<article class="order-card">' +
-
-      '<div class="order-head">' +
-        '<div>' +
-          '<div class="order-number">#' +
-            escapeHTML(orderNumber(order)) +
-          '</div>' +
-          '<div class="order-time">' +
-            escapeHTML(readableDate(order.created_at)) +
-          '</div>' +
-        '</div>' +
-
-        '<span class="badge ' + escapeHTML(status) + '">' +
-          escapeHTML(displayStatus) +
-        '</span>' +
-      '</div>' +
-
-      '<div class="' + assignmentClass + '">' +
-        escapeHTML(orderAssignmentLabel(order)) +
-      '</div>' +
-
-      '<div class="order-brief">' +
-        '<span>' + escapeHTML(table) + '</span>' +
-        '<span>' + escapeHTML(orderTypeLabel) + '</span>' +
-        '<span>' + totalQty + ' item</span>' +
-        '<span>' + escapeHTML(sourceText) + '</span>' +
-      '</div>' +
-
-      '<div class="total-row">' +
-        '<span class="total-label">Total Pesanan</span>' +
-        '<span class="total-price">' +
-          rupiah(orderTotal(order)) +
-        '</span>' +
-      '</div>' +
-
-      '<button type="button" class="order-detail-btn" ' +
-        'data-detail="' + escapeHTML(order.id) + '">' +
-        'Lihat Detail Pesanan →' +
-      '</button>' +
-
-    '</article>'
-  );
+  el("orders").innerHTML =
+    visible.map(renderOrder).join("");
 }
-
   /* MEMBUKA DETAIL PESANAN */
 function openOrderDetail(orderId){
   const order = allOrders.find(item=>

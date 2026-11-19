@@ -4693,7 +4693,9 @@ async function endShift(){
 
   if(!confirmed) return;
 
+  if(el("end-shift-btn")){
   el("end-shift-btn").disabled = true;
+}
 
   try{
     await cashierAPI("end_shift",{

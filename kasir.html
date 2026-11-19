@@ -4755,7 +4755,136 @@ el("submit-pos-btn").addEventListener(
   "click",
   submitPosOrder
 );
+/* =========================================
+   EVENT PENGATURAN PRIBADI KASIR
+========================================= */
 
+/* Buka kunci audio melalui interaksi langsung kasir.
+   Penting untuk kompatibilitas browser iPhone. */
+document.addEventListener(
+  "pointerdown",
+  () => {
+    if(cashierSession && cashierPreferences.sound){
+      unlockCashierAudio();
+    }
+  },
+  { once:true }
+);
+
+
+/* PENGATURAN TEMA */
+if(el("cashier-theme-setting")){
+  el("cashier-theme-setting").addEventListener("change",event=>{
+    const theme = event.target.value;
+
+    cashierPreferences.theme =
+      theme === "dark" ? "dark" : "light";
+
+    applyCashierPreferences();
+    saveCashierPreferences();
+  });
+}
+
+
+/* PENGATURAN SUARA PESANAN */
+if(el("cashier-sound-setting")){
+  el("cashier-sound-setting").addEventListener("change",async event=>{
+    const enabled = event.target.checked;
+
+    cashierPreferences.sound = enabled;
+
+    applyCashierPreferences();
+    saveCashierPreferences();
+
+    if(enabled){
+      const unlocked = await unlockCashierAudio();
+
+      if(!unlocked){
+        showNotice(
+          "Suara belum dapat diaktifkan. Coba sentuh layar sekali lagi.",
+          true
+        );
+      }else{
+        showNotice("Suara pesanan masuk berhasil diaktifkan.");
+      }
+    }else{
+      showNotice("Suara pesanan masuk dinonaktifkan.");
+    }
+  });
+}
+
+
+/* PENGATURAN NOTIFIKASI PERANGKAT */
+if(el("cashier-notification-setting")){
+  el("cashier-notification-setting").addEventListener(
+    "change",
+    async event=>{
+      const enabled = event.target.checked;
+
+      if(!enabled){
+        cashierPreferences.notification = false;
+
+        saveCashierPreferences();
+        applyCashierPreferences();
+
+        showNotice("Notifikasi perangkat dinonaktifkan.");
+        return;
+      }
+
+      if(!("Notification" in window)){
+        cashierPreferences.notification = false;
+
+        applyCashierPreferences();
+        saveCashierPreferences();
+
+        showNotice(
+          "Browser atau perangkat ini belum mendukung notifikasi.",
+          true
+        );
+        return;
+      }
+
+      try{
+        let permission = Notification.permission;
+
+        if(permission === "default"){
+          permission = await Notification.requestPermission();
+        }
+
+        if(permission === "granted"){
+          cashierPreferences.notification = true;
+
+          saveCashierPreferences();
+          applyCashierPreferences();
+
+          showNotice("Notifikasi perangkat berhasil diaktifkan.");
+
+        }else{
+          cashierPreferences.notification = false;
+
+          saveCashierPreferences();
+          applyCashierPreferences();
+
+          showNotice(
+            "Izin notifikasi belum diberikan. Periksa pengaturan browser atau perangkat.",
+            true
+          );
+        }
+
+      }catch(error){
+        cashierPreferences.notification = false;
+
+        saveCashierPreferences();
+        applyCashierPreferences();
+
+        showNotice(
+          "Notifikasi perangkat tidak dapat diaktifkan pada browser ini.",
+          true
+        );
+      }
+    }
+  );
+}
 /* =========================================
    NAVIGASI DASHBOARD KASIR
    INTEGRASI GLOBAL HEADER KOPIHUB

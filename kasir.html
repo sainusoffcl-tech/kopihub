@@ -3233,6 +3233,9 @@ function openOrderGroup(group){
   el("dashboard-home-page").hidden = true;
   el("order-list-panel").hidden = false;
   el("profile-page").hidden = true;
+  el("settings-page").hidden = true;
+
+  activePage = "orders";
 
   updateFilterButtons();
   renderOrders();
@@ -3242,7 +3245,6 @@ function openOrderGroup(group){
     behavior:"smooth"
   });
 }
-
 /* KEMBALI KE DASHBOARD UTAMA */
 function returnToDashboardHome(){
 

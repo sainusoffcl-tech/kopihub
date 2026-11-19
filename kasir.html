@@ -3758,7 +3758,17 @@ function openOrderDetail(orderId){
         '<div>' +
           '<div class="info-label">Metode Pembayaran</div>' +
           '<div class="info-value">' +
-            escapeHTML(order.payment_method || "—") +
+            escapeHTML(
+  ({
+    cashier: "Tunai di Kasir",
+    cash: "Tunai",
+    tunai: "Tunai",
+    qris: "QRIS",
+    transfer: "Transfer"
+  })[String(order.payment_method || "").toLowerCase()]
+  || order.payment_method
+  || "—"
+)
           '</div>' +
         '</div>' +
 

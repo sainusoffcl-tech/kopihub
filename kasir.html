@@ -3821,63 +3821,6 @@ function closeOrderDetail(){
     document.body.style.overflow = "";
   }
 }
-  /* DAFTAR PESANAN */
-function renderOrders(){
-
-  if(!cashierSession || !el("orders")) return;
-
-  const search = el("search")
-    ? el("search").value.trim().toLowerCase()
-    : "";
-
-  const visible = allOrders.filter(order=>{
-
-    const searchableValues = [
-      orderNumber(order),
-      order.table_label,
-      order.table_number,
-      order.order_type,
-      order.order_note,
-      ...order.items.map(itemName)
-    ];
-
-    const matchesSearch = searchableValues.some(value=>
-      String(value || "").toLowerCase().includes(search)
-    );
-
-    let matchesGroup = true;
-
-    if(activeFilter === "new"){
-      matchesGroup =
-        isToday(order.created_at) &&
-        order.order_status === "awaiting_confirmation" &&
-        !assignmentOf(order);
-
-    }else if(activeFilter === "processing"){
-      matchesGroup =
-        order.order_status === "processing" &&
-        isMine(order);
-
-    }else if(activeFilter === "completed"){
-      matchesGroup =
-        order.order_status === "completed";
-    }
-
-    return matchesSearch && matchesGroup;
-  });
-
-  el("order-count").textContent =
-    visible.length + " pesanan";
-
-  if(!visible.length){
-    el("orders").innerHTML =
-      '<div class="empty">Tidak ada pesanan pada kategori ini.</div>';
-    return;
-  }
-
-  el("orders").innerHTML =
-    visible.map(renderOrder).join("");
-}
 
 /* EVENT TINDAKAN PESANAN */
 function handleOrderAction(event){

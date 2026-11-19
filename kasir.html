@@ -3961,7 +3961,7 @@ async function acceptOrder(orderId){
   }
 }
 
-/* SELESAIKAN PESANAN BAYAR DI AWAL */
+/* SELESAIKAN PESANAN YANG SUDAH LUNAS */
 async function changeOrderStatus(orderId){
 
   const order = allOrders.find(item=>
@@ -3977,11 +3977,11 @@ async function changeOrderStatus(orderId){
   }
 
   if(
-    order.order_status !== "processing" ||
+    !["processing","ready_for_delivery"].includes(order.order_status) ||
     !isPaid(order)
   ){
     showNotice(
-      "Pesanan belum memenuhi syarat untuk diselesaikan.",
+      "Pesanan harus sudah dibayar dan sedang diproses sebelum diselesaikan.",
       true
     );
     return;
@@ -3999,7 +3999,6 @@ async function changeOrderStatus(orderId){
   renderOrders();
 
   try{
-
     await cashierAPI("update_order_status",{
       sessionToken:cashierSession.sessionToken,
       orderId:order.id,
@@ -4014,14 +4013,12 @@ async function changeOrderStatus(orderId){
     await loadOrders(true);
 
   }catch(error){
-
     showNotice(
       error.message || "Gagal menyelesaikan pesanan.",
       true
     );
 
   }finally{
-
     busyOrderIds.delete(String(orderId));
     renderOrders();
   }

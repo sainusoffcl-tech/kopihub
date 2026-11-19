@@ -4545,7 +4545,7 @@ function updatePosTypeUI(){
     posOrderType !== "dine_in";
 }
 
-/* SIMPAN PESANAN POS */
+/* SIMPAN TRANSAKSI POS */
 async function submitPosOrder(){
   if(!cashierSession || posSubmitting) return;
 
@@ -4605,7 +4605,7 @@ async function submitPosOrder(){
   }
 
   const confirmed = window.confirm(
-    "Simpan pesanan langsung ini?\n\n" +
+    "KONFIRMASI TRANSAKSI TUNAI\n\n" +
     "Jenis: " +
     (posOrderType === "dine_in" ? "Dine-in" : "Takeaway") +
     "\n" +
@@ -4614,7 +4614,9 @@ async function submitPosOrder(){
       : "") +
     "Jumlah jenis menu: " + items.length + "\n" +
     "Subtotal: " + rupiah(subtotal) +
-    "\n\nPastikan pesanan sudah sesuai."
+    "\n\nPastikan uang tunai dari pelanggan SUDAH DITERIMA." +
+    "\nSetelah disimpan, transaksi akan tercatat LUNAS." +
+    "\n\nLanjutkan?"
   );
 
   if(!confirmed) return;
@@ -4624,7 +4626,7 @@ async function submitPosOrder(){
   setBusy(
     "submit-pos-btn",
     true,
-    "Menyimpan pesanan..."
+    "Menyimpan transaksi..."
   );
 
   try{
@@ -4635,7 +4637,8 @@ async function submitPosOrder(){
         ? tableNumber
         : "",
       orderNote:note,
-      items
+      items,
+      subtotal
     });
 
     posCart.clear();
@@ -4654,23 +4657,23 @@ async function submitPosOrder(){
       "";
 
     showNotice(
-      "Pesanan POS berhasil dibuat" +
+      "Transaksi POS berhasil disimpan dan tercatat LUNAS" +
       (createdNumber
         ? " (#" + createdNumber + ")"
         : "") +
-      ". Pesanan langsung menjadi tugas kamu."
+      ". Pesanan masuk ke tugas kamu."
     );
 
     await loadOrders(true);
 
-activeFilter = "processing";
-openOrderGroup("processing");
-activePage = "orders";
-  
+    activeFilter = "processing";
+    openOrderGroup("processing");
+    activePage = "orders";
+
   }catch(error){
     showPosNotice(
       error.message ||
-      "Gagal membuat pesanan. Periksa kembali menu dan stok.",
+      "Gagal membuat transaksi. Periksa kembali menu dan stok.",
       true
     );
 
@@ -4679,8 +4682,6 @@ activePage = "orders";
     setBusy("submit-pos-btn",false);
   }
 }
-
-
 /* AKHIRI SHIFT */
 async function endShift(){
   if(!cashierSession){

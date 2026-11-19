@@ -4120,13 +4120,19 @@ function openPos(){
   loadPosProducts();
 }
 
+/* MENUTUP MODAL POS */
 function closePos(){
   if(el("pos-overlay")){
     el("pos-overlay").hidden = true;
   }
 
   document.body.style.overflow = "";
-  posSubmitting = false;
+
+  /*
+    Jangan mengubah posSubmitting di sini.
+    Status pengiriman hanya boleh diubah oleh
+    submitPosOrder() setelah request selesai.
+  */
 }
 
 /* MEMUAT PRODUK POS */

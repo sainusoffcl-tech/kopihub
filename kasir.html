@@ -3423,7 +3423,32 @@ async function loadOrders(silent=false){
       );
     }
 
-    allOrders = result.orders.map(normalizeOrder);
+   const previousOrders = allOrders;
+
+const incomingOrders = result.orders
+  .map(normalizeOrder)
+  .filter(order => {
+
+    const existed = previousOrders.some(
+      oldOrder =>
+        String(oldOrder.id) === String(order.id)
+    );
+
+    return (
+      !existed &&
+      order.order_status === "awaiting_confirmation" &&
+      !assignmentOf(order)
+    );
+  });
+
+allOrders = result.orders.map(normalizeOrder);
+
+/* MUAT PERTAMA TIDAK MEMBUNYIKAN PESANAN LAMA */
+if(hasInitialOrderSnapshot){
+  notifyIncomingOrders(incomingOrders);
+}else{
+  hasInitialOrderSnapshot = true;
+} );
 
     updateStats();
     renderOrders();

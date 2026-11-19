@@ -3303,7 +3303,25 @@ function openCashierProfile(){
     behavior:"smooth"
   });
 }
-/* MASUK DASHBOARD */
+
+/* MEMBUKA PENGATURAN KASIR */
+function openCashierSettings(){
+
+  el("dashboard-home-page").hidden = true;
+  el("order-list-panel").hidden = true;
+  el("profile-page").hidden = true;
+  el("settings-page").hidden = false;
+
+  activePage = "settings";
+
+  applyCashierPreferences();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+   /* MASUK DASHBOARD */
 async function enterDashboard(){
   if(!cashierSession){
     showView("login");

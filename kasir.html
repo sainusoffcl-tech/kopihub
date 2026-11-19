@@ -2911,20 +2911,21 @@ function showView(view){
   el("login-view").hidden = view !== "login";
   el("reset-view").hidden = view !== "reset";
   el("activation-view").hidden = view !== "activation";
-  el("dashboard-view").hidden = view !== "dashboard";
 
-  if(el("header-refresh")){
-    el("header-refresh").hidden = view !== "dashboard";
+  if(el("dashboard-shell")){
+    el("dashboard-shell").hidden = view !== "dashboard";
   }
 
-  if(el("header-profile")){
-    el("header-profile").hidden = view !== "dashboard";
+  if(el("dashboard-view")){
+    el("dashboard-view").hidden = view !== "dashboard";
   }
 
   if(view === "dashboard"){
     el("dashboard-home-page").hidden = false;
     el("order-list-panel").hidden = true;
     el("profile-page").hidden = true;
+    el("settings-page").hidden = true;
+
     activePage = "home";
   }
 }

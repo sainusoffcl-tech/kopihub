@@ -3772,7 +3772,8 @@ function renderOrder(order){
   );
 }
 
-   /* DAFTAR PESANAN */
+
+/* DAFTAR PESANAN */
 function renderOrders(){
 
   if(!cashierSession || !el("orders")) return;
@@ -3842,8 +3843,25 @@ function renderOrders(){
   }
 
   el("orders").innerHTML =
-    visible.map(renderOrder).join("");
+    visible.map(order=>{
+      try{
+        return renderOrder(order);
+      }catch(error){
+        console.error(
+          "Gagal render pesanan:",
+          error,
+          order
+        );
+
+        return (
+          '<div class="empty">' +
+          'Gagal menampilkan pesanan. Periksa Console.' +
+          '</div>'
+        );
+      }
+    }).join("");
 }
+
   /* MEMBUKA DETAIL PESANAN */
 function openOrderDetail(orderId){
   const order = allOrders.find(item=>

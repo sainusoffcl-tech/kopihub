@@ -4739,31 +4739,61 @@ async function submitPosOrder(){
     return;
   }
 
-  const subtotal = calculatePosSubtotal();
+  let totals;
 
-  if(!Number.isFinite(subtotal) || subtotal <= 0){
-    showPosNotice(
-      "Subtotal pesanan tidak valid.",
-      true
-    );
-    return;
-  }
-
-  const confirmed = window.confirm(
-    "KONFIRMASI TRANSAKSI TUNAI\n\n" +
-    "Jenis: " +
-    (posOrderType === "dine_in" ? "Dine-in" : "Takeaway") +
-    "\n" +
-    (posOrderType === "dine_in"
-      ? "Meja: " + tableNumber + "\n"
-      : "") +
-    "Jumlah jenis menu: " + items.length + "\n" +
-    "Subtotal: " + rupiah(subtotal) +
-    "\n\nPastikan uang tunai dari pelanggan SUDAH DITERIMA." +
-    "\nSetelah disimpan, transaksi akan tercatat LUNAS." +
-    "\n\nLanjutkan?"
+try{
+  totals = calculatePosTotals();
+}catch(error){
+  showPosNotice(
+    error.message || "Perhitungan transaksi tidak valid.",
+    true
   );
+  return;
+}
 
+const subtotal = totals.subtotal;
+
+if(
+  !Number.isFinite(subtotal) ||
+  subtotal <= 0 ||
+  !Number.isFinite(totals.taxAmount) ||
+  !Number.isFinite(totals.total)
+){
+  showPosNotice(
+    "Total transaksi tidak valid.",
+    true
+  );
+  return;
+}
+
+const confirmed = window.confirm(
+  "KONFIRMASI TRANSAKSI TUNAI\n\n" +
+
+  "Jenis: " +
+  (posOrderType === "dine_in" ? "Dine-in" : "Takeaway") +
+
+  "\n" +
+
+  (posOrderType === "dine_in"
+    ? "Meja: " + tableNumber + "\n"
+    : "") +
+
+  "Jumlah jenis menu: " + items.length +
+
+  "\n\nSubtotal: " + rupiah(totals.subtotal) +
+
+  "\nPBJT: " + rupiah(totals.taxAmount) +
+
+  "\nTOTAL PEMBAYARAN: " + rupiah(totals.total) +
+
+  "\n\nPastikan uang tunai sebesar " +
+  rupiah(totals.total) +
+  " dari pelanggan SUDAH DITERIMA." +
+
+  "\nSetelah disimpan, transaksi akan tercatat LUNAS." +
+
+  "\n\nLanjutkan?"
+);
   if(!confirmed) return;
 
   posSubmitting = true;

@@ -3614,6 +3614,164 @@ function renderOrderActions(order){
 
   return actions;
 }
+   
+/* RENDER KARTU PESANAN */
+function renderOrder(order){
+
+  const status = order.order_status;
+  const mine = isMine(order);
+
+  let displayStatus =
+    STATUS_LABELS[status] || status;
+
+  if(status === "processing" && isWaitingPayment(order)){
+    displayStatus = "Menunggu Pembayaran";
+  }
+
+  const table =
+    order.table_label ||
+    order.table_number ||
+    "—";
+
+  const orderTypeLabel =
+    order.order_type === "dine_in"
+      ? "Dine-in"
+      : order.order_type === "takeaway"
+        ? "Takeaway"
+        : order.order_type || "—";
+
+  const sourceLabel =
+    order.order_source === "pos"
+      ? "Dibuat Kasir (POS)"
+      : "Pesanan QR";
+
+  const paymentMethodLabel =
+    ({
+      cashier: "Tunai di Kasir",
+      cash: "Tunai",
+      tunai: "Tunai",
+      qris: "QRIS",
+      transfer: "Transfer"
+    })[String(order.payment_method || "").toLowerCase()]
+    || order.payment_method
+    || "—";
+
+  const paymentText =
+    isPaid(order)
+      ? "Sudah Dibayar"
+      : isWaitingPayment(order)
+        ? "Menunggu Pembayaran"
+        : (order.payment_status || "Belum tersedia");
+
+  const paymentClass =
+    isPaid(order)
+      ? "payment-paid"
+      : "payment-unpaid";
+
+  const note = getOrderNote(order);
+  const actions = renderOrderActions(order);
+
+  const items = renderItems(order.items);
+
+  return (
+    '<article class="order-card">' +
+
+      '<div class="order-head">' +
+
+        '<div>' +
+          '<div class="order-number">#' +
+            escapeHTML(orderNumber(order)) +
+          '</div>' +
+
+          '<div class="order-time">' +
+            escapeHTML(readableDate(order.created_at)) +
+          '</div>' +
+        '</div>' +
+
+        '<span class="badge ' +
+          escapeHTML(status) + '">' +
+          escapeHTML(displayStatus) +
+        '</span>' +
+
+      '</div>' +
+
+      '<div class="assignment ' +
+        (mine ? "mine" : "") + '">' +
+        escapeHTML(orderAssignmentLabel(order)) +
+      '</div>' +
+
+      '<div class="info-grid">' +
+
+        '<div>' +
+          '<div class="info-label">Jenis Pesanan</div>' +
+          '<div class="info-value">' +
+            escapeHTML(orderTypeLabel) +
+          '</div>' +
+        '</div>' +
+
+        '<div>' +
+          '<div class="info-label">Meja</div>' +
+          '<div class="info-value">' +
+            escapeHTML(table) +
+          '</div>' +
+        '</div>' +
+
+        '<div>' +
+          '<div class="info-label">Sumber Pesanan</div>' +
+          '<div class="info-value">' +
+            escapeHTML(sourceLabel) +
+          '</div>' +
+        '</div>' +
+
+        '<div>' +
+          '<div class="info-label">Pembayaran</div>' +
+          '<div class="info-value">' +
+            escapeHTML(paymentMethodLabel) +
+          '</div>' +
+        '</div>' +
+
+      '</div>' +
+
+      '<div class="items">' +
+        '<div class="items-title">Rincian Menu</div>' +
+        items +
+      '</div>' +
+
+      (note
+        ? '<div class="order-note">' +
+            '<strong>Catatan:</strong> ' +
+            escapeHTML(note) +
+          '</div>'
+        : '') +
+
+      '<div class="total-row">' +
+        '<span class="total-label">Total Pembayaran</span>' +
+        '<strong class="total-price">' +
+          rupiah(orderTotal(order)) +
+        '</strong>' +
+      '</div>' +
+
+      '<div class="payment-line">' +
+        'Status pembayaran: ' +
+        '<span class="' + paymentClass + '">' +
+          escapeHTML(paymentText) +
+        '</span>' +
+      '</div>' +
+
+      '<div class="order-actions">' +
+        actions +
+      '</div>' +
+
+      '<button type="button" ' +
+        'class="order-detail-btn" ' +
+        'data-detail="' + escapeHTML(order.id) + '">' +
+        'Lihat Detail Pesanan' +
+      '</button>' +
+
+    '</article>'
+  );
+}
+
    /* DAFTAR PESANAN */
 function renderOrders(){
 

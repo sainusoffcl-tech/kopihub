@@ -15,29 +15,37 @@
 <style>
 
 
-/* =================================
-   KOPIHUB DASHBOARD KASIR
-   CSS KHUSUS HALAMAN KASIR
-   Revisi: iPhone Responsive
-   Header dan Footer menggunakan CSS Global
-================================= */
+/* =========================================================
+   KOPIHUB — DASHBOARD KASIR
+   Global Design System v1.1.0
+   CSS khusus halaman kasir
+   Fokus: konsistensi visual, responsif, dan aksesibilitas
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. TOKEN DAN RESET HALAMAN
+--------------------------------------------------------- */
 
 body{
-  --green:#123b2c;
-  --green2:#174c38;
-  --green3:#216247;
-  --cream:#faf9f5;
-  --orange:#e99a55;
-  --text:#24342c;
-  --muted:#78847c;
-  --border:#e8ebe5;
-  --white:#fff;
-  --red:#b83232;
-  --shadow:0 5px 20px rgba(18,59,44,.045);
-  --radius:18px;
+  --green:var(--kh-color-primary,#123B2C);
+  --green2:var(--kh-color-primary-light,#24543E);
+  --green3:var(--kh-color-primary-dark,#0D2E22);
+  --cream:var(--kh-color-background,#FAF9F5);
+  --orange:var(--kh-color-accent,#E99A48);
+  --text:var(--kh-color-text,#26372D);
+  --muted:var(--kh-color-text-muted,#788278);
+  --border:var(--kh-color-border,#E5E8DF);
+  --white:var(--kh-color-surface,#FFFFFF);
+  --red:var(--kh-color-danger,#A52C2C);
+  --shadow:var(--kh-shadow-md,0 5px 18px rgba(18,59,44,.08));
+  --radius:16px;
+
   min-width:0;
   max-width:100%;
   overflow-x:clip;
+  background:var(--cream);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   -webkit-text-size-adjust:100%;
   text-size-adjust:100%;
   box-sizing:border-box;
@@ -62,42 +70,51 @@ body *::after{
 
 .container{
   width:100%;
-  margin:auto;
-  padding:23px 17px 38px;
+  max-width:1180px;
+  margin:0 auto;
+  padding:24px 18px 40px;
 }
+
+/* ---------------------------------------------------------
+   2. BERANDA DAN SAPAAN
+--------------------------------------------------------- */
 
 .welcome{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   gap:12px;
-  margin-bottom:22px;
+  margin-bottom:24px;
 }
 
 .welcome h1{
   margin:0 0 6px;
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:-.8px;
+  color:var(--green);
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:-.6px;
+  line-height:1.2;
 }
 
 .welcome p{
   margin:0;
   color:var(--muted);
-  font-size:12px;
+  font-size:13px;
   line-height:1.6;
 }
 
 .live-indicator{
   display:flex;
+  flex:0 0 auto;
   align-items:center;
   gap:7px;
-  padding:9px 12px;
-  border-radius:30px;
-  background:#eaf3ec;
-  color:#216247;
-  font-size:10px;
-  font-weight:850;
+  padding:8px 12px;
+  border:1px solid #D8E9DC;
+  border-radius:999px;
+  background:#EAF5ED;
+  color:#247A4A;
+  font-size:11px;
+  font-weight:700;
   white-space:nowrap;
 }
 
@@ -105,26 +122,30 @@ body *::after{
   width:7px;
   height:7px;
   border-radius:50%;
-  background:#36a66a;
+  background:#247A4A;
 }
 
 .notice{
   margin-bottom:18px;
-  padding:13px 15px;
-  border:1px solid #d6e8d9;
-  border-radius:14px;
-  background:#edf5ee;
-  color:#285c39;
-  font-size:12px;
-  line-height:1.55;
+  padding:14px 16px;
+  border:1px solid #D8E9DC;
+  border-radius:12px;
+  background:#EAF5ED;
+  color:#247A4A;
+  font-size:13px;
+  line-height:1.6;
   overflow-wrap:anywhere;
 }
 
 .notice.error{
-  border-color:#f1c7c4;
-  background:#fff0ef;
-  color:#8b2525;
+  border-color:#F0D0CD;
+  background:#FCE8E6;
+  color:#A52C2C;
 }
+
+/* ---------------------------------------------------------
+   3. JUDUL BAGIAN
+--------------------------------------------------------- */
 
 .page-section{
   min-width:0;
@@ -132,29 +153,34 @@ body *::after{
 
 .section-heading{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  gap:10px;
+  justify-content:space-between;
+  gap:12px;
   margin:0 0 14px;
 }
 
 .section-heading h2{
   margin:0;
+  color:var(--green);
   font-size:18px;
-  font-weight:900;
-  letter-spacing:-.4px;
+  font-weight:800;
+  letter-spacing:-.3px;
 }
 
 .section-heading span{
   color:var(--muted);
-  font-size:11px;
+  font-size:12px;
 }
+
+/* ---------------------------------------------------------
+   4. KARTU STATISTIK
+--------------------------------------------------------- */
 
 .stats{
   display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:12px;
-  margin-bottom:23px;
+  margin-bottom:24px;
 }
 
 .stat{
@@ -163,20 +189,20 @@ body *::after{
   align-items:center;
   width:100%;
   min-width:0;
-  min-height:104px;
-  padding:17px;
+  min-height:112px;
+  padding:16px;
   border:1px solid var(--border);
-  border-radius:19px;
+  border-radius:16px;
   background:var(--white);
   box-shadow:var(--shadow);
   color:var(--text);
   text-align:left;
-  transition:transform .18s,box-shadow .18s;
+  transition:transform .2s,box-shadow .2s;
 }
 
 .stat:active{
   transform:scale(.985);
-  box-shadow:0 2px 10px rgba(18,59,44,.07);
+  box-shadow:0 2px 8px rgba(18,59,44,.06);
 }
 
 .stat-top{
@@ -186,9 +212,9 @@ body *::after{
 .stat-label{
   grid-column:1;
   grid-row:1;
-  color:#68766d;
+  color:var(--muted);
   font-size:12px;
-  font-weight:750;
+  font-weight:600;
   line-height:1.45;
 }
 
@@ -200,12 +226,11 @@ body *::after{
   grid-row:1 / span 2;
   width:40px;
   height:40px;
-  flex:0 0 40px;
   border-radius:12px;
-  background:#edf4ef;
-  color:var(--green2);
+  background:#EDF2E9;
+  color:var(--green);
   font-size:17px;
-  font-weight:850;
+  font-weight:700;
 }
 
 .stat-value{
@@ -213,22 +238,27 @@ body *::after{
   grid-row:2;
   margin-top:8px;
   color:var(--green);
-  font-size:29px;
-  font-weight:950;
-  letter-spacing:-1px;
+  font-size:27px;
+  font-weight:800;
+  letter-spacing:-.7px;
+  overflow-wrap:anywhere;
 }
 
 .stat-hint{
   grid-column:1/-1;
-  margin-top:6px;
+  margin-top:7px;
   color:var(--muted);
-  font-size:10px;
-  line-height:1.4;
+  font-size:11px;
+  line-height:1.5;
 }
+
+/* ---------------------------------------------------------
+   5. KARTU AKSI CEPAT
+--------------------------------------------------------- */
 
 .action-grid{
   display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:12px;
   margin-bottom:24px;
 }
@@ -239,38 +269,38 @@ body *::after{
   gap:13px;
   width:100%;
   min-width:0;
-  min-height:76px;
-  padding:16px;
+  min-height:82px;
+  padding:15px;
   border:1px solid var(--border);
-  border-radius:18px;
-  background:white;
+  border-radius:16px;
+  background:var(--white);
   box-shadow:var(--shadow);
   color:var(--text);
   text-align:left;
-  transition:transform .15s;
+  transition:transform .2s,box-shadow .2s;
 }
 
 .action-card:active{
-  transform:scale(.99);
+  transform:scale(.985);
 }
 
 .action-icon{
   display:flex;
+  flex:0 0 42px;
   align-items:center;
   justify-content:center;
-  flex:0 0 45px;
-  width:45px;
-  height:45px;
-  border-radius:14px;
-  background:#edf4ef;
-  color:var(--green2);
-  font-size:22px;
-  font-weight:900;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:#EDF2E9;
+  color:var(--green);
+  font-size:21px;
+  font-weight:700;
 }
 
 .action-card.orange .action-icon{
-  background:#fff1e2;
-  color:#a66327;
+  background:#FFF1E2;
+  color:#A96818;
 }
 
 .action-copy{
@@ -279,8 +309,10 @@ body *::after{
 
 .action-copy strong{
   display:block;
+  color:var(--text);
   font-size:13px;
-  font-weight:900;
+  font-weight:700;
+  line-height:1.4;
 }
 
 .action-copy span{
@@ -291,19 +323,23 @@ body *::after{
   line-height:1.5;
 }
 
+/* ---------------------------------------------------------
+   6. KARTU KONTEN DAN TOOLBAR
+--------------------------------------------------------- */
+
 .content-card{
   min-width:0;
   margin-bottom:20px;
-  padding:17px;
+  padding:18px;
   border:1px solid var(--border);
-  border-radius:19px;
-  background:white;
+  border-radius:16px;
+  background:var(--white);
   box-shadow:var(--shadow);
 }
 
 .toolbar{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 43px;
+  grid-template-columns:minmax(0,1fr) 44px;
   gap:9px;
   margin-bottom:16px;
 }
@@ -311,39 +347,53 @@ body *::after{
 .field{
   width:100%;
   min-width:0;
-  padding:12px 14px;
+  min-height:44px;
+  padding:11px 13px;
   border:1px solid var(--border);
-  border-radius:13px;
+  border-radius:10px;
   outline:none;
-  background:white;
+  background:var(--white);
   color:var(--text);
+  font-family:inherit;
   font-size:16px;
+  transition:border-color .2s,box-shadow .2s;
 }
 
 .field:focus,
 .form-control:focus,
 .form-group input:focus{
-  border-color:#6b9b7e;
-  box-shadow:0 0 0 3px rgba(33,98,71,.08);
+  border-color:#6B9B7E;
+  box-shadow:0 0 0 3px rgba(36,84,62,.10);
 }
 
 .refresh-btn{
+  min-height:44px;
   border:1px solid var(--border);
-  border-radius:13px;
-  background:white;
+  border-radius:10px;
+  background:var(--white);
   color:var(--green);
   font-size:19px;
-  font-weight:800;
+  font-weight:700;
 }
 
+/* ---------------------------------------------------------
+   7. TOMBOL
+--------------------------------------------------------- */
+
 .btn{
-  min-height:43px;
-  padding:12px 15px;
-  border:0;
-  border-radius:12px;
-  font-size:12px;
-  font-weight:850;
-  transition:transform .15s,background .15s;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:10px 15px;
+  border:1px solid transparent;
+  border-radius:10px;
+  font-family:inherit;
+  font-size:13px;
+  font-weight:700;
+  line-height:1.4;
+  cursor:pointer;
+  transition:transform .15s,background .15s,border-color .15s;
 }
 
 .btn:active{
@@ -352,7 +402,7 @@ body *::after{
 
 .btn-green{
   background:var(--green);
-  color:white;
+  color:#FFFFFF;
 }
 
 .btn-green:hover{
@@ -365,20 +415,24 @@ body *::after{
 }
 
 .btn-light{
-  border:1px solid var(--border);
-  background:white;
+  border-color:var(--border);
+  background:var(--white);
   color:var(--green);
 }
 
 .btn-danger{
-  border:1px solid #f2d2cf;
-  background:#fff0ef;
+  border-color:#F0D0CD;
+  background:#FCE8E6;
   color:var(--red);
 }
 
 .btn-block{
   width:100%;
 }
+
+/* ---------------------------------------------------------
+   8. DAFTAR DAN KARTU PESANAN
+--------------------------------------------------------- */
 
 .orders{
   display:grid;
@@ -393,22 +447,23 @@ body *::after{
   min-width:0;
   padding:17px;
   border:1px solid var(--border);
-  border-radius:19px;
-  background:white;
+  border-radius:16px;
+  background:var(--white);
   box-shadow:var(--shadow);
 }
 
 .order-head{
   display:flex;
-  justify-content:space-between;
   align-items:flex-start;
+  justify-content:space-between;
   gap:10px;
   margin-bottom:0;
 }
 
 .order-number{
+  color:var(--text);
   font-size:16px;
-  font-weight:900;
+  font-weight:800;
   overflow-wrap:anywhere;
 }
 
@@ -418,56 +473,61 @@ body *::after{
   font-size:11px;
 }
 
+/* Status pesanan */
+
 .badge{
   display:inline-flex;
   align-items:center;
-  padding:7px 10px;
-  border-radius:20px;
-  background:#eef0ed;
-  color:#4c5851;
-  font-size:10px;
-  font-weight:850;
+  justify-content:center;
+  padding:6px 10px;
+  border:1px solid transparent;
+  border-radius:999px;
+  background:#EDF2E9;
+  color:#526057;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.4;
   white-space:nowrap;
 }
 
 .badge.awaiting_confirmation{
-  background:#fff1df;
-  color:#98601e;
+  background:#FFF4E3;
+  color:#A96818;
 }
 
 .badge.processing{
-  background:#eaf3ec;
-  color:#216247;
+  background:#EAF5ED;
+  color:#247A4A;
 }
 
 .badge.ready_for_delivery{
-  background:#f1f3ef;
-  color:#526057;
+  background:#EAF3F9;
+  color:#28658A;
 }
 
 .badge.completed{
-  background:#e8eee9;
-  color:#315b42;
+  background:#EAF5ED;
+  color:#247A4A;
 }
 
 .badge.cancelled{
-  background:#fff0ef;
-  color:#a22d2d;
+  background:#FCE8E6;
+  color:#A52C2C;
 }
 
 .assignment{
   margin:0;
-  padding:10px 11px;
-  border-radius:11px;
-  background:#f5f7f3;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#F3F4EF;
   color:#526057;
-  font-size:11px;
-  line-height:1.45;
+  font-size:12px;
+  line-height:1.5;
 }
 
 .assignment.mine{
-  background:#eaf4ed;
-  color:#216247;
+  background:#EAF5ED;
+  color:#247A4A;
 }
 
 .info-grid{
@@ -482,12 +542,13 @@ body *::after{
 .info-label{
   margin-bottom:5px;
   color:var(--muted);
-  font-size:10px;
+  font-size:11px;
 }
 
 .info-value{
-  font-size:12px;
-  font-weight:750;
+  color:var(--text);
+  font-size:13px;
+  font-weight:600;
   overflow-wrap:anywhere;
 }
 
@@ -497,8 +558,9 @@ body *::after{
 
 .items-title{
   margin-bottom:8px;
-  font-size:12px;
-  font-weight:900;
+  color:var(--text);
+  font-size:13px;
+  font-weight:700;
 }
 
 .item-row{
@@ -506,7 +568,9 @@ body *::after{
   justify-content:space-between;
   gap:10px;
   padding:5px 0;
+  color:var(--text);
   font-size:12px;
+  line-height:1.5;
 }
 
 .item-row span:first-child{
@@ -520,49 +584,52 @@ body *::after{
 
 .order-note{
   margin-bottom:12px;
-  padding:11px;
-  border-radius:11px;
-  background:#f7f7f2;
+  padding:11px 12px;
+  border-radius:10px;
+  background:#F3F4EF;
+  color:var(--text);
   font-size:12px;
-  line-height:1.5;
+  line-height:1.6;
   overflow-wrap:anywhere;
 }
 
 .total-row{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   gap:10px;
   padding-top:13px;
   border-top:1px solid var(--border);
 }
 
 .total-label{
-  font-size:12px;
-  font-weight:800;
+  color:var(--text);
+  font-size:13px;
+  font-weight:700;
 }
 
 .total-price{
-  color:var(--green2);
+  color:var(--green);
   font-size:20px;
-  font-weight:950;
+  font-weight:800;
   white-space:nowrap;
 }
 
 .payment-line{
   margin-top:10px;
-  font-size:11px;
+  color:var(--muted);
+  font-size:12px;
   line-height:1.5;
 }
 
 .payment-paid{
-  color:#216247;
-  font-weight:850;
+  color:#247A4A;
+  font-weight:700;
 }
 
 .payment-unpaid{
-  color:#98601e;
-  font-weight:850;
+  color:#A96818;
+  font-weight:700;
 }
 
 .order-actions{
@@ -581,18 +648,18 @@ body *::after{
   margin-top:7px;
   padding:5px 8px;
   border-radius:8px;
-  background:#f1f3ef;
-  color:#647168;
-  font-size:9px;
-  font-weight:800;
+  background:#F3F4EF;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:700;
 }
 
 .empty{
   grid-column:1/-1;
   padding:40px 20px;
-  border:1px dashed #ccd4cc;
-  border-radius:17px;
-  background:white;
+  border:1px dashed #D5DCD1;
+  border-radius:16px;
+  background:var(--white);
   color:var(--muted);
   text-align:center;
   font-size:13px;
@@ -608,10 +675,10 @@ body *::after{
 .order-brief span{
   padding:7px 9px;
   border-radius:9px;
-  background:#f3f5f1;
-  color:#59665e;
-  font-size:10px;
-  font-weight:750;
+  background:#F3F4EF;
+  color:#526057;
+  font-size:11px;
+  font-weight:600;
 }
 
 .order-detail-btn{
@@ -619,12 +686,16 @@ body *::after{
   min-height:42px;
   padding:10px;
   border:1px solid var(--border);
-  border-radius:11px;
-  background:white;
+  border-radius:10px;
+  background:var(--white);
   color:var(--green);
-  font-size:11px;
-  font-weight:850;
+  font-size:12px;
+  font-weight:700;
 }
+
+/* ---------------------------------------------------------
+   9. MODAL DETAIL PESANAN
+--------------------------------------------------------- */
 
 .order-detail-overlay{
   position:fixed;
@@ -634,7 +705,7 @@ body *::after{
   align-items:flex-end;
   justify-content:center;
   padding:0;
-  background:rgba(10,25,17,.58);
+  background:rgba(10,25,17,.56);
 }
 
 .order-detail-panel{
@@ -645,9 +716,11 @@ body *::after{
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
   padding:18px 16px calc(24px + env(safe-area-inset-bottom));
+  border:1px solid var(--border);
+  border-bottom:0;
   border-radius:22px 22px 0 0;
   background:var(--cream);
-  box-shadow:0 -10px 35px rgba(0,0,0,.18);
+  box-shadow:0 -10px 35px rgba(0,0,0,.16);
 }
 
 .order-detail-head{
@@ -667,8 +740,9 @@ body *::after{
 
 .order-detail-head h2{
   margin:0;
+  color:var(--green);
   font-size:18px;
-  font-weight:900;
+  font-weight:800;
 }
 
 .order-detail-close{
@@ -676,8 +750,8 @@ body *::after{
   width:38px;
   height:38px;
   border:1px solid var(--border);
-  border-radius:12px;
-  background:white;
+  border-radius:10px;
+  background:var(--white);
   color:var(--green);
   font-size:21px;
 }
@@ -688,15 +762,16 @@ body *::after{
 
 .order-detail-summary{
   display:flex;
-  justify-content:space-between;
   align-items:flex-start;
+  justify-content:space-between;
   gap:12px;
   margin-bottom:15px;
 }
 
 .order-detail-number{
+  color:var(--green);
   font-size:20px;
-  font-weight:950;
+  font-weight:800;
   overflow-wrap:anywhere;
 }
 
@@ -710,14 +785,15 @@ body *::after{
   margin-top:13px;
   padding:14px;
   border:1px solid var(--border);
-  border-radius:15px;
-  background:white;
+  border-radius:14px;
+  background:var(--white);
 }
 
 .order-detail-section h3{
   margin:0 0 11px;
-  font-size:12px;
-  font-weight:900;
+  color:var(--green);
+  font-size:13px;
+  font-weight:700;
 }
 
 .order-detail-meta{
@@ -728,19 +804,20 @@ body *::after{
 
 .order-detail-total{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   gap:10px;
   margin-top:13px;
   padding:15px;
-  border-radius:14px;
-  background:#eaf2ec;
+  border:1px solid #D8E9DC;
+  border-radius:12px;
+  background:#EAF5ED;
 }
 
 .order-detail-total strong{
   color:var(--green);
   font-size:19px;
-  font-weight:950;
+  font-weight:800;
 }
 
 .order-detail-actions{
@@ -754,6 +831,10 @@ body *::after{
   width:100%;
 }
 
+/* ---------------------------------------------------------
+   10. PROFIL KASIR
+--------------------------------------------------------- */
+
 .profile-identity{
   display:flex;
   align-items:center;
@@ -761,8 +842,8 @@ body *::after{
   margin-bottom:16px;
   padding:17px;
   border:1px solid var(--border);
-  border-radius:18px;
-  background:#f8faf7;
+  border-radius:16px;
+  background:#F3F4EF;
 }
 
 .account-card{
@@ -772,23 +853,23 @@ body *::after{
   margin-bottom:12px;
   padding:17px;
   border:1px solid var(--border);
-  border-radius:18px;
-  background:white;
+  border-radius:16px;
+  background:var(--white);
   box-shadow:var(--shadow);
 }
 
 .account-avatar{
   display:flex;
+  flex:0 0 45px;
   align-items:center;
   justify-content:center;
-  flex:0 0 45px;
   width:45px;
   height:45px;
-  border-radius:15px;
-  background:#edf4ef;
-  color:var(--green2);
+  border-radius:13px;
+  background:#EDF2E9;
+  color:var(--green);
   font-size:19px;
-  font-weight:900;
+  font-weight:700;
 }
 
 .account-copy{
@@ -797,31 +878,37 @@ body *::after{
 
 .account-label{
   color:var(--muted);
-  font-size:10px;
+  font-size:11px;
 }
 
 .account-value{
   margin-top:4px;
+  color:var(--text);
   font-size:13px;
-  font-weight:850;
+  font-weight:700;
   overflow-wrap:anywhere;
 }
 
 .account-note{
   padding:14px;
-  border-radius:13px;
-  background:#f1f5f0;
-  color:#58665d;
-  font-size:11px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#F3F4EF;
+  color:#526057;
+  font-size:12px;
   line-height:1.6;
 }
+
+/* ---------------------------------------------------------
+   11. PENGATURAN KASIR
+--------------------------------------------------------- */
 
 #settings-page{
   min-width:0;
 }
 
 #settings-page .content-card{
-  padding:17px;
+  padding:18px;
 }
 
 .settings-card{
@@ -829,8 +916,8 @@ body *::after{
   margin-bottom:14px;
   padding:16px;
   border:1px solid var(--border);
-  border-radius:16px;
-  background:white;
+  border-radius:14px;
+  background:var(--white);
 }
 
 .settings-card:last-child{
@@ -841,13 +928,13 @@ body *::after{
   margin:0 0 6px;
   color:var(--green);
   font-size:14px;
-  font-weight:900;
+  font-weight:700;
 }
 
 .settings-card p{
   margin:0 0 13px;
   color:var(--muted);
-  font-size:11px;
+  font-size:12px;
   line-height:1.6;
 }
 
@@ -855,7 +942,7 @@ body *::after{
   margin-top:13px;
   margin-bottom:0;
   padding-top:12px;
-  border-top:1px solid #eff1ec;
+  border-top:1px solid var(--border);
 }
 
 .settings-row{
@@ -865,7 +952,7 @@ body *::after{
   gap:14px;
   min-width:0;
   padding:13px 0;
-  border-top:1px solid #eff1ec;
+  border-top:1px solid var(--border);
 }
 
 .settings-row:first-of-type{
@@ -880,8 +967,8 @@ body *::after{
 .settings-row strong{
   display:block;
   color:var(--text);
-  font-size:12px;
-  font-weight:850;
+  font-size:13px;
+  font-weight:700;
   line-height:1.5;
 }
 
@@ -889,7 +976,7 @@ body *::after{
   display:block;
   margin-top:4px;
   color:var(--muted);
-  font-size:10px;
+  font-size:11px;
   line-height:1.5;
 }
 
@@ -897,20 +984,21 @@ body *::after{
   flex:0 0 auto;
   width:auto;
   max-width:125px;
-  min-height:39px;
+  min-height:40px;
   padding:8px 27px 8px 10px;
   border:1px solid var(--border);
   border-radius:10px;
   outline:none;
-  background:white;
+  background:var(--white);
   color:var(--green);
+  font-family:inherit;
   font-size:16px;
-  font-weight:750;
+  font-weight:600;
 }
 
 .settings-row select:focus{
-  border-color:#6b9b7e;
-  box-shadow:0 0 0 3px rgba(33,98,71,.08);
+  border-color:#6B9B7E;
+  box-shadow:0 0 0 3px rgba(36,84,62,.10);
 }
 
 .settings-row input[type="checkbox"]{
@@ -921,10 +1009,10 @@ body *::after{
   margin:0;
   appearance:none;
   -webkit-appearance:none;
-  border:1px solid #cbd3cb;
+  border:1px solid #D5DCD1;
   border-radius:30px;
   outline:none;
-  background:#dfe4df;
+  background:#E5E8DF;
   cursor:pointer;
   transition:background .2s,border-color .2s;
 }
@@ -937,14 +1025,14 @@ body *::after{
   width:20px;
   height:20px;
   border-radius:50%;
-  background:white;
-  box-shadow:0 1px 4px rgba(0,0,0,.18);
+  background:#FFFFFF;
+  box-shadow:0 1px 4px rgba(0,0,0,.15);
   transition:transform .2s;
 }
 
 .settings-row input[type="checkbox"]:checked{
-  border-color:var(--green2);
-  background:var(--green2);
+  border-color:var(--green);
+  background:var(--green);
 }
 
 .settings-row input[type="checkbox"]:checked::before{
@@ -952,9 +1040,13 @@ body *::after{
 }
 
 .settings-row input[type="checkbox"]:focus-visible{
-  outline:3px solid rgba(33,98,71,.2);
+  outline:3px solid rgba(36,84,62,.2);
   outline-offset:3px;
 }
+
+/* ---------------------------------------------------------
+   12. JUDUL HALAMAN DAN TOMBOL KEMBALI
+--------------------------------------------------------- */
 
 .page-back-btn{
   display:flex;
@@ -962,15 +1054,15 @@ body *::after{
   justify-content:center;
   gap:8px;
   width:100%;
-  min-height:45px;
+  min-height:44px;
   margin-bottom:18px;
-  padding:12px;
+  padding:11px;
   border:1px solid var(--border);
-  border-radius:13px;
-  background:white;
+  border-radius:10px;
+  background:var(--white);
   color:var(--green);
-  font-size:12px;
-  font-weight:850;
+  font-size:13px;
+  font-weight:700;
 }
 
 .page-back-btn:active{
@@ -985,30 +1077,34 @@ body *::after{
   margin:0;
   color:var(--green);
   font-size:22px;
-  font-weight:900;
-  letter-spacing:-.5px;
+  font-weight:800;
+  letter-spacing:-.4px;
 }
 
 .page-title p{
   margin:6px 0 0;
   color:var(--muted);
-  font-size:11px;
-  line-height:1.5;
+  font-size:12px;
+  line-height:1.6;
 }
+
+/* ---------------------------------------------------------
+   13. LOGIN, RESET, DAN AKTIVASI
+--------------------------------------------------------- */
 
 .auth-wrap{
   width:100%;
   max-width:440px;
-  margin:30px auto;
-  padding:0 17px;
+  margin:36px auto;
+  padding:0 18px;
 }
 
 .auth-card{
-  padding:25px;
+  padding:26px;
   border:1px solid var(--border);
-  border-radius:22px;
-  background:white;
-  box-shadow:0 12px 38px rgba(18,59,44,.075);
+  border-radius:20px;
+  background:var(--white);
+  box-shadow:var(--kh-shadow-lg,0 12px 32px rgba(18,59,44,.12));
 }
 
 .auth-brand{
@@ -1019,7 +1115,7 @@ body *::after{
 .auth-brand strong{
   color:var(--green);
   font-size:28px;
-  font-weight:950;
+  font-weight:800;
   letter-spacing:-1px;
 }
 
@@ -1030,19 +1126,21 @@ body *::after{
 .auth-brand p{
   margin:7px 0 0;
   color:var(--muted);
-  font-size:12px;
+  font-size:13px;
 }
 
 .auth-card h1{
   margin:0 0 7px;
+  color:var(--green);
   font-size:22px;
-  letter-spacing:-.6px;
+  font-weight:800;
+  letter-spacing:-.4px;
 }
 
 .auth-desc{
   margin:0 0 20px;
   color:var(--muted);
-  font-size:12px;
+  font-size:13px;
   line-height:1.6;
 }
 
@@ -1053,22 +1151,25 @@ body *::after{
 .form-group label{
   display:block;
   margin-bottom:7px;
-  font-size:11px;
-  font-weight:800;
+  color:var(--text);
+  font-size:12px;
+  font-weight:700;
 }
 
 .form-group input{
   display:block;
   width:100%;
   min-width:0;
-  min-height:47px;
-  padding:14px;
+  min-height:46px;
+  padding:12px 14px;
   border:1px solid var(--border);
-  border-radius:12px;
+  border-radius:10px;
   outline:none;
-  background:white;
+  background:var(--white);
   color:var(--text);
+  font-family:inherit;
   font-size:16px;
+  transition:border-color .2s,box-shadow .2s;
 }
 
 .auth-switch{
@@ -1084,14 +1185,16 @@ body *::after{
   border:0;
   background:none;
   color:var(--green);
-  font-weight:850;
+  font-family:inherit;
+  font-size:inherit;
+  font-weight:700;
   text-decoration:underline;
 }
 
 .pin-hint{
   margin-top:7px;
   color:var(--muted);
-  font-size:10px;
+  font-size:11px;
   line-height:1.5;
 }
 
@@ -1099,7 +1202,7 @@ body *::after{
   margin-top:21px;
   color:var(--muted);
   text-align:center;
-  font-size:10px;
+  font-size:11px;
 }
 
 .auth-back{
@@ -1111,9 +1214,13 @@ body *::after{
   border:0;
   background:none;
   color:var(--green);
-  font-size:12px;
-  font-weight:800;
+  font-size:13px;
+  font-weight:700;
 }
+
+/* ---------------------------------------------------------
+   14. POS — BUAT PESANAN
+--------------------------------------------------------- */
 
 .pos-open-btn{
   display:flex;
@@ -1121,16 +1228,17 @@ body *::after{
   justify-content:center;
   gap:9px;
   width:100%;
-  min-height:59px;
+  min-height:56px;
   margin:0 0 23px;
-  padding:16px;
+  padding:15px 16px;
   border:0;
-  border-radius:17px;
+  border-radius:14px;
   background:var(--green);
-  color:white;
+  color:#FFFFFF;
+  font-family:inherit;
   font-size:14px;
-  font-weight:850;
-  box-shadow:0 7px 18px rgba(18,59,44,.13);
+  font-weight:700;
+  box-shadow:0 5px 16px rgba(18,59,44,.12);
 }
 
 .pos-open-btn:active{
@@ -1150,7 +1258,7 @@ body *::after{
   align-items:flex-end;
   justify-content:center;
   padding:0;
-  background:rgba(10,25,17,.55);
+  background:rgba(10,25,17,.56);
 }
 
 .pos-panel{
@@ -1161,9 +1269,11 @@ body *::after{
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
   padding:18px 16px calc(22px + env(safe-area-inset-bottom));
+  border:1px solid var(--border);
+  border-bottom:0;
   border-radius:22px 22px 0 0;
   background:var(--cream);
-  box-shadow:0 -10px 35px rgba(0,0,0,.18);
+  box-shadow:0 -10px 35px rgba(0,0,0,.16);
 }
 
 .pos-panel-head{
@@ -1183,21 +1293,24 @@ body *::after{
 
 .pos-panel-head h2{
   margin:0;
+  color:var(--green);
   font-size:19px;
+  font-weight:800;
 }
 
 .pos-panel-head p{
   margin:4px 0 0;
   color:var(--muted);
-  font-size:11px;
+  font-size:12px;
 }
 
 .pos-close{
+  flex:0 0 38px;
   width:38px;
   height:38px;
   border:1px solid var(--border);
-  border-radius:12px;
-  background:white;
+  border-radius:10px;
+  background:var(--white);
   color:var(--green);
   font-size:20px;
 }
@@ -1209,8 +1322,9 @@ body *::after{
 .pos-label{
   display:block;
   margin-bottom:9px;
-  font-size:12px;
-  font-weight:850;
+  color:var(--text);
+  font-size:13px;
+  font-weight:700;
 }
 
 .pos-type-row{
@@ -1220,18 +1334,20 @@ body *::after{
 }
 
 .pos-type{
-  padding:13px;
+  min-height:44px;
+  padding:12px;
   border:1px solid var(--border);
-  border-radius:13px;
-  background:white;
+  border-radius:11px;
+  background:var(--white);
   color:var(--text);
-  font-size:12px;
-  font-weight:800;
+  font-family:inherit;
+  font-size:13px;
+  font-weight:600;
 }
 
 .pos-type.active{
   border-color:var(--green);
-  background:#eaf2ec;
+  background:#EAF5ED;
   color:var(--green);
 }
 
@@ -1239,18 +1355,23 @@ body *::after{
   display:block;
   width:100%;
   min-width:0;
-  padding:13px;
+  min-height:44px;
+  padding:12px 13px;
   border:1px solid var(--border);
-  border-radius:12px;
+  border-radius:10px;
   outline:none;
-  background:white;
+  background:var(--white);
   color:var(--text);
+  font-family:inherit;
   font-size:16px;
+  transition:border-color .2s,box-shadow .2s;
 }
+
+/* Kategori: tetap dapat digulir horizontal di ponsel */
 
 .pos-category-list{
   display:flex;
-  gap:7px;
+  gap:8px;
   max-width:100%;
   min-width:0;
   overflow-x:auto;
@@ -1263,19 +1384,20 @@ body *::after{
 
 .pos-category{
   flex:0 0 auto;
-  padding:9px 13px;
+  min-height:36px;
+  padding:8px 13px;
   border:1px solid var(--border);
-  border-radius:22px;
-  background:white;
+  border-radius:999px;
+  background:var(--white);
   color:#526057;
-  font-size:11px;
-  font-weight:800;
+  font-size:12px;
+  font-weight:600;
 }
 
 .pos-category.active{
   border-color:var(--green);
   background:var(--green);
-  color:white;
+  color:#FFFFFF;
 }
 
 .pos-product-list{
@@ -1288,28 +1410,29 @@ body *::after{
   min-width:0;
   padding:13px;
   border:1px solid var(--border);
-  border-radius:15px;
-  background:white;
+  border-radius:14px;
+  background:var(--white);
 }
 
 .pos-product-name{
-  font-size:12px;
-  font-weight:850;
-  line-height:1.4;
+  color:var(--text);
+  font-size:13px;
+  font-weight:700;
+  line-height:1.45;
   overflow-wrap:anywhere;
 }
 
 .pos-product-price{
   margin-top:5px;
-  color:var(--green2);
-  font-size:13px;
-  font-weight:900;
+  color:var(--green);
+  font-size:14px;
+  font-weight:800;
 }
 
 .pos-product-stock{
   margin-top:4px;
   color:var(--muted);
-  font-size:10px;
+  font-size:11px;
 }
 
 .pos-product-actions{
@@ -1319,27 +1442,27 @@ body *::after{
 }
 
 .pos-add{
-  width:35px;
-  height:33px;
+  width:36px;
+  height:34px;
   border:0;
-  border-radius:10px;
+  border-radius:9px;
   background:var(--green);
-  color:white;
+  color:#FFFFFF;
   font-size:20px;
-  font-weight:800;
+  font-weight:700;
 }
 
 .pos-add:disabled{
-  background:#d7ddd7;
-  color:#758078;
+  background:#D5DCD1;
+  color:#788278;
 }
 
 .pos-cart{
   min-width:0;
   padding:13px;
   border:1px solid var(--border);
-  border-radius:15px;
-  background:white;
+  border-radius:14px;
+  background:var(--white);
 }
 
 .pos-cart-empty{
@@ -1354,7 +1477,7 @@ body *::after{
   grid-template-columns:minmax(0,1fr) auto;
   gap:9px;
   padding:11px 0;
-  border-bottom:1px solid #eff0eb;
+  border-bottom:1px solid var(--border);
 }
 
 .pos-cart-row:last-child{
@@ -1362,15 +1485,16 @@ body *::after{
 }
 
 .pos-cart-name{
-  font-size:12px;
-  font-weight:800;
+  color:var(--text);
+  font-size:13px;
+  font-weight:700;
   overflow-wrap:anywhere;
 }
 
 .pos-cart-price{
   margin-top:4px;
   color:var(--muted);
-  font-size:11px;
+  font-size:12px;
 }
 
 .qty-control{
@@ -1384,16 +1508,17 @@ body *::after{
   height:30px;
   border:1px solid var(--border);
   border-radius:9px;
-  background:#f8f9f6;
+  background:#F3F4EF;
   color:var(--green);
-  font-weight:900;
+  font-weight:700;
 }
 
 .qty-number{
   min-width:14px;
+  color:var(--text);
   text-align:center;
   font-size:12px;
-  font-weight:850;
+  font-weight:700;
 }
 
 .pos-summary{
@@ -1407,6 +1532,7 @@ body *::after{
   justify-content:space-between;
   gap:10px;
   padding:4px 0;
+  color:var(--text);
   font-size:12px;
 }
 
@@ -1418,7 +1544,7 @@ body *::after{
 .pos-summary-note{
   margin-top:8px;
   color:var(--muted);
-  font-size:10px;
+  font-size:11px;
   line-height:1.5;
 }
 
@@ -1438,31 +1564,41 @@ body *::after{
 
 .pos-error{
   padding:11px;
+  border:1px solid #F0D0CD;
   border-radius:10px;
-  background:#fff0ef;
-  color:#8b2525;
+  background:#FCE8E6;
+  color:#A52C2C;
   font-size:12px;
   line-height:1.5;
 }
 
-/* =================================
-   MODE GELAP
-================================= */
+/* ---------------------------------------------------------
+   15. MODE GELAP
+   Preferensi tampilan kasir tetap dipertahankan
+--------------------------------------------------------- */
 
 body.cashier-dark{
-  --cream:#101b15;
-  --white:#19271f;
-  --text:#edf3ee;
-  --muted:#a4b2a8;
+  --cream:#101B15;
+  --white:#19271F;
+  --text:#EDF3EE;
+  --muted:#A4B2A8;
   --border:#304238;
   --shadow:0 5px 20px rgba(0,0,0,.18);
-  background:#101b15;
-  color:#edf3ee;
+  background:#101B15;
+  color:#EDF3EE;
 }
 
 body.cashier-dark .container,
 body.cashier-dark #dashboard-view{
-  color:#edf3ee;
+  color:#EDF3EE;
+}
+
+body.cashier-dark .welcome h1,
+body.cashier-dark .section-heading h2,
+body.cashier-dark .page-title h2,
+body.cashier-dark .auth-card h1,
+body.cashier-dark .auth-brand strong{
+  color:#DCEBE0;
 }
 
 body.cashier-dark .content-card,
@@ -1477,43 +1613,67 @@ body.cashier-dark .form-control,
 body.cashier-dark .form-group input,
 body.cashier-dark .auth-card{
   border-color:var(--border);
-  background:#19271f;
-  color:#edf3ee;
+  background:#19271F;
+  color:#EDF3EE;
+}
+
+body.cashier-dark .stat-label,
+body.cashier-dark .action-copy strong,
+body.cashier-dark .order-number,
+body.cashier-dark .info-value,
+body.cashier-dark .items-title,
+body.cashier-dark .total-label,
+body.cashier-dark .account-value,
+body.cashier-dark .settings-row strong,
+body.cashier-dark .pos-product-name,
+body.cashier-dark .pos-cart-name{
+  color:#EDF3EE;
+}
+
+body.cashier-dark .stat-value,
+body.cashier-dark .total-price,
+body.cashier-dark .pos-product-price{
+  color:#C5E3CE;
+}
+
+body.cashier-dark .action-card{
+  border-color:var(--border);
+  background:#19271F;
+  color:#EDF3EE;
+}
+
+body.cashier-dark .action-icon,
+body.cashier-dark .stat-icon,
+body.cashier-dark .account-avatar{
+  background:#294234;
+  color:#C5E3CE;
 }
 
 body.cashier-dark .settings-card h3,
-body.cashier-dark .section-heading h2,
-body.cashier-dark .page-title h2{
-  color:#dcebe0;
-}
-
-body.cashier-dark .settings-row strong,
-body.cashier-dark .account-value,
-body.cashier-dark .stat-value,
-body.cashier-dark .order-number,
-body.cashier-dark .info-value,
-body.cashier-dark .items-title{
-  color:#edf3ee;
+body.cashier-dark .order-detail-head h2,
+body.cashier-dark .order-detail-number,
+body.cashier-dark .pos-panel-head h2{
+  color:#DCEBE0;
 }
 
 body.cashier-dark .settings-row{
-  border-color:#304238;
+  border-color:var(--border);
 }
 
 body.cashier-dark .settings-row select{
   border-color:#405448;
-  background:#24362b;
-  color:#edf3ee;
+  background:#24362B;
+  color:#EDF3EE;
 }
 
 body.cashier-dark .settings-row input[type="checkbox"]{
-  border-color:#53665a;
+  border-color:#53665A;
   background:#405448;
 }
 
 body.cashier-dark .settings-row input[type="checkbox"]:checked{
-  border-color:#4d9a70;
-  background:#28734d;
+  border-color:#4D9A70;
+  background:#28734D;
 }
 
 body.cashier-dark .profile-identity,
@@ -1521,37 +1681,54 @@ body.cashier-dark .assignment,
 body.cashier-dark .order-note,
 body.cashier-dark .order-brief span,
 body.cashier-dark .account-note{
-  background:#24362b;
-  color:#c6d5ca;
-}
-
-body.cashier-dark .stat-icon,
-body.cashier-dark .account-avatar{
-  background:#294234;
-  color:#c5e3ce;
+  border-color:var(--border);
+  background:#24362B;
+  color:#C6D5CA;
 }
 
 body.cashier-dark .badge{
   background:#304238;
-  color:#d6e4d9;
+  color:#D6E4D9;
+}
+
+body.cashier-dark .badge.awaiting_confirmation{
+  background:#49391F;
+  color:#FFD69B;
+}
+
+body.cashier-dark .badge.processing,
+body.cashier-dark .badge.completed{
+  background:#234331;
+  color:#BCE1C8;
+}
+
+body.cashier-dark .badge.ready_for_delivery{
+  background:#203B4A;
+  color:#B9DDF0;
+}
+
+body.cashier-dark .badge.cancelled{
+  background:#492A28;
+  color:#FFD2CE;
 }
 
 body.cashier-dark .auth-back,
 body.cashier-dark .text-button,
 body.cashier-dark .page-back-btn,
 body.cashier-dark .order-detail-btn{
-  color:#b7dec4;
+  color:#B7DEC4;
 }
 
 body.cashier-dark .page-back-btn,
 body.cashier-dark .order-detail-btn{
   border-color:var(--border);
-  background:#19271f;
+  background:#19271F;
 }
 
 body.cashier-dark .order-detail-panel,
 body.cashier-dark .pos-panel{
-  background:#101b15;
+  border-color:var(--border);
+  background:#101B15;
 }
 
 body.cashier-dark .order-detail-head,
@@ -1565,64 +1742,87 @@ body.cashier-dark .pos-cart,
 body.cashier-dark .pos-product,
 body.cashier-dark .pos-type{
   border-color:var(--border);
-  background:#19271f;
-  color:#edf3ee;
+  background:#19271F;
+  color:#EDF3EE;
 }
 
 body.cashier-dark .pos-type.active{
+  border-color:#4D9A70;
   background:#294234;
-  color:#d6e9dc;
+  color:#D6E9DC;
 }
 
 body.cashier-dark .order-detail-total{
+  border-color:#365C43;
   background:#294234;
 }
 
 body.cashier-dark .order-detail-total strong{
-  color:#d6e9dc;
+  color:#D6E9DC;
 }
 
 body.cashier-dark .pos-category{
   border-color:var(--border);
-  background:#19271f;
-  color:#d6e4d9;
+  background:#19271F;
+  color:#D6E4D9;
 }
 
 body.cashier-dark .pos-category.active{
   background:var(--green2);
-  color:white;
+  color:#FFFFFF;
+}
+
+body.cashier-dark .qty-btn{
+  border-color:var(--border);
+  background:#24362B;
+  color:#D6E9DC;
+}
+
+body.cashier-dark .qty-number,
+body.cashier-dark .pos-summary-row{
+  color:#EDF3EE;
 }
 
 body.cashier-dark .live-indicator{
+  border-color:#365C43;
   background:#294234;
-  color:#bce1c8;
+  color:#BCE1C8;
+}
+
+body.cashier-dark .live-dot{
+  background:#65C58A;
 }
 
 body.cashier-dark .notice{
-  border-color:#365c43;
-  background:#203a2a;
-  color:#c4e4cd;
+  border-color:#365C43;
+  background:#203A2A;
+  color:#C4E4CD;
 }
 
-body.cashier-dark .notice.error{
-  border-color:#70403d;
+body.cashier-dark .notice.error,
+body.cashier-dark .pos-error{
+  border-color:#70403D;
   background:#402522;
-  color:#ffd2ce;
+  color:#FFD2CE;
 }
 
-/* =================================
-   RESPONSIVE TABLET DAN IPHONE
-================================= */
+body.cashier-dark .order-detail-total{
+  color:#EDF3EE;
+}
+
+/* ---------------------------------------------------------
+   16. RESPONSIVE TABLET DAN IPHONE
+--------------------------------------------------------- */
 
 @media(max-width:760px){
 
   .container{
-    padding:19px 14px 30px;
+    padding:20px 16px 32px;
   }
 
   .welcome{
     align-items:center;
-    gap:8px;
+    gap:9px;
     margin-bottom:20px;
   }
 
@@ -1631,37 +1831,40 @@ body.cashier-dark .notice.error{
   }
 
   .stats{
-    grid-template-columns:1fr;
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:11px;
   }
 
   .stat{
     min-height:104px;
-    padding:16px;
+    padding:14px;
   }
 
   .stat-label{
-    font-size:12px;
+    font-size:11px;
   }
 
   .stat-icon{
-    width:40px;
-    height:40px;
-    font-size:17px;
+    width:36px;
+    height:36px;
+    font-size:16px;
   }
 
   .stat-value{
     margin-top:8px;
-    font-size:27px;
+    font-size:25px;
   }
 
-  .action-grid,
+  .action-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
   .orders{
     grid-template-columns:1fr;
   }
 
   .toolbar{
-    grid-template-columns:minmax(0,1fr) 43px;
+    grid-template-columns:minmax(0,1fr) 44px;
   }
 
   .toolbar select{
@@ -1674,7 +1877,7 @@ body.cashier-dark .notice.error{
   }
 
   .content-card{
-    padding:14px;
+    padding:15px;
   }
 
   .pos-panel{
@@ -1682,19 +1885,19 @@ body.cashier-dark .notice.error{
   }
 
   .auth-wrap{
-    margin:22px auto;
+    margin:24px auto;
   }
 
   .auth-card{
-    padding:22px;
+    padding:23px;
   }
 
   .pos-open-btn{
-    min-height:58px;
+    min-height:56px;
   }
 
   .settings-card{
-    padding:14px;
+    padding:15px;
   }
 
   .settings-row{
@@ -1702,11 +1905,15 @@ body.cashier-dark .notice.error{
   }
 }
 
+/* ---------------------------------------------------------
+   17. IPHONE LAYAR KECIL
+--------------------------------------------------------- */
+
 @media(max-width:390px){
 
   .container{
-    padding-right:12px;
-    padding-left:12px;
+    padding-right:13px;
+    padding-left:13px;
   }
 
   .welcome{
@@ -1719,7 +1926,23 @@ body.cashier-dark .notice.error{
 
   .live-indicator{
     padding:7px 9px;
-    font-size:9px;
+    font-size:10px;
+  }
+
+  .stats{
+    gap:9px;
+  }
+
+  .stat{
+    padding:12px;
+  }
+
+  .stat-value{
+    font-size:23px;
+  }
+
+  .action-grid{
+    grid-template-columns:1fr;
   }
 
   .order-card{
@@ -1735,23 +1958,39 @@ body.cashier-dark .notice.error{
   }
 
   .settings-row strong{
-    font-size:11px;
+    font-size:12px;
   }
 
   .settings-row small{
-    font-size:9px;
+    font-size:10px;
+  }
+
+  .pos-product-list{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
   }
 }
+
+/* ---------------------------------------------------------
+   18. DESKTOP
+--------------------------------------------------------- */
 
 @media(min-width:761px){
 
   .container{
-    padding-top:27px;
+    padding:28px 32px 42px;
   }
 
-  .stats,
+  .stats{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
   .orders{
     grid-template-columns:1fr;
+  }
+
+  .action-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
   .auth-wrap{
@@ -1765,8 +2004,44 @@ body.cashier-dark .notice.error{
 
   .pos-panel{
     max-height:90dvh;
+    border:1px solid var(--border);
     border-radius:20px;
   }
+
+  .order-detail-overlay{
+    align-items:center;
+    padding:20px;
+  }
+
+  .order-detail-panel{
+    max-height:90dvh;
+    border:1px solid var(--border);
+    border-radius:20px;
+  }
+}
+
+/* ---------------------------------------------------------
+   19. AKSESIBILITAS DAN PERILAKU UMUM
+--------------------------------------------------------- */
+
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
+button:focus-visible{
+  outline:3px solid rgba(36,84,62,.25);
+  outline-offset:2px;
+}
+
+[hidden]{
+  display:none!important;
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -1780,11 +2055,6 @@ body.cashier-dark .notice.error{
   }
 }
 
-[hidden]{
-  display:none!important;
-}
-
-</style>
 
 </head>
 

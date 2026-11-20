@@ -1982,11 +1982,13 @@ body.cashier-dark .notice.error{
   <div class="auth-footer">KopiHub · Sistem operasional mitra</div>
 </section>
 
-<!-- GLOBAL HEADER KASIR -->
-<div data-kopihub-header data-role="cashier"></div>
+<!-- KHUSUS AREA DASHBOARD KASIR -->
+<div id="dashboard-shell" hidden>
 
-<main class="container" id="dashboard-view">
+  <!-- GLOBAL HEADER KASIR -->
+  <div data-kopihub-header data-role="cashier"></div>
 
+  <main class="container" id="dashboard-view">
   <!-- HALAMAN UTAMA -->
   <section id="dashboard-home-page">
 
@@ -2235,11 +2237,13 @@ body.cashier-dark .notice.error{
     </div>
   </section>
 
-</main>
+  </main>
 
-<!-- GLOBAL FOOTER KOPIHUB -->
-<div data-kopihub-footer></div>
+  <!-- GLOBAL FOOTER KOPIHUB -->
+  <div data-kopihub-footer></div>
 
+</div>
+<!-- AKHIR AREA KHUSUS DASHBOARD KASIR -->
 <!-- POS MODAL -->
 <section class="pos-overlay" id="pos-overlay" hidden>
   <div class="pos-panel" role="dialog" aria-modal="true" aria-labelledby="pos-title">

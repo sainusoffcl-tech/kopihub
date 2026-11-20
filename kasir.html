@@ -4171,6 +4171,58 @@ async function loadPosProducts(){
       );
     }
 
+    if(
+      !result.shop ||
+      result.shop.pbjtPercent === null ||
+      result.shop.pbjtPercent === undefined
+    ){
+      throw new Error(
+        "Tarif PBJT kedai belum diterima dari server. Silakan muat ulang POS."
+      );
+    }
+
+    const shopTax = Number(result.shop.pbjtPercent);
+
+    if(
+      !Number.isFinite(shopTax) ||
+      shopTax < 0 ||
+      shopTax > 100
+    ){
+      throw new Error("Tarif PBJT kedai tidak valid.");
+    }
+
+    for(const product of result.products){
+      if(
+        product.tax_mode !== "inherit" &&
+        product.tax_mode !== "custom"
+      ){
+        throw new Error(
+          "Pengaturan pajak menu " +
+          (product.name || "") +
+          " tidak valid."
+        );
+      }
+
+      if(product.tax_mode === "custom"){
+        const customTax = Number(product.tax_percent);
+
+        if(
+          product.tax_percent === null ||
+          product.tax_percent === undefined ||
+          !Number.isFinite(customTax) ||
+          customTax < 0 ||
+          customTax > 100
+        ){
+          throw new Error(
+            "Tarif pajak khusus menu " +
+            (product.name || "") +
+            " tidak valid."
+          );
+        }
+      }
+    }
+
+    posShopTaxPercent = shopTax;
     posProducts = result.products;
 
     posCategories = Array.isArray(result.categories)

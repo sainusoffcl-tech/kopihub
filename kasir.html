@@ -3835,7 +3835,12 @@ function renderOrders(){
     el("order-count").textContent =
       visible.length + " pesanan";
   }
-
+console.log("DEBUG PESANAN:", {
+  totalServer: allOrders.length,
+  totalTampil: visible.length,
+  activeFilter: activeFilter,
+  dataPesanan: allOrders
+});
   if(!visible.length){
     el("orders").innerHTML =
       '<div class="empty">Tidak ada pesanan pada kategori ini.</div>';

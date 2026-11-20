@@ -4479,15 +4479,96 @@ function changePosQty(productId,change){
   renderPosCart();
 }
 
-/* HITUNG SUBTOTAL POS */
-function calculatePosSubtotal(){
-  let subtotal = 0;
+/* =========================================
+   PERHITUNGAN PAJAK POS
+   Mengikuti aturan SQL:
+   PBJT dihitung dan dibulatkan per baris.
+========================================= */
 
-  for(const item of posCart.values()){
-    subtotal += Number(item.product.price) * item.qty;
+function getProductTaxPercent(product){
+  if(product.tax_mode === "custom"){
+    return Number(product.tax_percent);
   }
 
-  return Math.round(subtotal * 100) / 100;
+  if(product.tax_mode === "inherit"){
+    return Number(posShopTaxPercent);
+  }
+
+  throw new Error(
+    "Pengaturan pajak produk tidak dikenali."
+  );
+}
+
+/* HITUNG SUBTOTAL, PBJT, DAN TOTAL POS */
+function calculatePosTotals(){
+  let subtotal = 0;
+  let taxAmount = 0;
+
+  const lines = [];
+
+  for(const item of posCart.values()){
+    const price = Number(item.product.price);
+    const qty = Number(item.qty);
+
+    if(
+      !Number.isFinite(price) ||
+      price < 0 ||
+      !Number.isFinite(qty) ||
+      qty < 1
+    ){
+      throw new Error(
+        "Harga atau jumlah produk tidak valid."
+      );
+    }
+
+    const lineSubtotal = price * qty;
+    const taxPercent = getProductTaxPercent(
+      item.product
+    );
+
+    if(
+      !Number.isFinite(taxPercent) ||
+      taxPercent < 0 ||
+      taxPercent > 100
+    ){
+      throw new Error(
+        "Tarif PBJT produk tidak valid."
+      );
+    }
+
+    /*
+      Pembulatan per baris harus sama
+      dengan ROUND() pada PostgreSQL.
+    */
+    const lineTax = Math.round(
+      lineSubtotal * taxPercent / 100
+    );
+
+    subtotal += lineSubtotal;
+    taxAmount += lineTax;
+
+    lines.push({
+      product:item.product,
+      qty,
+      lineSubtotal,
+      taxPercent,
+      lineTax
+    });
+  }
+
+  subtotal = Math.round(subtotal * 100) / 100;
+
+  return {
+    subtotal,
+    taxAmount,
+    total:subtotal + taxAmount,
+    lines
+  };
+}
+
+/* HITUNG SUBTOTAL POS */
+function calculatePosSubtotal(){
+  return calculatePosTotals().subtotal;
 }
 
 /* TAMPILAN KERANJANG POS */
@@ -4496,51 +4577,89 @@ function renderPosCart(){
 
   if(!items.length){
     el("pos-cart-items").innerHTML =
-      '<div class="pos-cart-empty">Belum ada menu dipilih.</div>';
+      '<div class="pos-cart-empty">' +
+      'Belum ada menu dipilih.' +
+      '</div>';
 
     el("pos-subtotal").textContent = rupiah(0);
+    el("pos-pbjt").textContent = rupiah(0);
+    el("pos-total").textContent = rupiah(0);
+
     return;
   }
 
-  el("pos-cart-items").innerHTML = items.map(([id,item])=>{
-    return (
-      '<div class="pos-cart-row">' +
+  let totals;
 
-        '<div>' +
-          '<div class="pos-cart-name">' +
-            escapeHTML(item.product.name) +
-          '</div>' +
-
-          '<div class="pos-cart-price">' +
-            rupiah(item.product.price) +
-            ' × ' + item.qty +
-            ' = ' +
-            rupiah(Number(item.product.price) * item.qty) +
-          '</div>' +
-        '</div>' +
-
-        '<div class="qty-control">' +
-
-          '<button type="button" class="qty-btn" ' +
-            'data-pos-minus="' + escapeHTML(id) + '" ' +
-            'aria-label="Kurangi">−</button>' +
-
-          '<span class="qty-number">' +
-            item.qty +
-          '</span>' +
-
-          '<button type="button" class="qty-btn" ' +
-            'data-pos-plus="' + escapeHTML(id) + '" ' +
-            'aria-label="Tambah">+</button>' +
-
-        '</div>' +
-
-      '</div>'
+  try{
+    totals = calculatePosTotals();
+  }catch(error){
+    showPosNotice(
+      error.message || "Perhitungan pajak gagal.",
+      true
     );
-  }).join("");
+    return;
+  }
+
+  el("pos-cart-items").innerHTML =
+    totals.lines.map(line=>{
+      const product = line.product;
+      const id = String(product.id);
+
+      return (
+        '<div class="pos-cart-row">' +
+
+          '<div>' +
+
+            '<div class="pos-cart-name">' +
+              escapeHTML(product.name) +
+            '</div>' +
+
+            '<div class="pos-cart-price">' +
+              rupiah(product.price) +
+              ' × ' + line.qty +
+              ' = ' +
+              rupiah(line.lineSubtotal) +
+            '</div>' +
+
+            '<div class="pos-cart-price">' +
+              'PBJT ' +
+              line.taxPercent +
+              '%: ' +
+              rupiah(line.lineTax) +
+            '</div>' +
+
+          '</div>' +
+
+          '<div class="qty-control">' +
+
+            '<button type="button" class="qty-btn" ' +
+              'data-pos-minus="' +
+              escapeHTML(id) +
+              '" aria-label="Kurangi">−</button>' +
+
+            '<span class="qty-number">' +
+              line.qty +
+            '</span>' +
+
+            '<button type="button" class="qty-btn" ' +
+              'data-pos-plus="' +
+              escapeHTML(id) +
+              '" aria-label="Tambah">+</button>' +
+
+          '</div>' +
+
+        '</div>'
+      );
+    }).join("");
 
   el("pos-subtotal").textContent =
-    rupiah(calculatePosSubtotal());
+    rupiah(totals.subtotal);
+
+  el("pos-pbjt").textContent =
+    rupiah(totals.taxAmount);
+
+  el("pos-total").textContent =
+    rupiah(totals.total);
 }
 
 /* JENIS PESANAN POS */

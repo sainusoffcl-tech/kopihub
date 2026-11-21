@@ -3,6 +3,34 @@
   <header class="kh-header-bar">
 
     <div class="kh-header-identity">
+
+      <!-- KHUSUS OWNER: FOTO PROFIL KEDAI DI KIRI -->
+      <button
+        class="kh-header-profile-button"
+        type="button"
+        data-kh-profile-open
+        aria-label="Buka Identitas Kedai"
+        title="Identitas Kedai"
+        hidden
+      >
+        <img
+          class="kh-header-profile-image"
+          data-kh-shop-logo
+          src=""
+          alt="Foto profil kedai"
+          hidden
+        >
+
+        <span
+          class="kh-header-profile-fallback"
+          data-kh-shop-logo-fallback
+          aria-hidden="true"
+        >
+          <i data-lucide="user-round"></i>
+        </span>
+      </button>
+
+      <!-- LOGO RESMI KOPIHUB UNTUK PERAN LAIN -->
       <img
         class="kh-header-logo"
         data-kh-logo
@@ -19,7 +47,9 @@
         KH
       </div>
 
+      <!-- IDENTITAS KOPIHUB -->
       <div class="kh-header-brand">
+
         <div class="kh-header-wordmark">
           <span class="kh-header-kopi">Kopi</span><span class="kh-header-hub">Hub</span>
         </div>
@@ -38,38 +68,14 @@
           class="kh-header-role"
           data-kh-role-label
         ></div>
+
       </div>
     </div>
 
+    <!-- AKSI HEADER -->
     <div class="kh-header-actions">
 
-      <!-- Khusus Owner: Profil Kedai -->
-      <button
-        class="kh-header-profile-button"
-        type="button"
-        data-kh-profile-open
-        aria-label="Buka Identitas Kedai"
-        title="Identitas Kedai"
-        hidden
-      >
-        <img
-          class="kh-header-profile-image"
-          data-kh-shop-logo
-          src=""
-          alt=""
-          hidden
-        >
-
-        <span
-          class="kh-header-profile-fallback"
-          data-kh-shop-logo-fallback
-          aria-hidden="true"
-        >
-          <i data-lucide="user-round"></i>
-        </span>
-      </button>
-
-      <!-- Navigasi utama -->
+      <!-- NAVIGASI UTAMA -->
       <button
         class="kh-header-menu-button"
         type="button"
@@ -82,14 +88,17 @@
       </button>
 
     </div>
+
   </header>
 
+  <!-- OVERLAY MENU -->
   <div
     class="kh-header-overlay"
     data-kh-overlay
     hidden
   ></div>
 
+  <!-- MENU NAVIGASI -->
   <nav
     class="kh-header-menu"
     id="kh-header-menu"
@@ -124,5 +133,6 @@
     <div class="kh-header-menu-footer">
       SATU PLATFORM, BANYAK CERITA
     </div>
+
   </nav>
 </div>

@@ -9,7 +9,6 @@
 
 <!-- CSS GLOBAL KOPIHUB -->
 <link rel="stylesheet" href="/kopihub/css/design-system.css">
-<link rel="stylesheet" href="/kopihub/css/footer.css">
 
 <!-- CSS KHUSUS DASHBOARD KASIR -->
 
@@ -1954,6 +1953,159 @@ textarea:focus-visible {
   }
 }
 
+/* =====================================================
+   PERBAIKAN DETAIL PESANAN
+   Melengkapi elemen yang dibuat oleh JavaScript
+===================================================== */
+
+.order-detail-body {
+  min-width: 0;
+  color: var(--text);
+}
+
+.order-detail-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  min-width: 0;
+}
+
+.order-detail-number {
+  color: var(--green);
+  font-size: 17px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.order-detail-time {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.order-detail-section {
+  min-width: 0;
+  margin-top: 14px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--kh-radius-md, 12px);
+  background: var(--white);
+}
+
+.order-detail-section h3 {
+  margin: 0 0 12px;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.order-detail-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 12px;
+  min-width: 0;
+}
+
+.order-detail-meta > div {
+  min-width: 0;
+}
+
+.order-detail-meta .info-value {
+  overflow-wrap: anywhere;
+}
+
+.order-detail-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid var(--kh-color-status-success-border, #D8E9DC);
+  border-radius: var(--kh-radius-md, 12px);
+  background: var(--kh-color-status-success-bg, #EAF5ED);
+}
+
+.order-detail-total strong {
+  color: var(--green);
+  font-size: 17px;
+  font-weight: 800;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.order-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.order-detail-actions .btn {
+  flex: 1 1 125px;
+}
+
+/* MODE GELAP — DETAIL PESANAN */
+
+body.cashier-dark .order-detail-section {
+  border-color: var(--border);
+  background: #19271F;
+  color: #EDF3EE;
+}
+
+body.cashier-dark .order-detail-section h3 {
+  color: #DCEBE0;
+}
+
+body.cashier-dark .order-detail-number {
+  color: #DCEBE0;
+}
+
+body.cashier-dark .order-detail-time {
+  color: var(--muted);
+}
+
+body.cashier-dark .order-detail-total {
+  border-color: #365C43;
+  background: #294234;
+  color: #EDF3EE;
+}
+
+body.cashier-dark .order-detail-total strong {
+  color: #D6E9DC;
+}
+
+/* IPHONE LAYAR KECIL */
+
+@media (max-width: 390px) {
+  .order-detail-panel {
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+
+  .order-detail-meta {
+    gap: 12px 9px;
+  }
+
+  .order-detail-section {
+    padding: 13px;
+  }
+
+  .order-detail-total {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .order-detail-total strong {
+    text-align: left;
+  }
+}
+
+   
 </style>
 
 

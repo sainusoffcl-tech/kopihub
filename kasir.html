@@ -2026,99 +2026,145 @@ textarea:focus-visible{
 
 </style>
 
+
 </head>
 
 <body>
 
 <!-- LOGIN -->
 <section class="auth-wrap" id="login-view" hidden>
-  <div class="auth-card">
+  <div class="auth-card kh-ui-card">
     <div class="auth-brand">
       <strong>Kopi<span>Hub</span></strong>
       <p>Sistem Kasir Mitra</p>
     </div>
-    <h1>Login Kasir</h1>
-    <p class="auth-desc">Masuk menggunakan identitas kasir dan PIN pribadi yang sudah dibuat.</p>
+
+    <h1 class="kh-ui-title">Login Kasir</h1>
+    <p class="auth-desc kh-ui-subtitle">
+      Masuk menggunakan identitas kasir dan PIN pribadi yang sudah dibuat.
+    </p>
+
     <div id="login-notice" class="notice" hidden></div>
+
     <form id="login-form">
       <div class="form-group">
-        <label for="login-shop">Nama Kedai</label>
-        <input id="login-shop" required autocomplete="organization" placeholder="Contoh: Aroma Coffee">
+        <label class="kh-ui-label" for="login-shop">Nama Kedai</label>
+        <input class="kh-ui-input" id="login-shop" required
+          autocomplete="organization" placeholder="Contoh: Aroma Coffee">
       </div>
+
       <div class="form-group">
-        <label for="login-name">Nama Kasir</label>
-        <input id="login-name" required autocomplete="name" placeholder="Nama sesuai data Owner">
+        <label class="kh-ui-label" for="login-name">Nama Kasir</label>
+        <input class="kh-ui-input" id="login-name" required
+          autocomplete="name" placeholder="Nama sesuai data Owner">
       </div>
+
       <div class="form-group">
-        <label for="login-code">Cashier ID</label>
-        <input id="login-code" required autocomplete="username" placeholder="Masukkan Cashier ID">
+        <label class="kh-ui-label" for="login-code">Cashier ID</label>
+        <input class="kh-ui-input" id="login-code" required
+          autocomplete="username" placeholder="Masukkan Cashier ID">
       </div>
+
       <div class="form-group">
-        <label for="login-pin">PIN Pribadi</label>
-        <input id="login-pin" required type="password" inputmode="numeric"
+        <label class="kh-ui-label" for="login-pin">PIN Pribadi</label>
+        <input class="kh-ui-input" id="login-pin" required
+          type="password" inputmode="numeric"
           pattern="[0-9]{6,8}" minlength="6" maxlength="8"
           autocomplete="current-password" placeholder="PIN 6–8 digit">
       </div>
-      <button class="btn btn-green btn-block" id="login-submit" type="submit">Masuk ke Dashboard</button>
+
+      <button class="btn btn-green btn-block" id="login-submit" type="submit">
+        Masuk ke Dashboard
+      </button>
     </form>
+
     <div class="auth-switch">
       <button class="text-button" id="show-reset" type="button">Lupa PIN?</button>
       <br><br>
       Belum mengaktifkan identitas kasir?<br>
-      <button class="text-button" id="show-activation" type="button">Aktivasi Kasir Pertama Kali</button>
+      <button class="text-button" id="show-activation" type="button">
+        Aktivasi Kasir Pertama Kali
+      </button>
     </div>
   </div>
+
   <div class="auth-footer">KopiHub · Sistem operasional mitra</div>
 </section>
 
 <!-- RESET PIN -->
 <section class="auth-wrap" id="reset-view" hidden>
-  <div class="auth-card">
-    <button class="auth-back" id="reset-back" type="button">← Kembali ke Login</button>
+  <div class="auth-card kh-ui-card">
+    <button class="auth-back" id="reset-back" type="button">
+      ← Kembali ke Login
+    </button>
+
     <div class="auth-brand">
       <strong>Kopi<span>Hub</span></strong>
       <p>Pemulihan PIN Kasir</p>
     </div>
-    <h1>Reset PIN</h1>
-    <p class="auth-desc">
+
+    <h1 class="kh-ui-title">Reset PIN</h1>
+    <p class="auth-desc kh-ui-subtitle">
       Hubungi Owner kedai untuk meminta kode reset PIN. Setelah menerima kode,
       masukkan informasi kasir dan buat PIN baru.
     </p>
+
     <div id="reset-notice" class="notice" hidden></div>
+
     <form id="reset-form">
       <div class="form-group">
-        <label for="reset-shop">Nama Kedai</label>
-        <input id="reset-shop" required autocomplete="organization" placeholder="Nama kedai">
+        <label class="kh-ui-label" for="reset-shop">Nama Kedai</label>
+        <input class="kh-ui-input" id="reset-shop" required
+          autocomplete="organization" placeholder="Nama kedai">
       </div>
+
       <div class="form-group">
-        <label for="reset-name">Nama Kasir</label>
-        <input id="reset-name" required autocomplete="name" placeholder="Nama sesuai data Owner">
+        <label class="kh-ui-label" for="reset-name">Nama Kasir</label>
+        <input class="kh-ui-input" id="reset-name" required
+          autocomplete="name" placeholder="Nama sesuai data Owner">
       </div>
+
       <div class="form-group">
-        <label for="reset-staff-code">Cashier ID</label>
-        <input id="reset-staff-code" required autocomplete="username" placeholder="Masukkan Cashier ID">
+        <label class="kh-ui-label" for="reset-staff-code">Cashier ID</label>
+        <input class="kh-ui-input" id="reset-staff-code" required
+          autocomplete="username" placeholder="Masukkan Cashier ID">
       </div>
+
       <div class="form-group">
-        <label for="reset-activation-code">Kode Reset dari Owner</label>
-        <input id="reset-activation-code" required inputmode="numeric"
-          pattern="[0-9]{10}" minlength="10" maxlength="10"
-          autocomplete="one-time-code" placeholder="Masukkan kode 10 digit">
-        <div class="pin-hint">Kode reset hanya berlaku 30 menit dan hanya dapat digunakan satu kali.</div>
+        <label class="kh-ui-label" for="reset-activation-code">
+          Kode Reset dari Owner
+        </label>
+        <input class="kh-ui-input" id="reset-activation-code" required
+          inputmode="numeric" pattern="[0-9]{10}"
+          minlength="10" maxlength="10"
+          autocomplete="one-time-code"
+          placeholder="Masukkan kode 10 digit">
+        <div class="pin-hint">
+          Kode reset hanya berlaku 30 menit dan hanya dapat digunakan satu kali.
+        </div>
       </div>
+
       <div class="form-group">
-        <label for="reset-new-pin">PIN Baru</label>
-        <input id="reset-new-pin" required type="password" inputmode="numeric"
+        <label class="kh-ui-label" for="reset-new-pin">PIN Baru</label>
+        <input class="kh-ui-input" id="reset-new-pin" required
+          type="password" inputmode="numeric"
           pattern="[0-9]{6,8}" minlength="6" maxlength="8"
           autocomplete="new-password" placeholder="Buat PIN baru 6–8 digit">
       </div>
+
       <div class="form-group">
-        <label for="reset-confirm-pin">Ulangi PIN Baru</label>
-        <input id="reset-confirm-pin" required type="password" inputmode="numeric"
+        <label class="kh-ui-label" for="reset-confirm-pin">Ulangi PIN Baru</label>
+        <input class="kh-ui-input" id="reset-confirm-pin" required
+          type="password" inputmode="numeric"
           pattern="[0-9]{6,8}" minlength="6" maxlength="8"
           autocomplete="new-password" placeholder="Ulangi PIN baru">
       </div>
-      <button class="btn btn-green btn-block" id="reset-submit" type="submit">Simpan PIN Baru</button>
+
+      <button class="btn btn-green btn-block" id="reset-submit" type="submit">
+        Simpan PIN Baru
+      </button>
     </form>
+
     <div class="auth-footer">
       Jangan bagikan kode reset maupun PIN pribadi kepada orang lain.
     </div>
@@ -2127,70 +2173,98 @@ textarea:focus-visible{
 
 <!-- AKTIVASI -->
 <section class="auth-wrap" id="activation-view" hidden>
-  <div class="auth-card">
+  <div class="auth-card kh-ui-card">
     <div class="auth-brand">
       <strong>Kopi<span>Hub</span></strong>
       <p>Aktivasi Identitas Kasir</p>
     </div>
-    <h1>Buat PIN Pribadi</h1>
-    <p class="auth-desc">Masukkan informasi dan kode aktivasi yang diberikan Owner kedai. Buat PIN pribadi yang hanya kamu ketahui.</p>
+
+    <h1 class="kh-ui-title">Buat PIN Pribadi</h1>
+    <p class="auth-desc kh-ui-subtitle">
+      Masukkan informasi dan kode aktivasi yang diberikan Owner kedai.
+      Buat PIN pribadi yang hanya kamu ketahui.
+    </p>
+
     <div id="activation-notice" class="notice" hidden></div>
+
     <form id="activation-form">
       <div class="form-group">
-        <label for="activation-shop">Nama Kedai</label>
-        <input id="activation-shop" required placeholder="Nama kedai">
+        <label class="kh-ui-label" for="activation-shop">Nama Kedai</label>
+        <input class="kh-ui-input" id="activation-shop" required
+          placeholder="Nama kedai">
       </div>
+
       <div class="form-group">
-        <label for="activation-name">Nama Kasir</label>
-        <input id="activation-name" required placeholder="Nama sesuai data Owner">
+        <label class="kh-ui-label" for="activation-name">Nama Kasir</label>
+        <input class="kh-ui-input" id="activation-name" required
+          placeholder="Nama sesuai data Owner">
       </div>
+
       <div class="form-group">
-        <label for="activation-code">Cashier ID</label>
-        <input id="activation-code" required placeholder="Cashier ID">
+        <label class="kh-ui-label" for="activation-code">Cashier ID</label>
+        <input class="kh-ui-input" id="activation-code" required
+          placeholder="Cashier ID">
       </div>
+
       <div class="form-group">
-        <label for="setup-code">Kode Aktivasi dari Owner</label>
-        <input id="setup-code" required autocomplete="one-time-code" placeholder="Masukkan kode aktivasi">
+        <label class="kh-ui-label" for="setup-code">
+          Kode Aktivasi dari Owner
+        </label>
+        <input class="kh-ui-input" id="setup-code" required
+          autocomplete="one-time-code" placeholder="Masukkan kode aktivasi">
       </div>
+
       <div class="form-group">
-        <label for="new-pin">Buat PIN Pribadi</label>
-        <input id="new-pin" required type="password" inputmode="numeric"
+        <label class="kh-ui-label" for="new-pin">Buat PIN Pribadi</label>
+        <input class="kh-ui-input" id="new-pin" required
+          type="password" inputmode="numeric"
           pattern="[0-9]{6,8}" minlength="6" maxlength="8"
           autocomplete="new-password" placeholder="6–8 digit">
-        <div class="pin-hint">Gunakan 6–8 angka. Jangan bagikan PIN kepada siapa pun.</div>
+        <div class="pin-hint">
+          Gunakan 6–8 angka. Jangan bagikan PIN kepada siapa pun.
+        </div>
       </div>
+
       <div class="form-group">
-        <label for="confirm-pin">Ulangi PIN</label>
-        <input id="confirm-pin" required type="password" inputmode="numeric"
+        <label class="kh-ui-label" for="confirm-pin">Ulangi PIN</label>
+        <input class="kh-ui-input" id="confirm-pin" required
+          type="password" inputmode="numeric"
           pattern="[0-9]{6,8}" minlength="6" maxlength="8"
           autocomplete="new-password" placeholder="Ulangi PIN">
       </div>
-      <button class="btn btn-green btn-block" id="activation-submit" type="submit">Aktifkan Identitas Kasir</button>
+
+      <button class="btn btn-green btn-block" id="activation-submit" type="submit">
+        Aktifkan Identitas Kasir
+      </button>
     </form>
+
     <div class="auth-switch">
       Sudah memiliki PIN?<br>
-      <button class="text-button" id="show-login" type="button">Kembali ke Login Kasir</button>
+      <button class="text-button" id="show-login" type="button">
+        Kembali ke Login Kasir
+      </button>
     </div>
   </div>
+
   <div class="auth-footer">KopiHub · Sistem operasional mitra</div>
 </section>
 
-<!-- KHUSUS AREA DASHBOARD KASIR -->
+<!-- AREA DASHBOARD KASIR -->
 <div id="dashboard-shell" hidden>
 
   <!-- GLOBAL HEADER KASIR -->
   <div data-kopihub-header data-role="cashier"></div>
 
-  <main class="container" id="dashboard-view">
+  <main class="container kh-ui-container" id="dashboard-view">
 
     <!-- HALAMAN UTAMA -->
     <section id="dashboard-home-page">
 
       <section class="welcome">
         <div>
-          <h1>Dashboard Kasir</h1>
+          <h1 class="kh-ui-title">Dashboard Kasir</h1>
           <p id="shop-name">Menghubungkan ke kedai...</p>
-       <p id="cashier-name" class="cashier-name-meta"></p>
+          <p id="cashier-name" class="cashier-name-meta"></p>
         </div>
 
         <div class="live-indicator">
@@ -2211,9 +2285,8 @@ textarea:focus-visible{
 
       <!-- RINGKASAN PESANAN -->
       <section class="page-section">
-
         <div class="section-heading">
-          <h2>Ringkasan Pesanan</h2>
+          <h2 class="kh-ui-title">Ringkasan Pesanan</h2>
           <span>Perkembangan pesanan kedai</span>
         </div>
 
@@ -2251,23 +2324,23 @@ textarea:focus-visible{
 
         </div>
       </section>
-
     </section>
 
     <!-- HALAMAN DAFTAR PESANAN -->
-    <section class="content-card dashboard-subpage" id="order-list-panel" hidden>
+    <section class="content-card kh-ui-card dashboard-subpage"
+      id="order-list-panel" hidden>
 
       <button class="auth-back" type="button" id="orders-back-btn">
         ← Kembali ke Dashboard
       </button>
 
       <div class="section-heading">
-        <h2 id="list-heading">Daftar Pesanan</h2>
+        <h2 id="list-heading" class="kh-ui-title">Daftar Pesanan</h2>
         <span id="order-count">0 pesanan</span>
       </div>
 
       <div class="toolbar">
-        <input class="field" id="search" type="search"
+        <input class="field kh-ui-input" id="search" type="search"
           placeholder="Cari nomor pesanan, meja, atau menu..."
           aria-label="Cari pesanan">
 
@@ -2278,7 +2351,6 @@ textarea:focus-visible{
       <section class="orders" id="orders">
         <div class="empty">Pesanan akan ditampilkan di sini.</div>
       </section>
-
     </section>
 
     <!-- HALAMAN PROFIL KASIR -->
@@ -2288,10 +2360,10 @@ textarea:focus-visible{
         ← Kembali ke Dashboard
       </button>
 
-      <div class="content-card">
+      <div class="content-card kh-ui-card">
 
         <div class="section-heading">
-          <h2>Profil Kasir</h2>
+          <h2 class="kh-ui-title">Profil Kasir</h2>
           <span>Informasi akun dan shift</span>
         </div>
 
@@ -2331,7 +2403,9 @@ textarea:focus-visible{
           <div class="account-avatar">◷</div>
           <div class="account-copy">
             <div class="account-label">Status Shift</div>
-            <div class="account-value" id="account-shift-status">Shift berlangsung</div>
+            <div class="account-value" id="account-shift-status">
+              Shift berlangsung
+            </div>
           </div>
         </div>
 
@@ -2351,10 +2425,11 @@ textarea:focus-visible{
         </div>
 
         <div class="end-shift-wrap">
-  <button class="btn btn-danger btn-block" id="end-shift-btn" type="button">
-    Akhiri Shift / Logout
-  </button>
-</div>
+          <button class="btn btn-danger btn-block"
+            id="end-shift-btn" type="button">
+            Akhiri Shift / Logout
+          </button>
+        </div>
 
       </div>
     </section>
@@ -2366,14 +2441,14 @@ textarea:focus-visible{
         ← Kembali ke Dashboard
       </button>
 
-      <div class="content-card">
+      <div class="content-card kh-ui-card">
 
         <div class="section-heading">
-          <h2>Pengaturan</h2>
+          <h2 class="kh-ui-title">Pengaturan</h2>
           <span>Preferensi pribadi kasir</span>
         </div>
 
-        <div class="settings-card">
+        <div class="settings-card kh-ui-card">
           <h3>Tampilan Aplikasi</h3>
           <p>Atur tampilan Dashboard Kasir sesuai kenyamanan kamu.</p>
 
@@ -2382,14 +2457,15 @@ textarea:focus-visible{
               <strong>Tema Tampilan</strong>
               <small>Pilih tampilan terang atau gelap.</small>
             </div>
-            <select id="cashier-theme-setting">
+
+            <select class="kh-ui-select" id="cashier-theme-setting">
               <option value="light">Terang</option>
               <option value="dark">Gelap</option>
             </select>
           </div>
         </div>
 
-        <div class="settings-card">
+        <div class="settings-card kh-ui-card">
           <h3>Notifikasi</h3>
           <p>Atur pemberitahuan pesanan masuk pada perangkat ini.</p>
 
@@ -2410,7 +2486,7 @@ textarea:focus-visible{
           </div>
         </div>
 
-        <div class="settings-card">
+        <div class="settings-card kh-ui-card">
           <h3>Informasi Aplikasi</h3>
 
           <div class="settings-row">
@@ -2441,14 +2517,19 @@ textarea:focus-visible{
 
 <!-- POS MODAL -->
 <section class="pos-overlay" id="pos-overlay" hidden>
-  <div class="pos-panel" role="dialog" aria-modal="true" aria-labelledby="pos-title">
+  <div class="pos-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="pos-title">
 
     <div class="pos-panel-head">
       <div>
         <h2 id="pos-title">Buat Pesanan POS</h2>
         <p id="pos-shop-label">Transaksi tunai langsung di kedai</p>
       </div>
-      <button class="pos-close" id="close-pos-btn" type="button" aria-label="Tutup">×</button>
+
+      <button class="pos-close" id="close-pos-btn"
+        type="button" aria-label="Tutup">×</button>
     </div>
 
     <div id="pos-notice" class="notice" hidden></div>
@@ -2456,14 +2537,20 @@ textarea:focus-visible{
     <div class="pos-section">
       <label class="pos-label">Jenis Pesanan</label>
       <div class="pos-type-row">
-        <button type="button" class="pos-type active" data-order-type="dine_in">Dine-in</button>
-        <button type="button" class="pos-type" data-order-type="takeaway">Takeaway</button>
+        <button type="button" class="pos-type active"
+          data-order-type="dine_in">Dine-in</button>
+        <button type="button" class="pos-type"
+          data-order-type="takeaway">Takeaway</button>
       </div>
     </div>
 
     <div class="pos-section" id="pos-table-section">
-      <label class="pos-label" for="pos-table-number">Nomor Meja *</label>
-      <input class="form-control" id="pos-table-number" maxlength="30" placeholder="Contoh: Meja 01">
+      <label class="pos-label" for="pos-table-number">
+        Nomor Meja *
+      </label>
+      <input class="form-control kh-ui-input"
+        id="pos-table-number" maxlength="30"
+        placeholder="Contoh: Meja 01">
     </div>
 
     <div class="pos-section">
@@ -2485,7 +2572,6 @@ textarea:focus-visible{
       <label class="pos-label">Keranjang Pesanan</label>
 
       <div class="pos-cart">
-
         <div id="pos-cart-items">
           <div class="pos-cart-empty">Belum ada menu dipilih.</div>
         </div>
@@ -2518,18 +2604,23 @@ textarea:focus-visible{
     </div>
 
     <div class="pos-section">
-      <label class="pos-label" for="pos-order-note">Catatan Pesanan (Opsional)</label>
-      <textarea class="form-control" id="pos-order-note" rows="2" maxlength="500"
+      <label class="pos-label" for="pos-order-note">
+        Catatan Pesanan (Opsional)
+      </label>
+      <textarea class="form-control kh-ui-textarea"
+        id="pos-order-note" rows="2" maxlength="500"
         placeholder="Contoh: Gula sedikit, tanpa es..."></textarea>
     </div>
 
-    <button class="btn btn-green btn-block pos-submit" id="submit-pos-btn" type="button">
-      Bayar Tunai & Buat Pesanan
+    <button class="btn btn-green btn-block pos-submit"
+      id="submit-pos-btn" type="button">
+      Bayar Tunai &amp; Buat Pesanan
     </button>
 
     <p class="pin-hint">
       Pastikan pembayaran tunai sudah diterima sebelum menekan tombol ini.
-      Transaksi POS akan dicatat sebagai lunas dan langsung menjadi tanggung jawab kasir yang membuatnya.
+      Transaksi POS akan dicatat sebagai lunas dan langsung menjadi
+      tanggung jawab kasir yang membuatnya.
     </p>
 
   </div>
@@ -2538,22 +2629,24 @@ textarea:focus-visible{
 <!-- MODAL DETAIL PESANAN -->
 <section class="order-detail-overlay" id="order-detail-overlay" hidden>
   <div class="order-detail-panel"
-       role="dialog"
-       aria-modal="true"
-       aria-labelledby="order-detail-title">
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="order-detail-title">
 
     <div class="order-detail-head">
       <h2 id="order-detail-title">Detail Pesanan</h2>
+
       <button class="order-detail-close"
-              id="close-order-detail"
-              type="button"
-              aria-label="Tutup">×</button>
+        id="close-order-detail"
+        type="button"
+        aria-label="Tutup">×</button>
     </div>
 
     <div class="order-detail-body" id="order-detail-content"></div>
 
   </div>
 </section>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 

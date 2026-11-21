@@ -1,18 +1,18 @@
-
 /* =========================================
    KOPIHUB - GLOBAL FOOTER
+   Versi: 1.0.3
 ========================================= */
 
 (() => {
   "use strict";
 
-  const FOOTER_VERSION = "1.0.2";
+  const FOOTER_VERSION = "1.0.3";
 
-const FOOTER_HTML =
-  "/kopihub/components/footer.html";
+  const FOOTER_HTML =
+    "/kopihub/components/footer.html";
 
-const FOOTER_CSS =
-  "/kopihub/css/footer.css?v=" + FOOTER_VERSION;
+  const FOOTER_CSS =
+    "/kopihub/css/footer.css?v=" + FOOTER_VERSION;
 
   const SUPABASE_URL =
     "https://ozcliasebeydgyvgluht.supabase.co";
@@ -21,7 +21,19 @@ const FOOTER_CSS =
     "sb_publishable_X3z6XFroL-eNdwB14y6dYw_81dvj1yN";
 
 
-  /* MEMUAT CSS */
+  /* =========================================
+     KONFIGURASI TAUTAN RESMI KOPIHUB
+  ========================================= */
+
+  const FOOTER_LINKS = {
+    instagram: "https://www.instagram.com/USERNAME_INSTAGRAM/",
+    email: "mailto:EMAIL_RESMI_KOPIHUB"
+  };
+
+
+  /* =========================================
+     MEMUAT CSS
+  ========================================= */
 
   function loadFooterCSS() {
     if (document.querySelector("[data-kopihub-footer-css]")) {
@@ -37,7 +49,9 @@ const FOOTER_CSS =
   }
 
 
-  /* MEMUAT LOGO RESMI DARI SUPABASE */
+  /* =========================================
+     MEMUAT LOGO RESMI DARI SUPABASE
+  ========================================= */
 
   async function loadOfficialLogo(footer) {
     const logo = footer.querySelector("#kh-footer-logo-image");
@@ -116,7 +130,36 @@ const FOOTER_CSS =
   }
 
 
-  /* MEMUAT FOOTER HTML */
+  /* =========================================
+     MENGAKTIFKAN TAUTAN INSTAGRAM DAN EMAIL
+  ========================================= */
+
+  function setupFooterLinks(footer) {
+    const instagram = footer.querySelector(
+      '[data-footer-social="instagram"]'
+    );
+
+    const email = footer.querySelector(
+      '[data-footer-social="email"]'
+    );
+
+    if (instagram) {
+      instagram.href = FOOTER_LINKS.instagram;
+      instagram.target = "_blank";
+      instagram.rel = "noopener noreferrer";
+      instagram.removeAttribute("aria-disabled");
+    }
+
+    if (email) {
+      email.href = FOOTER_LINKS.email;
+      email.removeAttribute("aria-disabled");
+    }
+  }
+
+
+  /* =========================================
+     MEMUAT FOOTER HTML
+  ========================================= */
 
   async function loadFooter() {
     const placeholders = document.querySelectorAll(
@@ -158,6 +201,8 @@ const FOOTER_CSS =
           element.textContent = new Date().getFullYear();
         });
 
+        setupFooterLinks(footer);
+
         loadOfficialLogo(footer);
       });
 
@@ -170,7 +215,9 @@ const FOOTER_CSS =
   }
 
 
-  /* MENJALANKAN FOOTER */
+  /* =========================================
+     MENJALANKAN FOOTER
+  ========================================= */
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", loadFooter);

@@ -3753,6 +3753,7 @@ $("operating-hours-form")?.addEventListener(
   }
 );
 
+  
 /* =========================================
    IDENTITAS DAN PENGATURAN KEDAI
 ========================================= */
@@ -3795,50 +3796,44 @@ function renderSelectedShop() {
         ? "Pesanan dapat dipersiapkan sebelum pembayaran dikonfirmasi."
         : "Pembayaran harus dikonfirmasi sebelum pesanan dipersiapkan.";
   }
-/* NAMA KEDAI UNTUK GLOBAL HEADER KOPIHUB */
 
-const shopName = shop?.name || "";
+  /* NAMA KEDAI UNTUK GLOBAL HEADER */
 
-window.KopiHubOwnerShopName = shopName;
+  const shopName = shop?.name || "";
 
-if (window.KopiHubHeader?.setShopName) {
-  window.KopiHubHeader.setShopName(shopName);
-}
+  window.KopiHubOwnerShopName = shopName;
 
-document.dispatchEvent(
-  new CustomEvent("kopihub:shop-name", {
-    detail: {
-      name: shopName
-    }
-  })
-);
-
-/* FOTO PROFIL KEDAI PADA HEADER */
-
-const headerLogo = $("header-shop-logo");
-const headerFallback = $("header-profile-fallback");
-const headerProfileButton = $("header-profile-button");
-
-if (headerLogo && headerFallback) {
-  if (shop?.logo_url) {
-    headerLogo.src = shop.logo_url;
-    headerLogo.hidden = false;
-    headerFallback.hidden = true;
-
-    headerLogo.onerror = () => {
-      headerLogo.hidden = true;
-      headerFallback.hidden = false;
-    };
-  } else {
-    headerLogo.removeAttribute("src");
-    headerLogo.hidden = true;
-    headerFallback.hidden = false;
+  if (window.KopiHubHeader?.setShopName) {
+    window.KopiHubHeader.setShopName(shopName);
   }
-}
 
-if (headerProfileButton) {
-  headerProfileButton.disabled = !shop;
-}
+  document.dispatchEvent(
+    new CustomEvent("kopihub:shop-name", {
+      detail: {
+        name: shopName
+      }
+    })
+  );
+
+  /* FOTO PROFIL KEDAI UNTUK GLOBAL HEADER */
+
+  const shopLogo = shop?.logo_url || "";
+
+  window.KopiHubOwnerShopLogo = shopLogo;
+
+  if (window.KopiHubHeader?.setShopLogo) {
+    window.KopiHubHeader.setShopLogo(shopLogo);
+  }
+
+  document.dispatchEvent(
+    new CustomEvent("kopihub:shop-logo", {
+      detail: {
+        url: shopLogo
+      }
+    })
+  );
+
+  /* DETAIL KEDAI */
 
   const shopDetails = $("shop-details");
 
@@ -3847,6 +3842,7 @@ if (headerProfileButton) {
       ? "Kedai: " + shop.name + " · Slug: " + shop.slug
       : "Belum ada kedai yang dipilih.";
   }
+
   /* QR MENU */
 
   const makeQrButton = $("make-qr");
@@ -3891,6 +3887,8 @@ if (headerProfileButton) {
     profileMessage.textContent = "";
   }
 
+  /* PRATINJAU FOTO PROFIL DI FORM */
+
   const profileLogoImage = $("profile-logo-image");
   const profileLogoPreview = $("profile-logo-preview");
 
@@ -3911,6 +3909,8 @@ if (headerProfileButton) {
       profileLogoPreview.hidden = true;
     }
   }
+
+  /* TOMBOL SIMPAN PROFIL */
 
   const saveProfileButton = $("save-shop-profile");
 

@@ -520,7 +520,7 @@ body.kh-header-menu-open {
 .kh-header-profile-button:focus-visible,
 .kh-header-close-button:focus-visible,
 .kh-header-menu-item:focus-visible {
-  outline: 3px solid var(--kh-focus-ring);
+  outline: 3px solid #E99A48;
   outline-offset: 3px;
 }
 

@@ -4,8 +4,8 @@
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
    Global Design System v1.2.0
-   Header bersama seluruh halaman
-========================================================= */
+   Global Header v1.3.1
+   ========================================================= */
 
 /* 1. HEADER UTAMA */
 
@@ -35,7 +35,7 @@
   background: var(--kh-color-primary);
 }
 
-/* 2. IDENTITAS KOPIHUB */
+/* 2. IDENTITAS HEADER */
 
 .kh-header-identity {
   display: flex;
@@ -43,6 +43,8 @@
   gap: 13px;
   min-width: 0;
 }
+
+/* LOGO RESMI KOPIHUB */
 
 .kh-header-logo,
 .kh-header-logo-fallback {
@@ -58,16 +60,6 @@
   background: var(--kh-color-background);
 }
 
-.kh-header-logo[hidden],
-.kh-header-logo-fallback[hidden],
-.kh-header-shop-name[hidden],
-.kh-header-role[hidden],
-.kh-header-profile-button[hidden],
-.kh-header-profile-image[hidden],
-.kh-header-overlay[hidden] {
-  display: none !important;
-}
-
 .kh-header-logo-fallback {
   display: flex;
   align-items: center;
@@ -79,7 +71,71 @@
   letter-spacing: -1px;
 }
 
-/* 3. WORDMARK DAN TAGLINE */
+/* SEMBUNYIKAN ELEMEN HIDDEN */
+
+.kh-header-logo[hidden],
+.kh-header-logo-fallback[hidden],
+.kh-header-shop-name[hidden],
+.kh-header-role[hidden],
+.kh-header-profile-button[hidden],
+.kh-header-profile-image[hidden],
+.kh-header-profile-fallback[hidden],
+.kh-header-overlay[hidden] {
+  display: none !important;
+}
+
+/* 3. FOTO PROFIL KEDAI OWNER */
+
+.kh-header-profile-button {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(250, 249, 245, .25);
+  border-radius: var(--kh-radius-lg);
+  color: var(--kh-color-background);
+  background: var(--kh-color-primary-light);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kh-header-profile-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.kh-header-profile-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--kh-color-background);
+}
+
+.kh-header-profile-fallback svg {
+  width: 25px;
+  height: 25px;
+}
+
+.kh-header-profile-button:active {
+  background: var(--kh-color-secondary);
+}
+
+/* KHUSUS OWNER:
+   LOGO RESMI KOPIHUB DIGANTIKAN FOTO KEDAI */
+
+.kh-header-owner-layout .kh-header-logo,
+.kh-header-owner-layout .kh-header-logo-fallback {
+  display: none !important;
+}
+
+/* 4. WORDMARK DAN TAGLINE */
 
 .kh-header-brand {
   display: flex;
@@ -114,7 +170,7 @@
   white-space: nowrap;
 }
 
-/* 4. IDENTITAS KEDAI OWNER */
+/* 5. IDENTITAS KEDAI OWNER */
 
 .kh-header-shop-name {
   display: block;
@@ -131,7 +187,7 @@
   white-space: nowrap;
 }
 
-/* 5. LABEL PERAN */
+/* 6. LABEL PERAN */
 
 .kh-header-role {
   margin-top: 3px;
@@ -143,7 +199,7 @@
   text-transform: uppercase;
 }
 
-/* 6. AREA TOMBOL HEADER */
+/* 7. AREA TOMBOL HEADER */
 
 .kh-header-actions {
   display: flex;
@@ -151,49 +207,6 @@
   justify-content: flex-end;
   flex: 0 0 auto;
   gap: 9px;
-}
-
-/* 7. PROFIL KEDAI OWNER */
-
-.kh-header-profile-button {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid rgba(250, 249, 245, .25);
-  border-radius: 50%;
-  color: var(--kh-color-background);
-  background: var(--kh-color-primary-light);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.kh-header-profile-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.kh-header-profile-fallback {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  color: var(--kh-color-background);
-}
-
-.kh-header-profile-fallback svg {
-  width: 22px;
-  height: 22px;
-}
-
-.kh-header-profile-button:active {
-  background: var(--kh-color-secondary);
 }
 
 /* 8. TOMBOL HAMBURGER */
@@ -440,7 +453,8 @@ body.kh-header-menu-open {
   }
 
   .kh-header-logo,
-  .kh-header-logo-fallback {
+  .kh-header-logo-fallback,
+  .kh-header-profile-button {
     width: 60px;
     height: 60px;
     flex-basis: 60px;
@@ -454,7 +468,6 @@ body.kh-header-menu-open {
     font-size: 9px;
   }
 
-  .kh-header-profile-button,
   .kh-header-menu-button {
     width: 48px;
     height: 48px;
@@ -486,7 +499,8 @@ body.kh-header-menu-open {
   }
 
   .kh-header-logo,
-  .kh-header-logo-fallback {
+  .kh-header-logo-fallback,
+  .kh-header-profile-button {
     width: 47px;
     height: 47px;
     flex-basis: 47px;
@@ -506,7 +520,6 @@ body.kh-header-menu-open {
     gap: 7px;
   }
 
-  .kh-header-profile-button,
   .kh-header-menu-button {
     width: 42px;
     height: 42px;

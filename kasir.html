@@ -376,60 +376,70 @@ body *::after{
   font-weight:700;
 }
 
-/* ---------------------------------------------------------
-   7. TOMBOL
---------------------------------------------------------- */
+/* =========================================================
+   TOMBOL — MENGIKUTI GLOBAL DESIGN SYSTEM
+========================================================= */
 
 .btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:42px;
-  padding:10px 15px;
+  gap:var(--kh-space-2,8px);
+  min-height:var(--kh-control-height-md,46px);
+  padding:0 var(--kh-space-4,16px);
   border:1px solid transparent;
-  border-radius:10px;
-  font-family:inherit;
-  font-size:13px;
-  font-weight:700;
+  border-radius:var(--kh-radius-md,12px);
+  font-family:var(--kh-font-family,inherit);
+  font-size:var(--kh-font-size-sm,13px);
+  font-weight:var(--kh-font-weight-bold,700);
   line-height:1.4;
   cursor:pointer;
-  transition:transform .15s,background .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent;
+  transition:
+    background var(--kh-transition-normal,.2s),
+    border-color var(--kh-transition-normal,.2s),
+    color var(--kh-transition-normal,.2s),
+    transform var(--kh-transition-fast,.15s);
 }
 
 .btn:active{
   transform:scale(.98);
 }
 
+.btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
 .btn-green{
-  background:var(--green);
-  color:#FFFFFF;
+  background:var(--kh-color-primary,#123B2C);
+  color:var(--kh-color-text-inverse,#FAF9F5);
 }
 
 .btn-green:hover{
-  background:var(--green2);
+  background:var(--kh-color-primary-light,#24543E);
 }
 
 .btn-orange{
-  background:var(--orange);
-  color:#302216;
+  background:var(--kh-color-accent-dark,#CC7D2D);
+  color:#FFFFFF;
 }
 
 .btn-light{
-  border-color:var(--border);
-  background:var(--white);
-  color:var(--green);
+  border-color:var(--kh-color-border,#E5E8DF);
+  background:var(--kh-color-surface,#FFFFFF);
+  color:var(--kh-color-primary,#123B2C);
 }
 
 .btn-danger{
-  border-color:#F0D0CD;
-  background:#FCE8E6;
-  color:var(--red);
+  border-color:var(--kh-color-danger-bg,#FCE8E6);
+  background:var(--kh-color-danger-bg,#FCE8E6);
+  color:var(--kh-color-danger,#A52C2C);
 }
 
 .btn-block{
   width:100%;
 }
-
 /* ---------------------------------------------------------
    8. DAFTAR DAN KARTU PESANAN
 --------------------------------------------------------- */
@@ -693,144 +703,81 @@ body *::after{
   font-weight:700;
 }
 
-/* ---------------------------------------------------------
-   9. MODAL DETAIL PESANAN
---------------------------------------------------------- */
+/* =========================================================
+   MODAL DETAIL PESANAN — GLOBAL LAYER SYSTEM
+========================================================= */
 
 .order-detail-overlay{
   position:fixed;
   inset:0;
-  z-index:120;
+  z-index:var(--kh-z-modal,1200);
   display:flex;
   align-items:flex-end;
   justify-content:center;
+  min-width:0;
   padding:0;
-  background:rgba(10,25,17,.56);
+  background:var(--kh-color-overlay,rgba(10,25,17,.56));
+  overscroll-behavior:contain;
 }
 
 .order-detail-panel{
+  position:relative;
   width:100%;
   max-width:620px;
   max-height:92dvh;
+  overflow-x:hidden;
   overflow-y:auto;
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
-  padding:18px 16px calc(24px + env(safe-area-inset-bottom));
-  border:1px solid var(--border);
+  padding:var(--kh-space-5,20px) var(--kh-space-4,16px)
+    calc(var(--kh-space-6,24px) + var(--kh-safe-area-bottom,env(safe-area-inset-bottom,0px)));
+  border:1px solid var(--kh-color-border,#E5E8DF);
   border-bottom:0;
-  border-radius:22px 22px 0 0;
-  background:var(--cream);
-  box-shadow:0 -10px 35px rgba(0,0,0,.16);
+  border-radius:var(--kh-radius-2xl,24px) var(--kh-radius-2xl,24px) 0 0;
+  background:var(--kh-color-background,#FAF9F5);
+  box-shadow:var(--kh-shadow-lg,0 -10px 35px rgba(0,0,0,.16));
 }
 
 .order-detail-head{
   position:sticky;
-  top:-18px;
-  z-index:2;
+  top:calc(-1 * var(--kh-space-5,20px));
+  z-index:var(--kh-z-sticky,100);
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
-  margin:-18px -16px 17px;
-  padding:16px;
-  border-bottom:1px solid var(--border);
-  background:rgba(250,249,245,.97);
+  gap:var(--kh-space-3,12px);
+  margin:calc(-1 * var(--kh-space-5,20px))
+    calc(-1 * var(--kh-space-4,16px))
+    var(--kh-space-4,16px);
+  padding:var(--kh-space-4,16px);
+  border-bottom:1px solid var(--kh-color-border,#E5E8DF);
+  background:var(--kh-color-background,#FAF9F5);
   backdrop-filter:blur(12px);
 }
 
 .order-detail-head h2{
   margin:0;
-  color:var(--green);
-  font-size:18px;
-  font-weight:800;
+  color:var(--kh-color-primary,#123B2C);
+  font-size:var(--kh-font-size-lg,17px);
+  font-weight:var(--kh-font-weight-extra-bold,800);
 }
 
-.order-detail-close{
-  flex:0 0 38px;
-  width:38px;
-  height:38px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--white);
-  color:var(--green);
-  font-size:21px;
+.detail-close-bottom{
+  margin-top:var(--kh-space-3,12px);
 }
 
-.order-detail-body{
-  padding:2px 0;
-}
+@media(min-width:761px){
+  .order-detail-overlay{
+    align-items:center;
+    padding:20px;
+  }
 
-.order-detail-summary{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:15px;
+  .order-detail-panel{
+    max-height:90dvh;
+    border:1px solid var(--kh-color-border,#E5E8DF);
+    border-radius:var(--kh-radius-xl,20px);
+  }
 }
-
-.order-detail-number{
-  color:var(--green);
-  font-size:20px;
-  font-weight:800;
-  overflow-wrap:anywhere;
-}
-
-.order-detail-time{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:11px;
-}
-
-.order-detail-section{
-  margin-top:13px;
-  padding:14px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:var(--white);
-}
-
-.order-detail-section h3{
-  margin:0 0 11px;
-  color:var(--green);
-  font-size:13px;
-  font-weight:700;
-}
-
-.order-detail-meta{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:13px;
-}
-
-.order-detail-total{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:13px;
-  padding:15px;
-  border:1px solid #D8E9DC;
-  border-radius:12px;
-  background:#EAF5ED;
-}
-
-.order-detail-total strong{
-  color:var(--green);
-  font-size:19px;
-  font-weight:800;
-}
-
-.order-detail-actions{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:9px;
-  margin-top:15px;
-}
-
-.order-detail-actions .btn{
-  width:100%;
-}
-
 /* ---------------------------------------------------------
    10. PROFIL KASIR
 --------------------------------------------------------- */
@@ -1250,69 +1197,91 @@ body *::after{
   line-height:1;
 }
 
+/* =========================================================
+   MODAL POS — GLOBAL DESIGN SYSTEM
+========================================================= */
+
 .pos-overlay{
   position:fixed;
   inset:0;
-  z-index:100;
+  z-index:var(--kh-z-modal,1200);
   display:flex;
   align-items:flex-end;
   justify-content:center;
+  min-width:0;
   padding:0;
-  background:rgba(10,25,17,.56);
+  background:var(--kh-color-overlay,rgba(10,25,17,.56));
+  overscroll-behavior:contain;
 }
 
 .pos-panel{
+  position:relative;
   width:100%;
   max-width:760px;
   max-height:94dvh;
+  overflow-x:hidden;
   overflow-y:auto;
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
-  padding:18px 16px calc(22px + env(safe-area-inset-bottom));
-  border:1px solid var(--border);
+  padding:20px 16px calc(20px + var(--kh-safe-area-bottom,env(safe-area-inset-bottom,0px)));
+  border:1px solid var(--kh-color-border,#E5E8DF);
   border-bottom:0;
-  border-radius:22px 22px 0 0;
-  background:var(--cream);
-  box-shadow:0 -10px 35px rgba(0,0,0,.16);
+  border-radius:24px 24px 0 0;
+  background:var(--kh-color-background,#FAF9F5);
+  box-shadow:var(--kh-shadow-lg,0 -10px 35px rgba(0,0,0,.16));
 }
 
 .pos-panel-head{
   position:sticky;
-  top:-18px;
-  z-index:2;
+  top:-20px;
+  z-index:var(--kh-z-sticky,100);
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  margin:-18px -16px 17px;
-  padding:17px;
-  border-bottom:1px solid var(--border);
-  background:rgba(250,249,245,.97);
+  margin:-20px -16px 16px;
+  padding:16px;
+  border-bottom:1px solid var(--kh-color-border,#E5E8DF);
+  background:var(--kh-color-background,#FAF9F5);
   backdrop-filter:blur(12px);
 }
 
 .pos-panel-head h2{
   margin:0;
-  color:var(--green);
-  font-size:19px;
+  color:var(--kh-color-primary,#123B2C);
+  font-size:20px;
   font-weight:800;
 }
 
 .pos-panel-head p{
   margin:4px 0 0;
-  color:var(--muted);
-  font-size:12px;
+  color:var(--kh-color-text-muted,#788278);
+  font-size:13px;
 }
 
 .pos-close{
-  flex:0 0 38px;
-  width:38px;
-  height:38px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--white);
-  color:var(--green);
-  font-size:20px;
+  flex:0 0 42px;
+  width:42px;
+  height:42px;
+  border:1px solid var(--kh-color-border,#E5E8DF);
+  border-radius:12px;
+  background:var(--kh-color-surface,#FFFFFF);
+  color:var(--kh-color-primary,#123B2C);
+  font-size:22px;
+  cursor:pointer;
+}
+
+@media(min-width:761px){
+  .pos-overlay{
+    align-items:center;
+    padding:20px;
+  }
+
+  .pos-panel{
+    max-height:90dvh;
+    border:1px solid var(--kh-color-border,#E5E8DF);
+    border-radius:20px;
+  }
 }
 
 .pos-section{

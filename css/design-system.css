@@ -1,7 +1,7 @@
 
-/* =====================================================
-   KOPIHUB GLOBAL DESIGN SYSTEM
-   Versi: 1.1.0
+/* =========================================================
+   KOPIHUB — GLOBAL DESIGN SYSTEM
+   Versi: 1.2.0
 
    SUMBER STANDAR VISUAL SELURUH PLATFORM KOPIHUB
 
@@ -12,48 +12,62 @@
    - Menu Pelanggan
    - Halaman Publik KopiHub
 
-   Prinsip:
-   - Satu standar warna
-   - Satu standar tipografi
-   - Satu standar komponen
+   PRINSIP:
+   - Satu sumber token desain
+   - Satu standar warna dan tipografi
+   - Satu standar ukuran dan jarak
+   - Konsisten di seluruh halaman
    - Responsif untuk HP, tablet, dan desktop
    - Kompatibel dengan iPhone dan iOS
-   - Tidak mengubah fungsi JavaScript halaman
-===================================================== */
+   - Tidak mengubah fungsi JavaScript
+   - Tidak mengambil alih CSS Header dan Footer
+========================================================= */
 
 
-/* =====================================================
-   1. WARNA UTAMA KOPIHUB
-===================================================== */
+/* =========================================================
+   1. BRAND COLORS — IDENTITAS KOPIHUB
+========================================================= */
 
 :root {
 
   /* BRAND */
+
   --kh-color-primary: #123B2C;
   --kh-color-primary-light: #24543E;
   --kh-color-primary-dark: #0D2E22;
+
+  --kh-color-secondary: #174C38;
 
   --kh-color-accent: #E99A48;
   --kh-color-accent-light: #F5B66F;
   --kh-color-accent-dark: #CC7D2D;
 
+
   /* BACKGROUND */
+
   --kh-color-background: #FAF9F5;
   --kh-color-surface: #FFFFFF;
   --kh-color-surface-soft: #F3F4EF;
   --kh-color-surface-muted: #EDF2E9;
+  --kh-color-surface-hover: #F5F6F2;
+
 
   /* TEXT */
+
   --kh-color-text: #26372D;
   --kh-color-text-secondary: #64756C;
   --kh-color-text-muted: #788278;
   --kh-color-text-inverse: #FAF9F5;
 
+
   /* BORDER */
+
   --kh-color-border: #E5E8DF;
   --kh-color-border-strong: #D5DCD1;
 
+
   /* STATUS */
+
   --kh-color-success: #247A4A;
   --kh-color-success-bg: #EAF5ED;
 
@@ -66,13 +80,15 @@
   --kh-color-info: #28658A;
   --kh-color-info-bg: #EAF3F9;
 
+
   /* OVERLAY */
-  --kh-color-overlay: rgba(10, 25, 17, .56);
+
+  --kh-color-overlay: rgba(10, 25, 17, 0.56);
 
 
-  /* ===================================================
-     2. TIPOGRAFI
-  =================================================== */
+  /* =======================================================
+     2. TYPOGRAPHY — TIPOGRAFI
+  ======================================================= */
 
   --kh-font-family:
     -apple-system,
@@ -83,6 +99,14 @@
     Arial,
     sans-serif;
 
+  --kh-font-family-mono:
+    "SFMono-Regular",
+    Consolas,
+    monospace;
+
+
+  /* FONT SIZE */
+
   --kh-font-size-xs: 11px;
   --kh-font-size-sm: 13px;
   --kh-font-size-md: 14px;
@@ -91,6 +115,10 @@
   --kh-font-size-xl: 20px;
   --kh-font-size-2xl: 24px;
   --kh-font-size-3xl: 30px;
+  --kh-font-size-4xl: 36px;
+
+
+  /* FONT WEIGHT */
 
   --kh-font-weight-normal: 400;
   --kh-font-weight-medium: 500;
@@ -98,14 +126,18 @@
   --kh-font-weight-bold: 700;
   --kh-font-weight-extra-bold: 800;
 
+
+  /* LINE HEIGHT */
+
   --kh-line-height-tight: 1.2;
   --kh-line-height-normal: 1.5;
   --kh-line-height-relaxed: 1.7;
 
 
-  /* ===================================================
-     3. SPACING / JARAK
-  =================================================== */
+  /* =======================================================
+     3. SPACING — SISTEM JARAK
+     Kelipatan 4px
+  ======================================================= */
 
   --kh-space-1: 4px;
   --kh-space-2: 8px;
@@ -115,75 +147,134 @@
   --kh-space-6: 24px;
   --kh-space-7: 28px;
   --kh-space-8: 32px;
+  --kh-space-9: 36px;
   --kh-space-10: 40px;
   --kh-space-12: 48px;
+  --kh-space-14: 56px;
+  --kh-space-16: 64px;
+  --kh-space-20: 80px;
 
 
-  /* ===================================================
-     4. RADIUS / SUDUT
-  =================================================== */
+  /* =======================================================
+     4. RADIUS — SUDUT KOMPONEN
+  ======================================================= */
 
+  --kh-radius-xs: 4px;
   --kh-radius-sm: 8px;
   --kh-radius-md: 12px;
   --kh-radius-lg: 16px;
   --kh-radius-xl: 20px;
   --kh-radius-2xl: 24px;
   --kh-radius-pill: 999px;
+  --kh-radius-full: 9999px;
 
 
-  /* ===================================================
-     5. SHADOW / BAYANGAN
-  =================================================== */
+  /* =======================================================
+     5. SHADOW — BAYANGAN
+  ======================================================= */
+
+  --kh-shadow-xs:
+    0 1px 3px rgba(18, 59, 44, 0.04);
 
   --kh-shadow-sm:
-    0 2px 8px rgba(18, 59, 44, .05);
+    0 2px 8px rgba(18, 59, 44, 0.05);
 
   --kh-shadow-md:
-    0 5px 18px rgba(18, 59, 44, .08);
+    0 5px 18px rgba(18, 59, 44, 0.08);
 
   --kh-shadow-lg:
-    0 12px 32px rgba(18, 59, 44, .12);
+    0 12px 32px rgba(18, 59, 44, 0.12);
+
+  --kh-shadow-xl:
+    0 16px 40px rgba(18, 59, 44, 0.14);
 
 
-  /* ===================================================
-     6. UKURAN KOMPONEN
-  =================================================== */
+  /* =======================================================
+     6. BORDER SYSTEM
+  ======================================================= */
+
+  --kh-border-width: 1px;
+  --kh-border-style: solid;
+  --kh-border: 1px solid var(--kh-color-border);
+  --kh-border-strong: 1px solid var(--kh-color-border-strong);
+
+
+  /* =======================================================
+     7. CONTROL SIZES — UKURAN KOMPONEN
+  ======================================================= */
 
   --kh-control-height-sm: 38px;
   --kh-control-height-md: 46px;
   --kh-control-height-lg: 52px;
 
-  --kh-content-max-width: 1180px;
+  --kh-button-padding-x: 18px;
+  --kh-button-padding-y: 12px;
+
+  --kh-input-padding-x: 14px;
+  --kh-input-padding-y: 12px;
+
+
+  /* =======================================================
+     8. LAYOUT — UKURAN AREA KONTEN
+  ======================================================= */
+
+  --kh-content-max-width: 1000px;
+  --kh-content-wide-width: 1200px;
+  --kh-content-narrow-width: 720px;
 
   --kh-page-padding-mobile: 18px;
   --kh-page-padding-tablet: 24px;
   --kh-page-padding-desktop: 32px;
 
+  --kh-page-gutter: 16px;
+  --kh-page-gutter-tablet: 24px;
+  --kh-page-gutter-desktop: 32px;
 
-  /* ===================================================
-     7. TRANSISI
-  =================================================== */
+  --kh-section-spacing: 24px;
 
-  --kh-transition-fast: .15s ease;
-  --kh-transition-normal: .2s ease;
-  --kh-transition-slow: .3s ease;
+  --kh-card-padding: 20px;
+  --kh-card-padding-mobile: 16px;
 
 
-  /* ===================================================
-     8. LAPISAN / Z-INDEX
-  =================================================== */
+  /* =======================================================
+     9. TRANSITIONS — ANIMASI
+  ======================================================= */
+
+  --kh-transition-fast: 0.15s ease;
+  --kh-transition-normal: 0.2s ease;
+  --kh-transition-slow: 0.3s ease;
+
+
+  /* =======================================================
+     10. FOCUS — AKSESIBILITAS
+  ======================================================= */
+
+  --kh-focus-color: #E99A48;
+
+  --kh-focus-ring:
+    0 0 0 3px rgba(233, 154, 72, 0.28);
+
+
+  /* =======================================================
+     11. Z-INDEX — LAPISAN TAMPILAN
+  ======================================================= */
 
   --kh-z-content: 1;
-  --kh-z-sticky: 100;
+  --kh-z-dropdown: 100;
+  --kh-z-sticky: 200;
   --kh-z-header: 1000;
   --kh-z-overlay: 1100;
   --kh-z-modal: 1200;
   --kh-z-toast: 1300;
+  --kh-z-tooltip: 1400;
 
 
-  /* ===================================================
-     9. KOMPATIBILITAS GLOBAL HEADER LAMA
-  =================================================== */
+  /* =======================================================
+     12. KOMPATIBILITAS GLOBAL HEADER LAMA
+
+     Dipertahankan agar CSS Header versi lama
+     tidak kehilangan referensi variabel.
+  ======================================================= */
 
   --kh-header-green: var(--kh-color-primary);
   --kh-header-green-light: var(--kh-color-primary-light);
@@ -195,29 +286,111 @@
   --kh-header-danger: var(--kh-color-danger);
 
 
-  /* ===================================================
-     10. KOMPATIBILITAS iOS / IPHONE
-  =================================================== */
+  /* =======================================================
+     13. KOMPATIBILITAS iOS / IPHONE
+  ======================================================= */
 
-  /* Warna area status bar */
   --kh-ios-header-background: var(--kh-color-primary);
 
-  /* Safe area perangkat */
   --kh-safe-area-top: env(safe-area-inset-top, 0px);
   --kh-safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --kh-safe-area-left: env(safe-area-inset-left, 0px);
   --kh-safe-area-right: env(safe-area-inset-right, 0px);
 
+
+  /* =======================================================
+     14. MISCELLANEOUS
+  ======================================================= */
+
+  --kh-opacity-disabled: 0.55;
+
+  --kh-content-transition:
+    color var(--kh-transition-normal),
+    background-color var(--kh-transition-normal),
+    border-color var(--kh-transition-normal);
+
 }
 
 
-/* =====================================================
-   11. STANDAR DASAR KOMPONEN KOPIHUB
+/* =========================================================
+   15. DARK MODE TOKENS
+========================================================= */
 
-   Kelas di bawah ini digunakan saat halaman
-   disesuaikan dengan Global Design System.
-   Tidak memaksa perubahan pada kelas lama.
-===================================================== */
+html[data-theme="dark"],
+body.dark-mode {
+
+  color-scheme: dark;
+
+  --kh-color-background: #101A15;
+  --kh-color-surface: #17231C;
+  --kh-color-surface-soft: #1E2D24;
+  --kh-color-surface-muted: #26372C;
+  --kh-color-surface-hover: #26372C;
+
+  --kh-color-text: #F1F4EF;
+  --kh-color-text-secondary: #B5C0B7;
+  --kh-color-text-muted: #89968D;
+  --kh-color-text-inverse: #FFFFFF;
+
+  --kh-color-border: #304238;
+  --kh-color-border-strong: #43594A;
+
+  --kh-color-success-bg: #183B2A;
+  --kh-color-warning-bg: #42341E;
+  --kh-color-danger-bg: #402525;
+  --kh-color-info-bg: #1D3547;
+
+  --kh-shadow-xs:
+    0 1px 3px rgba(0, 0, 0, 0.15);
+
+  --kh-shadow-sm:
+    0 2px 8px rgba(0, 0, 0, 0.18);
+
+  --kh-shadow-md:
+    0 5px 18px rgba(0, 0, 0, 0.22);
+
+  --kh-shadow-lg:
+    0 12px 32px rgba(0, 0, 0, 0.28);
+
+  --kh-shadow-xl:
+    0 16px 40px rgba(0, 0, 0, 0.32);
+
+}
+
+
+/* =========================================================
+   16. GLOBAL BASE — STANDAR DASAR
+========================================================= */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background-color: var(--kh-color-primary);
+}
+
+body {
+  min-width: 0;
+  font-family: var(--kh-font-family);
+}
+
+
+/* MEDIA PROTECTION */
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+
+/* =========================================================
+   17. GLOBAL COMPONENTS — KH-UI
+     
+   Dipertahankan untuk kompatibilitas halaman lama.
+   Nantinya dapat dipindahkan ke components.css
+   setelah seluruh halaman dimigrasikan.
+========================================================= */
 
 
 /* AREA KONTEN */
@@ -227,8 +400,10 @@
     var(--kh-content-max-width),
     calc(100% - 36px)
   );
+
   margin-left: auto;
   margin-right: auto;
+
   min-width: 0;
 }
 
@@ -242,22 +417,28 @@
 
 .kh-ui-title {
   margin: 0;
+
   color: var(--kh-color-primary);
+
   font-family: var(--kh-font-family);
   font-size: var(--kh-font-size-2xl);
   font-weight: var(--kh-font-weight-extra-bold);
+
   line-height: var(--kh-line-height-tight);
 }
 
 .kh-ui-subtitle {
   margin: var(--kh-space-2) 0 0;
+
   color: var(--kh-color-text-secondary);
+
   font-size: var(--kh-font-size-sm);
   line-height: var(--kh-line-height-relaxed);
 }
 
 .kh-ui-label {
   color: var(--kh-color-text);
+
   font-size: var(--kh-font-size-sm);
   font-weight: var(--kh-font-weight-semibold);
 }
@@ -267,11 +448,15 @@
 
 .kh-ui-card {
   min-width: 0;
-  padding: var(--kh-space-5);
-  border: 1px solid var(--kh-color-border);
+
+  padding: var(--kh-card-padding);
+
+  border: var(--kh-border);
   border-radius: var(--kh-radius-lg);
+
   color: var(--kh-color-text);
   background: var(--kh-color-surface);
+
   box-shadow: var(--kh-shadow-sm);
 }
 
@@ -279,8 +464,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: var(--kh-space-3);
   margin-bottom: var(--kh-space-4);
+
   min-width: 0;
 }
 
@@ -291,20 +478,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: var(--kh-space-2);
+
   min-height: var(--kh-control-height-md);
-  padding: 0 var(--kh-space-4);
+  padding: 0 var(--kh-button-padding-x);
+
   border: 1px solid transparent;
   border-radius: var(--kh-radius-md);
+
   font-family: var(--kh-font-family);
   font-size: var(--kh-font-size-sm);
   font-weight: var(--kh-font-weight-bold);
+
   text-decoration: none;
   cursor: pointer;
+
   transition:
     background var(--kh-transition-normal),
     border-color var(--kh-transition-normal),
-    color var(--kh-transition-normal);
+    color var(--kh-transition-normal),
+    box-shadow var(--kh-transition-normal);
+
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -323,8 +518,16 @@
   background: var(--kh-color-surface);
 }
 
+.kh-ui-button-secondary:hover {
+  background: var(--kh-color-surface-hover);
+}
+
 .kh-ui-button-accent {
   color: #FFFFFF;
+  background: var(--kh-color-accent-dark);
+}
+
+.kh-ui-button-accent:hover {
   background: var(--kh-color-accent-dark);
 }
 
@@ -334,7 +537,7 @@
 }
 
 .kh-ui-button:disabled {
-  opacity: .55;
+  opacity: var(--kh-opacity-disabled);
   cursor: not-allowed;
 }
 
@@ -346,13 +549,18 @@
 .kh-ui-textarea {
   width: 100%;
   min-width: 0;
+
   border: 1px solid var(--kh-color-border-strong);
   border-radius: var(--kh-radius-md);
+
   outline: none;
+
   color: var(--kh-color-text);
   background: var(--kh-color-surface);
+
   font-family: var(--kh-font-family);
-  font-size: var(--kh-font-size-base);
+  font-size: 16px;
+
   transition:
     border-color var(--kh-transition-normal),
     box-shadow var(--kh-transition-normal);
@@ -361,12 +569,12 @@
 .kh-ui-input,
 .kh-ui-select {
   min-height: var(--kh-control-height-md);
-  padding: 0 var(--kh-space-3);
+  padding: 0 var(--kh-input-padding-x);
 }
 
 .kh-ui-textarea {
   min-height: 100px;
-  padding: var(--kh-space-3);
+  padding: var(--kh-input-padding-y) var(--kh-input-padding-x);
   resize: vertical;
 }
 
@@ -374,7 +582,7 @@
 .kh-ui-select:focus,
 .kh-ui-textarea:focus {
   border-color: var(--kh-color-primary);
-  box-shadow: 0 0 0 3px rgba(18, 59, 44, .10);
+  box-shadow: 0 0 0 3px rgba(18, 59, 44, 0.10);
 }
 
 
@@ -384,9 +592,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   min-height: 25px;
   padding: 4px 10px;
+
   border-radius: var(--kh-radius-pill);
+
   font-size: var(--kh-font-size-xs);
   font-weight: var(--kh-font-weight-bold);
 }
@@ -417,7 +628,9 @@
 .kh-ui-divider {
   width: 100%;
   height: 1px;
+
   border: 0;
+
   background: var(--kh-color-border);
 }
 
@@ -428,14 +641,14 @@
 .kh-ui-input:focus-visible,
 .kh-ui-select:focus-visible,
 .kh-ui-textarea:focus-visible {
-  outline: 3px solid rgba(233, 154, 72, .45);
+  outline: 3px solid rgba(233, 154, 72, 0.45);
   outline-offset: 2px;
 }
 
 
-/* =====================================================
-   12. RESPONSIVE
-===================================================== */
+/* =========================================================
+   18. RESPONSIVE — TABLET DAN DESKTOP
+========================================================= */
 
 @media (min-width: 761px) {
 
@@ -448,10 +661,11 @@
 
 }
 
+
 @media (max-width: 600px) {
 
   .kh-ui-card {
-    padding: var(--kh-space-4);
+    padding: var(--kh-card-padding-mobile);
     border-radius: var(--kh-radius-md);
   }
 
@@ -466,123 +680,22 @@
 }
 
 
-/* =====================================================
-   13. KOMPATIBILITAS iOS / IPHONE
-===================================================== */
+/* =========================================================
+   19. iOS / IPHONE COMPATIBILITY
+========================================================= */
 
-/* Mencegah pembesaran teks otomatis di Safari iOS */
+/*
+   Safe area dikelola oleh masing-masing komponen
+   yang membutuhkannya.
 
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-/* Area luar halaman mengikuti warna brand.
-   Halaman tetap menentukan background kontennya. */
-
-html {
-  background-color: var(--kh-color-primary);
-}
-
-/* Tidak memaksakan padding safe-area pada body.
-   Komponen header mengelola safe-area masing-masing. */
-
-body {
-  min-width: 0;
-}
-
-/* Perlindungan dasar untuk media agar tidak
-   melewati lebar kontainer. */
-
-img,
-video,
-canvas,
-svg {
-  max-width: 100%;
-}
-
-/* Mencegah flex/grid child memaksa halaman melebar. */
-
-.kh-ui-card,
-.kh-ui-container,
-.kh-ui-section,
-.kh-ui-card-header {
-  min-width: 0;
-}
+   Design System tidak memaksakan padding safe area
+   kepada seluruh body atau halaman.
+*/
 
 
-/* =====================================================
-   14. GLOBAL HEADER + STATUS BAR IPHONE
-===================================================== */
-
-/* Berlaku pada Global Header KopiHub.
-   Header bertanggung jawab atas safe-area bagian atas. */
-
-.kh-global-header {
-  background: var(--kh-ios-header-background);
-  padding-top: var(--kh-safe-area-top);
-  position: sticky;
-  top: 0;
-  z-index: var(--kh-z-header);
-  width: 100%;
-  min-width: 0;
-}
-
-/* Isi header tetap mengikuti lebar layar. */
-
-.kh-global-header .kh-header-bar {
-  min-width: 0;
-  max-width: 100%;
-}
-
-/* Safe area kiri dan kanan untuk perangkat
-   dengan layar penuh atau orientasi landscape. */
-
-@supports (padding-left: env(safe-area-inset-left)) {
-
-  .kh-global-header .kh-header-bar {
-    padding-left: max(
-      var(--kh-space-4),
-      var(--kh-safe-area-left)
-    );
-
-    padding-right: max(
-      var(--kh-space-4),
-      var(--kh-safe-area-right)
-    );
-  }
-
-}
-
-
-/* =====================================================
-   15. STANDAR INPUT IPHONE
-===================================================== */
-
-/* Safari iOS dapat melakukan zoom otomatis
-   jika ukuran teks input di bawah 16px.
-
-   Terapkan pada input halaman agar interaksi
-   tidak memicu pembesaran layar otomatis. */
-
-input,
-select,
-textarea {
-  font-size: 16px;
-}
-
-/* Komponen Global Design System tetap konsisten. */
-
-.kh-ui-input,
-.kh-ui-select,
-.kh-ui-textarea {
-  font-size: 16px;
-}
-
-
-/* =====================================================
-   16. REDUCED MOTION
-===================================================== */
+/* =========================================================
+   20. REDUCED MOTION — AKSESIBILITAS
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -590,9 +703,26 @@ textarea {
   *::before,
   *::after {
     scroll-behavior: auto !important;
-    transition-duration: .01ms !important;
-    animation-duration: .01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
 
 }
+
+
+/* =========================================================
+   SELESAI
+   KOPIHUB GLOBAL DESIGN SYSTEM v1.2.0
+
+   File ini bertanggung jawab atas:
+   - Global design tokens
+   - Standar dasar tipografi
+   - Komponen KH-UI kompatibilitas
+
+   Bukan tanggung jawab file ini:
+   - Global Header
+   - Global Footer
+   - Tata letak khusus halaman
+   - Fungsi JavaScript
+========================================================= */

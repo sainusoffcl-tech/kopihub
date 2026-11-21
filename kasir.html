@@ -15,10 +15,9 @@
 <style>
 /* =========================================================
    KOPIHUB — DASHBOARD KASIR
-   Global Design System v1.1.0
+   Global Design System v1.2.0
    CSS khusus halaman kasir
    ========================================================= */
-
 /* 1. TOKEN GLOBAL, RESET, DAN KERANGKA HALAMAN */
 
 body {
@@ -82,24 +81,24 @@ button {
 }
 
 /*
-  Dashboard aktif:
+  KERANGKA DASHBOARD KASIR
   Header dikelola oleh Global Header.
-  Area app-scroll menjadi satu-satunya area scroll dashboard.
+  Scroll mengikuti dokumen utama agar konten
+  dan Global Footer tetap dapat dijangkau.
 */
 
-#app-scroll {
-  position: fixed;
-  top: calc(var(--kh-global-header-height, 88px) + env(safe-area-inset-top, 0px));
-  right: 0;
-  bottom: 0;
-  left: 0;
+#dashboard-shell {
+  width: 100%;
   min-width: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: 0 0 calc(24px + env(safe-area-inset-bottom, 0px));
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x pan-y;
+  overflow-x: clip;
+}
+
+#dashboard-view {
+  width: 100%;
+  max-width: var(--kh-content-max-width, 1000px);
+  min-width: 0;
+  margin: 0 auto;
+  padding-bottom: calc(24px + var(--kh-safe-area-bottom, 0px));
 }
 
 /* Kontainer utama mengikuti lebar Dashboard Owner */

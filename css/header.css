@@ -1,12 +1,14 @@
-@import url("/kopihub/css/design-system.css?v=1.1.0");
-/* =========================================
-   GLOBAL HEADER KOPIHUB
-   Sumber tampilan bersama seluruh halaman
-   GLOBAL DESIGN SYSTEM v1.1.0
-========================================= */
-/* =========================================
-   GLOBAL HEADER DAN SAFE AREA IPHONE
-========================================= */
+
+@import url("/kopihub/css/design-system.css?v=1.2.0");
+
+/* =========================================================
+   KOPIHUB — GLOBAL HEADER
+   Global Design System v1.2.0
+   Header bersama seluruh halaman
+========================================================= */
+
+/* 1. HEADER UTAMA */
+
 .kh-global-header {
   position: sticky;
   top: 0;
@@ -17,12 +19,12 @@
   color: var(--kh-color-background);
   background: var(--kh-color-primary);
 }
-/* Area isi header */
+
 .kh-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: var(--kh-space-3);
   width: 100%;
   min-height: 88px;
   padding:
@@ -32,30 +34,40 @@
     max(18px, env(safe-area-inset-left, 0px));
   background: var(--kh-color-primary);
 }
-/* =========================================
-   IDENTITAS KOPIHUB
-========================================= */
+
+/* 2. IDENTITAS KOPIHUB */
+
 .kh-header-identity {
   display: flex;
   align-items: center;
   gap: 13px;
   min-width: 0;
 }
+
 .kh-header-logo,
 .kh-header-logo-fallback {
   width: 54px;
   height: 54px;
   flex: 0 0 54px;
-  border-radius: 14px;
+  border-radius: var(--kh-radius-lg);
 }
+
 .kh-header-logo {
   display: block;
   object-fit: contain;
   background: var(--kh-color-background);
 }
-.kh-header-logo[hidden] {
+
+.kh-header-logo[hidden],
+.kh-header-logo-fallback[hidden],
+.kh-header-shop-name[hidden],
+.kh-header-role[hidden],
+.kh-header-profile-button[hidden],
+.kh-header-profile-image[hidden],
+.kh-header-overlay[hidden] {
   display: none !important;
 }
+
 .kh-header-logo-fallback {
   display: flex;
   align-items: center;
@@ -66,12 +78,9 @@
   font-weight: 900;
   letter-spacing: -1px;
 }
-.kh-header-logo-fallback[hidden] {
-  display: none !important;
-}
-/* =========================================
-   NAMA DAN TAGLINE KOPIHUB
-========================================= */
+
+/* 3. WORDMARK DAN TAGLINE */
+
 .kh-header-brand {
   display: flex;
   flex-direction: column;
@@ -79,6 +88,7 @@
   min-width: 0;
   gap: 2px;
 }
+
 .kh-header-wordmark {
   white-space: nowrap;
   font-size: 27px;
@@ -86,12 +96,15 @@
   letter-spacing: -1.1px;
   line-height: 1.05;
 }
+
 .kh-header-kopi {
   color: var(--kh-color-background);
 }
+
 .kh-header-hub {
   color: var(--kh-color-accent);
 }
+
 .kh-header-tagline {
   color: var(--kh-color-accent);
   font-size: 8px;
@@ -100,9 +113,9 @@
   line-height: 1.5;
   white-space: nowrap;
 }
-/* =========================================
-   NAMA KEDAI KHUSUS HEADER OWNER
-========================================= */
+
+/* 4. IDENTITAS KEDAI OWNER */
+
 .kh-header-shop-name {
   display: block;
   max-width: 100%;
@@ -117,12 +130,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.kh-header-shop-name[hidden] {
-  display: none !important;
-}
-/* =========================================
-   LABEL PERAN
-========================================= */
+
+/* 5. LABEL PERAN */
+
 .kh-header-role {
   margin-top: 3px;
   color: rgba(250, 249, 245, .76);
@@ -132,9 +142,62 @@
   line-height: 1.4;
   text-transform: uppercase;
 }
-/* =========================================
-   TOMBOL HAMBURGER
-========================================= */
+
+/* 6. AREA TOMBOL HEADER */
+
+.kh-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  gap: 9px;
+}
+
+/* 7. PROFIL KEDAI OWNER */
+
+.kh-header-profile-button {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(250, 249, 245, .25);
+  border-radius: 50%;
+  color: var(--kh-color-background);
+  background: var(--kh-color-primary-light);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kh-header-profile-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.kh-header-profile-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--kh-color-background);
+}
+
+.kh-header-profile-fallback svg {
+  width: 22px;
+  height: 22px;
+}
+
+.kh-header-profile-button:active {
+  background: var(--kh-color-secondary);
+}
+
+/* 8. TOMBOL HAMBURGER */
+
 .kh-header-menu-button {
   display: grid;
   place-items: center;
@@ -143,22 +206,24 @@
   flex: 0 0 46px;
   padding: 0;
   border: 1px solid rgba(250, 249, 245, .2);
-  border-radius: 14px;
+  border-radius: var(--kh-radius-lg);
   color: var(--kh-color-background);
   background: var(--kh-color-primary-light);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+
 .kh-header-menu-button svg {
   width: 23px;
   height: 23px;
 }
+
 .kh-header-menu-button:active {
-  background: #315C45;
+  background: var(--kh-color-secondary);
 }
-/* =========================================
-   LAPISAN GELAP DI BELAKANG MENU
-========================================= */
+
+/* 9. OVERLAY MENU */
+
 .kh-header-overlay {
   position: fixed;
   inset: 0;
@@ -167,15 +232,13 @@
   opacity: 0;
   transition: opacity var(--kh-transition-slow);
 }
-.kh-header-overlay[hidden] {
-  display: none !important;
-}
+
 .kh-header-overlay.kh-visible {
   opacity: 1;
 }
-/* =========================================
-   PANEL NAVIGASI
-========================================= */
+
+/* 10. PANEL NAVIGASI */
+
 .kh-header-menu {
   position: fixed;
   z-index: var(--kh-z-modal);
@@ -209,16 +272,18 @@
     transform var(--kh-transition-slow),
     visibility var(--kh-transition-slow);
 }
+
 .kh-header-menu.kh-open {
   transform: translateY(0);
   visibility: visible;
 }
+
 .kh-header-menu[aria-hidden="true"] {
   pointer-events: none;
 }
-/* =========================================
-   HANDLE MENU
-========================================= */
+
+/* 11. HANDLE MENU */
+
 .kh-header-menu-handle {
   width: 43px;
   height: 5px;
@@ -226,9 +291,9 @@
   border-radius: var(--kh-radius-pill);
   background: var(--kh-color-border-strong);
 }
-/* =========================================
-   JUDUL MENU
-========================================= */
+
+/* 12. JUDUL MENU */
+
 .kh-header-menu-heading {
   display: flex;
   align-items: center;
@@ -236,45 +301,50 @@
   gap: var(--kh-space-3);
   margin-bottom: 17px;
 }
+
 .kh-header-menu-eyebrow {
   color: var(--kh-color-accent);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 1.5px;
 }
+
 .kh-header-menu-heading h2 {
   margin: 4px 0 0;
   color: var(--kh-color-primary);
   font-size: var(--kh-font-size-xl);
   font-weight: 850;
 }
-/* =========================================
-   TOMBOL TUTUP MENU
-========================================= */
+
+/* 13. TOMBOL TUTUP */
+
 .kh-header-close-button {
   display: grid;
   place-items: center;
   width: 40px;
   height: 40px;
   flex: 0 0 40px;
+  padding: 0;
   border: 1px solid var(--kh-color-border);
   border-radius: var(--kh-radius-md);
   color: var(--kh-color-primary);
   background: var(--kh-color-surface);
   cursor: pointer;
 }
+
 .kh-header-close-button svg {
   width: 20px;
   height: 20px;
 }
-/* =========================================
-   DAFTAR NAVIGASI
-========================================= */
+
+/* 14. DAFTAR NAVIGASI */
+
 .kh-header-menu-list {
   display: grid;
   grid-template-columns: 1fr;
   gap: 9px;
 }
+
 .kh-header-menu-item {
   display: flex;
   align-items: center;
@@ -283,7 +353,7 @@
   min-height: 56px;
   padding: 10px 13px;
   border: 1px solid var(--kh-color-border);
-  border-radius: 14px;
+  border-radius: var(--kh-radius-lg);
   color: var(--kh-color-primary);
   background: var(--kh-color-surface);
   text-align: left;
@@ -293,11 +363,13 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+
 .kh-header-menu-item:active,
 .kh-header-menu-item.kh-active {
   border-color: #C9D8CB;
   background: var(--kh-color-surface-muted);
 }
+
 .kh-header-menu-item-icon {
   display: grid;
   place-items: center;
@@ -308,34 +380,38 @@
   color: var(--kh-color-primary-light);
   background: var(--kh-color-surface-muted);
 }
+
 .kh-header-menu-item-icon svg {
   width: 19px;
   height: 19px;
 }
+
 .kh-header-menu-item-label {
   flex: 1 1 auto;
   min-width: 0;
 }
+
 .kh-header-menu-item-arrow {
   width: 16px;
   height: 16px;
   color: #9AA69B;
 }
-/* =========================================
-   TOMBOL KELUAR
-========================================= */
+
+/* 15. TOMBOL KELUAR */
+
 .kh-header-menu-item.kh-danger {
   margin-top: 7px;
   border-color: #F0D9D6;
   color: var(--kh-color-danger);
 }
+
 .kh-header-menu-item.kh-danger .kh-header-menu-item-icon {
   color: var(--kh-color-danger);
   background: var(--kh-color-danger-bg);
 }
-/* =========================================
-   FOOTER MENU
-========================================= */
+
+/* 16. FOOTER MENU */
+
 .kh-header-menu-footer {
   margin-top: 19px;
   padding-top: 14px;
@@ -346,55 +422,69 @@
   font-weight: 800;
   letter-spacing: 1px;
 }
-/* =========================================
-   KUNCI SCROLL SAAT MENU TERBUKA
-========================================= */
+
+/* 17. KUNCI SCROLL */
+
 body.kh-header-menu-open {
   overflow: hidden !important;
   touch-action: none;
 }
-/* =========================================
-   TABLET DAN DESKTOP
-========================================= */
+
+/* 18. TABLET DAN DESKTOP */
+
 @media (min-width: 761px) {
   .kh-header-bar {
     min-height: 92px;
     padding-right: max(28px, env(safe-area-inset-right, 0px));
     padding-left: max(28px, env(safe-area-inset-left, 0px));
   }
+
   .kh-header-logo,
   .kh-header-logo-fallback {
     width: 60px;
     height: 60px;
     flex-basis: 60px;
   }
+
   .kh-header-wordmark {
     font-size: 30px;
   }
+
   .kh-header-tagline {
     font-size: 9px;
   }
+
+  .kh-header-profile-button,
+  .kh-header-menu-button {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
   .kh-header-menu {
     bottom: 20px;
     max-height: 82vh;
     border-radius: var(--kh-radius-2xl);
   }
+
   .kh-header-menu-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-/* =========================================
-   IPHONE LAYAR KECIL
-========================================= */
+
+/* 19. IPHONE LAYAR KECIL */
+
 @media (max-width: 380px) {
   .kh-header-bar {
     gap: 9px;
     padding-right: 13px;
     padding-left: 13px;
   }
+
   .kh-header-identity {
     gap: 9px;
   }
+
   .kh-header-logo,
   .kh-header-logo-fallback {
     width: 47px;
@@ -402,22 +492,38 @@ body.kh-header-menu-open {
     flex-basis: 47px;
     border-radius: var(--kh-radius-md);
   }
+
   .kh-header-wordmark {
     font-size: 24px;
   }
+
   .kh-header-tagline {
     font-size: 7px;
     letter-spacing: .45px;
   }
+
+  .kh-header-actions {
+    gap: 7px;
+  }
+
+  .kh-header-profile-button,
   .kh-header-menu-button {
     width: 42px;
     height: 42px;
     flex-basis: 42px;
   }
 }
-/* =========================================
-   AKSESIBILITAS
-========================================= */
+
+/* 20. AKSESIBILITAS */
+
+.kh-header-menu-button:focus-visible,
+.kh-header-profile-button:focus-visible,
+.kh-header-close-button:focus-visible,
+.kh-header-menu-item:focus-visible {
+  outline: 3px solid var(--kh-focus-ring);
+  outline-offset: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kh-header-overlay,
   .kh-header-menu {

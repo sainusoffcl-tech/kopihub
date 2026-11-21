@@ -1,14 +1,14 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
-   Versi: 1.3.0
+   Versi: 1.3.1
    Global Design System v1.2.0
 ========================================================= */
 
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.3.0";
+  const HEADER_VERSION = "1.3.1";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =
@@ -36,57 +36,16 @@
       label: "ADMIN KOPIHUB",
       title: "Menu Admin",
       items: [
-        {
-          id: "dashboard",
-          label: "Dashboard",
-          icon: "layout-dashboard"
-        },
-        {
-          id: "partners",
-          label: "Kedai Mitra",
-          icon: "store"
-        },
-        {
-          id: "applications",
-          label: "Pendaftaran Mitra",
-          icon: "clipboard-check"
-        },
-        {
-          id: "users",
-          label: "Pengguna & Akses",
-          icon: "users"
-        },
-        {
-          id: "orders",
-          label: "Pesanan Platform",
-          icon: "receipt-text"
-        },
-        {
-          id: "transactions",
-          label: "Transaksi Platform",
-          icon: "credit-card"
-        },
-        {
-          id: "revenue",
-          label: "Komisi & Pendapatan",
-          icon: "wallet"
-        },
-        {
-          id: "settings",
-          label: "Pengaturan Platform",
-          icon: "settings"
-        },
-        {
-          id: "audit",
-          label: "Audit Log",
-          icon: "history"
-        },
-        {
-          id: "logout",
-          label: "Keluar dari Admin",
-          icon: "log-out",
-          danger: true
-        }
+        { id: "dashboard", label: "Dashboard", icon: "layout-dashboard" },
+        { id: "partners", label: "Kedai Mitra", icon: "store" },
+        { id: "applications", label: "Pendaftaran Mitra", icon: "clipboard-check" },
+        { id: "users", label: "Pengguna & Akses", icon: "users" },
+        { id: "orders", label: "Pesanan Platform", icon: "receipt-text" },
+        { id: "transactions", label: "Transaksi Platform", icon: "credit-card" },
+        { id: "revenue", label: "Komisi & Pendapatan", icon: "wallet" },
+        { id: "settings", label: "Pengaturan Platform", icon: "settings" },
+        { id: "audit", label: "Audit Log", icon: "history" },
+        { id: "logout", label: "Keluar dari Admin", icon: "log-out", danger: true }
       ]
     },
 
@@ -94,32 +53,11 @@
       label: "OWNER KEDAI",
       title: "Menu Owner",
       items: [
-        {
-          id: "home",
-          label: "Beranda",
-          icon: "layout-dashboard"
-        },
-        {
-          id: "menu",
-          label: "Menu Kedai",
-          icon: "coffee"
-        },
-        {
-          id: "transactions",
-          label: "Transaksi",
-          icon: "receipt-text"
-        },
-        {
-          id: "reports",
-          label: "Laporan",
-          icon: "chart-no-axes-combined"
-        },
-        {
-          id: "logout",
-          label: "Keluar",
-          icon: "log-out",
-          danger: true
-        }
+        { id: "home", label: "Beranda", icon: "layout-dashboard" },
+        { id: "menu", label: "Menu Kedai", icon: "coffee" },
+        { id: "transactions", label: "Transaksi", icon: "receipt-text" },
+        { id: "reports", label: "Laporan", icon: "chart-no-axes-combined" },
+        { id: "logout", label: "Keluar", icon: "log-out", danger: true }
       ]
     },
 
@@ -127,42 +65,13 @@
       label: "KASIR KEDAI",
       title: "Menu Kasir",
       items: [
-        {
-          id: "home",
-          label: "Beranda",
-          icon: "layout-dashboard"
-        },
-        {
-          id: "orders",
-          label: "Pesanan",
-          icon: "receipt-text"
-        },
-        {
-          id: "pos",
-          label: "Buat Pesanan (POS)",
-          icon: "shopping-bag"
-        },
-        {
-          id: "profile",
-          label: "Profil Kasir",
-          icon: "user-round"
-        },
-        {
-          id: "settings",
-          label: "Pengaturan",
-          icon: "settings"
-        },
-        {
-          id: "refresh",
-          label: "Muat Ulang Pesanan",
-          icon: "refresh-cw"
-        },
-        {
-          id: "logout",
-          label: "Akhiri Shift",
-          icon: "log-out",
-          danger: true
-        }
+        { id: "home", label: "Beranda", icon: "layout-dashboard" },
+        { id: "orders", label: "Pesanan", icon: "receipt-text" },
+        { id: "pos", label: "Buat Pesanan (POS)", icon: "shopping-bag" },
+        { id: "profile", label: "Profil Kasir", icon: "user-round" },
+        { id: "settings", label: "Pengaturan", icon: "settings" },
+        { id: "refresh", label: "Muat Ulang Pesanan", icon: "refresh-cw" },
+        { id: "logout", label: "Akhiri Shift", icon: "log-out", danger: true }
       ]
     },
 
@@ -170,16 +79,8 @@
       label: "MENU PELANGGAN",
       title: "Menu",
       items: [
-        {
-          id: "shop-home",
-          label: "Beranda Kedai",
-          icon: "store"
-        },
-        {
-          id: "customer-orders",
-          label: "Pesanan Saya",
-          icon: "receipt-text"
-        }
+        { id: "shop-home", label: "Beranda Kedai", icon: "store" },
+        { id: "customer-orders", label: "Pesanan Saya", icon: "receipt-text" }
       ]
     }
   };
@@ -204,30 +105,16 @@
   ===================================================== */
 
   function getBaseUrl() {
-    return new URL(
-      BASE_PATH,
-      window.location.origin
-    );
+    return new URL(BASE_PATH, window.location.origin);
   }
 
   function getHeaderUrl() {
-    return new URL(
-      "components/header.html",
-      getBaseUrl()
-    ).href;
+    return new URL("components/header.html", getBaseUrl()).href;
   }
 
   function getCssUrl() {
-    const url = new URL(
-      "css/header.css",
-      getBaseUrl()
-    );
-
-    url.searchParams.set(
-      "v",
-      HEADER_VERSION
-    );
-
+    const url = new URL("css/header.css", getBaseUrl());
+    url.searchParams.set("v", HEADER_VERSION);
     return url.href;
   }
 
@@ -237,7 +124,7 @@
 
   function loadStylesheet() {
     const existing = document.querySelector(
-      'link[data-kh-header-css]'
+      "link[data-kh-header-css]"
     );
 
     if (existing) {
@@ -247,7 +134,6 @@
     }
 
     const link = document.createElement("link");
-
     link.rel = "stylesheet";
     link.href = getCssUrl();
     link.dataset.khHeaderCss = HEADER_VERSION;
@@ -264,9 +150,7 @@
       window.lucide &&
       typeof window.lucide.createIcons === "function"
     ) {
-      window.lucide.createIcons({
-        root: container
-      });
+      window.lucide.createIcons({ root: container });
     }
   }
 
@@ -275,13 +159,8 @@
   ===================================================== */
 
   function setShopName(root, value) {
-    const shopName = root?.querySelector(
-      "[data-kh-shop-name]"
-    );
-
-    const roleLabel = root?.querySelector(
-      "[data-kh-role-label]"
-    );
+    const shopName = root?.querySelector("[data-kh-shop-name]");
+    const roleLabel = root?.querySelector("[data-kh-role-label]");
 
     if (!shopName) return;
 
@@ -300,13 +179,8 @@
   ===================================================== */
 
   function setShopLogo(root, value) {
-    const image = root?.querySelector(
-      "[data-kh-shop-logo]"
-    );
-
-    const fallback = root?.querySelector(
-      "[data-kh-shop-logo-fallback]"
-    );
+    const image = root?.querySelector("[data-kh-shop-logo]");
+    const fallback = root?.querySelector("[data-kh-shop-logo-fallback]");
 
     if (!image || !fallback) return;
 
@@ -329,6 +203,8 @@
       fallback.hidden = false;
     };
 
+    image.hidden = true;
+    fallback.hidden = false;
     image.src = logoUrl;
   }
 
@@ -337,13 +213,8 @@
   ===================================================== */
 
   async function loadOfficialLogo(root) {
-    const image = root.querySelector(
-      "[data-kh-logo]"
-    );
-
-    const fallback = root.querySelector(
-      "[data-kh-logo-fallback]"
-    );
+    const image = root.querySelector("[data-kh-logo]");
+    const fallback = root.querySelector("[data-kh-logo-fallback]");
 
     if (!image || !fallback) return;
 
@@ -360,35 +231,25 @@
           headers: {
             "Content-Type": "application/json",
             "apikey": SUPABASE_PUBLIC_KEY,
-            "Authorization":
-              `Bearer ${SUPABASE_PUBLIC_KEY}`
+            "Authorization": `Bearer ${SUPABASE_PUBLIC_KEY}`
           },
           body: "{}"
         }
       );
 
       if (!response.ok) {
-        throw new Error(
-          "Logo platform belum dapat dimuat."
-        );
+        throw new Error("Logo platform belum dapat dimuat.");
       }
 
       const path = await response.json();
 
-      if (
-        typeof path !== "string" ||
-        !path.trim()
-      ) {
-        throw new Error(
-          "Path logo belum tersedia."
-        );
+      if (typeof path !== "string" || !path.trim()) {
+        throw new Error("Path logo belum tersedia.");
       }
 
       const safePath = path
         .split("/")
-        .map(segment =>
-          encodeURIComponent(segment)
-        )
+        .map(segment => encodeURIComponent(segment))
         .join("/");
 
       const logoUrl =
@@ -417,21 +278,11 @@
   ===================================================== */
 
   function renderMenu(root, role) {
-    const config =
-      ROLE_CONFIG[role] ||
-      ROLE_CONFIG.customer;
+    const config = ROLE_CONFIG[role] || ROLE_CONFIG.customer;
 
-    const list = root.querySelector(
-      "[data-kh-menu-list]"
-    );
-
-    const roleLabel = root.querySelector(
-      "[data-kh-role-label]"
-    );
-
-    const menuTitle = root.querySelector(
-      "[data-kh-menu-title]"
-    );
+    const list = root.querySelector("[data-kh-menu-list]");
+    const roleLabel = root.querySelector("[data-kh-role-label]");
+    const menuTitle = root.querySelector("[data-kh-menu-title]");
 
     if (!list) {
       console.warn(
@@ -466,12 +317,7 @@
       icon.className = "kh-header-menu-item-icon";
 
       const iconElement = document.createElement("i");
-
-      iconElement.setAttribute(
-        "data-lucide",
-        item.icon
-      );
-
+      iconElement.setAttribute("data-lucide", item.icon);
       icon.appendChild(iconElement);
 
       const label = document.createElement("span");
@@ -480,18 +326,9 @@
 
       const arrow = document.createElement("i");
       arrow.className = "kh-header-menu-item-arrow";
+      arrow.setAttribute("data-lucide", "chevron-right");
 
-      arrow.setAttribute(
-        "data-lucide",
-        "chevron-right"
-      );
-
-      button.append(
-        icon,
-        label,
-        arrow
-      );
-
+      button.append(icon, label, arrow);
       list.appendChild(button);
     });
 
@@ -503,23 +340,13 @@
   ===================================================== */
 
   function openMenu(root) {
-    const menu = root.querySelector(
-      "[data-kh-menu]"
-    );
-
-    const overlay = root.querySelector(
-      "[data-kh-overlay]"
-    );
-
-    const openButton = root.querySelector(
-      "[data-kh-menu-open]"
-    );
+    const menu = root.querySelector("[data-kh-menu]");
+    const overlay = root.querySelector("[data-kh-overlay]");
+    const openButton = root.querySelector("[data-kh-menu-open]");
 
     if (!menu || !overlay) return;
 
-    if (menu.classList.contains("kh-open")) {
-      return;
-    }
+    if (menu.classList.contains("kh-open")) return;
 
     overlay.hidden = false;
 
@@ -531,16 +358,9 @@
     menu.setAttribute("aria-hidden", "false");
     menu.inert = false;
 
-    if (openButton) {
-      openButton.setAttribute(
-        "aria-expanded",
-        "true"
-      );
-    }
+    openButton?.setAttribute("aria-expanded", "true");
 
-    document.body.classList.add(
-      "kh-header-menu-open"
-    );
+    document.body.classList.add("kh-header-menu-open");
   }
 
   /* =====================================================
@@ -548,17 +368,9 @@
   ===================================================== */
 
   function closeMenu(root) {
-    const menu = root.querySelector(
-      "[data-kh-menu]"
-    );
-
-    const overlay = root.querySelector(
-      "[data-kh-overlay]"
-    );
-
-    const openButton = root.querySelector(
-      "[data-kh-menu-open]"
-    );
+    const menu = root.querySelector("[data-kh-menu]");
+    const overlay = root.querySelector("[data-kh-overlay]");
+    const openButton = root.querySelector("[data-kh-menu-open]");
 
     if (!menu || !overlay) return;
 
@@ -568,16 +380,9 @@
     menu.setAttribute("aria-hidden", "true");
     menu.inert = true;
 
-    if (openButton) {
-      openButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-    }
+    openButton?.setAttribute("aria-expanded", "false");
 
-    document.body.classList.remove(
-      "kh-header-menu-open"
-    );
+    document.body.classList.remove("kh-header-menu-open");
 
     window.setTimeout(() => {
       if (!menu.classList.contains("kh-open")) {
@@ -614,12 +419,9 @@
     if (action === "logout") {
       document.dispatchEvent(
         new CustomEvent("kopihub:logout", {
-          detail: {
-            role: role
-          }
+          detail: { role }
         })
       );
-
       return;
     }
 
@@ -635,16 +437,15 @@
         role,
         action
       );
-
       return;
     }
 
     document.dispatchEvent(
       new CustomEvent("kopihub:navigate", {
         detail: {
-          role: role,
-          page: page,
-          action: action
+          role,
+          page,
+          action
         }
       })
     );
@@ -657,15 +458,12 @@
   function bindOwnerIdentityEvents(root, role) {
     if (role !== "owner") return;
 
-    setShopName(
-      root,
-      window.KopiHubOwnerShopName
-    );
+    /* PENANDA LAYOUT OWNER UNTUK CSS */
 
-    setShopLogo(
-      root,
-      window.KopiHubOwnerShopLogo
-    );
+    root.classList.add("kh-header-owner-layout");
+
+    setShopName(root, window.KopiHubOwnerShopName);
+    setShopLogo(root, window.KopiHubOwnerShopLogo);
 
     const profileButton = root.querySelector(
       "[data-kh-profile-open]"
@@ -674,38 +472,21 @@
     if (profileButton) {
       profileButton.hidden = false;
 
-      profileButton.addEventListener(
-        "click",
-        () => {
-          sendNavigation(
-            root,
-            role,
-            "identity"
-          );
-        }
-      );
+      profileButton.addEventListener("click", () => {
+        sendNavigation(root, role, "identity");
+      });
     }
 
-    document.addEventListener(
-      "kopihub:shop-name",
-      event => {
-        setShopName(
-          root,
-          event.detail?.name || ""
-        );
-      }
-    );
+    document.addEventListener("kopihub:shop-name", event => {
+      setShopName(root, event.detail?.name || "");
+    });
 
-    document.addEventListener(
-      "kopihub:shop-logo",
-      event => {
-        const logo = event.detail?.url || "";
+    document.addEventListener("kopihub:shop-logo", event => {
+      const logo = event.detail?.url || "";
 
-        window.KopiHubOwnerShopLogo = logo;
-
-        setShopLogo(root, logo);
-      }
-    );
+      window.KopiHubOwnerShopLogo = logo;
+      setShopLogo(root, logo);
+    });
   }
 
   /* =====================================================
@@ -713,67 +494,31 @@
   ===================================================== */
 
   function bindEvents(root, role) {
-    const openButton = root.querySelector(
-      "[data-kh-menu-open]"
-    );
+    const openButton = root.querySelector("[data-kh-menu-open]");
+    const closeButton = root.querySelector("[data-kh-menu-close]");
+    const overlay = root.querySelector("[data-kh-overlay]");
+    const list = root.querySelector("[data-kh-menu-list]");
 
-    const closeButton = root.querySelector(
-      "[data-kh-menu-close]"
-    );
+    openButton?.addEventListener("click", () => openMenu(root));
+    closeButton?.addEventListener("click", () => closeMenu(root));
+    overlay?.addEventListener("click", () => closeMenu(root));
 
-    const overlay = root.querySelector(
-      "[data-kh-overlay]"
-    );
+    list?.addEventListener("click", event => {
+      const button = event.target.closest("[data-kh-action]");
 
-    const list = root.querySelector(
-      "[data-kh-menu-list]"
-    );
+      if (!button || !list.contains(button)) return;
 
-    openButton?.addEventListener(
-      "click",
-      () => openMenu(root)
-    );
+      sendNavigation(root, role, button.dataset.khAction);
+    });
 
-    closeButton?.addEventListener(
-      "click",
-      () => closeMenu(root)
-    );
-
-    overlay?.addEventListener(
-      "click",
-      () => closeMenu(root)
-    );
-
-    list?.addEventListener(
-      "click",
-      event => {
-        const button = event.target.closest(
-          "[data-kh-action]"
-        );
-
-        if (!button || !list.contains(button)) {
-          return;
-        }
-
-        sendNavigation(
-          root,
-          role,
-          button.dataset.khAction
-        );
+    document.addEventListener("keydown", event => {
+      if (
+        event.key === "Escape" &&
+        root.querySelector("[data-kh-menu]")?.classList.contains("kh-open")
+      ) {
+        closeMenu(root);
       }
-    );
-
-    document.addEventListener(
-      "keydown",
-      event => {
-        if (
-          event.key === "Escape" &&
-          root.querySelector("[data-kh-menu]")?.classList.contains("kh-open")
-        ) {
-          closeMenu(root);
-        }
-      }
-    );
+    });
   }
 
   /* =====================================================
@@ -797,49 +542,39 @@
     loadStylesheet();
 
     try {
-      const response = await fetch(
-        getHeaderUrl(),
-        {
-          cache: "no-cache"
-        }
-      );
+      const response = await fetch(getHeaderUrl(), {
+        cache: "no-cache"
+      });
 
       if (!response.ok) {
-        throw new Error(
-          "File header.html tidak dapat dimuat."
-        );
+        throw new Error("File header.html tidak dapat dimuat.");
       }
 
-      placeholder.innerHTML =
-        await response.text();
+      placeholder.innerHTML = await response.text();
 
-      const root = placeholder.querySelector(
-        "[data-kh-header-root]"
-      );
+      const root = placeholder.querySelector("[data-kh-header-root]");
 
       if (!root) {
-        throw new Error(
-          "Struktur Global Header tidak ditemukan."
-        );
+        throw new Error("Struktur Global Header tidak ditemukan.");
       }
 
       renderMenu(root, role);
 
       bindOwnerIdentityEvents(root, role);
-
       bindEvents(root, role);
 
-      loadOfficialLogo(root);
+      /* LOGO RESMI HANYA UNTUK NON-OWNER */
+
+      if (role !== "owner") {
+        loadOfficialLogo(root);
+      }
 
       refreshIcons(root);
 
       placeholder.dataset.khHeaderLoaded = "true";
 
     } catch (error) {
-      console.error(
-        "[KopiHub Header]",
-        error
-      );
+      console.error("[KopiHub Header]", error);
 
       placeholder.innerHTML = `
         <div style="
@@ -870,11 +605,9 @@
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      start,
-      { once: true }
-    );
+    document.addEventListener("DOMContentLoaded", start, {
+      once: true
+    });
   } else {
     start();
   }
@@ -887,47 +620,31 @@
     version: HEADER_VERSION,
 
     open() {
-      const root = document.querySelector(
-        "[data-kh-header-root]"
-      );
-
-      if (root) {
-        openMenu(root);
-      }
+      const root = document.querySelector("[data-kh-header-root]");
+      if (root) openMenu(root);
     },
 
     close() {
-      const root = document.querySelector(
-        "[data-kh-header-root]"
-      );
-
-      if (root) {
-        closeMenu(root);
-      }
+      const root = document.querySelector("[data-kh-header-root]");
+      if (root) closeMenu(root);
     },
 
     setShopName(name) {
-      window.KopiHubOwnerShopName =
-        String(name || "");
+      window.KopiHubOwnerShopName = String(name || "");
 
-      const root = document.querySelector(
-        "[data-kh-header-root]"
-      );
+      const root = document.querySelector("[data-kh-header-root]");
 
-      if (root) {
+      if (root?.classList.contains("kh-header-owner-layout")) {
         setShopName(root, name);
       }
     },
 
     setShopLogo(url) {
-      window.KopiHubOwnerShopLogo =
-        String(url || "");
+      window.KopiHubOwnerShopLogo = String(url || "");
 
-      const root = document.querySelector(
-        "[data-kh-header-root]"
-      );
+      const root = document.querySelector("[data-kh-header-root]");
 
-      if (root) {
+      if (root?.classList.contains("kh-header-owner-layout")) {
         setShopLogo(root, url);
       }
     }

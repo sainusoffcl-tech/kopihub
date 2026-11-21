@@ -1,15 +1,12 @@
-@import url("/kopihub/css/design-system.css?v=1.0.0");
-
+@import url("/kopihub/css/design-system.css?v=1.1.0");
 /* =========================================
    GLOBAL HEADER KOPIHUB
    Sumber tampilan bersama seluruh halaman
-   REVISI GLOBAL DESIGN SYSTEM
+   GLOBAL DESIGN SYSTEM v1.1.0
 ========================================= */
-
 /* =========================================
    GLOBAL HEADER DAN SAFE AREA IPHONE
 ========================================= */
-
 .kh-global-header {
   position: sticky;
   top: 0;
@@ -20,9 +17,7 @@
   color: var(--kh-color-background);
   background: var(--kh-color-primary);
 }
-
 /* Area isi header */
-
 .kh-header-bar {
   display: flex;
   align-items: center;
@@ -37,18 +32,15 @@
     max(18px, env(safe-area-inset-left, 0px));
   background: var(--kh-color-primary);
 }
-
 /* =========================================
    IDENTITAS KOPIHUB
 ========================================= */
-
 .kh-header-identity {
   display: flex;
   align-items: center;
   gap: 13px;
   min-width: 0;
 }
-
 .kh-header-logo,
 .kh-header-logo-fallback {
   width: 54px;
@@ -56,17 +48,14 @@
   flex: 0 0 54px;
   border-radius: 14px;
 }
-
 .kh-header-logo {
   display: block;
   object-fit: contain;
   background: var(--kh-color-background);
 }
-
 .kh-header-logo[hidden] {
   display: none !important;
 }
-
 .kh-header-logo-fallback {
   display: flex;
   align-items: center;
@@ -77,15 +66,12 @@
   font-weight: 900;
   letter-spacing: -1px;
 }
-
 .kh-header-logo-fallback[hidden] {
   display: none !important;
 }
-
 /* =========================================
    NAMA DAN TAGLINE KOPIHUB
 ========================================= */
-
 .kh-header-brand {
   display: flex;
   flex-direction: column;
@@ -93,7 +79,6 @@
   min-width: 0;
   gap: 2px;
 }
-
 .kh-header-wordmark {
   white-space: nowrap;
   font-size: 27px;
@@ -101,15 +86,12 @@
   letter-spacing: -1.1px;
   line-height: 1.05;
 }
-
 .kh-header-kopi {
   color: var(--kh-color-background);
 }
-
 .kh-header-hub {
   color: var(--kh-color-accent);
 }
-
 .kh-header-tagline {
   color: var(--kh-color-accent);
   font-size: 8px;
@@ -118,11 +100,9 @@
   line-height: 1.5;
   white-space: nowrap;
 }
-
 /* =========================================
    NAMA KEDAI KHUSUS HEADER OWNER
 ========================================= */
-
 .kh-header-shop-name {
   display: block;
   max-width: 100%;
@@ -137,15 +117,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .kh-header-shop-name[hidden] {
   display: none !important;
 }
-
 /* =========================================
    LABEL PERAN
 ========================================= */
-
 .kh-header-role {
   margin-top: 3px;
   color: rgba(250, 249, 245, .76);
@@ -155,11 +132,9 @@
   line-height: 1.4;
   text-transform: uppercase;
 }
-
 /* =========================================
    TOMBOL HAMBURGER
 ========================================= */
-
 .kh-header-menu-button {
   display: grid;
   place-items: center;
@@ -174,20 +149,16 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-
 .kh-header-menu-button svg {
   width: 23px;
   height: 23px;
 }
-
 .kh-header-menu-button:active {
   background: #315C45;
 }
-
 /* =========================================
    LAPISAN GELAP DI BELAKANG MENU
 ========================================= */
-
 .kh-header-overlay {
   position: fixed;
   inset: 0;
@@ -196,22 +167,18 @@
   opacity: 0;
   transition: opacity var(--kh-transition-slow);
 }
-
 .kh-header-overlay[hidden] {
   display: none !important;
 }
-
 .kh-header-overlay.kh-visible {
   opacity: 1;
 }
-
 /* =========================================
    PANEL NAVIGASI
 ========================================= */
-
 .kh-header-menu {
   position: fixed;
-  z-index: calc(var(--kh-z-overlay) + 1);
+  z-index: var(--kh-z-modal);
   left: 0;
   right: 0;
   bottom: 0;
@@ -242,20 +209,16 @@
     transform var(--kh-transition-slow),
     visibility var(--kh-transition-slow);
 }
-
 .kh-header-menu.kh-open {
   transform: translateY(0);
   visibility: visible;
 }
-
 .kh-header-menu[aria-hidden="true"] {
   pointer-events: none;
 }
-
 /* =========================================
    HANDLE MENU
 ========================================= */
-
 .kh-header-menu-handle {
   width: 43px;
   height: 5px;
@@ -263,11 +226,9 @@
   border-radius: var(--kh-radius-pill);
   background: var(--kh-color-border-strong);
 }
-
 /* =========================================
    JUDUL MENU
 ========================================= */
-
 .kh-header-menu-heading {
   display: flex;
   align-items: center;
@@ -275,25 +236,21 @@
   gap: var(--kh-space-3);
   margin-bottom: 17px;
 }
-
 .kh-header-menu-eyebrow {
   color: var(--kh-color-accent);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 1.5px;
 }
-
 .kh-header-menu-heading h2 {
   margin: 4px 0 0;
   color: var(--kh-color-primary);
   font-size: var(--kh-font-size-xl);
   font-weight: 850;
 }
-
 /* =========================================
    TOMBOL TUTUP MENU
 ========================================= */
-
 .kh-header-close-button {
   display: grid;
   place-items: center;
@@ -306,22 +263,18 @@
   background: var(--kh-color-surface);
   cursor: pointer;
 }
-
 .kh-header-close-button svg {
   width: 20px;
   height: 20px;
 }
-
 /* =========================================
    DAFTAR NAVIGASI
 ========================================= */
-
 .kh-header-menu-list {
   display: grid;
   grid-template-columns: 1fr;
   gap: 9px;
 }
-
 .kh-header-menu-item {
   display: flex;
   align-items: center;
@@ -340,13 +293,11 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-
 .kh-header-menu-item:active,
 .kh-header-menu-item.kh-active {
   border-color: #C9D8CB;
   background: var(--kh-color-surface-muted);
 }
-
 .kh-header-menu-item-icon {
   display: grid;
   place-items: center;
@@ -357,42 +308,34 @@
   color: var(--kh-color-primary-light);
   background: var(--kh-color-surface-muted);
 }
-
 .kh-header-menu-item-icon svg {
   width: 19px;
   height: 19px;
 }
-
 .kh-header-menu-item-label {
   flex: 1 1 auto;
   min-width: 0;
 }
-
 .kh-header-menu-item-arrow {
   width: 16px;
   height: 16px;
   color: #9AA69B;
 }
-
 /* =========================================
    TOMBOL KELUAR
 ========================================= */
-
 .kh-header-menu-item.kh-danger {
   margin-top: 7px;
   border-color: #F0D9D6;
   color: var(--kh-color-danger);
 }
-
 .kh-header-menu-item.kh-danger .kh-header-menu-item-icon {
   color: var(--kh-color-danger);
   background: var(--kh-color-danger-bg);
 }
-
 /* =========================================
    FOOTER MENU
 ========================================= */
-
 .kh-header-menu-footer {
   margin-top: 19px;
   padding-top: 14px;
@@ -403,68 +346,55 @@
   font-weight: 800;
   letter-spacing: 1px;
 }
-
 /* =========================================
    KUNCI SCROLL SAAT MENU TERBUKA
 ========================================= */
-
 body.kh-header-menu-open {
   overflow: hidden !important;
   touch-action: none;
 }
-
 /* =========================================
    TABLET DAN DESKTOP
 ========================================= */
-
 @media (min-width: 761px) {
   .kh-header-bar {
     min-height: 92px;
     padding-right: max(28px, env(safe-area-inset-right, 0px));
     padding-left: max(28px, env(safe-area-inset-left, 0px));
   }
-
   .kh-header-logo,
   .kh-header-logo-fallback {
     width: 60px;
     height: 60px;
     flex-basis: 60px;
   }
-
   .kh-header-wordmark {
     font-size: 30px;
   }
-
   .kh-header-tagline {
     font-size: 9px;
   }
-
   .kh-header-menu {
     bottom: 20px;
     max-height: 82vh;
     border-radius: var(--kh-radius-2xl);
   }
-
   .kh-header-menu-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
 /* =========================================
    IPHONE LAYAR KECIL
 ========================================= */
-
 @media (max-width: 380px) {
   .kh-header-bar {
     gap: 9px;
     padding-right: 13px;
     padding-left: 13px;
   }
-
   .kh-header-identity {
     gap: 9px;
   }
-
   .kh-header-logo,
   .kh-header-logo-fallback {
     width: 47px;
@@ -472,27 +402,22 @@ body.kh-header-menu-open {
     flex-basis: 47px;
     border-radius: var(--kh-radius-md);
   }
-
   .kh-header-wordmark {
     font-size: 24px;
   }
-
   .kh-header-tagline {
     font-size: 7px;
     letter-spacing: .45px;
   }
-
   .kh-header-menu-button {
     width: 42px;
     height: 42px;
     flex-basis: 42px;
   }
 }
-
 /* =========================================
    AKSESIBILITAS
 ========================================= */
-
 @media (prefers-reduced-motion: reduce) {
   .kh-header-overlay,
   .kh-header-menu {

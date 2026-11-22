@@ -5620,19 +5620,30 @@ document.addEventListener(
 );
 
 
-/* PENGATURAN TEMA */
+
+/* PENGATURAN TEMA GLOBAL KOPIHUB */
+
 if(el("cashier-theme-setting")){
-  el("cashier-theme-setting").addEventListener("change",event=>{
-    const theme = event.target.value;
+  el("cashier-theme-setting").addEventListener(
+    "change",
+    event => {
+      const theme =
+        event.target.value === "dark"
+          ? "dark"
+          : "light";
 
-    cashierPreferences.theme =
-      theme === "dark" ? "dark" : "light";
+      if(window.KopiHubTheme){
+        window.KopiHubTheme.setTheme(theme);
+      }else{
+        console.error(
+          "[KopiHub] Global Theme Controller belum tersedia."
+        );
+      }
 
-    applyCashierPreferences();
-    saveCashierPreferences();
-  });
+      applyCashierPreferences();
+    }
+  );
 }
-
 
 /* PENGATURAN SUARA PESANAN */
 if(el("cashier-sound-setting")){

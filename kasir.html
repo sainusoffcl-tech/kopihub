@@ -7,6 +7,9 @@
 
 <title>Dashboard Kasir | KopiHub</title>
 
+<!-- GLOBAL THEME KOPIHUB -->
+<script src="/kopihub/js/theme.js"></script>
+
 <!-- CSS GLOBAL KOPIHUB -->
 <link rel="stylesheet" href="/kopihub/css/design-system.css">
 
@@ -2815,18 +2818,21 @@ let activeFilter = "all";
 let refreshTimer = null;
 let activePage = "home";
 
+
 /* =========================================
    PREFERENSI PRIBADI KASIR
+   Tema menggunakan Global Theme KopiHub.
+   Suara dan notifikasi tetap per kasir.
 ========================================= */
 
 let cashierPreferences = {
-  theme: "light",
   sound: true,
   notification: false
 };
 
 let hasInitialOrderSnapshot = false;
 let cashierAudioContext = null;
+
 
 function getCashierPreferenceKey(){
   const staffId =
@@ -2837,9 +2843,9 @@ function getCashierPreferenceKey(){
   return "kopihubCashierPreferences:" + staffId;
 }
 
+
 function loadCashierPreferences(){
   const defaults = {
-    theme: "light",
     sound: true,
     notification: false
   };
@@ -2852,6 +2858,7 @@ function loadCashierPreferences(){
     cashierPreferences = saved
       ? { ...defaults, ...JSON.parse(saved) }
       : defaults;
+
   }catch(error){
     cashierPreferences = defaults;
   }
@@ -2859,38 +2866,77 @@ function loadCashierPreferences(){
   applyCashierPreferences();
 }
 
+
 function saveCashierPreferences(){
   try{
     localStorage.setItem(
       getCashierPreferenceKey(),
-      JSON.stringify(cashierPreferences)
+      JSON.stringify({
+        sound: cashierPreferences.sound,
+        notification: cashierPreferences.notification
+      })
     );
+
   }catch(error){
-    console.warn("Preferensi kasir tidak dapat disimpan.");
+    console.warn(
+      "Preferensi kasir tidak dapat disimpan."
+    );
   }
 }
 
+
 function applyCashierPreferences(){
+
+  /* TEMA GLOBAL KOPIHUB */
+
+  const activeTheme =
+    window.KopiHubTheme?.getTheme?.() ||
+    (
+      document.documentElement.getAttribute("data-theme") === "dark"
+        ? "dark"
+        : "light"
+    );
+
+  /*
+    Class cashier-dark dipertahankan untuk
+    kompatibilitas CSS Mode Gelap Dashboard Kasir.
+  */
+
   document.body.classList.toggle(
     "cashier-dark",
-    cashierPreferences.theme === "dark"
+    activeTheme === "dark"
   );
 
   if(el("cashier-theme-setting")){
-    el("cashier-theme-setting").value =
-      cashierPreferences.theme;
+    el("cashier-theme-setting").value = activeTheme;
   }
+
+
+  /* PREFERENSI SUARA */
 
   if(el("cashier-sound-setting")){
     el("cashier-sound-setting").checked =
       cashierPreferences.sound;
   }
 
+
+  /* PREFERENSI NOTIFIKASI */
+
   if(el("cashier-notification-setting")){
     el("cashier-notification-setting").checked =
       cashierPreferences.notification;
   }
 }
+
+
+/* SINKRONISASI JIKA TEMA BERUBAH DARI HALAMAN LAIN */
+
+window.addEventListener(
+  "kopihub:theme-change",
+  () => {
+    applyCashierPreferences();
+  }
+);
 
 /* BUKA AUDIO MELALUI INTERAKSI KASIR */
 async function unlockCashierAudio(){

@@ -1,7 +1,7 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL DESIGN SYSTEM
-   Versi: 1.2.0
+   Versi: 1.3.0
 
    SUMBER STANDAR VISUAL SELURUH PLATFORM KOPIHUB
 
@@ -17,6 +17,7 @@
    - Satu standar warna dan tipografi
    - Satu standar ukuran dan jarak
    - Konsisten di seluruh halaman
+   - Mendukung Mode Terang dan Mode Gelap global
    - Responsif untuk HP, tablet, dan desktop
    - Kompatibel dengan iPhone dan iOS
    - Tidak mengubah fungsi JavaScript
@@ -29,6 +30,8 @@
 ========================================================= */
 
 :root {
+
+  color-scheme: light;
 
   /* BRAND */
 
@@ -271,9 +274,6 @@
 
   /* =======================================================
      12. KOMPATIBILITAS GLOBAL HEADER LAMA
-
-     Dipertahankan agar CSS Header versi lama
-     tidak kehilangan referensi variabel.
   ======================================================= */
 
   --kh-header-green: var(--kh-color-primary);
@@ -321,24 +321,50 @@ body.dark-mode {
 
   color-scheme: dark;
 
+  /* BACKGROUND */
+
   --kh-color-background: #101A15;
   --kh-color-surface: #17231C;
   --kh-color-surface-soft: #1E2D24;
   --kh-color-surface-muted: #26372C;
-  --kh-color-surface-hover: #26372C;
+  --kh-color-surface-hover: #2B3D31;
+
+
+  /* TEXT */
 
   --kh-color-text: #F1F4EF;
   --kh-color-text-secondary: #B5C0B7;
   --kh-color-text-muted: #89968D;
   --kh-color-text-inverse: #FFFFFF;
 
+
+  /* BORDER */
+
   --kh-color-border: #304238;
   --kh-color-border-strong: #43594A;
 
+
+  /* STATUS */
+
+  --kh-color-success: #79D49A;
   --kh-color-success-bg: #183B2A;
+
+  --kh-color-warning: #F3C477;
   --kh-color-warning-bg: #42341E;
+
+  --kh-color-danger: #F09A94;
   --kh-color-danger-bg: #402525;
+
+  --kh-color-info: #8BC8ED;
   --kh-color-info-bg: #1D3547;
+
+
+  /* OVERLAY */
+
+  --kh-color-overlay: rgba(0, 0, 0, 0.72);
+
+
+  /* SHADOW */
 
   --kh-shadow-xs:
     0 1px 3px rgba(0, 0, 0, 0.15);
@@ -355,6 +381,12 @@ body.dark-mode {
   --kh-shadow-xl:
     0 16px 40px rgba(0, 0, 0, 0.32);
 
+
+  /* FOCUS */
+
+  --kh-focus-ring:
+    0 0 0 3px rgba(233, 154, 72, 0.35);
+
 }
 
 
@@ -365,12 +397,22 @@ body.dark-mode {
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  background-color: var(--kh-color-primary);
+
+  background-color: var(--kh-color-background);
+  color: var(--kh-color-text);
+
+  transition: var(--kh-content-transition);
 }
 
 body {
   min-width: 0;
+
   font-family: var(--kh-font-family);
+
+  color: var(--kh-color-text);
+  background-color: var(--kh-color-background);
+
+  transition: var(--kh-content-transition);
 }
 
 
@@ -386,10 +428,6 @@ svg {
 
 /* =========================================================
    17. GLOBAL COMPONENTS — KH-UI
-     
-   Dipertahankan untuk kompatibilitas halaman lama.
-   Nantinya dapat dipindahkan ke components.css
-   setelah seluruh halaman dimigrasikan.
 ========================================================= */
 
 
@@ -418,7 +456,7 @@ svg {
 .kh-ui-title {
   margin: 0;
 
-  color: var(--kh-color-primary);
+  color: var(--kh-color-text);
 
   font-family: var(--kh-font-family);
   font-size: var(--kh-font-size-2xl);
@@ -458,6 +496,8 @@ svg {
   background: var(--kh-color-surface);
 
   box-shadow: var(--kh-shadow-sm);
+
+  transition: var(--kh-content-transition);
 }
 
 .kh-ui-card-header {
@@ -513,7 +553,7 @@ svg {
 }
 
 .kh-ui-button-secondary {
-  color: var(--kh-color-primary);
+  color: var(--kh-color-text);
   border-color: var(--kh-color-border);
   background: var(--kh-color-surface);
 }
@@ -563,7 +603,9 @@ svg {
 
   transition:
     border-color var(--kh-transition-normal),
-    box-shadow var(--kh-transition-normal);
+    box-shadow var(--kh-transition-normal),
+    color var(--kh-transition-normal),
+    background-color var(--kh-transition-normal);
 }
 
 .kh-ui-input,
@@ -582,7 +624,7 @@ svg {
 .kh-ui-select:focus,
 .kh-ui-textarea:focus {
   border-color: var(--kh-color-primary);
-  box-shadow: 0 0 0 3px rgba(18, 59, 44, 0.10);
+  box-shadow: var(--kh-focus-ring);
 }
 
 
@@ -641,7 +683,7 @@ svg {
 .kh-ui-input:focus-visible,
 .kh-ui-select:focus-visible,
 .kh-ui-textarea:focus-visible {
-  outline: 3px solid rgba(233, 154, 72, 0.45);
+  outline: 3px solid var(--kh-focus-color);
   outline-offset: 2px;
 }
 
@@ -713,10 +755,11 @@ svg {
 
 /* =========================================================
    SELESAI
-   KOPIHUB GLOBAL DESIGN SYSTEM v1.2.0
+   KOPIHUB GLOBAL DESIGN SYSTEM v1.3.0
 
    File ini bertanggung jawab atas:
    - Global design tokens
+   - Token Mode Terang dan Mode Gelap
    - Standar dasar tipografi
    - Komponen KH-UI kompatibilitas
 

@@ -2129,6 +2129,24 @@ textarea:focus-visible {
     animation: none !important;
   }
 }
+   /* =========================================================
+   KOPIHUB — STICKY GLOBAL HEADER DASHBOARD KASIR
+========================================================= */
+
+#dashboard-shell > [data-kopihub-header][data-role="cashier"] {
+  position: sticky;
+  top: 0;
+  z-index: var(--kh-z-header, 100);
+  width: 100%;
+}
+
+/* Sticky dikelola oleh elemen pembungkus */
+
+#dashboard-shell > [data-kopihub-header][data-role="cashier"] > .kh-global-header {
+  position: relative;
+  top: auto;
+  z-index: auto;
+}
 </style>
 
 </head>

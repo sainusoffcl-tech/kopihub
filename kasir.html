@@ -6068,12 +6068,10 @@ if(el("cashier-notification-setting")){
         saveCashierPreferences();
         applyCashierPreferences();
 
-        showNotice(
-          "GAGAL AKTIVASI PUSH: " +
-          (error.message || String(error)),
-          true
-        );
-
+        window.alert(
+  "GAGAL AKTIVASI PUSH:\n\n" +
+  (error.message || String(error))
+);
       }finally{
 
         setting.disabled = false;

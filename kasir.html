@@ -6062,5 +6062,35 @@ initialize();
 <script src="/kopihub/js/header.js"></script>
 <script src="/kopihub/js/footer.js"></script>
 
+<script>
+/* =====================================================
+   KOPIHUB — SERVICE WORKER REGISTRATION
+   Dashboard Kasir
+===================================================== */
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const registration =
+        await navigator.serviceWorker.register(
+          "/kopihub/sw.js",
+          { scope: "/kopihub/" }
+        );
+
+      console.info(
+        "[KopiHub] Service Worker aktif:",
+        registration.scope
+      );
+
+    } catch (error) {
+      console.error(
+        "[KopiHub] Service Worker gagal didaftarkan:",
+        error
+      );
+    }
+  });
+}
+</script>
+
 </body>
 </html>

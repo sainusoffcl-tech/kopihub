@@ -6055,6 +6055,7 @@ async function initialize(){
 }
 
 initialize();
+
 </script>
 
 <!-- GLOBAL JAVASCRIPT KOPIHUB -->
@@ -6062,34 +6063,59 @@ initialize();
 <script src="/kopihub/js/header.js"></script>
 <script src="/kopihub/js/footer.js"></script>
 
-<script>
-/* =====================================================
-   KOPIHUB — SERVICE WORKER REGISTRATION
-   Dashboard Kasir
-===================================================== */
+<!-- =====================================================
+     KOPIHUB — SERVICE WORKER REGISTRATION
+     Dashboard Kasir
+     Versi: 1.1.0
+===================================================== -->
 
-if ("serviceWorker" in navigator) {
+<script>
+(() => {
+  "use strict";
+
+  if (!("serviceWorker" in navigator)) {
+    console.warn(
+      "[KopiHub] Browser tidak mendukung Service Worker."
+    );
+    return;
+  }
+
   window.addEventListener("load", async () => {
     try {
       const registration =
         await navigator.serviceWorker.register(
           "/kopihub/sw.js",
-          { scope: "/kopihub/" }
+          {
+            scope: "/kopihub/",
+            updateViaCache: "none"
+          }
         );
 
+      await registration.update();
+
       console.info(
-        "[KopiHub] Service Worker aktif:",
+        "[KopiHub] Service Worker berhasil didaftarkan:",
         registration.scope
       );
 
+      if (registration.active) {
+        console.info(
+          "[KopiHub] Service Worker aktif."
+        );
+      } else {
+        console.info(
+          "[KopiHub] Service Worker sedang diaktifkan."
+        );
+      }
+
     } catch (error) {
       console.error(
-        "[KopiHub] Service Worker gagal didaftarkan:",
+        "[KopiHub] Pendaftaran Service Worker gagal:",
         error
       );
     }
   });
-}
+})();
 </script>
 
 </body>

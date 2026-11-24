@@ -3179,6 +3179,290 @@ async function cashierAPI(action,payload={}){
   return result;
 }
 
+/* =========================================
+   KOPIHUB PUSH NOTIFICATION
+   Dashboard Kasir
+   ========================================= */
+
+const CASHIER_PUSH_FUNCTION =
+  "kopihub-cashier-push";
+
+/* KONVERSI VAPID PUBLIC KEY */
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat(
+    (4 - base64String.length % 4) % 4
+  );
+
+  const base64 = (
+    base64String + padding
+  )
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+
+  return Uint8Array.from(
+    [...rawData].map(char => char.charCodeAt(0))
+  );
+}
+
+/* REQUEST KE EDGE FUNCTION PUSH */
+
+async function cashierPushAPI(action, payload = {}) {
+  if (!db) {
+    throw new Error("Koneksi Supabase tidak tersedia.");
+  }
+
+  const { data, error } = await db.functions.invoke(
+    CASHIER_PUSH_FUNCTION,
+    {
+      body: {
+        action,
+        ...payload
+      }
+    }
+  );
+
+  if (error) {
+    throw new Error(
+      error.message || "Koneksi Push Notification gagal."
+    );
+  }
+
+  if (!data || data.error || data.success === false) {
+    throw new Error(
+      data?.error || "Permintaan Push Notification gagal."
+    );
+  }
+
+  return data;
+}
+
+/* REGISTRASI SERVICE WORKER */
+
+async function getCashierPushRegistration() {
+  if (!("serviceWorker" in navigator)) {
+    throw new Error("SERVICE_WORKER_UNSUPPORTED");
+  }
+
+  const registration =
+    await navigator.serviceWorker.register(
+      "/kopihub/sw.js",
+      {
+        scope: "/kopihub/",
+        updateViaCache: "none"
+      }
+    );
+
+  await navigator.serviceWorker.ready;
+
+  if (!registration.pushManager) {
+    throw new Error("PUSH_MANAGER_UNSUPPORTED");
+  }
+
+  return registration;
+}
+
+/* MENDAFTARKAN PERANGKAT KASIR */
+
+async function enableCashierPushNotification() {
+  if (!cashierSession || !cashierSession.sessionToken) {
+    throw new Error("Sesi kasir tidak tersedia.");
+  }
+
+  if (!("Notification" in window)) {
+    throw new Error("Browser tidak mendukung notifikasi.");
+  }
+
+  const isIOSDevice =
+    /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
+    (
+      navigator.platform === "MacIntel" &&
+      navigator.maxTouchPoints > 1
+    );
+
+  const isStandalonePWA =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    navigator.standalone === true;
+
+  if (isIOSDevice && !isStandalonePWA) {
+    throw new Error(
+      "Tambahkan KopiHub ke Layar Utama iPhone terlebih dahulu."
+    );
+  }
+
+  /* Meminta izin melalui interaksi kasir */
+
+  let permission = Notification.permission;
+
+  if (permission === "default") {
+    permission = await Notification.requestPermission();
+  }
+
+  if (permission !== "granted") {
+    throw new Error(
+      "Izin notifikasi belum diberikan."
+    );
+  }
+
+  const registration =
+    await getCashierPushRegistration();
+
+  /* Ambil VAPID Public Key dari server */
+
+  const publicKeyResult =
+    await cashierPushAPI("get_public_key");
+
+  if (!publicKeyResult.publicKey) {
+    throw new Error("VAPID_PUBLIC_KEY_MISSING");
+  }
+
+  const applicationServerKey =
+    urlBase64ToUint8Array(
+      publicKeyResult.publicKey
+    );
+
+  /* Periksa subscription yang sudah ada */
+
+  let subscription =
+    await registration.pushManager.getSubscription();
+
+  let newlyCreated = false;
+
+  if (!subscription) {
+    subscription =
+      await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey
+      });
+
+    newlyCreated = true;
+  }
+
+  try {
+    /* Daftarkan perangkat ke Supabase */
+
+    await cashierPushAPI("register", {
+      sessionToken: cashierSession.sessionToken,
+
+      subscription: subscription.toJSON(),
+
+      userAgent: navigator.userAgent
+    });
+
+  } catch (error) {
+    /* Bersihkan subscription baru jika registrasi gagal */
+
+    if (newlyCreated) {
+      try {
+        await subscription.unsubscribe();
+      } catch (unsubscribeError) {
+        console.warn(
+          "Pembersihan subscription gagal."
+        );
+      }
+    }
+
+    throw error;
+  }
+
+  return true;
+}
+
+/* MENONAKTIFKAN PUSH NOTIFICATION */
+
+async function disableCashierPushNotification() {
+  const registration =
+    await getCashierPushRegistration();
+
+  const subscription =
+    await registration.pushManager.getSubscription();
+
+  if (!subscription) {
+    return true;
+  }
+
+  let serverUnregistered = false;
+
+  try {
+    if (cashierSession?.sessionToken) {
+      await cashierPushAPI("unregister", {
+        sessionToken: cashierSession.sessionToken,
+        endpoint: subscription.endpoint
+      });
+
+      serverUnregistered = true;
+    }
+  } catch (error) {
+    console.warn(
+      "Pencabutan pendaftaran server gagal:",
+      error.message
+    );
+  }
+
+  const unsubscribed =
+    await subscription.unsubscribe();
+
+  if (!unsubscribed) {
+    throw new Error(
+      "Perangkat belum berhasil dinonaktifkan."
+    );
+  }
+
+  if (!serverUnregistered && cashierSession) {
+    console.warn(
+      "Subscription lokal dinonaktifkan; pendaftaran server akan dibersihkan saat endpoint tidak valid."
+    );
+  }
+
+  return true;
+}
+
+/* SINKRONISASI SESI KASIR BARU */
+
+async function syncExistingCashierPushSubscription() {
+  if (
+    !cashierSession ||
+    !cashierPreferences.notification ||
+    !("Notification" in window) ||
+    Notification.permission !== "granted"
+  ) {
+    return;
+  }
+
+  try {
+    const registration =
+      await getCashierPushRegistration();
+
+    const subscription =
+      await registration.pushManager.getSubscription();
+
+    if (!subscription) {
+      cashierPreferences.notification = false;
+
+      saveCashierPreferences();
+      applyCashierPreferences();
+
+      return;
+    }
+
+    await cashierPushAPI("register", {
+      sessionToken: cashierSession.sessionToken,
+
+      subscription: subscription.toJSON(),
+
+      userAgent: navigator.userAgent
+    });
+
+  } catch (error) {
+    console.warn(
+      "Sinkronisasi Push Notification gagal:",
+      error.message
+    );
+  }
+}
+
 function normalizeItems(items){
   if(Array.isArray(items)) return items;
 

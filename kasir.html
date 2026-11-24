@@ -3376,48 +3376,37 @@ async function enableCashierPushNotification() {
 }
 
 /* MENONAKTIFKAN PUSH NOTIFICATION */
+async function disableCashierPushNotification(){
 
-async function disableCashierPushNotification() {
   const registration =
     await getCashierPushRegistration();
 
   const subscription =
     await registration.pushManager.getSubscription();
 
-  if (!subscription) {
+  if(!subscription){
     return true;
   }
 
-  let serverUnregistered = false;
-
-  try {
-    if (cashierSession?.sessionToken) {
-      await cashierPushAPI("unregister", {
-        sessionToken: cashierSession.sessionToken,
-        endpoint: subscription.endpoint
-      });
-
-      serverUnregistered = true;
-    }
-  } catch (error) {
-    console.warn(
-      "Pencabutan pendaftaran server gagal:",
-      error.message
+  if(!cashierSession?.sessionToken){
+    throw new Error(
+      "Sesi kasir tidak tersedia untuk mencabut notifikasi."
     );
   }
 
+  /* CABUT PENDAFTARAN SERVER TERLEBIH DAHULU */
+  await cashierPushAPI("unregister",{
+    sessionToken:cashierSession.sessionToken,
+    endpoint:subscription.endpoint
+  });
+
+  /* BARU HAPUS SUBSCRIPTION PERANGKAT */
   const unsubscribed =
     await subscription.unsubscribe();
 
-  if (!unsubscribed) {
+  if(!unsubscribed){
     throw new Error(
-      "Perangkat belum berhasil dinonaktifkan."
-    );
-  }
-
-  if (!serverUnregistered && cashierSession) {
-    console.warn(
-      "Subscription lokal dinonaktifkan; pendaftaran server akan dibersihkan saat endpoint tidak valid."
+      "Pendaftaran server sudah dicabut, tetapi perangkat belum berhasil dinonaktifkan sepenuhnya."
     );
   }
 

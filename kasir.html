@@ -6006,6 +6006,7 @@ if(el("cashier-sound-setting")){
    WEB PUSH NOTIFICATION
 ========================================= */
 
+
 if(el("cashier-notification-setting")){
   el("cashier-notification-setting").addEventListener(
     "change",
@@ -6013,10 +6014,21 @@ if(el("cashier-notification-setting")){
       const setting = event.target;
       const enabled = setting.checked;
 
+      console.log(
+        "[KopiHub Push] Tombol ditekan:",
+        enabled
+      );
+
       setting.disabled = true;
 
       try{
         if(enabled){
+
+          console.log(
+            "[KopiHub Push] Memulai aktivasi perangkat."
+          );
+
+          await enableCashierPushNotification();
 
           /* DAFTARKAN PERANGKAT KE WEB PUSH */
           await enableCashierPushNotification();

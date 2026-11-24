@@ -3025,33 +3025,38 @@ async function playIncomingOrderSound(){
   }
 }
 
+
+/* =========================================
+   NOTIFIKASI PESANAN BARU
+   PUSH NOTIFICATION MELALUI SERVICE WORKER
+========================================= */
+
 /* NOTIFIKASI PERANGKAT */
 async function showIncomingOrderNotification(order){
-  if(!cashierPreferences.notification) return;
-  if(!("Notification" in window)) return;
-  if(Notification.permission !== "granted") return;
 
-  try{
-    new Notification("Pesanan Baru - KopiHub",{
-      body:
-        "Pesanan #" + orderNumber(order) +
-        " telah masuk ke kedai.",
-      tag: "kopihub-order-" + order.id
-    });
-  }catch(error){
-    console.warn("Notifikasi perangkat tidak tersedia.");
-  }
+  /*
+    Notifikasi perangkat ditangani oleh
+    Web Push melalui Service Worker.
+
+    Tidak menggunakan new Notification()
+    agar tidak terjadi notifikasi ganda.
+  */
+
+  return;
 }
 
 /* PROSES PESANAN YANG BENAR-BENAR BARU */
 function notifyIncomingOrders(orders){
+
   if(!Array.isArray(orders) || !orders.length) return;
 
+  /* SUARA PESANAN TETAP DIPERTAHANKAN */
   playIncomingOrderSound();
 
-  orders.forEach(order=>{
-    showIncomingOrderNotification(order);
-  });
+  /*
+    Tidak membuat notifikasi perangkat dari halaman.
+    Push Notification dikirim oleh server.
+  */
 }
 
 /* POS STATE */

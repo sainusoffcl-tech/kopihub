@@ -5788,8 +5788,10 @@ const confirmed = window.confirm(
     setBusy("submit-pos-btn",false);
   }
 }
+
 /* AKHIRI SHIFT */
 async function endShift(){
+
   if(!cashierSession){
     clearSession();
     showView("login");
@@ -5803,10 +5805,30 @@ async function endShift(){
   if(!confirmed) return;
 
   if(el("end-shift-btn")){
-  el("end-shift-btn").disabled = true;
-}
+    el("end-shift-btn").disabled = true;
+  }
 
   try{
+
+    /* COBA CABUT PUSH SEBELUM SHIFT BERAKHIR */
+    try{
+      await disableCashierPushNotification();
+
+    }catch(pushError){
+
+      console.warn(
+        "[KopiHub Kasir] Pencabutan Push Notification gagal:",
+        pushError.message
+      );
+
+      /*
+        SHIFT TETAP DIAKHIRI.
+        SERVER HARUS MEMASTIKAN SESI
+        MASIH AKTIF SEBELUM MENGIRIM PUSH.
+      */
+    }
+
+    /* AKHIRI SESI KASIR DI SERVER */
     await cashierAPI("end_shift",{
       sessionToken:cashierSession.sessionToken
     });
@@ -5820,15 +5842,18 @@ async function endShift(){
     );
 
   }catch(error){
+
     showNotice(
       error.message || "Gagal mengakhiri shift.",
       true
     );
 
   }finally{
+
     if(el("end-shift-btn")){
       el("end-shift-btn").disabled = false;
     }
+
   }
 }
 

@@ -5985,120 +5985,26 @@ if(el("cashier-sound-setting")){
 
 
 
+
 /* =========================================
    PENGATURAN NOTIFIKASI PERANGKAT KASIR
-   Safari iPhone dan PWA
-   ========================================= */
+   WEB PUSH NOTIFICATION
+========================================= */
 
-if (el("cashier-notification-setting")) {
+if(el("cashier-notification-setting")){
   el("cashier-notification-setting").addEventListener(
     "change",
     async event => {
-      const enabled = event.target.checked;
+      const setting = event.target;
+      const enabled = setting.checked;
 
-      if (!enabled) {
-        cashierPreferences.notification = false;
+      setting.disabled = true;
 
-        saveCashierPreferences();
-        applyCashierPreferences();
+      try{
+        if(enabled){
 
-        showNotice("Notifikasi perangkat dinonaktifkan.");
-        return;
-      }
-
-      const isIOSDevice =
-        /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
-        (
-          navigator.platform === "MacIntel" &&
-          navigator.maxTouchPoints > 1
-        );
-
-      const isStandalonePWA =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        navigator.standalone === true;
-
-      /*
-        Safari iPhone yang dibuka langsung
-        belum dapat menggunakan notifikasi
-        push seperti aplikasi PWA.
-      */
-      if (isIOSDevice && !isStandalonePWA) {
-        cashierPreferences.notification = false;
-
-        saveCashierPreferences();
-        applyCashierPreferences();
-
-        showNotice(
-          "Untuk menggunakan notifikasi perangkat di iPhone, tambahkan KopiHub ke Layar Utama terlebih dahulu. Suara pesanan masuk tetap dapat digunakan melalui Safari.",
-          true
-        );
-
-        return;
-      }
-
-      /*
-        PWA iPhone membutuhkan integrasi
-        Service Worker sebelum notifikasi
-        perangkat dapat diaktifkan.
-      */
-      if (
-        isIOSDevice &&
-        isStandalonePWA &&
-        !("serviceWorker" in navigator)
-      ) {
-        cashierPreferences.notification = false;
-
-        saveCashierPreferences();
-        applyCashierPreferences();
-
-        showNotice(
-          "Perangkat ini belum mendukung Service Worker untuk notifikasi KopiHub. Suara pesanan masuk tetap tersedia.",
-          true
-        );
-
-        return;
-      }
-
-      if (!("Notification" in window)) {
-        cashierPreferences.notification = false;
-
-        saveCashierPreferences();
-        applyCashierPreferences();
-
-        showNotice(
-          "Notifikasi perangkat belum didukung pada browser ini. Suara pesanan masuk tetap dapat digunakan.",
-          true
-        );
-
-        return;
-      }
-
-      try {
-        let permission = Notification.permission;
-
-        if (permission === "default") {
-          permission = await Notification.requestPermission();
-        }
-
-        if (permission === "granted") {
-          /*
-            Pada iPhone PWA, izin saja belum cukup.
-            Service Worker dan showNotification()
-            harus diintegrasikan terlebih dahulu.
-          */
-          if (isIOSDevice && isStandalonePWA) {
-            cashierPreferences.notification = false;
-
-            saveCashierPreferences();
-            applyCashierPreferences();
-
-            showNotice(
-              "Izin perangkat tersedia. Integrasi Service Worker KopiHub masih perlu diselesaikan sebelum notifikasi dapat digunakan.",
-              true
-            );
-
-            return;
-          }
+          /* DAFTARKAN PERANGKAT KE WEB PUSH */
+          await enableCashierPushNotification();
 
           cashierPreferences.notification = true;
 
@@ -6106,36 +6012,47 @@ if (el("cashier-notification-setting")) {
           applyCashierPreferences();
 
           showNotice(
-            "Notifikasi perangkat berhasil diaktifkan."
+            "Notifikasi pesanan baru berhasil diaktifkan pada perangkat ini."
           );
 
-        } else {
+        }else{
+
+          /* CABUT LANGGANAN WEB PUSH */
+          await disableCashierPushNotification();
+
           cashierPreferences.notification = false;
 
           saveCashierPreferences();
           applyCashierPreferences();
 
           showNotice(
-            "Izin notifikasi belum diberikan. Periksa pengaturan browser atau perangkat.",
-            true
+            "Notifikasi perangkat berhasil dinonaktifkan."
           );
         }
 
-      } catch (error) {
+      }catch(error){
+
         console.error(
-          "[KopiHub Kasir] Gagal mengaktifkan notifikasi:",
+          "[KopiHub Kasir] Pengaturan Push Notification gagal:",
           error
         );
 
-        cashierPreferences.notification = false;
+        cashierPreferences.notification = !enabled;
 
         saveCashierPreferences();
         applyCashierPreferences();
 
         showNotice(
-          "Notifikasi perangkat tidak dapat diaktifkan. Suara pesanan masuk tetap tersedia.",
+          error.message ||
+          "Pengaturan notifikasi perangkat gagal diproses.",
           true
         );
+
+      }finally{
+
+        setting.disabled = false;
+        applyCashierPreferences();
+
       }
     }
   );

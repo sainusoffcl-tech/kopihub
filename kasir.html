@@ -4110,7 +4110,8 @@ async function enterDashboard(){
 
   /* MUAT PREFERENSI PRIBADI KASIR */
   loadCashierPreferences();
-
+/* SINKRONISASI PUSH DENGAN SESI KASIR */
+syncExistingCashierPushSubscription();
   /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
   const ordersLoaded = await loadOrders(true);
 

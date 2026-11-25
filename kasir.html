@@ -6000,13 +6000,10 @@ if(el("cashier-sound-setting")){
 }
 
 
-
-
 /* =========================================
    PENGATURAN NOTIFIKASI PERANGKAT KASIR
    WEB PUSH NOTIFICATION
 ========================================= */
-
 
 if(el("cashier-notification-setting")){
   el("cashier-notification-setting").addEventListener(
@@ -6037,7 +6034,6 @@ if(el("cashier-notification-setting")){
           saveCashierPreferences();
           applyCashierPreferences();
 
-          
         }else{
 
           /* CABUT LANGGANAN WEB PUSH */
@@ -6048,7 +6044,7 @@ if(el("cashier-notification-setting")){
           saveCashierPreferences();
           applyCashierPreferences();
 
-          
+        }
 
       }catch(error){
 
@@ -6063,9 +6059,10 @@ if(el("cashier-notification-setting")){
         applyCashierPreferences();
 
         window.alert(
-  "GAGAL AKTIVASI PUSH:\n\n" +
-  (error.message || String(error))
-);
+          "GAGAL AKTIVASI PUSH:\n\n" +
+          (error.message || String(error))
+        );
+
       }finally{
 
         setting.disabled = false;

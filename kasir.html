@@ -4113,37 +4113,38 @@ async function enterDashboard(){
   loadCashierPreferences();
 /* SINKRONISASI PUSH DENGAN SESI KASIR */
 syncExistingCashierPushSubscription();
-  /* MUAT PESANAN SAAT DASHBOARD DIBUKA */
-  const ordersLoaded = await loadOrders(true);
 
-  if(ordersLoaded && cashierSession){
-    showNotice(
-      "Terhubung ke sistem kasir. " +
-      allOrders.length +
-      " pesanan diterima dari server."
-    );
-  }
+/* =========================================
+   MEMUAT PESANAN SAAT DASHBOARD DIBUKA
+========================================= */
 
-  /* JANGAN BUAT TIMER JIKA SESI SUDAH BERAKHIR */
-  if(!cashierSession) return;
+await loadOrders(true);
 
-  /* REFRESH OTOMATIS SETIAP 30 DETIK */
-  if(refreshTimer){
-    clearInterval(refreshTimer);
-  }
+/* JANGAN BUAT TIMER JIKA SESI SUDAH BERAKHIR */
+if(!cashierSession) return;
 
-  refreshTimer = setInterval(() => {
-    if(!cashierSession){
-      clearInterval(refreshTimer);
-      refreshTimer = null;
-      return;
-    }
-
-    loadOrders(true);
-  },30000);
+/* REFRESH OTOMATIS SETIAP 30 DETIK */
+if(refreshTimer){
+  clearInterval(refreshTimer);
+  refreshTimer = null;
 }
-   /* MEMUAT PESANAN */
-async function loadOrders(silent=false){
+
+refreshTimer = setInterval(() => {
+  if(!cashierSession){
+    clearInterval(refreshTimer);
+    refreshTimer = null;
+    return;
+  }
+
+  loadOrders(true);
+},30000);
+}
+
+/* =========================================
+   MEMUAT PESANAN
+========================================= */
+
+async function loadOrders(silent=true){
   if(!cashierSession || loading) return false;
 
   loading = true;
@@ -4184,8 +4185,9 @@ async function loadOrders(silent=false){
 
     allOrders = normalizedOrders;
 
-    /* Pemuatan pertama hanya membuat snapshot.
-       Pesanan lama tidak akan membunyikan notifikasi. */
+    /* PEMUATAN PERTAMA HANYA MEMBUAT SNAPSHOT */
+    /* PESANAN LAMA TIDAK MEMBUNYIKAN NOTIFIKASI */
+
     if(hasInitialOrderSnapshot){
       notifyIncomingOrders(incomingOrders);
     }else{
@@ -4194,14 +4196,6 @@ async function loadOrders(silent=false){
 
     updateStats();
     renderOrders();
-
-    if(!silent){
-      showNotice(
-        "Terhubung ke sistem kasir. " +
-        allOrders.length +
-        " pesanan diterima dari server."
-      );
-    }
 
     return true;
 
@@ -4244,6 +4238,7 @@ async function loadOrders(silent=false){
     }
   }
 }
+
 /* TIGA RINGKASAN PESANAN */
 function updateStats(){
 

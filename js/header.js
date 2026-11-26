@@ -1,14 +1,14 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
-   Versi: 1.3.2
+   Versi: 1.3.3
    Global Design System v1.3.0
 ========================================================= */
 
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.3.2";
+  const HEADER_VERSION = "1.3.3";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =
@@ -86,6 +86,52 @@
         { id: "shop-home", label: "Beranda Kedai", icon: "store" },
         { id: "customer-orders", label: "Pesanan Saya", icon: "receipt-text" }
       ]
+    }
+  };
+
+  /* =====================================================
+     DESKRIPSI MENU BERDASARKAN PERAN
+  ===================================================== */
+
+  const MENU_DESCRIPTIONS = {
+    admin: {
+      dashboard: "Ringkasan dan pemantauan platform KopiHub",
+      partners: "Kelola kedai yang bergabung dengan KopiHub",
+      applications: "Periksa dan kelola pendaftaran kedai mitra",
+      users: "Kelola akun pengguna dan hak akses platform",
+      orders: "Pantau pesanan dari seluruh kedai mitra",
+      transactions: "Pantau transaksi pada platform KopiHub",
+      revenue: "Kelola komisi dan pendapatan platform",
+      settings: "Atur konfigurasi dan pengaturan platform",
+      audit: "Lihat catatan aktivitas sistem",
+      logout: "Keluar dari akun Admin KopiHub"
+    },
+
+    owner: {
+      home: "Lihat ringkasan aktivitas dan performa kedai",
+      menu: "Tambah, ubah, dan kelola daftar menu kedai",
+      transactions: "Pantau dan kelola transaksi kedai",
+      reports: "Lihat laporan penjualan dan performa kedai",
+      cashiers: "Kelola karyawan dan akun kasir",
+      identity: "Kelola identitas, nama, dan logo kedai",
+      payments: "Atur metode dan ketentuan pembayaran",
+      settings: "Atur preferensi dan operasional kedai",
+      logout: "Keluar dari akun Owner"
+    },
+
+    cashier: {
+      home: "Lihat ringkasan aktivitas kasir",
+      orders: "Lihat dan proses pesanan pelanggan",
+      pos: "Buat pesanan langsung melalui kasir",
+      profile: "Lihat informasi akun dan profil kasir",
+      settings: "Atur preferensi dan pemberitahuan kasir",
+      refresh: "Perbarui daftar pesanan terbaru",
+      logout: "Akhiri sesi dan shift kasir"
+    },
+
+    customer: {
+      "shop-home": "Lihat informasi dan daftar menu kedai",
+      "customer-orders": "Lihat status dan riwayat pesanan Anda"
     }
   };
 
@@ -279,10 +325,15 @@
 
   /* =====================================================
      MEMBUAT DAFTAR MENU
+     Format:
+     Ikon | Judul + Deskripsi | Panah
   ===================================================== */
 
   function renderMenu(root, role) {
     const config = ROLE_CONFIG[role] || ROLE_CONFIG.customer;
+
+    const descriptions =
+      MENU_DESCRIPTIONS[role] || MENU_DESCRIPTIONS.customer;
 
     const list = root.querySelector("[data-kh-menu-list]");
     const roleLabel = root.querySelector("[data-kh-role-label]");
@@ -317,22 +368,43 @@
         button.classList.add("kh-danger");
       }
 
+      /* IKON DI KIRI */
+
       const icon = document.createElement("span");
       icon.className = "kh-header-menu-item-icon";
 
       const iconElement = document.createElement("i");
       iconElement.setAttribute("data-lucide", item.icon);
+
       icon.appendChild(iconElement);
+
+      /* AREA JUDUL DAN DESKRIPSI */
+
+      const content = document.createElement("span");
+      content.className = "kh-header-menu-item-content";
 
       const label = document.createElement("span");
       label.className = "kh-header-menu-item-label";
       label.textContent = item.label;
 
+      const description = document.createElement("span");
+      description.className = "kh-header-menu-item-description";
+
+      description.textContent =
+        descriptions[item.id] || `Buka fitur ${item.label}`;
+
+      content.append(label, description);
+
+      /* PANAH DI KANAN */
+
       const arrow = document.createElement("i");
       arrow.className = "kh-header-menu-item-arrow";
       arrow.setAttribute("data-lucide", "chevron-right");
 
-      button.append(icon, label, arrow);
+      /* SUSUNAN KARTU */
+
+      button.append(icon, content, arrow);
+
       list.appendChild(button);
     });
 

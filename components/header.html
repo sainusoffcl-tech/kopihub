@@ -2,9 +2,10 @@
 <div class="kh-global-header" data-kh-header-root>
   <header class="kh-header-bar">
 
+    <!-- IDENTITAS PENGGUNA DAN PLATFORM -->
     <div class="kh-header-identity">
 
-      <!-- KHUSUS OWNER: FOTO PROFIL KEDAI DI KIRI -->
+      <!-- KHUSUS OWNER: FOTO PROFIL KEDAI -->
       <button
         class="kh-header-profile-button"
         type="button"
@@ -26,11 +27,11 @@
           data-kh-shop-logo-fallback
           aria-hidden="true"
         >
-          <i data-lucide="user-round"></i>
+          <i data-lucide="store"></i>
         </span>
       </button>
 
-      <!-- LOGO RESMI KOPIHUB UNTUK PERAN LAIN -->
+      <!-- LOGO RESMI KOPIHUB: ADMIN, KASIR, PELANGGAN -->
       <img
         class="kh-header-logo"
         data-kh-logo
@@ -47,7 +48,7 @@
         KH
       </div>
 
-      <!-- IDENTITAS KOPIHUB -->
+      <!-- IDENTITAS PLATFORM -->
       <div class="kh-header-brand">
 
         <div class="kh-header-wordmark">
@@ -58,12 +59,14 @@
           SATU PLATFORM, BANYAK CERITA
         </div>
 
+        <!-- NAMA KEDAI: KHUSUS OWNER -->
         <div
           class="kh-header-shop-name"
           data-kh-shop-name
           hidden
         ></div>
 
+        <!-- LABEL PERAN PENGGUNA -->
         <div
           class="kh-header-role"
           data-kh-role-label
@@ -75,7 +78,7 @@
     <!-- AKSI HEADER -->
     <div class="kh-header-actions">
 
-      <!-- NAVIGASI UTAMA -->
+      <!-- HAMBURGER NAVIGASI -->
       <button
         class="kh-header-menu-button"
         type="button"
@@ -98,7 +101,7 @@
     hidden
   ></div>
 
-  <!-- MENU NAVIGASI -->
+  <!-- PANEL NAVIGASI -->
   <nav
     class="kh-header-menu"
     id="kh-header-menu"
@@ -107,9 +110,12 @@
     aria-hidden="true"
     inert
   >
+
     <div class="kh-header-menu-handle"></div>
 
+    <!-- JUDUL MENU -->
     <div class="kh-header-menu-heading">
+
       <div>
         <span class="kh-header-menu-eyebrow">KOPIHUB</span>
         <h2 data-kh-menu-title>Menu Navigasi</h2>
@@ -123,13 +129,16 @@
       >
         <i data-lucide="x"></i>
       </button>
+
     </div>
 
+    <!-- DAFTAR MENU SESUAI HAK AKSES PERAN -->
     <div
       class="kh-header-menu-list"
       data-kh-menu-list
     ></div>
 
+    <!-- FOOTER MENU -->
     <div class="kh-header-menu-footer">
       SATU PLATFORM, BANYAK CERITA
     </div>

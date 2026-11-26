@@ -6094,77 +6094,79 @@ if(el("cashier-sound-setting")){
 }
 
 
+
 /* =========================================
    PENGATURAN NOTIFIKASI PERANGKAT KASIR
    WEB PUSH NOTIFICATION
 ========================================= */
 
 if(el("cashier-notification-setting")){
+
   el("cashier-notification-setting").addEventListener(
     "change",
     async event => {
+
       const setting = event.target;
       const enabled = setting.checked;
 
-      console.log(
-        "[KopiHub Push] Tombol ditekan:",
-        enabled
-      );
+      /* SIMPAN STATUS SEBELUM PERUBAHAN */
+      const previousNotification =
+        !!cashierPreferences.notification;
 
       setting.disabled = true;
 
       try{
+
         if(enabled){
 
-          console.log(
-            "[KopiHub Push] Memulai aktivasi perangkat."
-          );
-
-          /* DAFTARKAN PERANGKAT KE WEB PUSH */
+          /* AKTIFKAN WEB PUSH */
           await enableCashierPushNotification();
-
-          cashierPreferences.notification = true;
-
-          saveCashierPreferences();
-          applyCashierPreferences();
 
         }else{
 
-          /* CABUT LANGGANAN WEB PUSH */
+          /* NONAKTIFKAN WEB PUSH */
           await disableCashierPushNotification();
 
-          cashierPreferences.notification = false;
-
-          saveCashierPreferences();
-          applyCashierPreferences();
-
         }
+
+        /* SIMPAN STATUS SETELAH BERHASIL */
+        cashierPreferences.notification = enabled;
+
+        saveCashierPreferences();
+        applyCashierPreferences();
 
       }catch(error){
 
         console.error(
-          "[KopiHub Kasir] Pengaturan Push Notification gagal:",
+          "[KopiHub Kasir] Pengaturan Push gagal:",
           error
         );
 
-        cashierPreferences.notification = false;
+        /* KEMBALIKAN STATUS SEBELUMNYA */
+        cashierPreferences.notification =
+          previousNotification;
 
         saveCashierPreferences();
         applyCashierPreferences();
 
         window.alert(
-          "GAGAL AKTIVASI PUSH:\n\n" +
+          "PENGATURAN PUSH GAGAL:\n\n" +
           (error.message || String(error))
         );
 
       }finally{
 
         setting.disabled = false;
-        applyCashierPreferences();
+
+        /* PASTIKAN TOMBOL SESUAI STATUS TERSIMPAN */
+        setting.checked =
+          !!cashierPreferences.notification;
 
       }
+
     }
   );
+
 }
 
 /* =========================================

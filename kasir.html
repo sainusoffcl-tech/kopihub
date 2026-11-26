@@ -3102,13 +3102,22 @@ function readableDate(value){
   });
 }
 
+
 function showNotice(message,isError=false){
   const notice = el("notice");
   if(!notice) return;
 
+  if(!isError){
+    notice.hidden = true;
+    notice.textContent = "";
+    return;
+  }
+
+  notice.hidden = false;
   notice.textContent = message;
-  notice.className = isError ? "notice error" : "notice";
+  notice.className = "notice error";
 }
+
 
 function showAuthNotice(id,message,isError=false){
   const notice = el(id);

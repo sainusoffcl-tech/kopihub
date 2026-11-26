@@ -1,9 +1,9 @@
 
-@import url("/kopihub/css/design-system.css?v=1.2.0");
+@import url("/kopihub/css/design-system.css?v=1.3.0");
 
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
-   Global Design System v1.2.0
+   Global Design System v1.3.0
    Global Header v1.3.1
    ========================================================= */
 
@@ -44,7 +44,7 @@
   min-width: 0;
 }
 
-/* LOGO RESMI KOPIHUB */
+/* 3. LOGO RESMI KOPIHUB */
 
 .kh-header-logo,
 .kh-header-logo-fallback {
@@ -71,7 +71,7 @@
   letter-spacing: -1px;
 }
 
-/* SEMBUNYIKAN ELEMEN HIDDEN */
+/* 4. STATUS HIDDEN */
 
 .kh-header-logo[hidden],
 .kh-header-logo-fallback[hidden],
@@ -84,7 +84,7 @@
   display: none !important;
 }
 
-/* 3. FOTO PROFIL KEDAI OWNER */
+/* 5. FOTO PROFIL KEDAI OWNER */
 
 .kh-header-profile-button {
   display: grid;
@@ -127,15 +127,14 @@
   background: var(--kh-color-secondary);
 }
 
-/* KHUSUS OWNER:
-   LOGO RESMI KOPIHUB DIGANTIKAN FOTO KEDAI */
+/* KHUSUS OWNER */
 
 .kh-header-owner-layout .kh-header-logo,
 .kh-header-owner-layout .kh-header-logo-fallback {
   display: none !important;
 }
 
-/* 4. WORDMARK DAN TAGLINE */
+/* 6. WORDMARK DAN TAGLINE */
 
 .kh-header-brand {
   display: flex;
@@ -170,7 +169,7 @@
   white-space: nowrap;
 }
 
-/* 5. IDENTITAS KEDAI OWNER */
+/* 7. IDENTITAS KEDAI OWNER */
 
 .kh-header-shop-name {
   display: block;
@@ -187,7 +186,7 @@
   white-space: nowrap;
 }
 
-/* 6. LABEL PERAN */
+/* 8. LABEL PERAN */
 
 .kh-header-role {
   margin-top: 3px;
@@ -199,7 +198,7 @@
   text-transform: uppercase;
 }
 
-/* 7. AREA TOMBOL HEADER */
+/* 9. AREA TOMBOL HEADER */
 
 .kh-header-actions {
   display: flex;
@@ -209,7 +208,7 @@
   gap: 9px;
 }
 
-/* 8. TOMBOL HAMBURGER */
+/* 10. TOMBOL HAMBURGER */
 
 .kh-header-menu-button {
   display: grid;
@@ -235,7 +234,7 @@
   background: var(--kh-color-secondary);
 }
 
-/* 9. OVERLAY MENU */
+/* 11. OVERLAY MENU */
 
 .kh-header-overlay {
   position: fixed;
@@ -250,7 +249,7 @@
   opacity: 1;
 }
 
-/* 10. PANEL NAVIGASI */
+/* 12. PANEL NAVIGASI */
 
 .kh-header-menu {
   position: fixed;
@@ -295,7 +294,7 @@
   pointer-events: none;
 }
 
-/* 11. HANDLE MENU */
+/* 13. HANDLE MENU */
 
 .kh-header-menu-handle {
   width: 43px;
@@ -305,7 +304,7 @@
   background: var(--kh-color-border-strong);
 }
 
-/* 12. JUDUL MENU */
+/* 14. JUDUL MENU */
 
 .kh-header-menu-heading {
   display: flex;
@@ -329,7 +328,7 @@
   font-weight: 850;
 }
 
-/* 13. TOMBOL TUTUP */
+/* 15. TOMBOL TUTUP */
 
 .kh-header-close-button {
   display: grid;
@@ -350,7 +349,7 @@
   height: 20px;
 }
 
-/* 14. DAFTAR NAVIGASI */
+/* 16. DAFTAR NAVIGASI */
 
 .kh-header-menu-list {
   display: grid;
@@ -410,7 +409,7 @@
   color: #9AA69B;
 }
 
-/* 15. TOMBOL KELUAR */
+/* 17. TOMBOL KELUAR */
 
 .kh-header-menu-item.kh-danger {
   margin-top: 7px;
@@ -423,7 +422,7 @@
   background: var(--kh-color-danger-bg);
 }
 
-/* 16. FOOTER MENU */
+/* 18. FOOTER MENU */
 
 .kh-header-menu-footer {
   margin-top: 19px;
@@ -436,14 +435,14 @@
   letter-spacing: 1px;
 }
 
-/* 17. KUNCI SCROLL */
+/* 19. KUNCI SCROLL SAAT MENU TERBUKA */
 
 body.kh-header-menu-open {
   overflow: hidden !important;
   touch-action: none;
 }
 
-/* 18. TABLET DAN DESKTOP */
+/* 20. TABLET DAN DESKTOP */
 
 @media (min-width: 761px) {
   .kh-header-bar {
@@ -485,7 +484,7 @@ body.kh-header-menu-open {
   }
 }
 
-/* 19. IPHONE LAYAR KECIL */
+/* 21. IPHONE LAYAR KECIL */
 
 @media (max-width: 380px) {
   .kh-header-bar {
@@ -527,13 +526,13 @@ body.kh-header-menu-open {
   }
 }
 
-/* 20. AKSESIBILITAS */
+/* 22. AKSESIBILITAS */
 
 .kh-header-menu-button:focus-visible,
 .kh-header-profile-button:focus-visible,
 .kh-header-close-button:focus-visible,
 .kh-header-menu-item:focus-visible {
-  outline: 3px solid #E99A48;
+  outline: 3px solid var(--kh-color-accent);
   outline-offset: 3px;
 }
 

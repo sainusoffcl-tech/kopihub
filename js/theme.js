@@ -1,39 +1,130 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL THEME CONTROLLER
-   Versi: 1.0.0
-
-   PENGATUR TEMA GLOBAL KOPIHUB
-
-   Digunakan oleh:
-   - Dashboard Admin
-   - Dashboard Owner
-   - Dashboard Kasir
-   - Menu Pelanggan
-   - Halaman Publik KopiHub
+   Versi: 1.1.0
 
    FUNGSI:
    - Mode Terang dan Mode Gelap
    - Penyimpanan tema per perangkat/browser
    - Sinkronisasi antar-tab browser
-   - Kompatibilitas dengan body.dark-mode
+   - Kompatibilitas body.dark-mode
+   - Penguncian zoom global
+   - Menjaga tampilan stabil saat input
    - Tidak menggunakan Supabase
 ========================================================= */
 
 (() => {
   "use strict";
 
-  const THEME_VERSION = "1.0.0";
-
+  const THEME_VERSION = "1.1.0";
   const STORAGE_KEY = "kopihub-theme";
-
   const DEFAULT_THEME = "light";
 
   let currentTheme = DEFAULT_THEME;
 
 
   /* =======================================================
-     1. NORMALISASI TEMA
+     1. PENGATURAN VIEWPORT GLOBAL
+  ======================================================= */
+
+  function setupViewport() {
+    let viewport = document.querySelector(
+      'meta[name="viewport"]'
+    );
+
+    if (!viewport) {
+      viewport = document.createElement("meta");
+      viewport.name = "viewport";
+      document.head.appendChild(viewport);
+    }
+
+    viewport.setAttribute(
+      "content",
+      [
+        "width=device-width",
+        "initial-scale=1",
+        "maximum-scale=1",
+        "minimum-scale=1",
+        "user-scalable=no",
+        "viewport-fit=cover"
+      ].join(", ")
+    );
+  }
+
+
+  /* =======================================================
+     2. PENGUNCIAN GESTURE ZOOM
+  ======================================================= */
+
+  function setupZoomLock() {
+
+    const preventZoomGesture = (event) => {
+      event.preventDefault();
+    };
+
+    /* Safari iPhone / iPad */
+
+    document.addEventListener(
+      "gesturestart",
+      preventZoomGesture,
+      { passive: false }
+    );
+
+    document.addEventListener(
+      "gesturechange",
+      preventZoomGesture,
+      { passive: false }
+    );
+
+    document.addEventListener(
+      "gestureend",
+      preventZoomGesture,
+      { passive: false }
+    );
+
+    /* Mencegah pinch menggunakan multi-touch */
+
+    document.addEventListener(
+      "touchmove",
+      (event) => {
+        if (event.touches && event.touches.length > 1) {
+          event.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+
+    /* Mencegah zoom melalui kombinasi tombol Ctrl */
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          (event.ctrlKey || event.metaKey) &&
+          ["+", "-", "=", "0"].includes(event.key)
+        ) {
+          event.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+
+    /* Mencegah zoom melalui roda mouse + Ctrl */
+
+    document.addEventListener(
+      "wheel",
+      (event) => {
+        if (event.ctrlKey || event.metaKey) {
+          event.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+  }
+
+
+  /* =======================================================
+     3. NORMALISASI TEMA
   ======================================================= */
 
   function normalizeTheme(value) {
@@ -42,7 +133,7 @@
 
 
   /* =======================================================
-     2. MEMBACA TEMA TERSIMPAN
+     4. MEMBACA TEMA TERSIMPAN
   ======================================================= */
 
   function readStoredTheme() {
@@ -62,23 +153,17 @@
 
 
   /* =======================================================
-     3. MENERAPKAN TEMA
+     5. MENERAPKAN TEMA
   ======================================================= */
 
   function applyTheme(value, options = {}) {
     const theme = normalizeTheme(value);
-
     const root = document.documentElement;
 
     currentTheme = theme;
 
-    /* Atribut utama Global Design System */
-
     root.setAttribute("data-theme", theme);
-
     root.style.colorScheme = theme;
-
-    /* Kompatibilitas CSS lama */
 
     if (document.body) {
       document.body.classList.toggle(
@@ -86,8 +171,6 @@
         theme === "dark"
       );
     }
-
-    /* Simpan pilihan perangkat/browser */
 
     if (options.save !== false) {
       try {
@@ -99,8 +182,6 @@
         );
       }
     }
-
-    /* Beritahu komponen halaman */
 
     window.dispatchEvent(
       new CustomEvent("kopihub:theme-change", {
@@ -116,7 +197,7 @@
 
 
   /* =======================================================
-     4. MEMILIH TEMA
+     6. MEMILIH TEMA
   ======================================================= */
 
   function setTheme(value) {
@@ -125,7 +206,7 @@
 
 
   /* =======================================================
-     5. MEMBACA TEMA AKTIF
+     7. MEMBACA TEMA AKTIF
   ======================================================= */
 
   function getTheme() {
@@ -134,7 +215,7 @@
 
 
   /* =======================================================
-     6. MENGGANTI TEMA
+     8. MENGGANTI TEMA
   ======================================================= */
 
   function toggleTheme() {
@@ -146,7 +227,7 @@
 
 
   /* =======================================================
-     7. INISIALISASI TEMA
+     9. INISIALISASI TEMA
   ======================================================= */
 
   function initialize() {
@@ -159,7 +240,7 @@
 
 
   /* =======================================================
-     8. SINKRONISASI BODY
+     10. SINKRONISASI BODY
   ======================================================= */
 
   function syncBodyTheme() {
@@ -173,7 +254,7 @@
 
 
   /* =======================================================
-     9. SINKRONISASI ANTAR-TAB
+     11. SINKRONISASI ANTAR-TAB
   ======================================================= */
 
   window.addEventListener("storage", (event) => {
@@ -188,7 +269,7 @@
 
 
   /* =======================================================
-     10. PUBLIKASI API GLOBAL
+     12. PUBLIKASI API GLOBAL
   ======================================================= */
 
   window.KopiHubTheme = Object.freeze({
@@ -201,9 +282,11 @@
 
 
   /* =======================================================
-     11. JALANKAN SAAT SCRIPT DIMUAT
+     13. JALANKAN SAAT SCRIPT DIMUAT
   ======================================================= */
 
+  setupViewport();
+  setupZoomLock();
   initialize();
 
   if (document.readyState === "loading") {

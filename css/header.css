@@ -4,8 +4,8 @@
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
    Global Design System v1.3.0
-   Global Header v1.3.1
-   ========================================================= */
+   Global Header v1.3.3
+========================================================= */
 
 /* 1. HEADER UTAMA */
 
@@ -349,31 +349,38 @@
   height: 20px;
 }
 
-/* 16. DAFTAR NAVIGASI */
+/* 16. DAFTAR NAVIGASI — SATU KOLOM */
 
 .kh-header-menu-list {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
 }
+
+/* KARTU NAVIGASI */
 
 .kh-header-menu-item {
   display: flex;
   align-items: center;
   gap: 13px;
   width: 100%;
-  min-height: 56px;
-  padding: 10px 13px;
+  min-width: 0;
+  min-height: 70px;
+  padding: 11px 14px;
   border: 1px solid var(--kh-color-border);
   border-radius: var(--kh-radius-lg);
   color: var(--kh-color-primary);
   background: var(--kh-color-surface);
   text-align: left;
   font: inherit;
-  font-size: var(--kh-font-size-md);
-  font-weight: 700;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition:
+    background var(--kh-transition-fast),
+    border-color var(--kh-transition-fast),
+    transform var(--kh-transition-fast);
 }
 
 .kh-header-menu-item:active,
@@ -382,37 +389,70 @@
   background: var(--kh-color-surface-muted);
 }
 
+/* IKON KIRI */
+
 .kh-header-menu-item-icon {
   display: grid;
   place-items: center;
-  width: 37px;
-  height: 37px;
-  flex: 0 0 37px;
-  border-radius: 11px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 12px;
   color: var(--kh-color-primary-light);
   background: var(--kh-color-surface-muted);
 }
 
 .kh-header-menu-item-icon svg {
-  width: 19px;
-  height: 19px;
+  width: 20px;
+  height: 20px;
 }
 
-.kh-header-menu-item-label {
+/* JUDUL DAN DESKRIPSI TENGAH */
+
+.kh-header-menu-item-content {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
   min-width: 0;
 }
 
+.kh-header-menu-item-label {
+  display: block;
+  overflow: hidden;
+  color: var(--kh-color-primary);
+  font-size: var(--kh-font-size-md);
+  font-weight: 800;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kh-header-menu-item-description {
+  display: block;
+  overflow: hidden;
+  color: var(--kh-color-text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+}
+
+/* PANAH KANAN */
+
 .kh-header-menu-item-arrow {
-  width: 16px;
-  height: 16px;
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
   color: #9AA69B;
 }
 
 /* 17. TOMBOL KELUAR */
 
 .kh-header-menu-item.kh-danger {
-  margin-top: 7px;
+  margin-top: 5px;
   border-color: #F0D9D6;
   color: var(--kh-color-danger);
 }
@@ -420,6 +460,10 @@
 .kh-header-menu-item.kh-danger .kh-header-menu-item-icon {
   color: var(--kh-color-danger);
   background: var(--kh-color-danger-bg);
+}
+
+.kh-header-menu-item.kh-danger .kh-header-menu-item-label {
+  color: var(--kh-color-danger);
 }
 
 /* 18. FOOTER MENU */
@@ -479,8 +523,11 @@ body.kh-header-menu-open {
     border-radius: var(--kh-radius-2xl);
   }
 
+  /* MENU TETAP SATU KOLOM DI DESKTOP */
   .kh-header-menu-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -524,6 +571,31 @@ body.kh-header-menu-open {
     height: 42px;
     flex-basis: 42px;
   }
+
+  .kh-header-menu {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .kh-header-menu-item {
+    gap: 10px;
+    min-height: 66px;
+    padding: 10px;
+  }
+
+  .kh-header-menu-item-icon {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  .kh-header-menu-item-label {
+    font-size: 13px;
+  }
+
+  .kh-header-menu-item-description {
+    font-size: 10px;
+  }
 }
 
 /* 22. AKSESIBILITAS */
@@ -538,7 +610,8 @@ body.kh-header-menu-open {
 
 @media (prefers-reduced-motion: reduce) {
   .kh-header-overlay,
-  .kh-header-menu {
+  .kh-header-menu,
+  .kh-header-menu-item {
     transition: none;
   }
 }

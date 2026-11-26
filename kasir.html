@@ -4147,6 +4147,7 @@ refreshTimer = setInterval(() => {
 }
 
 
+
 /* =========================================
    MEMUAT PESANAN DAN RIWAYAT PESANAN
 ========================================= */
@@ -4166,7 +4167,13 @@ async function loadOrders(silent=true){
 
   try{
 
-    /* PESANAN AKTIF */
+    /* SIMPAN DATA SEBELUM REFRESH */
+    const previousOrders = allOrders;
+
+    /* =====================================
+       1. MUAT PESANAN AKTIF
+    ===================================== */
+
     const result = await cashierAPI("list_orders",{
       sessionToken:cashierSession.sessionToken
     });
@@ -4177,28 +4184,59 @@ async function loadOrders(silent=true){
       );
     }
 
-    /* RIWAYAT PESANAN SELESAI */
-    const historyResult = await cashierAPI(
-      "list_order_history",
-      {
-        sessionToken:cashierSession.sessionToken
-      }
-    );
+    const activeOrders =
+      result.orders.map(normalizeOrder);
 
-    if(!Array.isArray(historyResult.orders)){
-      throw new Error(
-        "Data riwayat pesanan dari server tidak sesuai format."
+    /* =====================================
+       2. MUAT RIWAYAT SECARA TERPISAH
+    ===================================== */
+
+    let historyOrders = [];
+    let historyLoadError = null;
+
+    try{
+
+      const historyResult = await cashierAPI(
+        "list_order_history",
+        {
+          sessionToken:cashierSession.sessionToken
+        }
+      );
+
+      if(!Array.isArray(historyResult.orders)){
+        throw new Error(
+          "Data riwayat pesanan tidak sesuai format."
+        );
+      }
+
+      historyOrders =
+        historyResult.orders.map(normalizeOrder);
+
+    }catch(error){
+
+      /* SESI TIDAK VALID TETAP HARUS DITANGANI */
+      if(
+        /session|expired|sesi|kasir tidak aktif|unauthorized/i
+          .test(error.message || "")
+      ){
+        throw error;
+      }
+
+      /* JANGAN HAPUS RIWAYAT YANG SUDAH DIMUAT */
+      historyLoadError = error;
+
+      historyOrders = previousOrders.filter(order=>
+        order.order_status === "completed"
       );
     }
 
-    const previousOrders = allOrders;
+    /* =====================================
+       3. DETEKSI PESANAN ONLINE BARU
+       HANYA DARI PESANAN AKTIF
+    ===================================== */
 
-    /* NORMALISASI DATA */
-    const activeOrders = result.orders.map(normalizeOrder);
-    const historyOrders = historyResult.orders.map(normalizeOrder);
-
-    /* DETEKSI PESANAN BARU HANYA DARI PESANAN AKTIF */
     const incomingOrders = activeOrders.filter(order=>{
+
       const existed = previousOrders.some(oldOrder=>
         String(oldOrder.id) === String(order.id)
       );
@@ -4210,7 +4248,10 @@ async function loadOrders(silent=true){
       );
     });
 
-    /* GABUNGKAN PESANAN AKTIF DAN RIWAYAT */
+    /* =====================================
+       4. GABUNGKAN DATA PESANAN
+    ===================================== */
+
     const orderMap = new Map();
 
     activeOrders.forEach(order=>{
@@ -4225,23 +4266,46 @@ async function loadOrders(silent=true){
 
     allOrders = Array.from(orderMap.values());
 
-    /* PEMUATAN PERTAMA HANYA MEMBUAT SNAPSHOT */
+    /* =====================================
+       5. NOTIFIKASI PESANAN BARU
+    ===================================== */
+
     if(hasInitialOrderSnapshot){
       notifyIncomingOrders(incomingOrders);
     }else{
       hasInitialOrderSnapshot = true;
     }
 
+    /* =====================================
+       6. PERBARUI DASHBOARD
+    ===================================== */
+
     updateStats();
     renderOrders();
+
+    /* TAMPILKAN ERROR HANYA JIKA RIWAYAT GAGAL */
+    if(historyLoadError){
+      showNotice(
+        "Pesanan aktif berhasil dimuat, tetapi riwayat belum dapat diperbarui.",
+        true
+      );
+    }else{
+      showNotice("",false);
+    }
 
     return true;
 
   }catch(error){
 
+    /* =====================================
+       7. PENANGANAN SESI
+    ===================================== */
+
     if(
-      /session|expired|sesi|kasir tidak aktif|unauthorized/i.test(error.message)
+      /session|expired|sesi|kasir tidak aktif|unauthorized/i
+        .test(error.message || "")
     ){
+
       showNotice(
         "Sesi kasir tidak lagi aktif. Silakan login kembali.",
         true
@@ -4251,20 +4315,20 @@ async function loadOrders(silent=true){
       showView("login");
 
     }else{
+
       showNotice(
         error.message || "Gagal memuat pesanan.",
         true
       );
 
-      if(el("orders")){
-        el("orders").innerHTML =
-          '<div class="empty">Pesanan belum dapat dimuat. Periksa koneksi dan status sesi.</div>';
-      }
+      /* JANGAN HAPUS DATA PESANAN LAMA */
+      renderOrders();
     }
 
     return false;
 
   }finally{
+
     loading = false;
 
     if(el("refresh-btn")){
@@ -4276,6 +4340,7 @@ async function loadOrders(silent=true){
     }
   }
 }
+
 
 /* TIGA RINGKASAN PESANAN */
 function updateStats(){

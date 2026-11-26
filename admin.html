@@ -201,170 +201,47 @@ main,
   background: var(--cream);
 }
 
+
 /* =====================================
    HEADER GLOBAL KOPIHUB ADMIN
-   EDGE-TO-EDGE APP BAR
+   DIKELOLA OLEH KOMPONEN GLOBAL
 ===================================== */
 
-.header-shell {
-  position: relative;
-  z-index: 1000;
+/* Tombol Kembali Admin */
 
-  flex: 0 0 auto;
+.admin-back-button {
+  width: 32px;
+  height: 32px;
 
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-
-  box-sizing: border-box;
-
-  padding-top: env(safe-area-inset-top, 0px);
-
-  background: #123B2C;
-}
-
-/* HEADER UTAMA */
-
-.topbar {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 12px;
-
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-
-  min-height: 88px;
-
-  box-sizing: border-box;
-
-  padding: 12px 20px;
-
-  color: #FFFFFF;
-  background: #123B2C;
-
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-/* IDENTITAS KOPIHUB */
-
-.topbar-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
-  flex: 1 1 auto;
-
-  width: auto;
-  min-width: 0;
-  max-width: 100%;
-
-  overflow: hidden;
-}
-
-.topbar-brand {
-  display: flex;
-  align-items: center;
-
-  max-width: 100%;
-
-  margin: 0 0 5px;
-
-  color: #FFFFFF;
-
-  font-size: 30px;
-  line-height: 1;
-  font-weight: 850;
-  letter-spacing: -1px;
-
-  white-space: nowrap;
-}
-
-.brand-kopi {
-  color: #FFFFFF;
-}
-
-.brand-i {
-  position: relative;
-}
-
-.coffee-bean {
-  position: absolute;
-
-  width: 8px;
-  height: 11px;
-
-  top: -3px;
-  left: 50%;
-
-  border-radius: 70% 35% 70% 35%;
-
-  background: #A66B3D;
-
-  transform: translateX(-50%) rotate(35deg);
-}
-
-.topbar-brand .hub {
-  color: #E99A48;
-}
-
-/* TAGLINE */
-
-.topbar-label {
-  max-width: 100%;
-
-  margin: 0;
-
-  color: #C5D9C9;
-
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: .8px;
-
-  white-space: nowrap;
-}
-
-/* HAMBURGER DI KANAN */
-
-.header-menu-button {
-  width: 46px;
-  height: 46px;
-
-  flex: 0 0 46px;
+  flex: 0 0 32px;
 
   display: grid;
   place-items: center;
 
-  margin-left: auto;
   padding: 0;
-
   box-sizing: border-box;
 
   border: 0;
-  border-radius: 10px;
+  border-radius: 9px;
 
-  color: #FFFFFF;
-  background: transparent;
+  color: #123B2C;
+  background: #EDF2E9;
 
   cursor: pointer;
 }
 
-.header-menu-button svg {
-  width: 32px;
-  height: 32px;
-
-  stroke-width: 2.2;
+.admin-back-button svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
 }
 
-.header-menu-button:active {
-  background: rgba(255,255,255,.15);
+.admin-back-button:active {
+  background: #DCE7DC;
+}
+
+.admin-back-button[hidden] {
+  display: none !important;
 }
 
 /* TOMBOL KEMBALI DI AREA JUDUL */

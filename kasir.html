@@ -3382,18 +3382,9 @@ async function enableCashierPushNotification() {
   return true;
 }
 
+
 /* MENONAKTIFKAN PUSH NOTIFICATION */
 async function disableCashierPushNotification(){
-
-  const registration =
-    await getCashierPushRegistration();
-
-  const subscription =
-    await registration.pushManager.getSubscription();
-
-  if(!subscription){
-    return true;
-  }
 
   if(!cashierSession?.sessionToken){
     throw new Error(
@@ -3401,13 +3392,24 @@ async function disableCashierPushNotification(){
     );
   }
 
-  /* CABUT PENDAFTARAN SERVER TERLEBIH DAHULU */
-  await cashierPushAPI("unregister",{
-    sessionToken:cashierSession.sessionToken,
-    endpoint:subscription.endpoint
+  /* CABUT SEMUA SUBSCRIPTION SESI INI DI SERVER */
+  await cashierPushAPI("unregister_session_devices",{
+    sessionToken:cashierSession.sessionToken
   });
 
-  /* BARU HAPUS SUBSCRIPTION PERANGKAT */
+  /* PERIKSA SUBSCRIPTION PERANGKAT */
+  const registration =
+    await getCashierPushRegistration();
+
+  const subscription =
+    await registration.pushManager.getSubscription();
+
+  /* JIKA SUBSCRIPTION LOKAL SUDAH TIDAK ADA */
+  if(!subscription){
+    return true;
+  }
+
+  /* HAPUS SUBSCRIPTION DARI PERANGKAT */
   const unsubscribed =
     await subscription.unsubscribe();
 

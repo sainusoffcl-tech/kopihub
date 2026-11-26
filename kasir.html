@@ -235,12 +235,15 @@ button {
   font-size: 12px;
 }
 
-/* 4. KARTU STATISTIK */
+
+/* 4. KARTU STATISTIK — STANDAR GLOBAL KOPIHUB */
 
 .stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 14px;
+  width: 100%;
   margin-bottom: 26px;
 }
 
@@ -248,9 +251,11 @@ button {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  width: 100%;
+  width: 90%;
   min-width: 0;
   min-height: 116px;
+  margin-left: auto;
+  margin-right: auto;
   padding: 18px;
   border: 1px solid var(--cashier-border);
   border-radius: var(--cashier-radius);
@@ -312,6 +317,7 @@ button {
   font-size: 11px;
   line-height: 1.5;
 }
+
 
 /* 5. KARTU AKSI CEPAT */
 

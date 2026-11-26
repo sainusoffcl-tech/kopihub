@@ -9426,6 +9426,7 @@ if (logoutButton) {
   });
 }
 
+
 /* =========================================
    INTEGRASI GLOBAL HEADER — OWNER
 ========================================= */
@@ -9468,6 +9469,18 @@ document.addEventListener("kopihub:navigate", event => {
 
       navigateToPage("lainnya");
       showSettingsPanel("manajemen-kasir");
+      break;
+
+    case "payments":
+      if (!selectedShop()) return;
+
+      navigateToPage("lainnya");
+      showSettingsPanel("tagihan-kopihub");
+      break;
+
+    case "settings":
+      navigateToPage("lainnya");
+      showSettingsPanel("settings-home-panel");
       break;
   }
 });

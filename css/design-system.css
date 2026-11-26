@@ -240,6 +240,22 @@
 
 
   /* =======================================================
+     8A. GLOBAL DASHBOARD SUMMARY CARD
+     Standar ukuran kartu ringkasan seluruh dashboard
+  ======================================================= */
+
+  --kh-stat-card-width: 90%;
+  --kh-stat-card-min-height: 116px;
+  --kh-stat-card-padding: 18px;
+  --kh-stat-card-gap: 14px;
+
+  --kh-stat-icon-size: 42px;
+  --kh-stat-value-size: 27px;
+  --kh-stat-label-size: 12px;
+  --kh-stat-description-size: 11px;
+
+
+  /* =======================================================
      9. TRANSITIONS — ANIMASI
   ======================================================= */
 
@@ -1044,7 +1060,206 @@ svg {
 
 
 /* =========================================================
-   20. FOCUS ACCESSIBILITY
+   20. GLOBAL DASHBOARD SUMMARY CARDS
+   Standar kartu ringkasan seluruh dashboard KopiHub
+
+   Digunakan oleh:
+   - Dashboard Admin
+   - Dashboard Owner
+   - Dashboard Kasir
+
+   Pengaturan ukuran berada di token bagian 8A.
+========================================================= */
+
+
+/* PEMBUNGKUS KARTU */
+
+.kh-ui-stats {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: var(--kh-stat-card-gap);
+
+  width: 100%;
+  min-width: 0;
+
+}
+
+
+/* KARTU RINGKASAN */
+
+.kh-ui-stat-card {
+
+  display: flex;
+  flex-direction: column;
+
+  width: var(--kh-stat-card-width);
+  min-width: 0;
+  min-height: var(--kh-stat-card-min-height);
+
+  margin-left: auto;
+  margin-right: auto;
+
+  padding: var(--kh-stat-card-padding);
+
+  border: var(--kh-border);
+  border-radius: var(--kh-radius-lg);
+
+  color: var(--kh-color-text);
+  background: var(--kh-color-surface);
+
+  box-shadow: var(--kh-shadow-sm);
+
+  text-decoration: none;
+
+  transition:
+    background var(--kh-transition-normal),
+    border-color var(--kh-transition-normal),
+    box-shadow var(--kh-transition-normal);
+
+}
+
+
+/* JUDUL DAN IKON */
+
+.kh-ui-stat-header {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--kh-space-3);
+  min-width: 0;
+
+}
+
+
+.kh-ui-stat-label {
+
+  min-width: 0;
+
+  color: var(--kh-color-text-secondary);
+
+  font-size: var(--kh-stat-label-size);
+  font-weight: var(--kh-font-weight-semibold);
+
+  line-height: var(--kh-line-height-normal);
+
+}
+
+
+.kh-ui-stat-icon {
+
+  display: grid;
+  place-items: center;
+
+  width: var(--kh-stat-icon-size);
+  height: var(--kh-stat-icon-size);
+
+  flex: 0 0 var(--kh-stat-icon-size);
+
+  border-radius: var(--kh-radius-md);
+
+  color: var(--kh-color-primary);
+  background: var(--kh-color-surface-muted);
+
+}
+
+
+.kh-ui-stat-icon svg {
+
+  display: block;
+
+  width: 20px;
+  height: 20px;
+
+}
+
+
+/* ANGKA RINGKASAN */
+
+.kh-ui-stat-value {
+
+  margin-top: var(--kh-space-2);
+
+  color: var(--kh-color-primary);
+
+  font-size: var(--kh-stat-value-size);
+  font-weight: var(--kh-font-weight-extra-bold);
+
+  line-height: var(--kh-line-height-tight);
+  letter-spacing: -0.7px;
+
+  overflow-wrap: anywhere;
+
+  font-variant-numeric: tabular-nums;
+
+}
+
+
+/* KETERANGAN */
+
+.kh-ui-stat-description {
+
+  margin-top: var(--kh-space-2);
+
+  color: var(--kh-color-text-muted);
+
+  font-size: var(--kh-stat-description-size);
+  line-height: var(--kh-line-height-normal);
+
+}
+
+
+/* TAUTAN KARTU */
+
+.kh-ui-stat-link {
+
+  display: inline-flex;
+  align-items: center;
+
+  margin-top: var(--kh-space-3);
+
+  color: var(--kh-color-primary-light);
+
+  font-size: var(--kh-font-size-xs);
+  font-weight: var(--kh-font-weight-bold);
+
+  text-decoration: none;
+
+}
+
+
+/* INTERAKSI */
+
+.kh-ui-stat-card:active {
+
+  transform: scale(0.99);
+
+}
+
+
+.kh-ui-stat-card:focus-visible {
+
+  outline: 3px solid var(--kh-focus-color);
+  outline-offset: 3px;
+
+}
+
+
+.kh-ui-stat-card:disabled,
+.kh-ui-stat-card[aria-disabled="true"] {
+
+  opacity: var(--kh-opacity-disabled);
+  cursor: not-allowed;
+
+}
+
+
+/* =========================================================
+   21. FOCUS ACCESSIBILITY
 ========================================================= */
 
 .kh-ui-button:focus-visible,
@@ -1059,7 +1274,7 @@ svg {
 
 
 /* =========================================================
-   21. RESPONSIVE — TABLET DAN DESKTOP
+   22. RESPONSIVE — TABLET DAN DESKTOP
 ========================================================= */
 
 @media (min-width: 761px) {
@@ -1130,11 +1345,18 @@ svg {
 
   }
 
+
+  .kh-ui-stat-card {
+
+    border-radius: var(--kh-radius-md);
+
+  }
+
 }
 
 
 /* =========================================================
-   22. iOS / IPHONE COMPATIBILITY
+   23. iOS / IPHONE COMPATIBILITY
 ========================================================= */
 
 /*
@@ -1150,7 +1372,7 @@ svg {
 
 
 /* =========================================================
-   23. REDUCED MOTION — AKSESIBILITAS
+   24. REDUCED MOTION — AKSESIBILITAS
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1182,6 +1404,7 @@ svg {
    - Standar dasar tipografi
    - Komponen KH-UI kompatibilitas
    - Standar kartu navigasi global
+   - Standar kartu ringkasan dashboard
    - Responsivitas komponen global
 
    Bukan tanggung jawab file ini:

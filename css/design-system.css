@@ -1,7 +1,7 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL DESIGN SYSTEM
-   Versi: 1.3.0
+   Versi: 1.3.1
 
    SUMBER STANDAR VISUAL SELURUH PLATFORM KOPIHUB
 
@@ -309,11 +309,36 @@
     background-color var(--kh-transition-normal),
     border-color var(--kh-transition-normal);
 
+
+  /* =======================================================
+     15. GLOBAL NAVIGATION TOKENS
+     Standar kartu navigasi seluruh peran
+  ======================================================= */
+
+  --kh-nav-card-background: var(--kh-color-surface);
+  --kh-nav-card-border: var(--kh-color-border);
+  --kh-nav-card-hover: var(--kh-color-surface-hover);
+  --kh-nav-card-active: var(--kh-color-surface-muted);
+
+  --kh-nav-card-radius: var(--kh-radius-lg);
+  --kh-nav-card-padding: 14px;
+  --kh-nav-card-min-height: 70px;
+
+  --kh-nav-icon-size: 42px;
+  --kh-nav-icon-radius: 12px;
+
+  --kh-nav-title-color: var(--kh-color-primary);
+  --kh-nav-description-color: var(--kh-color-text-muted);
+  --kh-nav-arrow-color: #9AA69B;
+
+  --kh-nav-card-gap: 13px;
+  --kh-nav-list-gap: 10px;
+
 }
 
 
 /* =========================================================
-   15. DARK MODE TOKENS
+   16. DARK MODE TOKENS
 ========================================================= */
 
 html[data-theme="dark"],
@@ -388,11 +413,23 @@ body.dark-mode {
   --kh-focus-ring:
     0 0 0 3px rgba(233, 154, 72, 0.35);
 
+
+  /* GLOBAL NAVIGATION */
+
+  --kh-nav-card-background: var(--kh-color-surface);
+  --kh-nav-card-border: var(--kh-color-border);
+  --kh-nav-card-hover: var(--kh-color-surface-hover);
+  --kh-nav-card-active: var(--kh-color-surface-muted);
+
+  --kh-nav-title-color: var(--kh-color-text);
+  --kh-nav-description-color: var(--kh-color-text-muted);
+  --kh-nav-arrow-color: #89968D;
+
 }
 
 
 /* =========================================================
-   16. GLOBAL BASE — STANDAR DASAR
+   17. GLOBAL BASE — STANDAR DASAR
 ========================================================= */
 
 html {
@@ -435,7 +472,7 @@ svg {
 
 
 /* =========================================================
-   17. GLOBAL COMPONENTS — KH-UI
+   18. GLOBAL COMPONENTS — KH-UI
 ========================================================= */
 
 
@@ -762,7 +799,253 @@ svg {
 }
 
 
-/* FOCUS ACCESSIBILITY */
+/* =========================================================
+   19. GLOBAL NAVIGATION COMPONENT
+   Standar kartu navigasi satu kolom KopiHub
+
+   STRUKTUR:
+   Ikon kiri
+   Judul dan deskripsi tengah
+   Panah kanan
+
+   Dapat digunakan pada:
+   Admin, Owner, Kasir, dan Pelanggan.
+
+   Tidak mengatur fungsi navigasi JavaScript.
+========================================================= */
+
+
+/* PEMBUNGKUS DAFTAR NAVIGASI */
+
+.kh-ui-nav-list {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--kh-nav-list-gap);
+
+  width: 100%;
+  min-width: 0;
+
+}
+
+
+/* KARTU NAVIGASI */
+
+.kh-ui-nav-card {
+
+  display: flex;
+  align-items: center;
+
+  gap: var(--kh-nav-card-gap);
+
+  width: 100%;
+  min-width: 0;
+  min-height: var(--kh-nav-card-min-height);
+
+  padding: var(--kh-nav-card-padding);
+
+  border: 1px solid var(--kh-nav-card-border);
+  border-radius: var(--kh-nav-card-radius);
+
+  color: var(--kh-nav-title-color);
+  background: var(--kh-nav-card-background);
+
+  text-align: left;
+  font-family: var(--kh-font-family);
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+
+  transition:
+    background var(--kh-transition-fast),
+    border-color var(--kh-transition-fast),
+    color var(--kh-transition-fast),
+    box-shadow var(--kh-transition-fast);
+
+}
+
+
+/* INTERAKSI KARTU */
+
+.kh-ui-nav-card:hover {
+
+  background: var(--kh-nav-card-hover);
+
+}
+
+
+.kh-ui-nav-card:active,
+.kh-ui-nav-card.kh-active,
+.kh-ui-nav-card[aria-current="page"] {
+
+  border-color: var(--kh-color-primary-light);
+  background: var(--kh-nav-card-active);
+
+}
+
+
+/* IKON KIRI */
+
+.kh-ui-nav-icon {
+
+  display: grid;
+  place-items: center;
+
+  width: var(--kh-nav-icon-size);
+  height: var(--kh-nav-icon-size);
+
+  flex: 0 0 var(--kh-nav-icon-size);
+
+  border-radius: var(--kh-nav-icon-radius);
+
+  color: var(--kh-color-primary-light);
+  background: var(--kh-color-surface-muted);
+
+}
+
+
+.kh-ui-nav-icon svg {
+
+  display: block;
+
+  width: 20px;
+  height: 20px;
+
+}
+
+
+/* AREA JUDUL DAN DESKRIPSI */
+
+.kh-ui-nav-content {
+
+  display: flex;
+  flex: 1 1 auto;
+
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 4px;
+
+  min-width: 0;
+
+}
+
+
+/* JUDUL KARTU */
+
+.kh-ui-nav-title {
+
+  display: block;
+
+  min-width: 0;
+
+  color: var(--kh-nav-title-color);
+
+  font-size: var(--kh-font-size-md);
+  font-weight: var(--kh-font-weight-bold);
+
+  line-height: var(--kh-line-height-tight);
+
+}
+
+
+/* KETERANGAN KARTU */
+
+.kh-ui-nav-description {
+
+  display: block;
+
+  min-width: 0;
+
+  color: var(--kh-nav-description-color);
+
+  font-size: var(--kh-font-size-xs);
+  font-weight: var(--kh-font-weight-normal);
+
+  line-height: var(--kh-line-height-normal);
+
+}
+
+
+/* PANAH KANAN */
+
+.kh-ui-nav-arrow {
+
+  display: grid;
+  place-items: center;
+
+  width: 18px;
+  height: 18px;
+
+  flex: 0 0 18px;
+
+  color: var(--kh-nav-arrow-color);
+
+}
+
+
+.kh-ui-nav-arrow svg {
+
+  display: block;
+
+  width: 18px;
+  height: 18px;
+
+}
+
+
+/* VARIAN KARTU BERBAHAYA */
+
+.kh-ui-nav-card.kh-danger {
+
+  border-color: #F0D9D6;
+
+  color: var(--kh-color-danger);
+
+}
+
+
+.kh-ui-nav-card.kh-danger .kh-ui-nav-icon {
+
+  color: var(--kh-color-danger);
+  background: var(--kh-color-danger-bg);
+
+}
+
+
+.kh-ui-nav-card.kh-danger .kh-ui-nav-title {
+
+  color: var(--kh-color-danger);
+
+}
+
+
+/* AKSESIBILITAS NAVIGASI */
+
+.kh-ui-nav-card:focus-visible {
+
+  outline: 3px solid var(--kh-focus-color);
+  outline-offset: 3px;
+
+}
+
+
+.kh-ui-nav-card:disabled,
+.kh-ui-nav-card[aria-disabled="true"] {
+
+  opacity: var(--kh-opacity-disabled);
+  cursor: not-allowed;
+
+}
+
+
+/* =========================================================
+   20. FOCUS ACCESSIBILITY
+========================================================= */
 
 .kh-ui-button:focus-visible,
 .kh-ui-input:focus-visible,
@@ -776,7 +1059,7 @@ svg {
 
 
 /* =========================================================
-   18. RESPONSIVE — TABLET DAN DESKTOP
+   21. RESPONSIVE — TABLET DAN DESKTOP
 ========================================================= */
 
 @media (min-width: 761px) {
@@ -816,11 +1099,42 @@ svg {
 
   }
 
+
+  .kh-ui-nav-card {
+
+    gap: 11px;
+    padding: 12px;
+
+  }
+
+
+  .kh-ui-nav-icon {
+
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+
+  }
+
+
+  .kh-ui-nav-title {
+
+    font-size: 13px;
+
+  }
+
+
+  .kh-ui-nav-description {
+
+    font-size: 10px;
+
+  }
+
 }
 
 
 /* =========================================================
-   19. iOS / IPHONE COMPATIBILITY
+   22. iOS / IPHONE COMPATIBILITY
 ========================================================= */
 
 /*
@@ -836,7 +1150,7 @@ svg {
 
 
 /* =========================================================
-   20. REDUCED MOTION — AKSESIBILITAS
+   23. REDUCED MOTION — AKSESIBILITAS
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -860,13 +1174,14 @@ svg {
 
 /* =========================================================
    SELESAI
-   KOPIHUB GLOBAL DESIGN SYSTEM v1.3.0
+   KOPIHUB GLOBAL DESIGN SYSTEM v1.3.1
 
    File ini bertanggung jawab atas:
    - Global design tokens
    - Token Mode Terang dan Mode Gelap
    - Standar dasar tipografi
    - Komponen KH-UI kompatibilitas
+   - Standar kartu navigasi global
    - Responsivitas komponen global
 
    Bukan tanggung jawab file ini:

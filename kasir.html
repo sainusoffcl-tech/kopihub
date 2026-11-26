@@ -4146,8 +4146,9 @@ refreshTimer = setInterval(() => {
 },30000);
 }
 
+
 /* =========================================
-   MEMUAT PESANAN
+   MEMUAT PESANAN DAN RIWAYAT PESANAN
 ========================================= */
 
 async function loadOrders(silent=true){
@@ -4164,6 +4165,8 @@ async function loadOrders(silent=true){
   }
 
   try{
+
+    /* PESANAN AKTIF */
     const result = await cashierAPI("list_orders",{
       sessionToken:cashierSession.sessionToken
     });
@@ -4174,10 +4177,28 @@ async function loadOrders(silent=true){
       );
     }
 
-    const previousOrders = allOrders;
-    const normalizedOrders = result.orders.map(normalizeOrder);
+    /* RIWAYAT PESANAN SELESAI */
+    const historyResult = await cashierAPI(
+      "list_order_history",
+      {
+        sessionToken:cashierSession.sessionToken
+      }
+    );
 
-    const incomingOrders = normalizedOrders.filter(order=>{
+    if(!Array.isArray(historyResult.orders)){
+      throw new Error(
+        "Data riwayat pesanan dari server tidak sesuai format."
+      );
+    }
+
+    const previousOrders = allOrders;
+
+    /* NORMALISASI DATA */
+    const activeOrders = result.orders.map(normalizeOrder);
+    const historyOrders = historyResult.orders.map(normalizeOrder);
+
+    /* DETEKSI PESANAN BARU HANYA DARI PESANAN AKTIF */
+    const incomingOrders = activeOrders.filter(order=>{
       const existed = previousOrders.some(oldOrder=>
         String(oldOrder.id) === String(order.id)
       );
@@ -4189,11 +4210,22 @@ async function loadOrders(silent=true){
       );
     });
 
-    allOrders = normalizedOrders;
+    /* GABUNGKAN PESANAN AKTIF DAN RIWAYAT */
+    const orderMap = new Map();
+
+    activeOrders.forEach(order=>{
+      orderMap.set(String(order.id),order);
+    });
+
+    historyOrders.forEach(order=>{
+      if(!orderMap.has(String(order.id))){
+        orderMap.set(String(order.id),order);
+      }
+    });
+
+    allOrders = Array.from(orderMap.values());
 
     /* PEMUATAN PERTAMA HANYA MEMBUAT SNAPSHOT */
-    /* PESANAN LAMA TIDAK MEMBUNYIKAN NOTIFIKASI */
-
     if(hasInitialOrderSnapshot){
       notifyIncomingOrders(incomingOrders);
     }else{

@@ -1,14 +1,14 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
-   Versi: 1.3.1
-   Global Design System v1.2.0
+   Versi: 1.3.2
+   Global Design System v1.3.0
 ========================================================= */
 
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.3.1";
+  const HEADER_VERSION = "1.3.2";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =
@@ -53,10 +53,14 @@
       label: "OWNER KEDAI",
       title: "Menu Owner",
       items: [
-        { id: "home", label: "Beranda", icon: "layout-dashboard" },
-        { id: "menu", label: "Menu Kedai", icon: "coffee" },
+        { id: "home", label: "Dashboard", icon: "layout-dashboard" },
+        { id: "menu", label: "Kelola Menu", icon: "coffee" },
         { id: "transactions", label: "Transaksi", icon: "receipt-text" },
-        { id: "reports", label: "Laporan", icon: "chart-no-axes-combined" },
+        { id: "reports", label: "Laporan Penjualan", icon: "chart-no-axes-combined" },
+        { id: "cashiers", label: "Karyawan", icon: "users" },
+        { id: "identity", label: "Profil Kedai", icon: "store" },
+        { id: "payments", label: "Pembayaran", icon: "wallet" },
+        { id: "settings", label: "Pengaturan", icon: "settings" },
         { id: "logout", label: "Keluar", icon: "log-out", danger: true }
       ]
     },
@@ -559,7 +563,6 @@
       }
 
       renderMenu(root, role);
-
       bindOwnerIdentityEvents(root, role);
       bindEvents(root, role);
 

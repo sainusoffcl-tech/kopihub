@@ -9776,24 +9776,23 @@ document.addEventListener("kopihub:navigate", event => {
       navigateToPage("laporan");
       break;
 
-    /* PENGATURAN KEDAI */
+/* PENGATURAN KEDAI */
 
-    case "settings":
-      navigateToPage("lainnya");
-      showSettingsPanel("settings-home-panel");
-      break;
+case "settings":
+  navigateToPage("lainnya");
+  showSettingsPanel("settings-home-panel");
+  break;
 
-    /* PENGATURAN AKUN
-       Diaktifkan setelah panel tersedia.
-    */
+/* PENGATURAN AKUN */
 
-    case "account-settings":
-      break;
+case "account-settings":
+  navigateToPage("lainnya");
+  showSettingsPanel("pengaturan-akun");
+  loadOwnerAccount();
+  break;
 
-  }
+}
 });
-
-
 /* LOGOUT DARI GLOBAL HEADER */
 
 document.addEventListener("kopihub:logout", async event => {

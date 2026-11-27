@@ -9637,6 +9637,7 @@ if (logoutButton) {
 
 /* =========================================
    INTEGRASI GLOBAL HEADER — OWNER
+   SUSUNAN MENU BARU
 ========================================= */
 
 document.addEventListener("kopihub:navigate", event => {
@@ -9645,53 +9646,51 @@ document.addEventListener("kopihub:navigate", event => {
   if (detail.role !== "owner") return;
 
   switch (detail.action || detail.page) {
+
+    /* DASHBOARD */
+
     case "home":
     case "dashboard":
       navigateToPage("home");
       break;
 
+    /* MANAJEMEN MENU */
+
     case "menu":
       navigateToPage("menu");
       break;
+
+    /* TRANSAKSI */
 
     case "transactions":
     case "transaksi":
       navigateToPage("transaksi");
       break;
 
+    /* LAPORAN PENJUALAN */
+
     case "reports":
     case "laporan":
       navigateToPage("laporan");
       break;
 
-    case "identity":
-      if (!selectedShop()) return;
-
-      navigateToPage("lainnya");
-      showSettingsPanel("profil-kedai");
-      showIdentityTab("profile");
-      break;
-
-    case "cashiers":
-      if (!selectedShop()) return;
-
-      navigateToPage("lainnya");
-      showSettingsPanel("settings-home-pa");
-      break;
-
-    case "payments":
-      if (!selectedShop()) return;
-
-      navigateToPage("lainnya");
-      showSettingsPanel("tagihan-kopihub");
-      break;
+    /* PENGATURAN KEDAI */
 
     case "settings":
       navigateToPage("lainnya");
       showSettingsPanel("settings-home-panel");
       break;
+
+    /* PENGATURAN AKUN
+       Diaktifkan setelah panel tersedia.
+    */
+
+    case "account-settings":
+      break;
+
   }
 });
+
 
 /* LOGOUT DARI GLOBAL HEADER */
 

@@ -9707,6 +9707,146 @@ document
   ?.addEventListener("click", loadOwnerInvoices);
 
 
+/* =========================================
+   PENGATURAN AKUN OWNER
+========================================= */
+
+/* MEMUAT EMAIL DAN ID AKUN */
+
+async function loadOwnerAccount() {
+  const emailElement = $("owner-account-email");
+  const idElement = $("owner-account-id");
+  const messageElement = $("owner-account-message");
+
+  if (emailElement) emailElement.textContent = "Memuat...";
+  if (idElement) idElement.textContent = "Memuat...";
+  if (messageElement) messageElement.textContent = "";
+
+  try {
+    if (!client) {
+      throw new Error("Sesi Supabase belum tersedia. Silakan muat ulang halaman.");
+    }
+
+    const { data, error } = await client.auth.getUser();
+
+    if (error) throw error;
+
+    const user = data?.user;
+
+    if (!user) {
+      throw new Error("Data akun Owner tidak ditemukan.");
+    }
+
+    if (emailElement) {
+      emailElement.textContent = user.email || "Email tidak tersedia";
+    }
+
+    if (idElement) {
+      idElement.textContent = user.id || "ID tidak tersedia";
+    }
+
+    if (messageElement) {
+      messageElement.textContent = "Informasi akun berhasil dimuat.";
+    }
+
+  } catch (error) {
+    console.error("Gagal memuat informasi akun:", error);
+
+    if (emailElement) {
+      emailElement.textContent = "Tidak dapat dimuat";
+    }
+
+    if (idElement) {
+      idElement.textContent = "Tidak dapat dimuat";
+    }
+
+    if (messageElement) {
+      messageElement.textContent =
+        "Gagal memuat informasi akun: " + error.message;
+    }
+  }
+}
+
+
+/* MENYIMPAN KATA SANDI BARU */
+
+$("owner-change-password-form")?.addEventListener(
+  "submit",
+  async function(event) {
+    event.preventDefault();
+
+    const passwordInput = $("owner-new-password");
+    const confirmationInput = $("owner-confirm-password");
+    const messageElement = $("owner-password-message");
+    const saveButton = $("owner-save-password");
+
+    const password = passwordInput?.value || "";
+    const confirmation = confirmationInput?.value || "";
+
+    if (!client) {
+      if (messageElement) {
+        messageElement.textContent =
+          "Sesi belum tersedia. Silakan muat ulang halaman.";
+      }
+      return;
+    }
+
+    if (password.length < 8) {
+      if (messageElement) {
+        messageElement.textContent =
+          "Kata sandi minimal harus 8 karakter.";
+      }
+      return;
+    }
+
+    if (password !== confirmation) {
+      if (messageElement) {
+        messageElement.textContent =
+          "Konfirmasi kata sandi tidak cocok.";
+      }
+      return;
+    }
+
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.textContent = "Menyimpan...";
+    }
+
+    if (messageElement) {
+      messageElement.textContent = "Sedang menyimpan kata sandi...";
+    }
+
+    try {
+      const { error } = await client.auth.updateUser({
+        password: password
+      });
+
+      if (error) throw error;
+
+      $("owner-change-password-form").reset();
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Kata sandi berhasil diperbarui.";
+      }
+
+    } catch (error) {
+      console.error("Gagal mengubah kata sandi:", error);
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Gagal mengubah kata sandi: " + error.message;
+      }
+
+    } finally {
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.textContent = "Simpan Kata Sandi Baru";
+      }
+    }
+  }
+);
+
 /* LOGOUT OWNER */
 const logoutButton = $("logout");
 

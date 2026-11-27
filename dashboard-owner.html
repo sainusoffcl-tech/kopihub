@@ -2386,368 +2386,470 @@ a,
 
   </div>
 
-  <!-- IDENTITAS KEDAI -->
-  <section class="panel" id="profil-kedai" hidden>
+  
+<!-- IDENTITAS KEDAI -->
+<section class="panel" id="profil-kedai" hidden>
 
-    <h2>Identitas Kedai</h2>
-    <p class="muted">
-      Kelola profil dan informasi kedai Anda.
-    </p>
+  <h2>Identitas Kedai</h2>
+  <p class="muted">
+    Kelola profil dan informasi kedai Anda.
+  </p>
 
-    <div class="identity-tabs">
-      <button
-        type="button"
-        class="identity-tab active"
-        id="identity-tab-profile"
-      >
-        Profil Kedai
-      </button>
-    </div>
+  <div class="identity-tabs">
+    <button
+      type="button"
+      class="identity-tab active"
+      id="identity-tab-profile"
+    >
+      Profil Kedai
+    </button>
+  </div>
 
-    <div id="identity-profile-content">
+  <div id="identity-profile-content">
 
-      <form id="shop-profile-form">
-
-        <div class="field">
-          <label for="profile-shop-name">Nama Kedai</label>
-          <input
-            id="profile-shop-name"
-            type="text"
-            maxlength="120"
-            required
-            placeholder="Contoh: Ontal Kopi"
-          >
-        </div>
-
-        <div class="field">
-          <label for="profile-shop-description">Deskripsi Kedai</label>
-          <textarea
-            id="profile-shop-description"
-            rows="3"
-            maxlength="1000"
-            placeholder="Ceritakan sedikit tentang kedai Anda"
-          ></textarea>
-        </div>
-
-        <div class="field">
-          <label for="profile-shop-logo">Logo Kedai</label>
-          <input
-            id="profile-shop-logo"
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-          >
-          <p class="muted">
-            Format PNG, JPG, atau WebP. Maksimal 20 MB.
-          </p>
-        </div>
-
-        <div id="profile-logo-preview" hidden>
-          <img
-            id="profile-logo-image"
-            alt="Pratinjau logo kedai"
-            style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"
-          >
-          <button
-            type="button"
-            id="remove-shop-logo"
-            class="danger"
-            style="margin-top:10px"
-          >
-            Hapus Logo
-          </button>
-        </div>
-
-        <div class="button-stack">
-          <button
-            class="primary"
-            id="save-shop-profile"
-            type="submit"
-          >
-            Simpan Profil Kedai
-          </button>
-        </div>
-
-        <p id="profile-message" class="muted" role="status"></p>
-
-      </form>
-
-    </div>
-
-  </section>
-
-  <!-- WAKTU OPERASIONAL -->
-  <section class="panel" id="pengaturan-jam-operasional" hidden>
-
-    <h2>Waktu Operasional</h2>
-
-    <p class="muted">
-      Atur jam buka dan tutup kedai untuk setiap hari.
-      Hari yang ditandai tutup tidak menerima pesanan maupun transaksi POS.
-    </p>
-
-    <p id="operating-hours-timezone" class="muted">
-      Zona waktu kedai akan ditampilkan di sini.
-    </p>
-
-    <form id="operating-hours-form">
-
-      <div id="operating-hours-list"></div>
-
-      <button
-        type="submit"
-        class="primary"
-        id="save-operating-hours"
-        style="margin-top:12px"
-      >
-        Simpan Waktu Operasional
-      </button>
-
-      <p
-        id="operating-hours-message"
-        class="muted"
-        role="status"
-        aria-live="polite"
-      ></p>
-
-    </form>
-
-  </section>
-
-  <!-- PBJT -->
-  <section class="panel" id="pengaturan-pbjt" hidden>
-
-    <h2>Pengaturan Pajak PBJT</h2>
-
-    <p class="muted">
-      Atur tarif PBJT yang berlaku untuk kedai ini.
-      Tarif akan digunakan otomatis dalam perhitungan pesanan pelanggan.
-    </p>
-
-    <form id="shop-pbjt-form">
+    <form id="shop-profile-form">
 
       <div class="field">
-        <label for="shop-pbjt-percent">Tarif PBJT (%)</label>
+        <label for="profile-shop-name">Nama Kedai</label>
         <input
-          id="shop-pbjt-percent"
-          type="number"
-          min="0"
-          max="100"
-          step="0.01"
-          inputmode="decimal"
-          placeholder="Contoh: 10"
+          id="profile-shop-name"
+          type="text"
+          maxlength="120"
           required
+          placeholder="Contoh: Ontal Kopi"
         >
       </div>
 
-      <p class="muted">
-        Pastikan tarif sesuai ketentuan PBJT daerah yang berlaku.
-        KopiHub tidak menetapkan tarif secara otomatis.
-      </p>
+      <div class="field">
+        <label for="profile-shop-description">Deskripsi Kedai</label>
+        <textarea
+          id="profile-shop-description"
+          rows="3"
+          maxlength="1000"
+          placeholder="Ceritakan sedikit tentang kedai Anda"
+        ></textarea>
+      </div>
 
-      <button
-        type="submit"
-        class="primary"
-        id="save-shop-pbjt"
-      >
-        Simpan Tarif PBJT
-      </button>
+      <div class="field">
+        <label for="profile-shop-logo">Logo Kedai</label>
+        <input
+          id="profile-shop-logo"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+        >
+        <p class="muted">
+          Format PNG, JPG, atau WebP. Maksimal 20 MB.
+        </p>
+      </div>
 
-      <p
-        id="shop-pbjt-message"
-        class="muted"
-        role="status"
-        aria-live="polite"
-      ></p>
+      <div id="profile-logo-preview" hidden>
+        <img
+          id="profile-logo-image"
+          alt="Pratinjau logo kedai"
+          style="width:100px;height:100px;object-fit:contain;border-radius:12px;border:1px solid #e7e9e3;padding:6px"
+        >
+        <button
+          type="button"
+          id="remove-shop-logo"
+          class="danger"
+          style="margin-top:10px"
+        >
+          Hapus Logo
+        </button>
+      </div>
+
+      <div class="button-stack">
+        <button
+          class="primary"
+          id="save-shop-profile"
+          type="submit"
+        >
+          Simpan Profil Kedai
+        </button>
+      </div>
+
+      <p id="profile-message" class="muted" role="status"></p>
 
     </form>
 
-  </section>
+  </div>
 
-  <!-- TAGIHAN KOPIHUB -->
-  <section class="panel" id="tagihan-kopihub" hidden>
+</section>
 
-    <h2>Tagihan KopiHub</h2>
 
-    <p class="muted">
-      Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
-      Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
-    </p>
+<!-- WAKTU OPERASIONAL -->
+<section class="panel" id="pengaturan-jam-operasional" hidden>
+
+  <h2>Waktu Operasional</h2>
+
+  <p class="muted">
+    Atur jam buka dan tutup kedai untuk setiap hari.
+    Hari yang ditandai tutup tidak menerima pesanan maupun transaksi POS.
+  </p>
+
+  <p id="operating-hours-timezone" class="muted">
+    Zona waktu kedai akan ditampilkan di sini.
+  </p>
+
+  <form id="operating-hours-form">
+
+    <div id="operating-hours-list"></div>
 
     <button
-      class="secondary invoice-refresh"
-      id="refresh-owner-invoices"
-      type="button"
+      type="submit"
+      class="primary"
+      id="save-operating-hours"
+      style="margin-top:12px"
     >
-      Muat Ulang Tagihan
+      Simpan Waktu Operasional
     </button>
 
-    <p id="owner-invoice-message" class="invoice-message" role="status">
-      Tagihan belum dimuat.
-    </p>
-
-    <div id="owner-invoice-list">
-      <div class="invoice-empty">
-        Tagihan akan ditampilkan di sini.
-      </div>
-    </div>
-
-  </section>
-
-  <!-- MANAJEMEN KARYAWAN -->
-  <section class="panel" id="manajemen-kasir" hidden>
-
-    <h2>Manajemen Karyawan</h2>
-
-    <p class="muted">
-      Buat dan kelola identitas staf kasir yang bertugas di kedai Anda.
-    </p>
-
-    <div class="cashier-intro">
-      <strong>Informasi keamanan</strong><br>
-      Setiap kasir memiliki ID dan PIN pribadi. Owner hanya membuat identitas serta memberikan kode aktivasi. PIN dibuat sendiri oleh kasir dan tidak dapat dilihat Owner. Pengelolaan ini hanya dapat dilakukan oleh akun Owner aktif.
-    </div>
-
-    <form id="cashier-create-form">
-
-      <div class="field">
-        <label for="cashier-name">Nama Karyawan</label>
-        <input
-          id="cashier-name"
-          type="text"
-          maxlength="100"
-          autocomplete="off"
-          required
-          placeholder="Masukkan nama lengkap karyawan"
-        >
-      </div>
-
-      <button
-        class="primary"
-        id="create-cashier-button"
-        type="submit"
-      >
-        + Buat Identitas Karyawan
-      </button>
-
-    </form>
-
     <p
-      id="cashier-message"
-      class="cashier-message"
+      id="operating-hours-message"
+      class="muted"
       role="status"
       aria-live="polite"
     ></p>
 
-    <div id="cashier-setup-panel" class="setup-code-panel" hidden>
+  </form>
 
-      <strong>Identitas karyawan berhasil dibuat</strong>
+</section>
 
-      <p class="muted">
-        Berikan ID Kasir dan kode aktivasi ini kepada staf yang bersangkutan.
-        Kode aktivasi hanya ditampilkan sekarang dan tidak dapat ditampilkan kembali.
-      </p>
 
-      <div class="field">
-        <label>ID Kasir</label>
-        <div
-          class="setup-code-value"
-          id="cashier-created-id"
-          style="font-size:17px;letter-spacing:1px"
-        ></div>
-        <button
-          class="secondary"
-          id="copy-cashier-id"
-          type="button"
-        >
-          Salin ID Kasir
-        </button>
-      </div>
+<!-- PBJT -->
+<section class="panel" id="pengaturan-pbjt" hidden>
 
-      <div class="field">
-        <label>Kode Aktivasi Sekali Pakai</label>
-        <div
-          class="setup-code-value"
-          id="cashier-created-code"
-        ></div>
-        <button
-          class="secondary"
-          id="copy-cashier-code"
-          type="button"
-        >
-          Salin Kode Aktivasi
-        </button>
-      </div>
+  <h2>Pengaturan Pajak PBJT</h2>
 
-      <p class="setup-code-meta" id="cashier-code-expiry"></p>
+  <p class="muted">
+    Atur tarif PBJT yang berlaku untuk kedai ini.
+    Tarif akan digunakan otomatis dalam perhitungan pesanan pelanggan.
+  </p>
 
-      <p class="setup-code-meta">
-        Kasir harus mengaktifkan identitasnya melalui halaman Login Kasir dan membuat PIN pribadi sebelum mulai bertugas.
-      </p>
+  <form id="shop-pbjt-form">
 
+    <div class="field">
+      <label for="shop-pbjt-percent">Tarif PBJT (%)</label>
+      <input
+        id="shop-pbjt-percent"
+        type="number"
+        min="0"
+        max="100"
+        step="0.01"
+        inputmode="decimal"
+        placeholder="Contoh: 10"
+        required
+      >
     </div>
 
-    <div class="cashier-list-heading">
-      <h3>Daftar Karyawan</h3>
+    <p class="muted">
+      Pastikan tarif sesuai ketentuan PBJT daerah yang berlaku.
+      KopiHub tidak menetapkan tarif secara otomatis.
+    </p>
+
+    <button
+      type="submit"
+      class="primary"
+      id="save-shop-pbjt"
+    >
+      Simpan Tarif PBJT
+    </button>
+
+    <p
+      id="shop-pbjt-message"
+      class="muted"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+  </form>
+
+</section>
+
+
+<!-- TAGIHAN KOPIHUB -->
+<section class="panel" id="tagihan-kopihub" hidden>
+
+  <h2>Tagihan KopiHub</h2>
+
+  <p class="muted">
+    Riwayat biaya layanan kedai dan pembayaran kepada KopiHub.
+    Biaya layanan merupakan kewajiban Owner, bukan tambahan pembayaran pelanggan.
+  </p>
+
+  <button
+    class="secondary invoice-refresh"
+    id="refresh-owner-invoices"
+    type="button"
+  >
+    Muat Ulang Tagihan
+  </button>
+
+  <p id="owner-invoice-message" class="invoice-message" role="status">
+    Tagihan belum dimuat.
+  </p>
+
+  <div id="owner-invoice-list">
+    <div class="invoice-empty">
+      Tagihan akan ditampilkan di sini.
+    </div>
+  </div>
+
+</section>
+
+
+<!-- MANAJEMEN KARYAWAN -->
+<section class="panel" id="manajemen-kasir" hidden>
+
+  <h2>Manajemen Karyawan</h2>
+
+  <p class="muted">
+    Buat dan kelola identitas staf kasir yang bertugas di kedai Anda.
+  </p>
+
+  <div class="cashier-intro">
+    <strong>Informasi keamanan</strong><br>
+    Setiap kasir memiliki ID dan PIN pribadi. Owner hanya membuat identitas serta memberikan kode aktivasi. PIN dibuat sendiri oleh kasir dan tidak dapat dilihat Owner. Pengelolaan ini hanya dapat dilakukan oleh akun Owner aktif.
+  </div>
+
+  <form id="cashier-create-form">
+
+    <div class="field">
+      <label for="cashier-name">Nama Karyawan</label>
+      <input
+        id="cashier-name"
+        type="text"
+        maxlength="100"
+        autocomplete="off"
+        required
+        placeholder="Masukkan nama lengkap karyawan"
+      >
+    </div>
+
+    <button
+      class="primary"
+      id="create-cashier-button"
+      type="submit"
+    >
+      + Buat Identitas Karyawan
+    </button>
+
+  </form>
+
+  <p
+    id="cashier-message"
+    class="cashier-message"
+    role="status"
+    aria-live="polite"
+  ></p>
+
+  <div id="cashier-setup-panel" class="setup-code-panel" hidden>
+
+    <strong>Identitas karyawan berhasil dibuat</strong>
+
+    <p class="muted">
+      Berikan ID Kasir dan kode aktivasi ini kepada staf yang bersangkutan.
+      Kode aktivasi hanya ditampilkan sekarang dan tidak dapat ditampilkan kembali.
+    </p>
+
+    <div class="field">
+      <label>ID Kasir</label>
+      <div
+        class="setup-code-value"
+        id="cashier-created-id"
+        style="font-size:17px;letter-spacing:1px"
+      ></div>
       <button
         class="secondary"
-        id="refresh-cashiers"
+        id="copy-cashier-id"
         type="button"
       >
-        Muat Ulang
+        Salin ID Kasir
       </button>
     </div>
 
-    <p class="muted" id="cashier-list-status">
-      Memuat daftar karyawan...
-    </p>
-
-    <div id="cashier-list">
-      <div class="cashier-empty">
-        Daftar karyawan akan ditampilkan di sini.
-      </div>
+    <div class="field">
+      <label>Kode Aktivasi Sekali Pakai</label>
+      <div
+        class="setup-code-value"
+        id="cashier-created-code"
+      ></div>
+      <button
+        class="secondary"
+        id="copy-cashier-code"
+        type="button"
+      >
+        Salin Kode Aktivasi
+      </button>
     </div>
 
-    <p class="owner-only-note">
-      Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
+    <p class="setup-code-meta" id="cashier-code-expiry"></p>
+
+    <p class="setup-code-meta">
+      Kasir harus mengaktifkan identitasnya melalui halaman Login Kasir dan membuat PIN pribadi sebelum mulai bertugas.
     </p>
 
-  </section>
+  </div>
 
-  <!-- WAKTU PEMBAYARAN -->
-  <section class="panel" id="pengaturan-waktu-pembayaran" hidden>
-
-    <h2>Waktu Pembayaran</h2>
-
-    <p class="muted">
-      Tentukan kapan pelanggan harus membayar pesanannya.
-    </p>
-
-    <select id="owner-payment-timing">
-      <option value="false">Bayar di Awal</option>
-      <option value="true">Bayar di Akhir</option>
-    </select>
-
-    <p
-      id="owner-payment-timing-message"
-      class="muted"
-      style="margin:8px 0 0;font-size:12px"
+  <div class="cashier-list-heading">
+    <h3>Daftar Karyawan</h3>
+    <button
+      class="secondary"
+      id="refresh-cashiers"
+      type="button"
     >
-      Pengaturan mengikuti kebijakan pembayaran kedai.
-    </p>
+      Muat Ulang
+    </button>
+  </div>
 
-  </section>
+  <p class="muted" id="cashier-list-status">
+    Memuat daftar karyawan...
+  </p>
+
+  <div id="cashier-list">
+    <div class="cashier-empty">
+      Daftar karyawan akan ditampilkan di sini.
+    </div>
+  </div>
+
+  <p class="owner-only-note">
+    Menonaktifkan kasir akan mencabut akses login berikutnya dan mengakhiri sesi aktifnya. Kasir yang masih memegang pesanan aktif harus menyelesaikan atau menyerahkan pesanan terlebih dahulu.
+  </p>
 
 </section>
-<!-- PENUTUP HALAMAN LAINNYA -->
 
-<!-- NAVIGASI BAWAH DIHAPUS -->
 
+<!-- WAKTU PEMBAYARAN -->
+<section class="panel" id="pengaturan-waktu-pembayaran" hidden>
+
+  <h2>Waktu Pembayaran</h2>
+
+  <p class="muted">
+    Tentukan kapan pelanggan harus membayar pesanannya.
+  </p>
+
+  <select id="owner-payment-timing">
+    <option value="false">Bayar di Awal</option>
+    <option value="true">Bayar di Akhir</option>
+  </select>
+
+  <p
+    id="owner-payment-timing-message"
+    class="muted"
+    style="margin:8px 0 0;font-size:12px"
+  >
+    Pengaturan mengikuti kebijakan pembayaran kedai.
+  </p>
+
+</section>
+
+
+<!-- PENGATURAN AKUN OWNER -->
+<section class="panel" id="pengaturan-akun" hidden>
+
+  <h2>Pengaturan Akun</h2>
+
+  <p class="muted">
+    Kelola informasi login dan keamanan akun Owner Anda.
+  </p>
+
+  <div class="settings-item">
+    <div class="settings-icon">👤</div>
+    <div class="settings-info">
+      <strong>Email Akun</strong>
+      <span id="owner-account-email">
+        Memuat alamat email...
+      </span>
+    </div>
+  </div>
+
+  <div class="settings-item">
+    <div class="settings-icon">🔐</div>
+    <div class="settings-info">
+      <strong>ID Akun</strong>
+      <span id="owner-account-id">
+        Memuat ID akun...
+      </span>
+    </div>
+  </div>
+
+  <p
+    id="owner-account-message"
+    class="muted"
+    role="status"
+    aria-live="polite"
+  ></p>
+
+  <div class="panel" style="margin-top:20px">
+
+    <h3>Ubah Kata Sandi</h3>
+
+    <p class="muted">
+      Gunakan kata sandi baru untuk melindungi akun Owner.
+    </p>
+
+    <form id="owner-change-password-form">
+
+      <div class="field">
+        <label for="owner-new-password">
+          Kata Sandi Baru
+        </label>
+        <input
+          id="owner-new-password"
+          type="password"
+          minlength="8"
+          autocomplete="new-password"
+          required
+          placeholder="Minimal 8 karakter"
+        >
+      </div>
+
+      <div class="field">
+        <label for="owner-confirm-password">
+          Konfirmasi Kata Sandi Baru
+        </label>
+        <input
+          id="owner-confirm-password"
+          type="password"
+          minlength="8"
+          autocomplete="new-password"
+          required
+          placeholder="Ulangi kata sandi baru"
+        >
+      </div>
+
+      <button
+        type="submit"
+        class="primary"
+        id="owner-save-password"
+      >
+        Simpan Kata Sandi Baru
+      </button>
+
+      <p
+        id="owner-password-message"
+        class="muted"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+    </form>
+
+  </div>
+
+</section>
+
+</section>
+<!-- AKHIR PAGE LAINNYA -->
+
+<!-- SCRIPT LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
 
 <script>
+
    "use strict";
 
 /* =========================================

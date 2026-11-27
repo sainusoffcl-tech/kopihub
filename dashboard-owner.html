@@ -9730,6 +9730,7 @@ document
   ?.addEventListener("click", loadOwnerInvoices);
 
 
+
 /* =========================================
    PENGATURAN AKUN OWNER
 ========================================= */
@@ -9791,18 +9792,20 @@ async function loadOwnerAccount() {
 }
 
 
-/* MENYIMPAN KATA SANDI BARU */
+/* MENGUBAH KATA SANDI DENGAN VERIFIKASI KATA SANDI LAMA */
 
 $("owner-change-password-form")?.addEventListener(
   "submit",
   async function(event) {
     event.preventDefault();
 
+    const currentPasswordInput = $("owner-current-password");
     const passwordInput = $("owner-new-password");
     const confirmationInput = $("owner-confirm-password");
     const messageElement = $("owner-password-message");
     const saveButton = $("owner-save-password");
 
+    const currentPassword = currentPasswordInput?.value || "";
     const password = passwordInput?.value || "";
     const confirmation = confirmationInput?.value || "";
 
@@ -9814,10 +9817,18 @@ $("owner-change-password-form")?.addEventListener(
       return;
     }
 
+    if (!currentPassword) {
+      if (messageElement) {
+        messageElement.textContent =
+          "Masukkan kata sandi lama terlebih dahulu.";
+      }
+      return;
+    }
+
     if (password.length < 8) {
       if (messageElement) {
         messageElement.textContent =
-          "Kata sandi minimal harus 8 karakter.";
+          "Kata sandi baru minimal harus 8 karakter.";
       }
       return;
     }
@@ -9825,28 +9836,88 @@ $("owner-change-password-form")?.addEventListener(
     if (password !== confirmation) {
       if (messageElement) {
         messageElement.textContent =
-          "Konfirmasi kata sandi tidak cocok.";
+          "Konfirmasi kata sandi baru tidak cocok.";
+      }
+      return;
+    }
+
+    if (currentPassword === password) {
+      if (messageElement) {
+        messageElement.textContent =
+          "Kata sandi baru harus berbeda dari kata sandi lama.";
       }
       return;
     }
 
     if (saveButton) {
       saveButton.disabled = true;
-      saveButton.textContent = "Menyimpan...";
+      saveButton.textContent = "Memverifikasi...";
     }
 
     if (messageElement) {
-      messageElement.textContent = "Sedang menyimpan kata sandi...";
+      messageElement.textContent =
+        "Sedang memverifikasi kata sandi lama...";
     }
 
     try {
-      const { error } = await client.auth.updateUser({
+      /* Ambil identitas akun yang sedang aktif */
+
+      const { data: userData, error: userError } =
+        await client.auth.getUser();
+
+      if (userError) throw userError;
+
+      const currentUser = userData?.user;
+
+      if (!currentUser || !currentUser.email || !currentUser.id) {
+        throw new Error("Identitas akun Owner tidak ditemukan.");
+      }
+
+      /* Verifikasi kata sandi lama melalui Supabase Auth */
+
+      const { data: verificationData, error: verificationError } =
+        await client.auth.signInWithPassword({
+          email: currentUser.email,
+          password: currentPassword
+        });
+
+      if (verificationError) {
+        throw new Error(
+          "Kata sandi lama yang Anda masukkan salah."
+        );
+      }
+
+      /* Pastikan akun yang diverifikasi tetap akun Owner yang sama */
+
+      if (
+        !verificationData?.user ||
+        verificationData.user.id !== currentUser.id
+      ) {
+        throw new Error(
+          "Verifikasi akun gagal. Silakan masuk kembali."
+        );
+      }
+
+      if (saveButton) {
+        saveButton.textContent = "Menyimpan...";
+      }
+
+      if (messageElement) {
+        messageElement.textContent =
+          "Verifikasi berhasil. Sedang menyimpan kata sandi baru...";
+      }
+
+      /* Simpan kata sandi baru */
+
+      const { error: updateError } = await client.auth.updateUser({
         password: password
       });
 
-      if (error) throw error;
+      if (updateError) throw updateError;
 
-      $("owner-change-password-form").reset();
+      /* Bersihkan formulir setelah berhasil */
+
+      $("owner-change-password-form")?.reset();
 
       if (messageElement) {
         messageElement.textContent =
@@ -9870,7 +9941,9 @@ $("owner-change-password-form")?.addEventListener(
   }
 );
 
+
 /* LOGOUT OWNER */
+
 const logoutButton = $("logout");
 
 if (logoutButton) {
@@ -9898,7 +9971,6 @@ if (logoutButton) {
     }
   });
 }
-
 
 /* =========================================
    INTEGRASI GLOBAL HEADER — OWNER

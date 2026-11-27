@@ -2557,105 +2557,205 @@ main,
             </div>
           </div>
 
-          <!-- LOGO RESMI KOPIHUB -->
-          <div class="settings-card platform-logo-card">
+          
+<!-- LOGO RESMI KOPIHUB -->
+<div class="settings-card platform-logo-card">
 
-            <div class="settings-heading">
-              <div class="settings-icon">
-                <i data-lucide="image"></i>
-              </div>
+  <div class="settings-heading">
+    <div class="settings-icon">
+      <i data-lucide="image"></i>
+    </div>
 
-              <div>
-                <h3>Identitas Platform</h3>
-                <p>
-                  Kelola logo resmi yang digunakan di seluruh
-                  halaman KopiHub.
-                </p>
-              </div>
-            </div>
+    <div>
+      <h3>Identitas Platform</h3>
+      <p>
+        Kelola logo resmi yang digunakan di seluruh
+        halaman KopiHub.
+      </p>
+    </div>
+  </div>
 
-            <div class="platform-logo-preview-area">
+  <div class="platform-logo-preview-area">
 
-              <span class="settings-rate-label">
-                Logo Resmi Saat Ini
-              </span>
+    <span class="settings-rate-label">
+      Logo Resmi Saat Ini
+    </span>
 
-              <div class="platform-logo-preview">
+    <div class="platform-logo-preview">
 
-                <img
-                  id="platform-logo-preview"
-                  src=""
-                  alt="Logo Resmi KopiHub"
-                  hidden>
+      <img
+        id="platform-logo-preview"
+        src=""
+        alt="Logo Resmi KopiHub"
+        hidden>
 
-                <div
-                  id="platform-logo-placeholder"
-                  class="platform-logo-placeholder">
-                  <i data-lucide="image"></i>
-                  <span>Logo belum tersedia</span>
-                </div>
+      <div
+        id="platform-logo-placeholder"
+        class="platform-logo-placeholder">
+        <i data-lucide="image"></i>
+        <span>Logo belum tersedia</span>
+      </div>
 
-              </div>
+    </div>
 
-              <p class="muted" id="platform-logo-status">
-                Memuat logo resmi KopiHub...
-              </p>
+    <p class="muted" id="platform-logo-status">
+      Memuat logo resmi KopiHub...
+    </p>
 
-            </div>
+  </div>
 
-            <div class="settings-form">
+  <div class="settings-form">
 
-              <label for="platform-logo-file">Pilih Logo Baru</label>
+    <label for="platform-logo-file">Pilih Logo Baru</label>
 
-              <input
-                type="file"
-                id="platform-logo-file"
-                accept="image/png,image/jpeg,image/webp">
+    <input
+      type="file"
+      id="platform-logo-file"
+      accept="image/png,image/jpeg,image/webp">
 
-              <p class="muted">
-                Format PNG, JPG/JPEG, atau WebP.
-                Maksimal ukuran file 5 MB.
-              </p>
+    <p class="muted">
+      Format PNG, JPG/JPEG, atau WebP.
+      Maksimal ukuran file 5 MB.
+    </p>
 
-              <div
-                class="platform-logo-new-preview-area"
-                id="platform-logo-new-preview-area"
-                hidden>
+    <div
+      class="platform-logo-new-preview-area"
+      id="platform-logo-new-preview-area"
+      hidden>
 
-                <span class="settings-rate-label">
-                  Pratinjau Logo Baru
-                </span>
+      <span class="settings-rate-label">
+        Pratinjau Logo Baru
+      </span>
 
-                <img
-                  id="platform-logo-new-preview"
-                  alt="Pratinjau Logo Baru">
+      <img
+        id="platform-logo-new-preview"
+        alt="Pratinjau Logo Baru">
 
-              </div>
+    </div>
 
-              <button
-                type="button"
-                class="action-button"
-                id="save-platform-logo">
-                <i data-lucide="upload"></i>
-                Unggah dan Simpan Logo
-              </button>
+    <button
+      type="button"
+      class="action-button"
+      id="save-platform-logo">
+      <i data-lucide="upload"></i>
+      Unggah dan Simpan Logo
+    </button>
 
-              <p
-                class="settings-message"
-                id="platform-logo-message"
-                aria-live="polite"></p>
+    <p
+      class="settings-message"
+      id="platform-logo-message"
+      aria-live="polite"></p>
 
-            </div>
+  </div>
 
-            <div class="settings-note">
-              Penggantian logo resmi hanya dapat dilakukan
-              oleh Admin KopiHub. Logo ini digunakan bersama
-              oleh Dashboard Admin, Dashboard Owner,
-              Dashboard Kasir, dan Menu Pelanggan.
-            </div>
+  <div class="settings-note">
+    Penggantian logo resmi hanya dapat dilakukan
+    oleh Admin KopiHub. Logo ini digunakan bersama
+    oleh Dashboard Admin, Dashboard Owner,
+    Dashboard Kasir, dan Menu Pelanggan.
+  </div>
 
-          </div>
-        </section>
+</div>
+
+<!-- INFORMASI RESMI PLATFORM -->
+<div class="settings-card platform-identity-card">
+
+  <div class="settings-heading">
+    <div class="settings-icon">
+      <i data-lucide="info"></i>
+    </div>
+
+    <div>
+      <h3>Informasi Resmi Platform</h3>
+      <p>
+        Kelola informasi resmi KopiHub yang ditampilkan
+        pada footer seluruh halaman platform.
+      </p>
+    </div>
+  </div>
+
+  <div class="settings-form">
+
+    <label for="platformEmail">
+      Email Resmi KopiHub
+    </label>
+
+    <input
+      type="email"
+      id="platformEmail"
+      placeholder="Email resmi KopiHub">
+
+    <label for="platformInstagram">
+      Instagram Resmi
+    </label>
+
+    <input
+      type="url"
+      id="platformInstagram"
+      placeholder="https://www.instagram.com/...">
+
+    <label for="platformCreator">
+      Nama Pencipta dan Pengembang
+    </label>
+
+    <input
+      type="text"
+      id="platformCreator"
+      placeholder="Nama pencipta dan pengembang">
+
+    <label for="platformVersion">
+      Versi Platform
+    </label>
+
+    <input
+      type="text"
+      id="platformVersion"
+      placeholder="Diatur menjelang launching">
+
+    <p class="muted">
+      Kosongkan versi sampai nomor resmi ditetapkan.
+    </p>
+
+    <label for="platformTagline">
+      Tagline Platform
+    </label>
+
+    <input
+      type="text"
+      id="platformTagline"
+      value="SATU PLATFORM, BANYAK CERITA">
+
+    <label for="platformDescription">
+      Deskripsi Platform
+    </label>
+
+    <textarea
+      id="platformDescription"
+      rows="3">Platform digital untuk membantu kedai kopi mengelola operasional dan mengembangkan bisnis.</textarea>
+
+    <button
+      type="button"
+      class="action-button"
+      id="save-platform-identity">
+      <i data-lucide="save"></i>
+      Simpan Informasi Platform
+    </button>
+
+    <p
+      class="settings-message"
+      id="platform-identity-message"
+      aria-live="polite"></p>
+
+  </div>
+
+  <div class="settings-note">
+    Informasi ini dikelola oleh Admin KopiHub
+    dan digunakan bersama pada seluruh halaman
+    platform.
+  </div>
+
+</div>
+</section>
 
         <!-- PENGGUNA & AKSES -->
         <section id="users-section" hidden>

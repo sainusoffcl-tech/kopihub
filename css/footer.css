@@ -1,18 +1,12 @@
+
 @import url("/kopihub/css/design-system.css?v=1.1.0");
+
 /* =========================================
    KOPIHUB - GLOBAL FOOTER
-   GLOBAL DESIGN SYSTEM v1.1.0
-   Digunakan bersama oleh:
-   - Dashboard Admin
-   - Dashboard Owner
-   - Dashboard Kasir
-   - Menu Pelanggan
-   - Checkout
-   - Halaman Utama KopiHub
+   SATU KOLOM VERTIKAL
+   GLOBAL DESIGN SYSTEM
 ========================================= */
-/* =========================================
-   FOOTER UTAMA
-========================================= */
+
 .kh-global-footer {
   width: 100%;
   min-width: 0;
@@ -21,6 +15,7 @@
   color: var(--kh-color-primary);
   font-family: var(--kh-font-family);
 }
+
 .kh-footer-container {
   width: min(
     var(--kh-content-max-width),
@@ -29,126 +24,153 @@
   margin: 0 auto;
   min-width: 0;
 }
+
 /* =========================================
-   SUSUNAN UTAMA FOOTER
+   SUSUNAN UTAMA
 ========================================= */
+
 .kh-footer-main {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr 1fr 1fr 1fr;
-  gap: var(--kh-space-8);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
   min-width: 0;
 }
+
 /* =========================================
    IDENTITAS KOPIHUB
 ========================================= */
+
 .kh-footer-brand {
-  max-width: 310px;
+  width: 100%;
+  max-width: 420px;
   min-width: 0;
 }
-/* LOGO GAMBAR DAN WORDMARK */
+
 .kh-footer-logo {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  min-height: 96px;
+  min-height: 80px;
   max-width: 100%;
   text-decoration: none;
 }
+
 .kh-footer-logo img {
   display: block;
-  width: 96px;
-  height: 96px;
-  flex: 0 0 96px;
+  width: 80px;
+  height: 80px;
+  flex: 0 0 80px;
   object-fit: contain;
   object-position: center;
 }
+
 .kh-footer-logo img[hidden] {
   display: none !important;
 }
+
 .kh-footer-brand-name {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  font-size: 34px;
+  font-size: 30px;
   font-weight: var(--kh-font-weight-extra-bold);
   letter-spacing: -1.2px;
 }
+
 .kh-logo-kopi {
   color: var(--kh-color-primary);
 }
+
 .kh-logo-hub {
   color: var(--kh-color-accent);
 }
+
 /* =========================================
    TAGLINE DAN DESKRIPSI
 ========================================= */
+
 .kh-footer-tagline {
   margin-top: var(--kh-space-3);
   color: var(--kh-color-accent);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: var(--kh-font-weight-extra-bold);
   letter-spacing: .6px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
+
 .kh-footer-description {
-  max-width: 300px;
-  margin: 11px 0 0;
+  max-width: 360px;
+  margin: 10px 0 0;
   color: var(--kh-color-text-secondary);
   font-size: var(--kh-font-size-sm);
   line-height: 1.8;
 }
+
 /* =========================================
-   KOLOM NAVIGASI FOOTER
+   NAVIGASI FOOTER
 ========================================= */
+
 .kh-footer-column {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--kh-space-3);
+  gap: 11px;
+  width: 100%;
   min-width: 0;
 }
+
 .kh-footer-column h3 {
-  margin: 5px 0 7px;
+  margin: 0 0 3px;
   color: var(--kh-color-primary);
   font-size: 12px;
   font-weight: var(--kh-font-weight-extra-bold);
   letter-spacing: .7px;
 }
+
 .kh-footer-column a {
   color: var(--kh-color-text-secondary);
   font-size: var(--kh-font-size-sm);
-  line-height: 1.5;
+  line-height: 1.6;
   text-decoration: none;
+  overflow-wrap: anywhere;
   transition: color var(--kh-transition-normal);
 }
+
 .kh-footer-column a:hover {
   color: var(--kh-color-accent);
 }
+
 .kh-footer-column a:focus-visible,
 .kh-footer-logo:focus-visible {
   outline: 2px solid var(--kh-color-accent);
   outline-offset: 4px;
   border-radius: var(--kh-radius-sm);
 }
+
 /* =========================================
    BAGIAN BAWAH FOOTER
 ========================================= */
+
 .kh-footer-bottom {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  margin-top: 38px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 30px;
   padding-top: 18px;
   border-top: 1px solid var(--kh-color-border);
+  text-align: left;
 }
+
 .kh-footer-bottom p {
   margin: 0;
   color: var(--kh-color-text-muted);
   font-size: var(--kh-font-size-xs);
   line-height: 1.6;
 }
+
 .kh-footer-bottom-tagline {
   color: var(--kh-color-primary);
   font-size: var(--kh-font-size-xs);
@@ -156,89 +178,83 @@
   letter-spacing: .5px;
   line-height: 1.6;
 }
-/* =========================================
-   TABLET
-========================================= */
-@media (max-width: 900px) {
-  .kh-footer-main {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 30px 24px;
-  }
-  .kh-footer-brand {
-    grid-column: 1 / -1;
-    max-width: 420px;
-  }
-}
+
 /* =========================================
    HANDPHONE
 ========================================= */
+
 @media (max-width: 600px) {
   .kh-global-footer {
     padding: 36px 0 18px;
   }
+
   .kh-footer-container {
     width: calc(100% - 36px);
   }
+
   .kh-footer-main {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 18px;
+    gap: 25px;
   }
-  .kh-footer-brand {
-    grid-column: 1 / -1;
-    max-width: 100%;
-  }
+
   .kh-footer-logo {
     gap: 12px;
-    min-height: 80px;
+    min-height: 72px;
   }
+
   .kh-footer-logo img {
-    width: 80px;
-    height: 80px;
-    flex-basis: 80px;
+    width: 72px;
+    height: 72px;
+    flex-basis: 72px;
   }
+
   .kh-footer-brand-name {
-    font-size: 30px;
+    font-size: 28px;
   }
+
   .kh-footer-tagline {
     font-size: 11px;
   }
+
   .kh-footer-column {
-    gap: 11px;
+    gap: 10px;
   }
+
   .kh-footer-column h3 {
     font-size: 11px;
   }
+
   .kh-footer-column a {
     font-size: 12px;
   }
+
   .kh-footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 9px;
-    margin-top: 30px;
+    margin-top: 27px;
   }
 }
+
 /* =========================================
    IPHONE LAYAR KECIL
 ========================================= */
+
 @media (max-width: 360px) {
-  .kh-footer-main {
-    column-gap: 12px;
-  }
   .kh-footer-container {
     width: calc(100% - 28px);
   }
+
   .kh-footer-brand-name {
-    font-size: 27px;
+    font-size: 26px;
   }
+
   .kh-footer-tagline {
     font-size: 10px;
     letter-spacing: .4px;
   }
 }
+
 /* =========================================
    AKSESIBILITAS
 ========================================= */
+
 @media (prefers-reduced-motion: reduce) {
   .kh-footer-column a {
     transition: none;

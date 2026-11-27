@@ -3414,7 +3414,8 @@ $("open-report-download")?.addEventListener("click", () => {
   showReportPanel("report-download-panel");
 });
 
-  /* =========================================
+
+/* =========================================
    NAVIGASI PANEL PENGATURAN KEDAI
 ========================================= */
 
@@ -3426,6 +3427,7 @@ function showSettingsPanel(
   const panels = [
     "settings-home-panel",
     "profil-kedai",
+    "pengaturan-jam-operasional",
     "pengaturan-pbjt",
     "manajemen-kasir",
     "pengaturan-waktu-pembayaran",
@@ -3449,6 +3451,7 @@ function showSettingsPanel(
 
   panels.forEach(id => {
     const element = $(id);
+
     if (element) {
       element.hidden = id !== panelId;
     }
@@ -3467,9 +3470,14 @@ function showSettingsPanel(
   if (panelId === "manajemen-kasir" && selectedShop()) {
     loadCashierStaff();
   }
-if (panelId === "profil-kedai" && selectedShop()) {
-  loadOperatingHours();
-}
+
+  if (
+    panelId === "pengaturan-jam-operasional" &&
+    selectedShop()
+  ) {
+    loadOperatingHours();
+  }
+
   if (panelId === "tagihan-kopihub" && selectedShop()) {
     loadOwnerInvoices();
   }
@@ -3484,26 +3492,25 @@ if (panelId === "profil-kedai" && selectedShop()) {
   }
 }
 
-  
+
 /* TAB IDENTITAS KEDAI */
 
 function showIdentityTab(tab) {
+  if (tab === "hours") {
+    showSettingsPanel("pengaturan-jam-operasional");
+    return;
+  }
+
   const profileContent = $("identity-profile-content");
-  const hoursContent = $("identity-hours-content");
   const profileButton = $("identity-tab-profile");
   const hoursButton = $("identity-tab-hours");
 
-  const showHours = tab === "hours";
-
-  profileContent.hidden = showHours;
-  hoursContent.hidden = !showHours;
-
-  profileButton.classList.toggle("active", !showHours);
-  hoursButton.classList.toggle("active", showHours);
-
-  if (showHours && selectedShop()) {
-    loadOperatingHours();
+  if (profileContent) {
+    profileContent.hidden = false;
   }
+
+  profileButton?.classList.add("active");
+  hoursButton?.classList.remove("active");
 
   if (appScroll) {
     appScroll.scrollTo({
@@ -3520,6 +3527,7 @@ $("identity-tab-profile")?.addEventListener("click", () => {
 $("identity-tab-hours")?.addEventListener("click", () => {
   showIdentityTab("hours");
 });
+
 
 /* TOMBOL PILIHAN PENGATURAN */
 
@@ -3546,17 +3554,20 @@ $("open-settings-invoices")?.addEventListener("click", () => {
 $("open-settings-account")?.addEventListener("click", () => {
   showSettingsPanel("pengaturan-akun");
 });
-  
-  
+
+
 /* WAKTU OPERASIONAL */
+
 $("open-settings-hours")?.addEventListener("click", () => {
-  showSettingsPanel("profil-kedai");
-  showIdentityTab("hours");
+  showSettingsPanel("pengaturan-jam-operasional");
 });
 
+
 /* QR MENU KEDAI */
+
 $("open-settings-qr")?.addEventListener("click", () => {
-  showMenuPanel("menu-qr-panel");
+  navigateToPage("menu");
+  showMenuPanel("menu-qr-panel", false);
 });
 
   /* =========================================

@@ -3399,12 +3399,14 @@ function addDashboardDetailSection(title) {
   return section;
 }
 
-/* =========================================
-   MEMBUKA DETAIL COFFEE SHOP
-========================================= */
 
 async function openDashboardShopDetail(shop) {
+  if (!shop || !shop.id) {
+    alert("Data kedai tidak valid.");
+    return;
+  }
 
+  // Tampilkan halaman Detail Kedai
   dashboardListView.hidden = true;
   dashboardDetailView.hidden = false;
 
@@ -3419,258 +3421,184 @@ async function openDashboardShopDetail(shop) {
 
   dashboardDetail.replaceChildren();
 
-  const loadingText =
-    document.createElement("p");
-
-  loadingText.className = "muted";
-  loadingText.textContent =
-    "Memuat detail kedai...";
-
-  dashboardDetail.appendChild(loadingText);
-
   if (contentScroll) {
     contentScroll.scrollTop = 0;
   }
 
-  const owners =
-    dashboardOwnersByShop[shop.id] || [];
+  // Tampilkan status pemuatan
+  const loadingText = document.createElement("p");
+  loadingText.className = "muted";
+  loadingText.textContent = "Memuat detail kedai...";
 
-  let orderCount = null;
+  dashboardDetail.appendChild(loadingText);
 
   try {
-
-    const { data: orderSummary, error: orderError } =
-      await client.rpc(
-        "kh_admin_get_platform_orders",
-        {
-          p_shop_id: shop.id,
-          p_limit: 1,
-          p_offset: 0
-        }
-      );
-
-    if (orderError) throw orderError;
-
-    orderCount = Number(
-      orderSummary?.total_count ?? 0
+    // Ambil data melalui RPC khusus Admin
+    const { data, error } = await client.rpc(
+      "kh_admin_get_shop_detail",
+      {
+        p_shop_id: shop.id
+      }
     );
 
-  } catch (error) {
+    if (error) {
+      throw error;
+    }
 
-    console.error(
-      "Gagal memuat jumlah pesanan kedai:",
-      error
-    );
-  }
-
-  dashboardDetail.replaceChildren();
-
-  /* IDENTITAS KEDAI */
-
-  const headerCard =
-    document.createElement("div");
-
-  headerCard.className =
-    "dashboard-detail-card";
-
-  const heading =
-    document.createElement("div");
-
-  heading.className =
-    "dashboard-detail-heading";
-
-  const logo =
-    document.createElement("div");
-
-  logo.className =
-    "dashboard-detail-logo";
-
-  if (
-    shop.logo_url &&
-    /^https?:\/\//i.test(shop.logo_url)
-  ) {
-
-    const image =
-      document.createElement("img");
-
-    image.src = shop.logo_url;
-    image.alt =
-      "Logo " + (shop.name || "Coffee Shop");
-
-    image.referrerPolicy = "no-referrer";
-    logo.appendChild(image);
-
-  } else {
-
-    const icon =
-      document.createElement("i");
-
-    icon.setAttribute("data-lucide", "store");
-    logo.appendChild(icon);
-  }
-
-  const titleWrap =
-    document.createElement("div");
-
-  const title =
-    document.createElement("h2");
-
-  title.textContent =
-    shop.name || "Kedai tanpa nama";
-
-  const subtitle =
-    document.createElement("p");
-
-  subtitle.textContent =
-    shop.business_type ||
-    "Jenis usaha belum diisi";
-
-  titleWrap.append(title, subtitle);
-  heading.append(logo, titleWrap);
-  headerCard.appendChild(heading);
-
-  const status =
-    document.createElement("span");
-
-  status.className =
-    "dashboard-detail-status " +
-    (shop.is_active ? "active" : "inactive");
-
-  status.textContent =
-    shop.is_active ? "Kedai Aktif" : "Kedai Nonaktif";
-
-  headerCard.appendChild(status);
-  dashboardDetail.appendChild(headerCard);
-
-  /* INFORMASI KEDAI */
-
-  const shopInfoSection =
-    addDashboardDetailSection("Informasi Kedai");
-
-  addDashboardDetailField(
-    shopInfoSection,
-    "Nama Coffee Shop",
-    shop.name
-  );
-
-  addDashboardDetailField(
-    shopInfoSection,
-    "Jenis Usaha",
-    shop.business_type
-  );
-
-  addDashboardDetailField(
-    shopInfoSection,
-    "Alamat",
-    shop.address
-  );
-
-  addDashboardDetailField(
-    shopInfoSection,
-    "Nomor Telepon Kedai",
-    shop.phone
-  );
-
-  addDashboardDetailField(
-    shopInfoSection,
-    "Deskripsi",
-    shop.description
-  );
-
-  /* INFORMASI OWNER */
-
-  const ownerSection =
-    addDashboardDetailSection("Informasi Owner");
-
-  if (owners.length > 0) {
-
-    owners.forEach((owner, index) => {
-
-      addDashboardDetailField(
-        ownerSection,
-        owners.length > 1
-          ? "Nama Owner " + (index + 1)
-          : "Nama Owner",
-        owner.full_name
+    if (!data || !data.shop) {
+      throw new Error(
+        "Informasi kedai tidak ditemukan."
       );
+    }
 
-      addDashboardDetailField(
-        ownerSection,
-        owners.length > 1
-          ? "Telepon Owner " + (index + 1)
-          : "Telepon Owner",
-        owner.phone
-      );
-    });
+    const shopInfo = data.shop;
+    const ownerInfo = data.owner || {};
 
-  } else {
+    dashboardDetail.replaceChildren();
 
-    addDashboardDetailField(
-      ownerSection,
-      "Informasi Owner",
-      "Belum tersedia atau belum dapat diakses"
-    );
-  }
+    // Format tanggal bergabung
+    let joinedDate = "Belum tersedia";
 
-  addDashboardDetailField(
-    ownerSection,
-    "Email Owner",
-    "Belum tersedia pada data profil"
-  );
+    if (shopInfo.joined_at) {
+      const date = new Date(shopInfo.joined_at);
 
-  /* INFORMASI KEMITRAAN */
-
-  const partnershipSection =
-    addDashboardDetailSection("Informasi Kemitraan");
-
-  addDashboardDetailField(
-    partnershipSection,
-    "Tanggal Bergabung",
-    shop.created_at
-      ? new Date(shop.created_at).toLocaleDateString(
+      if (!Number.isNaN(date.getTime())) {
+        joinedDate = date.toLocaleDateString(
           "id-ID",
           {
             day: "numeric",
             month: "long",
             year: "numeric"
           }
-        )
-      : "Belum tersedia"
-  );
+        );
+      }
+    }
 
-  addDashboardDetailField(
-    partnershipSection,
-    "Status Kedai",
-    shop.is_active ? "Aktif" : "Nonaktif"
-  );
+    // Membuat kartu informasi
+    function createDetailCard(title) {
+      const card = document.createElement("div");
+      card.className = "dashboard-detail-card";
 
-  addDashboardDetailField(
-    partnershipSection,
-    "Status Platform",
-    "Kedai sudah terdaftar"
-  );
+      const section = document.createElement("div");
+      section.className = "dashboard-detail-section";
 
-  /* AKTIVITAS */
+      const heading = document.createElement("h3");
+      heading.textContent = title;
 
-  const activitySection =
-    addDashboardDetailSection("Aktivitas Kedai");
+      section.appendChild(heading);
+      card.appendChild(section);
+      dashboardDetail.appendChild(card);
 
-  addDashboardDetailField(
-    activitySection,
-    "Total Pesanan",
-    orderCount === null
-      ? "Gagal memuat jumlah pesanan"
-      : orderCount.toLocaleString("id-ID") +
-        " pesanan"
-  );
+      return section;
+    }
 
-  addDashboardDetailField(
-    activitySection,
-    "Total Transaksi",
-    "Menunggu integrasi data transaksi"
-  );
+    // =====================================
+    // 1. INFORMASI KEDAI
+    // =====================================
 
-  refreshIcons();
+    const shopSection =
+      createDetailCard("Informasi Kedai");
+
+    addDashboardDetailField(
+      shopSection,
+      "Nama kedai",
+      shopInfo.name
+    );
+
+    addDashboardDetailField(
+      shopSection,
+      "Kode kedai",
+      shopInfo.shop_code
+    );
+
+    addDashboardDetailField(
+      shopSection,
+      "Slug kedai",
+      shopInfo.slug
+    );
+
+    addDashboardDetailField(
+      shopSection,
+      "Alamat kedai",
+      shopInfo.address
+    );
+
+    addDashboardDetailField(
+      shopSection,
+      "Nomor telepon",
+      shopInfo.phone
+    );
+
+    addDashboardDetailField(
+      shopSection,
+      "Email kedai",
+      shopInfo.email
+    );
+
+    addDashboardDetailField(
+      shopSection,
+      "Tanggal bergabung",
+      joinedDate
+    );
+
+    addDashboardDetailField(
+      shopSection,
+      "Status kedai",
+      shopInfo.status
+    );
+
+    // =====================================
+    // 2. INFORMASI PEMILIK
+    // =====================================
+
+    const ownerSection =
+      createDetailCard("Informasi Pemilik");
+
+    addDashboardDetailField(
+      ownerSection,
+      "Nama pemilik",
+      ownerInfo.name
+    );
+
+    addDashboardDetailField(
+      ownerSection,
+      "Email akun",
+      ownerInfo.email
+    );
+
+    addDashboardDetailField(
+      ownerSection,
+      "Nomor telepon",
+      ownerInfo.phone
+    );
+
+    addDashboardDetailField(
+      ownerSection,
+      "Status akun",
+      ownerInfo.status
+    );
+
+    // Perbarui ikon jika diperlukan
+    refreshIcons();
+
+  } catch (error) {
+    console.error(
+      "Gagal memuat Detail Kedai:",
+      error
+    );
+
+    dashboardDetail.replaceChildren();
+
+    const errorMessage =
+      document.createElement("div");
+
+    errorMessage.className = "warning";
+    errorMessage.textContent =
+      "Detail kedai gagal dimuat: " +
+      (error.message || "Terjadi kesalahan.");
+
+    dashboardDetail.appendChild(errorMessage);
+  }
 }
 
 /* =========================================

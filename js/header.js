@@ -1,14 +1,14 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
-   Versi: 1.3.3
+   Versi: 1.3.4
    Global Design System v1.3.0
 ========================================================= */
 
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.3.3";
+  const HEADER_VERSION = "1.3.4";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =
@@ -529,6 +529,7 @@
 
   /* =====================================================
      EVENT IDENTITAS OWNER
+     FOTO PROFIL TIDAK MEMBUKA HALAMAN
   ===================================================== */
 
   function bindOwnerIdentityEvents(root, role) {
@@ -541,6 +542,8 @@
     setShopName(root, window.KopiHubOwnerShopName);
     setShopLogo(root, window.KopiHubOwnerShopLogo);
 
+    /* FOTO PROFIL TETAP TAMPIL, TAPI TIDAK NAVIGASI */
+
     const profileButton = root.querySelector(
       "[data-kh-profile-open]"
     );
@@ -548,8 +551,9 @@
     if (profileButton) {
       profileButton.hidden = false;
 
-      profileButton.addEventListener("click", () => {
-        sendNavigation(root, role, "identity");
+      profileButton.addEventListener("click", event => {
+        event.preventDefault();
+        event.stopPropagation();
       });
     }
 

@@ -82,7 +82,6 @@
           id: "account-settings",
           label: "Pengaturan Akun",
           icon: "user-round-cog",
-          disabled: true
         },
         {
           id: "logout",

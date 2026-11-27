@@ -1,14 +1,14 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL HEADER
-   Versi: 1.3.4
+   Versi: 1.3.5
    Global Design System v1.3.0
 ========================================================= */
 
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.3.4";
+  const HEADER_VERSION = "1.3.5";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =
@@ -53,15 +53,43 @@
       label: "OWNER KEDAI",
       title: "Menu Owner",
       items: [
-        { id: "home", label: "Dashboard", icon: "layout-dashboard" },
-        { id: "menu", label: "Kelola Menu", icon: "coffee" },
-        { id: "transactions", label: "Transaksi", icon: "receipt-text" },
-        { id: "reports", label: "Laporan Penjualan", icon: "chart-no-axes-combined" },
-        { id: "cashiers", label: "Karyawan", icon: "users" },
-        { id: "identity", label: "Profil Kedai", icon: "store" },
-        { id: "payments", label: "Pembayaran", icon: "wallet" },
-        { id: "settings", label: "Pengaturan", icon: "settings" },
-        { id: "logout", label: "Keluar", icon: "log-out", danger: true }
+        {
+          id: "home",
+          label: "Dashboard",
+          icon: "layout-dashboard"
+        },
+        {
+          id: "transactions",
+          label: "Transaksi",
+          icon: "receipt-text"
+        },
+        {
+          id: "reports",
+          label: "Laporan Penjualan",
+          icon: "chart-no-axes-combined"
+        },
+        {
+          id: "menu",
+          label: "Manajemen Menu",
+          icon: "coffee"
+        },
+        {
+          id: "settings",
+          label: "Pengaturan Kedai",
+          icon: "store"
+        },
+        {
+          id: "account-settings",
+          label: "Pengaturan Akun",
+          icon: "user-round-cog",
+          disabled: true
+        },
+        {
+          id: "logout",
+          label: "Keluar",
+          icon: "log-out",
+          danger: true
+        }
       ]
     },
 
@@ -109,13 +137,11 @@
 
     owner: {
       home: "Lihat ringkasan aktivitas dan performa kedai",
-      menu: "Tambah, ubah, dan kelola daftar menu kedai",
       transactions: "Pantau dan kelola transaksi kedai",
       reports: "Lihat laporan penjualan dan performa kedai",
-      cashiers: "Kelola karyawan dan akun kasir",
-      identity: "Kelola identitas, nama, dan logo kedai",
-      payments: "Atur metode dan ketentuan pembayaran",
-      settings: "Atur preferensi dan operasional kedai",
+      menu: "Tambah, ubah, dan kelola daftar menu kedai",
+      settings: "Atur pajak, karyawan, dan operasional kedai",
+      "account-settings": "Kelola informasi dan keamanan akun",
       logout: "Keluar dari akun Owner"
     },
 
@@ -368,6 +394,14 @@
         button.classList.add("kh-danger");
       }
 
+      /* MENU YANG BELUM DIAKTIFKAN */
+
+      if (item.disabled) {
+        button.disabled = true;
+        button.classList.add("kh-menu-disabled");
+        button.setAttribute("aria-disabled", "true");
+      }
+
       /* IKON DI KIRI */
 
       const icon = document.createElement("span");
@@ -535,14 +569,10 @@
   function bindOwnerIdentityEvents(root, role) {
     if (role !== "owner") return;
 
-    /* PENANDA LAYOUT OWNER UNTUK CSS */
-
     root.classList.add("kh-header-owner-layout");
 
     setShopName(root, window.KopiHubOwnerShopName);
     setShopLogo(root, window.KopiHubOwnerShopLogo);
-
-    /* FOTO PROFIL TETAP TAMPIL, TAPI TIDAK NAVIGASI */
 
     const profileButton = root.querySelector(
       "[data-kh-profile-open]"
@@ -587,6 +617,7 @@
       const button = event.target.closest("[data-kh-action]");
 
       if (!button || !list.contains(button)) return;
+      if (button.disabled) return;
 
       sendNavigation(root, role, button.dataset.khAction);
     });
@@ -641,8 +672,6 @@
       renderMenu(root, role);
       bindOwnerIdentityEvents(root, role);
       bindEvents(root, role);
-
-      /* LOGO RESMI HANYA UNTUK NON-OWNER */
 
       if (role !== "owner") {
         loadOfficialLogo(root);

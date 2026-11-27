@@ -1,7 +1,7 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL DESIGN SYSTEM
-   Versi: 1.3.1
+   Versi: 1.4.0
 
    SUMBER STANDAR VISUAL SELURUH PLATFORM KOPIHUB
 
@@ -10,6 +10,7 @@
    - Dashboard Owner
    - Dashboard Kasir
    - Menu Pelanggan
+   - Checkout
    - Halaman Publik KopiHub
 
    PRINSIP:
@@ -30,47 +31,36 @@
 ========================================================= */
 
 :root {
-
   color-scheme: light;
 
   /* BRAND */
-
   --kh-color-primary: #123B2C;
   --kh-color-primary-light: #24543E;
   --kh-color-primary-dark: #0D2E22;
-
   --kh-color-secondary: #174C38;
 
   --kh-color-accent: #E99A48;
   --kh-color-accent-light: #F5B66F;
   --kh-color-accent-dark: #CC7D2D;
 
-
   /* BACKGROUND */
-
   --kh-color-background: #FAF9F5;
   --kh-color-surface: #FFFFFF;
   --kh-color-surface-soft: #F3F4EF;
   --kh-color-surface-muted: #EDF2E9;
   --kh-color-surface-hover: #F5F6F2;
 
-
   /* TEXT */
-
   --kh-color-text: #26372D;
   --kh-color-text-secondary: #64756C;
   --kh-color-text-muted: #788278;
   --kh-color-text-inverse: #FAF9F5;
 
-
   /* BORDER */
-
   --kh-color-border: #E5E8DF;
   --kh-color-border-strong: #D5DCD1;
 
-
   /* STATUS */
-
   --kh-color-success: #247A4A;
   --kh-color-success-bg: #EAF5ED;
 
@@ -83,9 +73,7 @@
   --kh-color-info: #28658A;
   --kh-color-info-bg: #EAF3F9;
 
-
   /* OVERLAY */
-
   --kh-color-overlay: rgba(10, 25, 17, 0.56);
 
 
@@ -107,9 +95,7 @@
     Consolas,
     monospace;
 
-
   /* FONT SIZE */
-
   --kh-font-size-xs: 11px;
   --kh-font-size-sm: 13px;
   --kh-font-size-md: 14px;
@@ -120,18 +106,14 @@
   --kh-font-size-3xl: 30px;
   --kh-font-size-4xl: 36px;
 
-
   /* FONT WEIGHT */
-
   --kh-font-weight-normal: 400;
   --kh-font-weight-medium: 500;
   --kh-font-weight-semibold: 600;
   --kh-font-weight-bold: 700;
   --kh-font-weight-extra-bold: 800;
 
-
   /* LINE HEIGHT */
-
   --kh-line-height-tight: 1.2;
   --kh-line-height-normal: 1.5;
   --kh-line-height-relaxed: 1.7;
@@ -139,7 +121,6 @@
 
   /* =======================================================
      3. SPACING — SISTEM JARAK
-     Kelipatan 4px
   ======================================================= */
 
   --kh-space-1: 4px;
@@ -241,7 +222,6 @@
 
   /* =======================================================
      8A. GLOBAL DASHBOARD SUMMARY CARD
-     Standar ukuran kartu ringkasan seluruh dashboard
   ======================================================= */
 
   --kh-stat-card-width: 90%;
@@ -253,6 +233,30 @@
   --kh-stat-value-size: 27px;
   --kh-stat-label-size: 12px;
   --kh-stat-description-size: 11px;
+
+
+  /* =======================================================
+     8B. GLOBAL NAVIGATION CARD
+  ======================================================= */
+
+  --kh-nav-card-background: var(--kh-color-surface);
+  --kh-nav-card-border: var(--kh-color-border);
+  --kh-nav-card-hover: var(--kh-color-surface-hover);
+  --kh-nav-card-active: var(--kh-color-surface-muted);
+
+  --kh-nav-card-radius: var(--kh-radius-lg);
+  --kh-nav-card-padding: 14px;
+  --kh-nav-card-min-height: 70px;
+
+  --kh-nav-icon-size: 42px;
+  --kh-nav-icon-radius: 12px;
+
+  --kh-nav-title-color: var(--kh-color-primary);
+  --kh-nav-description-color: var(--kh-color-text-muted);
+  --kh-nav-arrow-color: #9AA69B;
+
+  --kh-nav-card-gap: 13px;
+  --kh-nav-list-gap: 10px;
 
 
   /* =======================================================
@@ -325,69 +329,40 @@
     background-color var(--kh-transition-normal),
     border-color var(--kh-transition-normal);
 
-
-  /* =======================================================
-     15. GLOBAL NAVIGATION TOKENS
-     Standar kartu navigasi seluruh peran
-  ======================================================= */
-
-  --kh-nav-card-background: var(--kh-color-surface);
-  --kh-nav-card-border: var(--kh-color-border);
-  --kh-nav-card-hover: var(--kh-color-surface-hover);
-  --kh-nav-card-active: var(--kh-color-surface-muted);
-
-  --kh-nav-card-radius: var(--kh-radius-lg);
-  --kh-nav-card-padding: 14px;
-  --kh-nav-card-min-height: 70px;
-
-  --kh-nav-icon-size: 42px;
-  --kh-nav-icon-radius: 12px;
-
-  --kh-nav-title-color: var(--kh-color-primary);
-  --kh-nav-description-color: var(--kh-color-text-muted);
-  --kh-nav-arrow-color: #9AA69B;
-
-  --kh-nav-card-gap: 13px;
-  --kh-nav-list-gap: 10px;
-
 }
 
 
 /* =========================================================
-   16. DARK MODE TOKENS
+   15. DARK MODE TOKENS
+   Sinkron dengan js/theme.js versi 1.1.0
+
+   Tidak menggunakan :has() agar kompatibel dengan Safari
+   dan browser iPhone yang lebih lama.
 ========================================================= */
 
 html[data-theme="dark"],
-html:has(body.dark-mode),
 body.dark-mode {
 
   color-scheme: dark;
 
   /* BACKGROUND */
-
   --kh-color-background: #101A15;
   --kh-color-surface: #17231C;
   --kh-color-surface-soft: #1E2D24;
   --kh-color-surface-muted: #26372C;
   --kh-color-surface-hover: #2B3D31;
 
-
   /* TEXT */
-
   --kh-color-text: #F1F4EF;
   --kh-color-text-secondary: #B5C0B7;
   --kh-color-text-muted: #89968D;
   --kh-color-text-inverse: #FFFFFF;
 
-
   /* BORDER */
-
   --kh-color-border: #304238;
   --kh-color-border-strong: #43594A;
 
-
   /* STATUS */
-
   --kh-color-success: #79D49A;
   --kh-color-success-bg: #183B2A;
 
@@ -400,14 +375,10 @@ body.dark-mode {
   --kh-color-info: #8BC8ED;
   --kh-color-info-bg: #1D3547;
 
-
   /* OVERLAY */
-
   --kh-color-overlay: rgba(0, 0, 0, 0.72);
 
-
   /* SHADOW */
-
   --kh-shadow-xs:
     0 1px 3px rgba(0, 0, 0, 0.15);
 
@@ -423,15 +394,11 @@ body.dark-mode {
   --kh-shadow-xl:
     0 16px 40px rgba(0, 0, 0, 0.32);
 
-
   /* FOCUS */
-
   --kh-focus-ring:
     0 0 0 3px rgba(233, 154, 72, 0.35);
 
-
-  /* GLOBAL NAVIGATION */
-
+  /* NAVIGATION */
   --kh-nav-card-background: var(--kh-color-surface);
   --kh-nav-card-border: var(--kh-color-border);
   --kh-nav-card-hover: var(--kh-color-surface-hover);
@@ -445,11 +412,16 @@ body.dark-mode {
 
 
 /* =========================================================
-   17. GLOBAL BASE — STANDAR DASAR
+   16. GLOBAL BASE — STANDAR DASAR
 ========================================================= */
 
-html {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
+html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 
@@ -457,12 +429,9 @@ html {
   color: var(--kh-color-text);
 
   transition: var(--kh-content-transition);
-
 }
 
-
 body {
-
   min-width: 0;
 
   font-family: var(--kh-font-family);
@@ -471,9 +440,7 @@ body {
   background-color: var(--kh-color-background);
 
   transition: var(--kh-content-transition);
-
 }
-
 
 /* MEDIA PROTECTION */
 
@@ -481,21 +448,38 @@ img,
 video,
 canvas,
 svg {
-
   max-width: 100%;
+}
 
+img,
+video {
+  height: auto;
+}
+
+/* FORM ELEMENT FONT CONSISTENCY */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+[role="button"],
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 
 /* =========================================================
-   18. GLOBAL COMPONENTS — KH-UI
+   17. GLOBAL COMPONENTS — KH-UI
 ========================================================= */
 
 
 /* AREA KONTEN */
 
 .kh-ui-container {
-
   width: min(
     var(--kh-content-max-width),
     calc(100% - 36px)
@@ -505,23 +489,17 @@ svg {
   margin-right: auto;
 
   min-width: 0;
-
 }
 
-
 .kh-ui-section {
-
   min-width: 0;
-
   margin-bottom: var(--kh-space-6);
-
 }
 
 
 /* TYPOGRAPHY */
 
 .kh-ui-title {
-
   margin: 0;
 
   color: var(--kh-color-text);
@@ -532,35 +510,29 @@ svg {
 
   line-height: var(--kh-line-height-tight);
 
+  overflow-wrap: anywhere;
 }
 
-
 .kh-ui-subtitle {
-
   margin: var(--kh-space-2) 0 0;
 
   color: var(--kh-color-text-secondary);
 
   font-size: var(--kh-font-size-sm);
   line-height: var(--kh-line-height-relaxed);
-
 }
 
-
 .kh-ui-label {
-
   color: var(--kh-color-text);
 
   font-size: var(--kh-font-size-sm);
   font-weight: var(--kh-font-weight-semibold);
-
 }
 
 
 /* CARD */
 
 .kh-ui-card {
-
   min-width: 0;
 
   padding: var(--kh-card-padding);
@@ -573,13 +545,12 @@ svg {
 
   box-shadow: var(--kh-shadow-sm);
 
-  transition: var(--kh-content-transition);
-
+  transition:
+    var(--kh-content-transition),
+    box-shadow var(--kh-transition-normal);
 }
 
-
 .kh-ui-card-header {
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -588,14 +559,12 @@ svg {
   margin-bottom: var(--kh-space-4);
 
   min-width: 0;
-
 }
 
 
 /* BUTTON */
 
 .kh-ui-button {
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -612,80 +581,65 @@ svg {
   font-size: var(--kh-font-size-sm);
   font-weight: var(--kh-font-weight-bold);
 
+  text-align: center;
   text-decoration: none;
+  white-space: normal;
+
   cursor: pointer;
 
   transition:
-    background var(--kh-transition-normal),
+    background-color var(--kh-transition-normal),
     border-color var(--kh-transition-normal),
     color var(--kh-transition-normal),
-    box-shadow var(--kh-transition-normal);
+    box-shadow var(--kh-transition-normal),
+    opacity var(--kh-transition-normal);
 
   -webkit-tap-highlight-color: transparent;
-
 }
-
 
 .kh-ui-button-primary {
-
-  color: var(--kh-color-text-inverse);
+  color: #FFFFFF;
   background: var(--kh-color-primary);
-
 }
-
 
 .kh-ui-button-primary:hover {
-
   background: var(--kh-color-primary-light);
-
 }
 
-
 .kh-ui-button-secondary {
-
   color: var(--kh-color-text);
 
   border-color: var(--kh-color-border);
   background: var(--kh-color-surface);
-
 }
-
 
 .kh-ui-button-secondary:hover {
-
   background: var(--kh-color-surface-hover);
-
 }
-
 
 .kh-ui-button-accent {
-
   color: #FFFFFF;
   background: var(--kh-color-accent-dark);
-
 }
-
 
 .kh-ui-button-accent:hover {
-
   background: var(--kh-color-accent-dark);
-
 }
-
 
 .kh-ui-button-danger {
-
   color: #FFFFFF;
   background: var(--kh-color-danger);
-
 }
 
+.kh-ui-button-danger:hover {
+  opacity: 0.9;
+}
 
-.kh-ui-button:disabled {
-
+.kh-ui-button:disabled,
+.kh-ui-button[aria-disabled="true"] {
   opacity: var(--kh-opacity-disabled);
   cursor: not-allowed;
-
+  pointer-events: none;
 }
 
 
@@ -694,6 +648,7 @@ svg {
 .kh-ui-input,
 .kh-ui-select,
 .kh-ui-textarea {
+  display: block;
 
   width: 100%;
   min-width: 0;
@@ -714,21 +669,15 @@ svg {
     box-shadow var(--kh-transition-normal),
     color var(--kh-transition-normal),
     background-color var(--kh-transition-normal);
-
 }
-
 
 .kh-ui-input,
 .kh-ui-select {
-
   min-height: var(--kh-control-height-md);
   padding: 0 var(--kh-input-padding-x);
-
 }
 
-
 .kh-ui-textarea {
-
   min-height: 100px;
 
   padding:
@@ -736,24 +685,32 @@ svg {
     var(--kh-input-padding-x);
 
   resize: vertical;
-
 }
 
+.kh-ui-input::placeholder,
+.kh-ui-textarea::placeholder {
+  color: var(--kh-color-text-muted);
+  opacity: 1;
+}
 
 .kh-ui-input:focus,
 .kh-ui-select:focus,
 .kh-ui-textarea:focus {
-
-  border-color: var(--kh-color-primary);
+  border-color: var(--kh-color-primary-light);
   box-shadow: var(--kh-focus-ring);
+}
 
+.kh-ui-input:disabled,
+.kh-ui-select:disabled,
+.kh-ui-textarea:disabled {
+  opacity: var(--kh-opacity-disabled);
+  cursor: not-allowed;
 }
 
 
 /* BADGE / STATUS */
 
 .kh-ui-badge {
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -766,57 +723,44 @@ svg {
   font-size: var(--kh-font-size-xs);
   font-weight: var(--kh-font-weight-bold);
 
+  line-height: var(--kh-line-height-normal);
 }
-
 
 .kh-ui-badge-success {
-
   color: var(--kh-color-success);
   background: var(--kh-color-success-bg);
-
 }
-
 
 .kh-ui-badge-warning {
-
   color: var(--kh-color-warning);
   background: var(--kh-color-warning-bg);
-
 }
-
 
 .kh-ui-badge-danger {
-
   color: var(--kh-color-danger);
   background: var(--kh-color-danger-bg);
-
 }
 
-
 .kh-ui-badge-info {
-
   color: var(--kh-color-info);
   background: var(--kh-color-info-bg);
-
 }
 
 
 /* DIVIDER */
 
 .kh-ui-divider {
-
   width: 100%;
   height: 1px;
 
   border: 0;
 
   background: var(--kh-color-border);
-
 }
 
 
 /* =========================================================
-   19. GLOBAL NAVIGATION COMPONENT
+   18. GLOBAL NAVIGATION COMPONENT
    Standar kartu navigasi satu kolom KopiHub
 
    STRUKTUR:
@@ -824,17 +768,10 @@ svg {
    Judul dan deskripsi tengah
    Panah kanan
 
-   Dapat digunakan pada:
-   Admin, Owner, Kasir, dan Pelanggan.
-
    Tidak mengatur fungsi navigasi JavaScript.
 ========================================================= */
 
-
-/* PEMBUNGKUS DAFTAR NAVIGASI */
-
 .kh-ui-nav-list {
-
   display: flex;
   flex-direction: column;
 
@@ -842,14 +779,9 @@ svg {
 
   width: 100%;
   min-width: 0;
-
 }
 
-
-/* KARTU NAVIGASI */
-
 .kh-ui-nav-card {
-
   display: flex;
   align-items: center;
 
@@ -877,37 +809,27 @@ svg {
   -webkit-tap-highlight-color: transparent;
 
   transition:
-    background var(--kh-transition-fast),
+    background-color var(--kh-transition-fast),
     border-color var(--kh-transition-fast),
     color var(--kh-transition-fast),
     box-shadow var(--kh-transition-fast);
-
 }
-
-
-/* INTERAKSI KARTU */
 
 .kh-ui-nav-card:hover {
-
   background: var(--kh-nav-card-hover);
-
 }
-
 
 .kh-ui-nav-card:active,
 .kh-ui-nav-card.kh-active,
 .kh-ui-nav-card[aria-current="page"] {
-
   border-color: var(--kh-color-primary-light);
   background: var(--kh-nav-card-active);
-
 }
 
 
 /* IKON KIRI */
 
 .kh-ui-nav-icon {
-
   display: grid;
   place-items: center;
 
@@ -920,24 +842,19 @@ svg {
 
   color: var(--kh-color-primary-light);
   background: var(--kh-color-surface-muted);
-
 }
 
-
 .kh-ui-nav-icon svg {
-
   display: block;
 
   width: 20px;
   height: 20px;
-
 }
 
 
 /* AREA JUDUL DAN DESKRIPSI */
 
 .kh-ui-nav-content {
-
   display: flex;
   flex: 1 1 auto;
 
@@ -947,14 +864,9 @@ svg {
   gap: 4px;
 
   min-width: 0;
-
 }
 
-
-/* JUDUL KARTU */
-
 .kh-ui-nav-title {
-
   display: block;
 
   min-width: 0;
@@ -966,13 +878,10 @@ svg {
 
   line-height: var(--kh-line-height-tight);
 
+  overflow-wrap: anywhere;
 }
 
-
-/* KETERANGAN KARTU */
-
 .kh-ui-nav-description {
-
   display: block;
 
   min-width: 0;
@@ -984,13 +893,13 @@ svg {
 
   line-height: var(--kh-line-height-normal);
 
+  overflow-wrap: anywhere;
 }
 
 
 /* PANAH KANAN */
 
 .kh-ui-nav-arrow {
-
   display: grid;
   place-items: center;
 
@@ -1000,82 +909,63 @@ svg {
   flex: 0 0 18px;
 
   color: var(--kh-nav-arrow-color);
-
 }
 
-
 .kh-ui-nav-arrow svg {
-
   display: block;
 
   width: 18px;
   height: 18px;
-
 }
 
 
 /* VARIAN KARTU BERBAHAYA */
 
 .kh-ui-nav-card.kh-danger {
-
-  border-color: #F0D9D6;
-
+  border-color: var(--kh-color-danger-bg);
   color: var(--kh-color-danger);
-
 }
-
 
 .kh-ui-nav-card.kh-danger .kh-ui-nav-icon {
-
   color: var(--kh-color-danger);
   background: var(--kh-color-danger-bg);
-
 }
 
-
 .kh-ui-nav-card.kh-danger .kh-ui-nav-title {
-
   color: var(--kh-color-danger);
-
 }
 
 
 /* AKSESIBILITAS NAVIGASI */
 
 .kh-ui-nav-card:focus-visible {
-
   outline: 3px solid var(--kh-focus-color);
   outline-offset: 3px;
-
 }
-
 
 .kh-ui-nav-card:disabled,
 .kh-ui-nav-card[aria-disabled="true"] {
-
   opacity: var(--kh-opacity-disabled);
   cursor: not-allowed;
-
+  pointer-events: none;
 }
 
 
 /* =========================================================
-   20. GLOBAL DASHBOARD SUMMARY CARDS
-   Standar kartu ringkasan seluruh dashboard KopiHub
+   19. GLOBAL DASHBOARD SUMMARY CARDS
 
    Digunakan oleh:
    - Dashboard Admin
    - Dashboard Owner
    - Dashboard Kasir
 
-   Pengaturan ukuran berada di token bagian 8A.
+   Ukuran dikendalikan melalui token bagian 8A.
 ========================================================= */
 
 
 /* PEMBUNGKUS KARTU */
 
 .kh-ui-stats {
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1084,14 +974,12 @@ svg {
 
   width: 100%;
   min-width: 0;
-
 }
 
 
 /* KARTU RINGKASAN */
 
 .kh-ui-stat-card {
-
   display: flex;
   flex-direction: column;
 
@@ -1115,29 +1003,25 @@ svg {
   text-decoration: none;
 
   transition:
-    background var(--kh-transition-normal),
+    background-color var(--kh-transition-normal),
     border-color var(--kh-transition-normal),
-    box-shadow var(--kh-transition-normal);
-
+    box-shadow var(--kh-transition-normal),
+    transform var(--kh-transition-fast);
 }
 
 
 /* JUDUL DAN IKON */
 
 .kh-ui-stat-header {
-
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   gap: var(--kh-space-3);
   min-width: 0;
-
 }
 
-
 .kh-ui-stat-label {
-
   min-width: 0;
 
   color: var(--kh-color-text-secondary);
@@ -1147,11 +1031,10 @@ svg {
 
   line-height: var(--kh-line-height-normal);
 
+  overflow-wrap: anywhere;
 }
 
-
 .kh-ui-stat-icon {
-
   display: grid;
   place-items: center;
 
@@ -1164,24 +1047,19 @@ svg {
 
   color: var(--kh-color-primary);
   background: var(--kh-color-surface-muted);
-
 }
 
-
 .kh-ui-stat-icon svg {
-
   display: block;
 
   width: 20px;
   height: 20px;
-
 }
 
 
 /* ANGKA RINGKASAN */
 
 .kh-ui-stat-value {
-
   margin-top: var(--kh-space-2);
 
   color: var(--kh-color-primary);
@@ -1195,28 +1073,24 @@ svg {
   overflow-wrap: anywhere;
 
   font-variant-numeric: tabular-nums;
-
 }
 
 
 /* KETERANGAN */
 
 .kh-ui-stat-description {
-
   margin-top: var(--kh-space-2);
 
   color: var(--kh-color-text-muted);
 
   font-size: var(--kh-stat-description-size);
   line-height: var(--kh-line-height-normal);
-
 }
 
 
 /* TAUTAN KARTU */
 
 .kh-ui-stat-link {
-
   display: inline-flex;
   align-items: center;
 
@@ -1228,147 +1102,105 @@ svg {
   font-weight: var(--kh-font-weight-bold);
 
   text-decoration: none;
-
 }
 
 
 /* INTERAKSI */
 
 .kh-ui-stat-card:active {
-
   transform: scale(0.99);
-
 }
-
 
 .kh-ui-stat-card:focus-visible {
-
   outline: 3px solid var(--kh-focus-color);
   outline-offset: 3px;
-
 }
-
 
 .kh-ui-stat-card:disabled,
 .kh-ui-stat-card[aria-disabled="true"] {
-
   opacity: var(--kh-opacity-disabled);
   cursor: not-allowed;
-
+  pointer-events: none;
 }
 
 
 /* =========================================================
-   21. FOCUS ACCESSIBILITY
+   20. FOCUS ACCESSIBILITY
 ========================================================= */
 
 .kh-ui-button:focus-visible,
 .kh-ui-input:focus-visible,
 .kh-ui-select:focus-visible,
 .kh-ui-textarea:focus-visible {
-
   outline: 3px solid var(--kh-focus-color);
   outline-offset: 2px;
-
 }
 
 
 /* =========================================================
-   22. RESPONSIVE — TABLET DAN DESKTOP
+   21. RESPONSIVE — TABLET DAN DESKTOP
 ========================================================= */
 
 @media (min-width: 761px) {
-
   .kh-ui-container {
-
     width: min(
       var(--kh-content-max-width),
       calc(100% - 56px)
     );
-
   }
-
 }
 
 
+/* =========================================================
+   22. RESPONSIVE — MOBILE
+========================================================= */
+
 @media (max-width: 600px) {
-
   .kh-ui-card {
-
     padding: var(--kh-card-padding-mobile);
     border-radius: var(--kh-radius-md);
-
   }
-
 
   .kh-ui-title {
-
     font-size: var(--kh-font-size-xl);
-
   }
-
 
   .kh-ui-container {
-
     width: calc(100% - 36px);
-
   }
-
 
   .kh-ui-nav-card {
-
     gap: 11px;
     padding: 12px;
-
   }
 
-
   .kh-ui-nav-icon {
-
     width: 40px;
     height: 40px;
     flex-basis: 40px;
-
   }
-
 
   .kh-ui-nav-title {
-
     font-size: 13px;
-
   }
-
 
   .kh-ui-nav-description {
-
     font-size: 10px;
-
   }
-
 
   .kh-ui-stat-card {
-
     border-radius: var(--kh-radius-md);
-
   }
-
 }
 
 
 /* =========================================================
    23. iOS / IPHONE COMPATIBILITY
+
+   Safe area dikelola oleh komponen yang membutuhkan.
+   Input minimal 16px untuk membantu mencegah auto-zoom
+   Safari iOS ketika pengguna mengetik.
 ========================================================= */
-
-/*
-   Safe area dikelola oleh masing-masing komponen
-   yang membutuhkannya.
-
-   Design System tidak memaksakan padding safe area
-   kepada seluruh body atau halaman.
-
-   Ukuran font input minimal 16px untuk membantu
-   mencegah pembesaran otomatis pada Safari iOS.
-*/
 
 
 /* =========================================================
@@ -1376,38 +1208,32 @@ svg {
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
-
     scroll-behavior: auto !important;
-
     transition-duration: 0.01ms !important;
-
     animation-duration: 0.01ms !important;
-
     animation-iteration-count: 1 !important;
-
   }
-
 }
 
 
 /* =========================================================
    SELESAI
-   KOPIHUB GLOBAL DESIGN SYSTEM v1.3.1
+   KOPIHUB GLOBAL DESIGN SYSTEM v1.4.0
 
-   File ini bertanggung jawab atas:
+   FILE INI BERTANGGUNG JAWAB ATAS:
    - Global design tokens
    - Token Mode Terang dan Mode Gelap
    - Standar dasar tipografi
-   - Komponen KH-UI kompatibilitas
+   - Komponen KH-UI
    - Standar kartu navigasi global
    - Standar kartu ringkasan dashboard
    - Responsivitas komponen global
+   - Konsistensi kontrol formulir
 
-   Bukan tanggung jawab file ini:
+   BUKAN TANGGUNG JAWAB FILE INI:
    - Global Header
    - Global Footer
    - Tata letak khusus halaman

@@ -1947,174 +1947,339 @@ a,
       </section>
     </section>
 
-    <!-- LAPORAN -->
-    <section class="page" id="page-laporan" hidden>
-      <h1 class="page-heading" id="report-page-heading">Laporan Penjualan</h1>
-      <p class="page-description" id="report-page-description">
-        Pantau omzet, produk terjual, dan metode pembayaran kedai.
-      </p>
+    
+<!-- LAPORAN -->
+<section class="page" id="page-laporan" hidden>
 
-      <div class="kh-ui-nav-list" id="report-home-panel">
-        <button class="kh-ui-nav-card" id="open-report-summary" type="button">
-          <span class="kh-ui-nav-icon">📊</span>
-          <span class="kh-ui-nav-content">
-            <span class="kh-ui-nav-title">Ringkasan Penjualan</span>
-            <span class="kh-ui-nav-description">Omzet dan jumlah transaksi</span>
-          </span>
-          <span class="kh-ui-nav-arrow">›</span>
-        </button>
+  <h1 class="page-heading" id="report-page-heading">Laporan Penjualan</h1>
 
-        <button class="kh-ui-nav-card" id="open-report-products" type="button">
-          <span class="kh-ui-nav-icon">☕</span>
-          <span class="kh-ui-nav-content">
-            <span class="kh-ui-nav-title">Rincian Penjualan Produk</span>
-            <span class="kh-ui-nav-description">Jumlah dan nilai penjualan produk</span>
-          </span>
-          <span class="kh-ui-nav-arrow">›</span>
-        </button>
+  <p class="page-description" id="report-page-description">
+    Pantau omzet, produk terjual, dan metode pembayaran kedai.
+  </p>
 
-        <button class="kh-ui-nav-card" id="open-report-payments" type="button">
-          <span class="kh-ui-nav-icon">💳</span>
-          <span class="kh-ui-nav-content">
-            <span class="kh-ui-nav-title">Metode Pembayaran</span>
-            <span class="kh-ui-nav-description">Rekap berdasarkan metode pembayaran</span>
-          </span>
-          <span class="kh-ui-nav-arrow">›</span>
-        </button>
+  <!-- HALAMAN UTAMA: RINGKASAN PENJUALAN -->
+  <section class="panel" id="report-summary-panel">
 
-        <button class="kh-ui-nav-card" id="open-report-download" type="button">
-          <span class="kh-ui-nav-icon">📥</span>
-          <span class="kh-ui-nav-content">
-            <span class="kh-ui-nav-title">Unduh Laporan</span>
-            <span class="kh-ui-nav-description">Unduh laporan Excel dan PDF</span>
-          </span>
-          <span class="kh-ui-nav-arrow">›</span>
-        </button>
+    <p class="muted">
+      Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.
+    </p>
+
+    <!-- FILTER PERIODE -->
+    <div class="report-filter">
+
+      <div class="field">
+        <label for="report-period">Periode Laporan</label>
+        <select id="report-period">
+          <option value="today">Hari Ini</option>
+          <option value="last7">7 Hari Terakhir</option>
+          <option value="month">Bulan Ini</option>
+          <option value="custom">Rentang Tanggal</option>
+        </select>
       </div>
 
-      <section class="panel" id="report-summary-panel" hidden>
-        <p class="muted">
-          Laporan ini hanya mengambil transaksi dari kedai milik Owner yang sedang login.
-        </p>
+      <div class="field" id="report-start-wrap" hidden>
+        <label for="report-start-date">Tanggal Mulai</label>
+        <input id="report-start-date" type="date">
+      </div>
 
-        <div class="report-filter">
-          <div class="field">
-            <label for="report-period">Periode Laporan</label>
-            <select id="report-period">
-              <option value="today">Hari Ini</option>
-              <option value="last7">7 Hari Terakhir</option>
-              <option value="month">Bulan Ini</option>
-              <option value="custom">Rentang Tanggal</option>
-            </select>
-          </div>
+      <div class="field" id="report-end-wrap" hidden>
+        <label for="report-end-date">Tanggal Akhir</label>
+        <input id="report-end-date" type="date">
+      </div>
 
-          <div class="field" id="report-start-wrap" hidden>
-            <label for="report-start-date">Tanggal Mulai</label>
-            <input id="report-start-date" type="date">
-          </div>
+      <button class="primary" id="refresh-sales-report" type="button">
+        Tampilkan Laporan
+      </button>
 
-          <div class="field" id="report-end-wrap" hidden>
-            <label for="report-end-date">Tanggal Akhir</label>
-            <input id="report-end-date" type="date">
-          </div>
-        </div>
+    </div>
 
-        <div class="button-stack">
-          <button class="primary" id="refresh-sales-report" type="button">
-            Tampilkan Laporan
-          </button>
-        </div>
+    <p class="muted" id="report-period-label">
+      Periode: Hari Ini
+    </p>
 
-        <p class="muted" id="report-period-label">Periode: Hari Ini</p>
+    <!-- RINGKASAN OMZET -->
+    <div class="stats">
 
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-label">Nilai Seluruh Pesanan</div>
-            <div class="stat-number" id="report-order-value">—</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Omzet Sudah Dibayar</div>
-            <div class="stat-number" id="report-paid-sales">—</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Nilai Belum Dibayar</div>
-            <div class="stat-number" id="report-unpaid-sales">—</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Pesanan Lunas</div>
-            <div class="stat-number" id="report-paid-count">—</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Pesanan Belum Lunas</div>
-            <div class="stat-number" id="report-unpaid-count">—</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Jumlah Produk Terjual</div>
-            <div class="stat-number" id="report-products-sold">—</div>
-          </div>
-        </div>
-      </section>
+      <div class="stat">
+        <div class="stat-label">Total Omzet</div>
+        <div class="stat-number" id="report-paid-sales">—</div>
+        <p class="muted">Total transaksi yang sudah dibayar</p>
+      </div>
 
-      <section class="panel" id="report-products-panel" hidden>
-        <h3 class="report-section-title">Rincian Penjualan Produk</h3>
-        <div class="report-table-wrap">
-          <table class="report-table">
-            <thead>
-              <tr>
-                <th>Nama Produk</th>
-                <th>Jumlah</th>
-                <th>Nilai Penjualan</th>
-              </tr>
-            </thead>
-            <tbody id="report-product-list">
-              <tr>
-                <td colspan="3">Laporan belum dimuat.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <div class="stat">
+        <div class="stat-label">Total Penjualan</div>
+        <div class="stat-number" id="report-paid-count">—</div>
+        <p class="muted">Jumlah transaksi yang sudah dibayar</p>
+      </div>
 
-      <section class="panel" id="report-payments-panel" hidden>
-        <h3 class="report-section-title">Metode Pembayaran</h3>
-        <div class="report-table-wrap">
-          <table class="report-table">
-            <thead>
-              <tr>
-                <th>Metode</th>
-                <th>Jumlah Transaksi</th>
-                <th>Nilai</th>
-              </tr>
-            </thead>
-            <tbody id="report-payment-methods">
-              <tr>
-                <td colspan="3">Data metode pembayaran belum tersedia.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <div class="stat">
+        <div class="stat-label">Rata-rata Transaksi</div>
+        <div class="stat-number" id="report-average-transaction">—</div>
+        <p class="muted">Rata-rata nilai setiap transaksi lunas</p>
+      </div>
 
-      <section class="panel" id="report-download-panel" hidden>
-        <div class="report-note" id="report-data-note">
-          Laporan menggunakan status pembayaran pada tabel kh_orders.
-          Rincian produk dibaca dari kolom items.
-        </div>
+    </div>
 
-        <div class="report-actions">
-          <button class="primary" id="download-report-excel" type="button" disabled>
-            Unduh Excel
-          </button>
-          <button class="primary" id="download-report-pdf" type="button" disabled>
-            Unduh PDF
-          </button>
-        </div>
+    <!-- GRAFIK OMZET HARIAN -->
+    <section class="chart-panel">
 
-        <p id="report-message" class="muted" role="status">
-          Laporan akan diperbarui saat data pesanan dimuat.
-        </p>
-      </section>
+      <h2>Grafik Tren Omzet Harian</h2>
+
+      <p class="muted">
+        Pergerakan omzet berdasarkan transaksi yang sudah dibayar.
+      </p>
+
+      <div id="report-sales-chart" class="sales-chart">
+        <p class="muted">Grafik akan ditampilkan setelah laporan dimuat.</p>
+      </div>
+
+      <p id="report-chart-message" class="muted" role="status"></p>
+
     </section>
+
+    <!-- INFORMASI TAMBAHAN -->
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-label">Nilai Seluruh Pesanan</div>
+        <div class="stat-number" id="report-order-value">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Nilai Belum Dibayar</div>
+        <div class="stat-number" id="report-unpaid-sales">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Pesanan Belum Lunas</div>
+        <div class="stat-number" id="report-unpaid-count">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Jumlah Produk Terjual</div>
+        <div class="stat-number" id="report-products-sold">—</div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- NAVIGASI DETAIL LAPORAN -->
+  <section id="report-home-panel">
+
+    <h2 class="report-section-title">Detail Laporan</h2>
+
+    <div class="kh-ui-nav-list">
+
+      <button
+        class="kh-ui-nav-card"
+        id="open-report-products"
+        type="button"
+      >
+        <span class="kh-ui-nav-icon">☕</span>
+        <span class="kh-ui-nav-content">
+          <span class="kh-ui-nav-title">
+            Rincian Penjualan Produk
+          </span>
+          <span class="kh-ui-nav-description">
+            Lihat jumlah dan nilai penjualan setiap produk
+          </span>
+        </span>
+        <span class="kh-ui-nav-arrow">›</span>
+      </button>
+
+      <button
+        class="kh-ui-nav-card"
+        id="open-report-payments"
+        type="button"
+      >
+        <span class="kh-ui-nav-icon">💳</span>
+        <span class="kh-ui-nav-content">
+          <span class="kh-ui-nav-title">
+            Metode Pembayaran
+          </span>
+          <span class="kh-ui-nav-description">
+            Lihat rekap pembayaran Tunai, QRIS, dan Transfer
+          </span>
+        </span>
+        <span class="kh-ui-nav-arrow">›</span>
+      </button>
+
+      <button
+        class="kh-ui-nav-card"
+        id="open-report-download"
+        type="button"
+      >
+        <span class="kh-ui-nav-icon">📥</span>
+        <span class="kh-ui-nav-content">
+          <span class="kh-ui-nav-title">
+            Unduh Laporan
+          </span>
+          <span class="kh-ui-nav-description">
+            Unduh laporan penjualan dalam format Excel dan PDF
+          </span>
+        </span>
+        <span class="kh-ui-nav-arrow">›</span>
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- RINCIAN PENJUALAN PRODUK -->
+  <section class="panel" id="report-products-panel" hidden>
+
+    <h2 class="report-section-title">
+      Rincian Penjualan Produk
+    </h2>
+
+    <p class="muted" id="report-products-period-label">
+      Periode mengikuti filter laporan.
+    </p>
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-label">Total Produk Terjual</div>
+        <div class="stat-number" id="report-product-total-quantity">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Nilai Penjualan Produk</div>
+        <div class="stat-number" id="report-product-total-sales">—</div>
+      </div>
+
+    </div>
+
+    <h3>Daftar Penjualan Produk</h3>
+
+    <div class="report-table-wrap">
+      <table class="report-table">
+
+        <thead>
+          <tr>
+            <th>Nama Produk</th>
+            <th>Jumlah Terjual</th>
+            <th>Nilai Penjualan</th>
+          </tr>
+        </thead>
+
+        <tbody id="report-product-list">
+          <tr>
+            <td colspan="3">
+              Laporan belum dimuat.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+  </section>
+
+  <!-- METODE PEMBAYARAN -->
+  <section class="panel" id="report-payments-panel" hidden>
+
+    <h2 class="report-section-title">
+      Metode Pembayaran
+    </h2>
+
+    <p class="muted" id="report-payments-period-label">
+      Periode mengikuti filter laporan.
+    </p>
+
+    <div class="stats">
+
+      <div class="stat">
+        <div class="stat-label">Total Pembayaran Berhasil</div>
+        <div class="stat-number" id="report-payment-total">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">Jumlah Transaksi Berhasil</div>
+        <div class="stat-number" id="report-payment-count">—</div>
+      </div>
+
+    </div>
+
+    <h3>Rincian Metode Pembayaran</h3>
+
+    <div id="report-payment-methods">
+
+      <p class="muted">
+        Data metode pembayaran belum tersedia.
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- UNDUH LAPORAN -->
+  <section class="panel" id="report-download-panel" hidden>
+
+    <h2 class="report-section-title">
+      Unduh Laporan
+    </h2>
+
+    <p class="muted" id="report-download-period-label">
+      Periode mengikuti filter laporan.
+    </p>
+
+    <div class="report-note" id="report-data-note">
+      Laporan menggunakan data transaksi kedai,
+      rincian produk, dan status pembayaran.
+    </div>
+
+    <div class="kh-ui-nav-list">
+
+      <div class="kh-ui-nav-card">
+        <span class="kh-ui-nav-icon">📊</span>
+        <span class="kh-ui-nav-content">
+          <span class="kh-ui-nav-title">Laporan Excel</span>
+          <span class="kh-ui-nav-description">
+            Unduh laporan dalam format .xlsx
+          </span>
+        </span>
+      </div>
+
+      <button
+        class="primary"
+        id="download-report-excel"
+        type="button"
+        disabled
+      >
+        Unduh Excel
+      </button>
+
+      <div class="kh-ui-nav-card">
+        <span class="kh-ui-nav-icon">📄</span>
+        <span class="kh-ui-nav-content">
+          <span class="kh-ui-nav-title">Laporan PDF</span>
+          <span class="kh-ui-nav-description">
+            Unduh laporan dalam format .pdf
+          </span>
+        </span>
+      </div>
+
+      <button
+        class="primary"
+        id="download-report-pdf"
+        type="button"
+        disabled
+      >
+        Unduh PDF
+      </button>
+
+    </div>
+
+    <p id="report-message" class="muted" role="status">
+      Laporan akan diperbarui saat data pesanan dimuat.
+    </p>
+
+  </section>
+
+</section>
+<!-- PENUTUP LAPORAN -->
 
     <!-- LAINNYA -->
     <section class="page" id="page-lainnya" hidden>

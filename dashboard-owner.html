@@ -3136,21 +3136,20 @@ function showReportPanel(
   fromBack = false,
   skipScroll = false
 ) {
-  const panels = [
-    "report-home-panel",
+  const validPanels = [
     "report-summary-panel",
     "report-products-panel",
     "report-payments-panel",
     "report-download-panel"
   ];
 
-  if (!panels.includes(panelId)) {
+  if (!validPanels.includes(panelId)) {
     console.warn("Panel laporan tidak ditemukan:", panelId);
     return;
   }
 
   const previousPanel =
-    currentReportPanel || "report-home-panel";
+    currentReportPanel || "report-summary-panel";
 
   if (!fromBack && panelId !== previousPanel) {
     reportPanelHistory.push(previousPanel);
@@ -3158,14 +3157,30 @@ function showReportPanel(
 
   currentReportPanel = panelId;
 
-  panels.forEach(id => {
+  const isHome = panelId === "report-summary-panel";
+
+  const summaryPanel = $("report-summary-panel");
+  const homePanel = $("report-home-panel");
+
+  if (summaryPanel) {
+    summaryPanel.hidden = !isHome;
+  }
+
+  if (homePanel) {
+    homePanel.hidden = !isHome;
+  }
+
+  [
+    "report-products-panel",
+    "report-payments-panel",
+    "report-download-panel"
+  ].forEach(id => {
     const element = $(id);
+
     if (element) {
       element.hidden = id !== panelId;
     }
   });
-
-  const isHome = panelId === "report-home-panel";
 
   if ($("report-page-heading")) {
     $("report-page-heading").hidden = !isHome;
@@ -3184,12 +3199,8 @@ function showReportPanel(
     });
   }
 }
-
 /* TOMBOL PILIHAN LAPORAN */
 
-$("open-report-summary")?.addEventListener("click", () => {
-  showReportPanel("report-summary-panel");
-});
 
 $("open-report-products")?.addEventListener("click", () => {
   showReportPanel("report-products-panel");

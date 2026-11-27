@@ -2744,6 +2744,7 @@ a,
 </section>
 
 
+
 <!-- PENGATURAN AKUN OWNER -->
 <section class="panel" id="pengaturan-akun" hidden>
 
@@ -2753,6 +2754,7 @@ a,
     Kelola informasi login dan keamanan akun Owner Anda.
   </p>
 
+  <!-- INFORMASI EMAIL -->
   <div class="settings-item">
     <div class="settings-icon">👤</div>
     <div class="settings-info">
@@ -2763,6 +2765,7 @@ a,
     </div>
   </div>
 
+  <!-- INFORMASI ID AKUN -->
   <div class="settings-item">
     <div class="settings-icon">🔐</div>
     <div class="settings-info">
@@ -2780,20 +2783,39 @@ a,
     aria-live="polite"
   ></p>
 
+  <!-- FORM UBAH KATA SANDI -->
   <div class="panel" style="margin-top:20px">
 
     <h3>Ubah Kata Sandi</h3>
 
     <p class="muted">
-      Gunakan kata sandi baru untuk melindungi akun Owner.
+      Masukkan kata sandi lama untuk memverifikasi identitas Anda
+      sebelum mengganti kata sandi akun.
     </p>
 
     <form id="owner-change-password-form">
 
+      <!-- KATA SANDI LAMA -->
+      <div class="field">
+        <label for="owner-current-password">
+          Kata Sandi Lama
+        </label>
+
+        <input
+          id="owner-current-password"
+          type="password"
+          autocomplete="current-password"
+          required
+          placeholder="Masukkan kata sandi saat ini"
+        >
+      </div>
+
+      <!-- KATA SANDI BARU -->
       <div class="field">
         <label for="owner-new-password">
           Kata Sandi Baru
         </label>
+
         <input
           id="owner-new-password"
           type="password"
@@ -2804,10 +2826,12 @@ a,
         >
       </div>
 
+      <!-- KONFIRMASI KATA SANDI BARU -->
       <div class="field">
         <label for="owner-confirm-password">
           Konfirmasi Kata Sandi Baru
         </label>
+
         <input
           id="owner-confirm-password"
           type="password"
@@ -2818,6 +2842,7 @@ a,
         >
       </div>
 
+      <!-- TOMBOL SIMPAN -->
       <button
         type="submit"
         class="primary"
@@ -2839,8 +2864,6 @@ a,
 
 </section>
 
-</section>
-<!-- AKHIR PAGE LAINNYA -->
 
 <!-- SCRIPT LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

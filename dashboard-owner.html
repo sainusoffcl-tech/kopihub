@@ -2745,7 +2745,10 @@ a,
 
 
 
-<!-- PENGATURAN AKUN OWNER -->
+<!-- =========================================
+     PENGATURAN AKUN OWNER
+========================================= -->
+
 <section class="panel" id="pengaturan-akun" hidden>
 
   <h2>Pengaturan Akun</h2>
@@ -2754,27 +2757,193 @@ a,
     Kelola informasi login dan keamanan akun Owner Anda.
   </p>
 
-  <!-- INFORMASI EMAIL -->
-  <div class="settings-item">
-    <div class="settings-icon">👤</div>
-    <div class="settings-info">
-      <strong>Email Akun</strong>
-      <span id="owner-account-email">
-        Memuat alamat email...
-      </span>
+  <div class="account-menu-list">
+
+    <!-- INFORMASI EMAIL DAN ID AKUN -->
+    <div class="account-menu-row">
+
+      <div class="account-menu-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          <path d="m3 7 9 6 9-6"></path>
+        </svg>
+      </div>
+
+      <div class="account-menu-info">
+        <strong>Email Akun</strong>
+
+        <span id="owner-account-email">
+          Memuat alamat email...
+        </span>
+
+        <div class="account-id-meta">
+          <span>ID Akun</span>
+          <span id="owner-account-id">
+            Memuat ID akun...
+          </span>
+        </div>
+      </div>
+
     </div>
+
+
+    <!-- UBAH KATA SANDI -->
+    <details class="account-menu-disclosure">
+
+      <summary>
+
+        <div class="account-menu-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+            <path d="M12 14v3"></path>
+          </svg>
+        </div>
+
+        <div class="account-menu-info">
+          <strong>Ubah Kata Sandi</strong>
+          <span>Perbarui kata sandi akun Owner</span>
+        </div>
+
+        <span class="account-menu-chevron">›</span>
+
+      </summary>
+
+      <div class="account-menu-content">
+
+        <p class="muted">
+          Masukkan kata sandi lama untuk memverifikasi identitas
+          sebelum mengganti kata sandi akun.
+        </p>
+
+        <form id="owner-change-password-form">
+
+          <div class="field">
+            <label for="owner-current-password">
+              Kata Sandi Lama
+            </label>
+
+            <input
+              id="owner-current-password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Masukkan kata sandi saat ini"
+            >
+          </div>
+
+          <div class="field">
+            <label for="owner-new-password">
+              Kata Sandi Baru
+            </label>
+
+            <input
+              id="owner-new-password"
+              type="password"
+              minlength="8"
+              autocomplete="new-password"
+              required
+              placeholder="Minimal 8 karakter"
+            >
+          </div>
+
+          <div class="field">
+            <label for="owner-confirm-password">
+              Konfirmasi Kata Sandi Baru
+            </label>
+
+            <input
+              id="owner-confirm-password"
+              type="password"
+              minlength="8"
+              autocomplete="new-password"
+              required
+              placeholder="Ulangi kata sandi baru"
+            >
+          </div>
+
+          <button
+            type="submit"
+            class="primary"
+            id="owner-save-password"
+          >
+            Simpan Kata Sandi Baru
+          </button>
+
+          <p
+            id="owner-password-message"
+            class="muted"
+            role="status"
+            aria-live="polite"
+          ></p>
+
+        </form>
+
+      </div>
+
+    </details>
+
+
+    <!-- KEAMANAN AKUN -->
+    <details class="account-menu-disclosure">
+
+      <summary>
+
+        <div class="account-menu-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+        </div>
+
+        <div class="account-menu-info">
+          <strong>Keamanan Akun</strong>
+          <span>Informasi perlindungan akun</span>
+        </div>
+
+        <span class="account-menu-chevron">›</span>
+
+      </summary>
+
+      <div class="account-menu-content">
+
+        <div class="account-security-note">
+          Penggantian kata sandi memerlukan verifikasi kata sandi
+          lama. Gunakan kata sandi yang kuat dan jangan membagikannya
+          kepada orang lain.
+        </div>
+
+      </div>
+
+    </details>
+
+
+    <!-- KELUAR DARI AKUN -->
+    <button
+      type="button"
+      class="account-menu-row account-menu-action"
+      id="owner-account-logout"
+    >
+
+      <div class="account-menu-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 17l5-5-5-5"></path>
+          <path d="M15 12H3"></path>
+          <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"></path>
+        </svg>
+      </div>
+
+      <div class="account-menu-info">
+        <strong>Keluar</strong>
+        <span>Keluar dari akun Owner KopiHub</span>
+      </div>
+
+      <span class="account-menu-chevron">›</span>
+
+    </button>
+
   </div>
 
-  <!-- INFORMASI ID AKUN -->
-  <div class="settings-item">
-    <div class="settings-icon">🔐</div>
-    <div class="settings-info">
-      <strong>ID Akun</strong>
-      <span id="owner-account-id">
-        Memuat ID akun...
-      </span>
-    </div>
-  </div>
 
   <p
     id="owner-account-message"
@@ -2783,87 +2952,7 @@ a,
     aria-live="polite"
   ></p>
 
-  <!-- FORM UBAH KATA SANDI -->
-  <div class="panel" style="margin-top:20px">
-
-    <h3>Ubah Kata Sandi</h3>
-
-    <p class="muted">
-      Masukkan kata sandi lama untuk memverifikasi identitas Anda
-      sebelum mengganti kata sandi akun.
-    </p>
-
-    <form id="owner-change-password-form">
-
-      <!-- KATA SANDI LAMA -->
-      <div class="field">
-        <label for="owner-current-password">
-          Kata Sandi Lama
-        </label>
-
-        <input
-          id="owner-current-password"
-          type="password"
-          autocomplete="current-password"
-          required
-          placeholder="Masukkan kata sandi saat ini"
-        >
-      </div>
-
-      <!-- KATA SANDI BARU -->
-      <div class="field">
-        <label for="owner-new-password">
-          Kata Sandi Baru
-        </label>
-
-        <input
-          id="owner-new-password"
-          type="password"
-          minlength="8"
-          autocomplete="new-password"
-          required
-          placeholder="Minimal 8 karakter"
-        >
-      </div>
-
-      <!-- KONFIRMASI KATA SANDI BARU -->
-      <div class="field">
-        <label for="owner-confirm-password">
-          Konfirmasi Kata Sandi Baru
-        </label>
-
-        <input
-          id="owner-confirm-password"
-          type="password"
-          minlength="8"
-          autocomplete="new-password"
-          required
-          placeholder="Ulangi kata sandi baru"
-        >
-      </div>
-
-      <!-- TOMBOL SIMPAN -->
-      <button
-        type="submit"
-        class="primary"
-        id="owner-save-password"
-      >
-        Simpan Kata Sandi Baru
-      </button>
-
-      <p
-        id="owner-password-message"
-        class="muted"
-        role="status"
-        aria-live="polite"
-      ></p>
-
-    </form>
-
-  </div>
-
 </section>
-
 
 <!-- SCRIPT LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

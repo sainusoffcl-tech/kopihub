@@ -7074,7 +7074,6 @@ async function loadOwnerOrderCashierAssignments(shopId, orders) {
 
   return result;
 }
-
 /* MENAMPILKAN DAFTAR PESANAN OWNER */
 function renderOwnerOrderList() {
   const container = $("transaction-list");
@@ -7095,45 +7094,50 @@ function renderOwnerOrderList() {
   const startDate = $("transaction-start-date").value;
   const endDate = $("transaction-end-date").value;
 
+  /* HANYA PESANAN YANG SUDAH SELESAI */
   const completedOrders = allOrders.filter(order =>
-  String(order.order_status || "").trim().toLowerCase() === "completed"
-);
-
-const visibleOrders = completedOrders
-  .filter(order => {
-    const dateKey = getDateKey(order.created_at, formatter);
-
-    if (!dateKey) return false;
-    if (startDate && dateKey < startDate) return false;
-    if (endDate && dateKey > endDate) return false;
-
-    return true;
-  })
-  .sort((a, b) =>
-    new Date(b.created_at).getTime() -
-    new Date(a.created_at).getTime()
+    String(order.order_status || "").trim().toLowerCase() === "completed"
   );
+
+  /* FILTER TANGGAL DAN URUTKAN TERBARU */
+  const visibleOrders = completedOrders
+    .filter(order => {
+      const dateKey = getDateKey(order.created_at, formatter);
+
+      if (!dateKey) return false;
+      if (startDate && dateKey < startDate) return false;
+      if (endDate && dateKey > endDate) return false;
+
+      return true;
+    })
+    .sort((a, b) =>
+      new Date(b.created_at).getTime() -
+      new Date(a.created_at).getTime()
+    );
 
   container.replaceChildren();
 
+  /* JUMLAH PESANAN YANG DITAMPILKAN */
   resultCount.textContent =
-  visibleOrders.length + " dari " +
-  completedOrders.length + " pesanan selesai";
+    visibleOrders.length + " dari " +
+    completedOrders.length + " pesanan selesai";
 
-if (!visibleOrders.length) {
-  const empty = document.createElement("div");
-  empty.className = "owner-order-empty";
-  empty.textContent = completedOrders.length
-    ? "Tidak ada pesanan selesai pada rentang tanggal tersebut."
-    : "Belum ada pesanan yang selesai.";
+  /* TAMPILKAN KONDISI KOSONG */
+  if (!visibleOrders.length) {
+    const empty = document.createElement("div");
+    empty.className = "owner-order-empty";
+    empty.textContent = completedOrders.length
+      ? "Tidak ada pesanan selesai pada rentang tanggal tersebut."
+      : "Belum ada pesanan yang selesai.";
 
-  container.appendChild(empty);
-  return;
-}
+    container.appendChild(empty);
+    return;
+  }
 
   const list = document.createElement("div");
   list.className = "owner-order-list";
 
+  /* FORMAT TANGGAL DAN WAKTU KEDAI */
   const dateTimeFormatter = new Intl.DateTimeFormat("id-ID", {
     timeZone: timezone,
     day: "2-digit",
@@ -7148,6 +7152,7 @@ if (!visibleOrders.length) {
     const card = document.createElement("article");
     card.className = "owner-order-card";
 
+    /* NOMOR PESANAN DAN TOTAL */
     const top = document.createElement("div");
     top.className = "owner-order-top";
 
@@ -7171,12 +7176,14 @@ if (!visibleOrders.length) {
 
     top.append(number, total);
 
+    /* TANGGAL DAN WAKTU */
     const dateTime = document.createElement("p");
     dateTime.className = "owner-order-datetime";
     dateTime.textContent = dateTimeFormatter.format(
       new Date(order.created_at)
     );
 
+    /* SUMBER PESANAN DAN INFORMASI KASIR */
     const source = document.createElement("p");
     source.className = "owner-order-source";
 
@@ -7199,13 +7206,87 @@ if (!visibleOrders.length) {
       source.textContent = "Sumber pesanan tidak diketahui";
     }
 
-    card.append(top, dateTime, source);
-/* PETUNJUK BUKA DETAIL PESANAN */
-const detailHint = document.createElement("div");
-detailHint.className = "owner-order-detail-hint";
-detailHint.textContent = "Detail →";
+    /* RINGKASAN PRODUK */
+    const productSummary = document.createElement("div");
+    productSummary.className = "owner-order-product-summary";
 
-card.appendChild(detailHint);
+    const relationalItems = parseOrderItems(
+      order.report_items
+    );
+
+    const items = relationalItems.length
+      ? relationalItems
+      : parseOrderItems(order.items);
+
+    if (items.length) {
+      items.forEach(item => {
+        const productLine = document.createElement("p");
+        productLine.className = "owner-order-product-summary-line";
+
+        productLine.textContent =
+          item.name + " × " + item.quantity;
+
+        productSummary.appendChild(productLine);
+      });
+    } else {
+      const unavailable = document.createElement("p");
+      unavailable.className = "muted";
+      unavailable.textContent = "Rincian produk tidak tersedia.";
+
+      productSummary.appendChild(unavailable);
+    }
+
+    /* METODE DAN STATUS PEMBAYARAN */
+    const paymentInfo = document.createElement("div");
+    paymentInfo.className = "owner-order-payment-info";
+
+    const payments = Array.isArray(order.payment_records)
+      ? order.payment_records
+      : [];
+
+    const paymentRecord =
+      payments.find(payment => payment.paid_at) ||
+      payments[0] ||
+      null;
+
+    const method =
+      paymentRecord?.method || order.payment_method;
+
+    const methodLine = document.createElement("p");
+    methodLine.className = "owner-order-payment-method";
+    methodLine.textContent =
+      "Metode pembayaran: " +
+      ownerOrderPaymentMethod(method);
+
+    const paid = isPaid(order);
+
+    const statusLine = document.createElement("p");
+    statusLine.className =
+      "owner-order-payment-status" +
+      (paid ? " paid" : "");
+
+    statusLine.textContent =
+      "Pembayaran: " +
+      (paid ? "Terbayar" : "Belum Terbayar");
+
+    paymentInfo.append(methodLine, statusLine);
+
+    /* SUSUN KARTU */
+    card.append(
+      top,
+      dateTime,
+      source,
+      productSummary,
+      paymentInfo
+    );
+
+    /* PETUNJUK BUKA DETAIL PESANAN */
+    const detailHint = document.createElement("div");
+    detailHint.className = "owner-order-detail-hint";
+    detailHint.textContent = "Detail →";
+
+    card.appendChild(detailHint);
+
     /* KARTU PESANAN DAPAT DIBUKA */
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
@@ -7231,6 +7312,7 @@ card.appendChild(detailHint);
 
   container.appendChild(list);
 }
+
 /* =====================================================
    DETAIL PESANAN OWNER
    ===================================================== */

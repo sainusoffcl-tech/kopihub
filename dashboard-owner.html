@@ -3627,16 +3627,22 @@ $("open-transaction-cashier")?.addEventListener(
 );
 
 
+
 /* =========================================
-   TOMBOL KEMBALI HEADER GLOBAL
+   INTEGRASI GLOBAL TOOLBAR OWNER
 ========================================= */
 
-if (headerBackButton) {
-  headerBackButton.addEventListener(
-    "click",
-    goBackPage
-  );
-}
+document.addEventListener("kopihub:back", event => {
+  if (event.detail?.role !== "owner") return;
+
+  goBackPage();
+});
+
+document.addEventListener("kopihub:header-ready", event => {
+  if (event.detail?.role !== "owner") return;
+
+  updateGlobalBackButton();
+});
 
 
 /* =========================================

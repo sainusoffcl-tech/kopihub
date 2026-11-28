@@ -10116,6 +10116,7 @@ if (logoutButton) {
   });
 }
 
+
 /* =========================================
    INTEGRASI GLOBAL HEADER — OWNER
    SUSUNAN MENU BARU
@@ -10155,23 +10156,36 @@ document.addEventListener("kopihub:navigate", event => {
       navigateToPage("laporan");
       break;
 
-/* PENGATURAN KEDAI */
+    /* PENGATURAN KEDAI */
 
-case "settings":
-  navigateToPage("lainnya");
-  showSettingsPanel("settings-home-panel");
-  break;
+    case "settings":
+      if (currentPage !== "lainnya") {
+        navigateToPage("lainnya");
+      } else {
+        showSettingsPanel("settings-home-panel");
+      }
+      break;
 
-/* PENGATURAN AKUN */
+    /* PENGATURAN AKUN */
 
-case "account-settings":
-  navigateToPage("lainnya");
-  showSettingsPanel("pengaturan-akun");
-  loadOwnerAccount();
-  break;
+    case "account-settings": {
+      const alreadyOnSettingsPage =
+        currentPage === "lainnya";
 
-}
+      navigateToPage("lainnya");
+
+      showSettingsPanel(
+        "pengaturan-akun",
+        !alreadyOnSettingsPage,
+        true
+      );
+
+      loadOwnerAccount();
+      break;
+    }
+  }
 });
+
 /* LOGOUT DARI GLOBAL HEADER */
 
 document.addEventListener("kopihub:logout", async event => {

@@ -823,6 +823,165 @@ button {
 }
 
 /* =========================================
+   PENGATURAN AKUN OWNER — DESAIN DAFTAR
+========================================= */
+
+#pengaturan-akun .account-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+#pengaturan-akun .account-menu-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-width: 0;
+  padding: 14px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font: inherit;
+}
+
+#pengaturan-akun .account-menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 43px;
+  width: 43px;
+  height: 43px;
+  border-radius: 13px;
+  background: var(--kh-color-surface-muted);
+  color: var(--green);
+}
+
+#pengaturan-akun .account-menu-icon svg {
+  width: 21px;
+  height: 21px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#pengaturan-akun .account-menu-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#pengaturan-akun .account-menu-info strong {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+#pengaturan-akun .account-menu-info span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#pengaturan-akun .account-menu-chevron {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 21px;
+  transition: transform .2s ease;
+}
+
+#pengaturan-akun details[open] .account-menu-chevron {
+  transform: rotate(90deg);
+}
+
+#pengaturan-akun .account-menu-disclosure {
+  border-bottom: 1px solid var(--border);
+}
+
+#pengaturan-akun .account-menu-disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-height: 70px;
+  padding: 12px 4px;
+  cursor: pointer;
+  list-style: none;
+}
+
+#pengaturan-akun .account-menu-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+#pengaturan-akun .account-menu-disclosure > summary:focus-visible,
+#pengaturan-akun .account-menu-action:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+#pengaturan-akun .account-menu-content {
+  padding: 4px 4px 17px 60px;
+}
+
+#pengaturan-akun .account-menu-content .field {
+  margin: 12px 0;
+}
+
+#pengaturan-akun .account-menu-content input {
+  margin-bottom: 8px;
+}
+
+#pengaturan-akun .account-menu-content .muted {
+  font-size: 12px;
+}
+
+#pengaturan-akun .account-menu-content button {
+  margin-top: 5px;
+}
+
+#pengaturan-akun .account-id-meta {
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px dashed var(--border);
+}
+
+#pengaturan-akun .account-security-note {
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--kh-color-surface-muted);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#pengaturan-akun .account-menu-action {
+  cursor: pointer;
+  background: transparent;
+}
+
+#pengaturan-akun .account-menu-action:active {
+  background: var(--kh-color-surface-muted);
+}
+
+#pengaturan-akun .account-menu-action .account-menu-info strong {
+  color: var(--danger);
+}
+
+#pengaturan-akun .account-menu-action .account-menu-icon {
+  color: var(--danger);
+}
+/* =========================================
    CASHIER MANAGEMENT
 ========================================= */
 

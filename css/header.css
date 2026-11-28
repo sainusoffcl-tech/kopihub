@@ -562,12 +562,18 @@ body.kh-header-menu-open {
    .kh-toolbar-back-label
    .kh-toolbar-title
 
+   Posisi:
+   - Tombol Kembali rata kiri.
+   - Judul halaman dan submenu rata kanan.
+   - Berlaku konsisten untuk seluruh halaman KopiHub.
+
    Toolbar menggunakan token dari design-system.css.
 ========================================================= */
 
 .kh-global-toolbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--kh-space-3);
 
   width: 100%;
@@ -604,17 +610,22 @@ body.kh-header-menu-open {
 }
 
 
-/* TOMBOL KEMBALI */
+/* TOMBOL KEMBALI — RATA KIRI */
 
 .kh-toolbar-back {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+
   flex: 0 0 auto;
   gap: var(--kh-toolbar-icon-gap);
 
+  width: auto;
+  height: auto;
   min-width: 0;
   min-height: 28px;
+
+  margin: 0;
   padding: 0;
 
   border: 0;
@@ -622,6 +633,8 @@ body.kh-header-menu-open {
 
   color: var(--kh-toolbar-text);
   background: transparent;
+
+  box-shadow: none;
 
   font-family: inherit;
   font-size: var(--kh-toolbar-font-size);
@@ -636,6 +649,12 @@ body.kh-header-menu-open {
   transition:
     opacity var(--kh-toolbar-transition),
     transform var(--kh-toolbar-transition);
+}
+
+/* SEMBUNYIKAN TOMBOL KEMBALI JIKA TIDAK DIPERLUKAN */
+
+.kh-toolbar-back[hidden] {
+  display: none !important;
 }
 
 .kh-toolbar-back:active {
@@ -679,13 +698,16 @@ body.kh-header-menu-open {
 }
 
 
-/* JUDUL HALAMAN / PANEL */
+/* JUDUL HALAMAN / PANEL — RATA KANAN */
 
 .kh-toolbar-title {
   display: block;
 
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
+  max-width: 70%;
+
+  margin-left: auto;
 
   overflow: hidden;
 
@@ -695,16 +717,9 @@ body.kh-header-menu-open {
   font-weight: var(--kh-toolbar-font-weight);
   line-height: var(--kh-toolbar-line-height);
 
-  text-align: left;
+  text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-
-/* OPSI JUDUL TENGAH */
-
-.kh-global-toolbar.kh-toolbar-centered .kh-toolbar-title {
-  text-align: center;
 }
 
 

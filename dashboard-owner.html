@@ -27,8 +27,7 @@
   --border: var(--kh-color-border);
   --orange: var(--kh-color-accent);
   --danger: var(--kh-color-danger);
-  --kh-global-header-height: 88px;
-}
+  --kh-global-header-height: 132px;
 
 /* =========================================
    GLOBAL RESET
@@ -1583,78 +1582,7 @@ button {
   line-height: 1.4;
 }
 
-/* =========================================
-   TOOLBAR HALAMAN OWNER
-========================================= */
 
-.owner-page-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 90;
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  width: 100%;
-  min-height: 54px;
-  height: auto;
-  margin: 0;
-  padding: 8px 17px;
-  background: var(--kh-color-surface);
-  border-bottom: 1px solid var(--border);
-}
-
-.owner-page-toolbar[hidden] {
-  display: none !important;
-}
-
-.owner-page-toolbar .header-back-button {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: auto;
-  height: auto;
-  min-height: 38px;
-  margin: 0;
-  padding: 6px 0;
-  color: var(--green);
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: left;
-  cursor: pointer;
-}
-
-.owner-page-toolbar .header-back-button svg {
-  display: block;
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.owner-sticky-title {
-  flex: 1;
-  min-width: 0;
-  height: auto;
-  margin: 0;
-  color: var(--green);
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1.3;
-  text-align: right;
-  overflow-wrap: anywhere;
-}
 
 .page > .page-heading,
 .page > .page-description {
@@ -1713,33 +1641,6 @@ a,
 <!-- AREA KONTEN DASHBOARD OWNER -->
 <div id="app-scroll">
 
-  <!-- TOOLBAR HALAMAN -->
-  <div class="owner-page-toolbar" id="owner-page-toolbar" hidden>
-
-    <button
-      class="header-back-button"
-      id="header-back-button"
-      type="button"
-      aria-label="Kembali"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          d="M15 18l-6-6 6-6"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-      <span>Kembali</span>
-    </button>
-
-    <h1 class="owner-sticky-title" id="owner-page-title">
-      Dashboard Owner
-    </h1>
-
-  </div>
 
   <main>
     <select id="shop-select" hidden aria-hidden="true"></select>

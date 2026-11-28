@@ -7875,13 +7875,19 @@ const sourceLabel = getOrderSourceLabel(order);
    BUKA DETAIL PESANAN OWNER
    NAVIGASI GLOBAL
 ========================================= */
-
 function openOwnerOrderDetail(orderId) {
   const order = allOrders.find(item =>
     String(item.id) === String(orderId)
   );
 
   if (!order) return;
+
+  /* DETAIL OWNER HANYA UNTUK PESANAN SELESAI */
+  if (
+    String(order.order_status || "").trim().toLowerCase() !== "completed"
+  ) {
+    return;
+  }
 
   const detailPanel = $("owner-order-detail-panel");
 
@@ -7932,12 +7938,10 @@ function openOwnerOrderDetail(orderId) {
   }
 }
 
-
 /* =========================================
    TUTUP DETAIL PESANAN OWNER
    KEMBALI KE PANEL ASAL
 ========================================= */
-
 function closeOwnerOrderDetail() {
   const detailPanel = $("owner-order-detail-panel");
 
@@ -7973,8 +7977,13 @@ function closeOwnerOrderDetail() {
     }
   });
 }
-
-  async function loadOrders() {
+  /* =========================================
+   MEMUAT DATA PESANAN OWNER
+   MENGAMBIL DATA PESANAN KEDAI YANG DIPILIH,
+   MEMUAT PENUGASAN KASIR, DAN MENYIAPKAN
+   DATA UNTUK LAPORAN PENJUALAN
+========================================= */
+async function loadOrders() {
   const shop = selectedShop();
 
   if (!client || !shop) {

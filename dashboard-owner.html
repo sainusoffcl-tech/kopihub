@@ -3289,17 +3289,17 @@ function updateOwnerStickyTitle() {
   }
 
   else if (currentPage === "transaksi") {
-    const transactionTitles = {
-      "transaction-home-panel": "Transaksi",
-      "transaction-summary-panel": "Informasi Transaksi",
-      "transaction-history-panel": "Riwayat Transaksi",
-      "transaction-cashier-panel": "Dashboard Kasir",
-      "owner-order-detail-panel": "Detail Pesanan"
-    };
+  const transactionTitles = {
+    "transaction-home-panel": "Transaksi",
+    "transaction-summary-panel": "Informasi Pesanan",
+    "transaction-history-panel": "Riwayat Pesanan",
+    "transaction-cashier-panel": "Dashboard Kasir",
+    "owner-order-detail-panel": "Detail Pesanan"
+  };
 
-    title =
-      transactionTitles[currentTransactionPanel] || "Transaksi";
-  }
+  title =
+    transactionTitles[currentTransactionPanel] || "Transaksi";
+}
 
   else if (currentPage === "laporan") {
     const reportTitles = {

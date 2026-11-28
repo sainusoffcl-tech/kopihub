@@ -3163,10 +3163,6 @@ const pageTitles = {
 
 
 function updateOwnerStickyTitle() {
-  const titleElement = $("owner-page-title");
-
-  if (!titleElement) return;
-
   let title = "Dashboard Owner";
 
   if (currentPage === "home") {
@@ -3189,17 +3185,17 @@ function updateOwnerStickyTitle() {
   }
 
   else if (currentPage === "transaksi") {
-  const transactionTitles = {
-    "transaction-home-panel": "Transaksi",
-    "transaction-summary-panel": "Informasi Pesanan",
-    "transaction-history-panel": "Riwayat Pesanan",
-    "transaction-cashier-panel": "Dashboard Kasir",
-    "owner-order-detail-panel": "Detail Pesanan"
-  };
+    const transactionTitles = {
+      "transaction-home-panel": "Transaksi",
+      "transaction-summary-panel": "Informasi Pesanan",
+      "transaction-history-panel": "Riwayat Pesanan",
+      "transaction-cashier-panel": "Dashboard Kasir",
+      "owner-order-detail-panel": "Detail Pesanan"
+    };
 
-  title =
-    transactionTitles[currentTransactionPanel] || "Transaksi";
-}
+    title =
+      transactionTitles[currentTransactionPanel] || "Transaksi";
+  }
 
   else if (currentPage === "laporan") {
     const reportTitles = {
@@ -3229,8 +3225,10 @@ function updateOwnerStickyTitle() {
       settingsTitles[currentSettingsPanel] || "Pengaturan Kedai";
   }
 
-  titleElement.textContent = title;
+  return title;
 }
+
+
 
   
 /* =========================================
@@ -3249,6 +3247,7 @@ function updateOwnerStickyTitle() {
 /* =========================================
    UPDATE TOMBOL KEMBALI GLOBAL OWNER
 ========================================= */
+
 
 function updateGlobalBackButton() {
   const orderDetailPanel = $("owner-order-detail-panel");
@@ -3270,30 +3269,23 @@ function updateGlobalBackButton() {
   const hasPageHistory =
     ownerNavigation.canGoBackPage("owner");
 
-  const hasHistory =
-    hasOrderDetail ||
-    hasPanelHistory ||
-    hasPageHistory;
+  const toolbarState = {
+    role: "owner",
+    title: updateOwnerStickyTitle(),
+    canGoBack: Boolean(
+      hasOrderDetail ||
+      hasPanelHistory ||
+      hasPageHistory
+    )
+  };
 
-  /* TOMBOL KEMBALI TOOLBAR */
-  if (headerBackButton) {
-    headerBackButton.hidden = !hasHistory;
+  window.KopiHubToolbarState = toolbarState;
 
-    headerBackButton.setAttribute(
-      "aria-label",
-      "Kembali"
-    );
-  }
-
-  /* TOOLBAR SELALU TAMPIL */
-  const ownerPageToolbar = $("owner-page-toolbar");
-
-  if (ownerPageToolbar) {
-    ownerPageToolbar.hidden = false;
-  }
-
-  /* PERBARUI JUDUL HALAMAN */
-  updateOwnerStickyTitle();
+  document.dispatchEvent(
+    new CustomEvent("kopihub:toolbar-update", {
+      detail: toolbarState
+    })
+  );
 }
 
 /* =========================================
@@ -3451,7 +3443,7 @@ function goBackPage() {
         case "menu":
           showMenuPanel(
             previousPanel,
-            false,
+            true,
             true
           );
           break;

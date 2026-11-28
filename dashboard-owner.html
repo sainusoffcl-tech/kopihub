@@ -7607,7 +7607,12 @@ const sourceLabel = getOrderSourceLabel(order);
 }
 
 
-/* BUKA DETAIL PESANAN OWNER */
+
+/* =========================================
+   BUKA DETAIL PESANAN OWNER
+   NAVIGASI GLOBAL
+========================================= */
+
 function openOwnerOrderDetail(orderId) {
   const order = allOrders.find(item =>
     String(item.id) === String(orderId)
@@ -7621,12 +7626,17 @@ function openOwnerOrderDetail(orderId) {
 
   ownerSelectedOrderId = order.id;
 
+  /* SIMPAN POSISI SCROLL */
   ownerOrderListScrollTop = appScroll
     ? appScroll.scrollTop
     : 0;
 
-  currentTransactionPanel = "owner-order-detail-panel";
+  /* SIMPAN PANEL ASAL HANYA SAAT PERTAMA DIBUKA */
+  if (currentTransactionPanel !== "owner-order-detail-panel") {
+    ownerPreviousTransactionPanel = currentTransactionPanel;
+  }
 
+  /* TUTUP PANEL TRANSAKSI LAIN */
   [
     "transaction-page-heading",
     "transaction-page-description",
@@ -7642,9 +7652,13 @@ function openOwnerOrderDetail(orderId) {
     }
   });
 
+  /* TAMPILKAN DETAIL */
   detailPanel.hidden = false;
 
+  currentTransactionPanel = "owner-order-detail-panel";
+
   updateGlobalBackButton();
+
   renderOwnerOrderDetail(order);
 
   if (appScroll) {
@@ -7656,21 +7670,37 @@ function openOwnerOrderDetail(orderId) {
 }
 
 
-/* TUTUP DETAIL PESANAN OWNER */
+/* =========================================
+   TUTUP DETAIL PESANAN OWNER
+   KEMBALI KE PANEL ASAL
+========================================= */
+
 function closeOwnerOrderDetail() {
   const detailPanel = $("owner-order-detail-panel");
 
   if (!detailPanel) return;
 
   detailPanel.hidden = true;
+
   ownerSelectedOrderId = null;
 
+  /* PULIHKAN PANEL YANG SEBELUMNYA DIBUKA */
+  const previousPanel =
+    ownerPreviousTransactionPanel ||
+    "transaction-history-panel";
+
+  currentTransactionPanel = previousPanel;
+
   showTransactionPanel(
-    "transaction-history-panel",
+    previousPanel,
     true,
     true
   );
 
+  /* PERBARUI TOMBOL KEMBALI */
+  updateGlobalBackButton();
+
+  /* PULIHKAN POSISI DAFTAR PESANAN */
   requestAnimationFrame(() => {
     if (appScroll) {
       appScroll.scrollTo({
@@ -7680,7 +7710,6 @@ function closeOwnerOrderDetail() {
     }
   });
 }
-
 
   async function loadOrders() {
   const shop = selectedShop();

@@ -8,7 +8,7 @@
 (() => {
   "use strict";
 
-  const HEADER_VERSION = "1.3.5";
+  const HEADER_VERSION = "1.4.0";
   const BASE_PATH = "/kopihub/";
 
   const SUPABASE_URL =
@@ -81,7 +81,7 @@
         {
           id: "account-settings",
           label: "Pengaturan Akun",
-          icon: "user-round-cog",
+          icon: "user-round-cog"
         },
         {
           id: "logout",
@@ -227,6 +227,54 @@
     ) {
       window.lucide.createIcons({ root: container });
     }
+  }
+
+  /* =====================================================
+     GLOBAL TOOLBAR — STATE DAN PEMBARUAN
+  ===================================================== */
+
+  function getToolbarState(role) {
+    const saved = window.KopiHubToolbarState;
+
+    if (saved && saved.role === role) {
+      return saved;
+    }
+
+    return {
+      role,
+      title: role === "owner" ? "Dashboard Owner" : "Dashboard",
+      canGoBack: false
+    };
+  }
+
+  function applyToolbarState(root, role, state = null) {
+    if (!root) return;
+
+    const toolbar = root.querySelector(
+      "[data-kh-global-toolbar]"
+    );
+
+    const backButton = root.querySelector(
+      "[data-kh-toolbar-back]"
+    );
+
+    const titleElement = root.querySelector(
+      "[data-kh-toolbar-title]"
+    );
+
+    if (!toolbar || !backButton || !titleElement) return;
+
+    const currentState = state || getToolbarState(role);
+
+    titleElement.textContent =
+      String(currentState.title || "Dashboard");
+
+    backButton.hidden = !currentState.canGoBack;
+
+    backButton.setAttribute(
+      "aria-label",
+      "Kembali"
+    );
   }
 
   /* =====================================================
@@ -599,7 +647,7 @@
   }
 
   /* =====================================================
-     EVENT MENU
+     EVENT MENU & GLOBAL TOOLBAR
   ===================================================== */
 
   function bindEvents(root, role) {
@@ -607,6 +655,10 @@
     const closeButton = root.querySelector("[data-kh-menu-close]");
     const overlay = root.querySelector("[data-kh-overlay]");
     const list = root.querySelector("[data-kh-menu-list]");
+
+    const toolbarBackButton = root.querySelector(
+      "[data-kh-toolbar-back]"
+    );
 
     openButton?.addEventListener("click", () => openMenu(root));
     closeButton?.addEventListener("click", () => closeMenu(root));
@@ -620,6 +672,32 @@
 
       sendNavigation(root, role, button.dataset.khAction);
     });
+
+    /* TOMBOL KEMBALI GLOBAL */
+
+    toolbarBackButton?.addEventListener("click", () => {
+      if (toolbarBackButton.hidden) return;
+
+      document.dispatchEvent(
+        new CustomEvent("kopihub:back", {
+          detail: { role }
+        })
+      );
+    });
+
+    /* PEMBARUAN JUDUL DAN STATUS TOOLBAR */
+
+    document.addEventListener("kopihub:toolbar-update", event => {
+      const state = event.detail || {};
+
+      if (state.role !== role) return;
+
+      window.KopiHubToolbarState = state;
+
+      applyToolbarState(root, role, state);
+    });
+
+    /* TUTUP MENU DENGAN TOMBOL ESCAPE */
 
     document.addEventListener("keydown", event => {
       if (
@@ -662,7 +740,9 @@
 
       placeholder.innerHTML = await response.text();
 
-      const root = placeholder.querySelector("[data-kh-header-root]");
+      const root = placeholder.querySelector(
+        "[data-kh-header-root]"
+      );
 
       if (!root) {
         throw new Error("Struktur Global Header tidak ditemukan.");
@@ -678,7 +758,19 @@
 
       refreshIcons(root);
 
+      /* TERAPKAN STATUS TOOLBAR YANG SUDAH TERSIMPAN */
+
+      applyToolbarState(root, role);
+
       placeholder.dataset.khHeaderLoaded = "true";
+
+      /* BERITAHU HALAMAN BAHWA HEADER SUDAH SIAP */
+
+      document.dispatchEvent(
+        new CustomEvent("kopihub:header-ready", {
+          detail: { role }
+        })
+      );
 
     } catch (error) {
       console.error("[KopiHub Header]", error);
@@ -726,33 +818,84 @@
   window.KopiHubHeader = {
     version: HEADER_VERSION,
 
+    /* MEMBUKA MENU */
+
     open() {
-      const root = document.querySelector("[data-kh-header-root]");
-      if (root) openMenu(root);
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
+
+      if (root) {
+        openMenu(root);
+      }
     },
 
+    /* MENUTUP MENU */
+
     close() {
-      const root = document.querySelector("[data-kh-header-root]");
-      if (root) closeMenu(root);
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
+
+      if (root) {
+        closeMenu(root);
+      }
     },
+
+    /* MENGATUR NAMA KEDAI OWNER */
 
     setShopName(name) {
       window.KopiHubOwnerShopName = String(name || "");
 
-      const root = document.querySelector("[data-kh-header-root]");
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
 
       if (root?.classList.contains("kh-header-owner-layout")) {
         setShopName(root, name);
       }
     },
 
+    /* MENGATUR LOGO KEDAI OWNER */
+
     setShopLogo(url) {
       window.KopiHubOwnerShopLogo = String(url || "");
 
-      const root = document.querySelector("[data-kh-header-root]");
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
 
       if (root?.classList.contains("kh-header-owner-layout")) {
         setShopLogo(root, url);
+      }
+    },
+
+    /* MENGATUR JUDUL DAN TOMBOL KEMBALI TOOLBAR */
+
+    setToolbar(title, canGoBack = false, role = null) {
+      const placeholder = document.querySelector(
+        "[data-kopihub-header]"
+      );
+
+      const targetRole =
+        role ||
+        placeholder?.dataset.role ||
+        "customer";
+
+      const state = {
+        role: targetRole,
+        title: String(title || "Dashboard"),
+        canGoBack: Boolean(canGoBack)
+      };
+
+      window.KopiHubToolbarState = state;
+
+      const root = document.querySelector(
+        "[data-kh-header-root]"
+      );
+
+      if (root) {
+        applyToolbarState(root, targetRole, state);
       }
     }
   };

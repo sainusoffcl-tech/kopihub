@@ -3508,11 +3508,19 @@ document.querySelectorAll("[data-page]").forEach(button => {
 });
 
 
+
 /* =========================================
-   TOMBOL PROFIL HEADER
+   TOMBOL PROFIL HEADER OWNER
+   MENGGUNAKAN EVENT DELEGATION
 ========================================= */
 
-$("header-profile-button")?.addEventListener("click", () => {
+document.addEventListener("click", event => {
+  const profileButton = event.target.closest(
+    "[data-kh-profile-open]"
+  );
+
+  if (!profileButton) return;
+
   if (!selectedShop()) return;
 
   if (currentPage !== "lainnya") {
@@ -3534,7 +3542,7 @@ $("header-profile-button")?.addEventListener("click", () => {
   }
 
   showIdentityTab("profile");
-});
+}, true);
 
 
 /* =========================================

@@ -3156,39 +3156,29 @@ function updateOwnerStickyTitle() {
   updateOwnerStickyTitle();
 }
 
-/* PINDAH HALAMAN UTAMA */
+
+/* =========================================
+   PINDAH HALAMAN UTAMA
+   MENGGUNAKAN NAVIGASI GLOBAL
+========================================= */
+
 function navigateToPage(pageName, options = {}) {
   if (!pages[pageName]) return;
 
   const previousPage = currentPage;
 
-  if (
-    pageName !== previousPage &&
-    options.fromBack !== true &&
-    options.replace !== true
-  ) {
-    pageHistory.push(previousPage);
-  }
-
-  if (options.replace === true) {
-    pageHistory = [];
-  }
-
-  /* MASUK KELOLA MENU */
-  if (
-    pageName === "menu" &&
-    previousPage !== "menu"
-  ) {
-    menuPanelHistory = [];
-
-    showMenuPanel(
-      "menu-home-panel",
-      false,
-      true
+  // Pindah halaman melalui pengelola navigasi global.
+  if (pageName !== previousPage) {
+    ownerNavigation.navigate(
+      "owner",
+      pageName,
+      {
+        replace: options.replace === true
+      }
     );
   }
 
-  /* TAMPILKAN HALAMAN TUJUAN */
+  // Tampilkan halaman tujuan.
   Object.entries(pages).forEach(([name, element]) => {
     if (element) {
       element.hidden = name !== pageName;
@@ -3197,45 +3187,65 @@ function navigateToPage(pageName, options = {}) {
 
   currentPage = pageName;
 
-  /* MASUK TRANSAKSI */
-  if (
-    pageName === "transaksi" &&
-    previousPage !== "transaksi"
-  ) {
-    transactionPanelHistory = [];
+  // Setel panel awal saat memasuki halaman baru.
+  if (pageName !== previousPage) {
+    switch (pageName) {
+      case "menu":
+        ownerNavigation.replacePanel(
+          "owner",
+          OWNER_PANEL_GROUPS.menu,
+          "menu-home-panel"
+        );
 
-    showTransactionPanel(
-      "transaction-home-panel",
-      true,
-      true
-    );
-  }
+        showMenuPanel(
+          "menu-home-panel",
+          false,
+          true
+        );
+        break;
 
-  /* MASUK LAPORAN */
-  if (
-    pageName === "laporan" &&
-    previousPage !== "laporan"
-  ) {
-    reportPanelHistory = [];
+      case "transaksi":
+        ownerNavigation.replacePanel(
+          "owner",
+          OWNER_PANEL_GROUPS.transaksi,
+          "transaction-home-panel"
+        );
 
-    showReportPanel(
-      "report-summary-panel",
-      true,
-      true
-    );
-  }
-  /* MASUK PENGATURAN KEDAI */
-  if (
-    pageName === "lainnya" &&
-    previousPage !== "lainnya"
-  ) {
-    settingsPanelHistory = [];
+        showTransactionPanel(
+          "transaction-home-panel",
+          true,
+          true
+        );
+        break;
 
-    showSettingsPanel(
-      "settings-home-panel",
-      true,
-      true
-    );
+      case "laporan":
+        ownerNavigation.replacePanel(
+          "owner",
+          OWNER_PANEL_GROUPS.laporan,
+          "report-summary-panel"
+        );
+
+        showReportPanel(
+          "report-summary-panel",
+          true,
+          true
+        );
+        break;
+
+      case "lainnya":
+        ownerNavigation.replacePanel(
+          "owner",
+          OWNER_PANEL_GROUPS.lainnya,
+          "settings-home-panel"
+        );
+
+        showSettingsPanel(
+          "settings-home-panel",
+          true,
+          true
+        );
+        break;
+    }
   }
 
   updateGlobalBackButton();
@@ -3247,7 +3257,7 @@ function navigateToPage(pageName, options = {}) {
     });
   }
 
-  /* PERBARUI LAPORAN */
+  // Perbarui laporan bila diperlukan.
   if (
     pageName === "laporan" &&
     currentReport === null &&
@@ -3258,10 +3268,13 @@ function navigateToPage(pageName, options = {}) {
 }
 
 
-/* TOMBOL KEMBALI GLOBAL */
+/* =========================================
+   TOMBOL KEMBALI GLOBAL
+========================================= */
+
 function goBackPage() {
 
-  /* PRIORITAS 1: DETAIL TRANSAKSI */
+  // PRIORITAS 1: TUTUP DETAIL PESANAN.
   const orderDetailPanel = $("owner-order-detail-panel");
 
   if (
@@ -3274,106 +3287,104 @@ function goBackPage() {
     return;
   }
 
-  /* PRIORITAS 2: PANEL TRANSAKSI */
-  if (
-    currentPage === "transaksi" &&
-    transactionPanelHistory.length > 0
-  ) {
-    const previousPanel = transactionPanelHistory.pop();
+  // PRIORITAS 2: KEMBALI DARI PANEL AKTIF.
+  const panelGroup = OWNER_PANEL_GROUPS[currentPage];
 
-    showTransactionPanel(
-      previousPanel,
-      true,
-      true
+  if (
+    panelGroup &&
+    ownerNavigation.canGoBackPanel(
+      "owner",
+      panelGroup
+    )
+  ) {
+    const previousPanel = ownerNavigation.backPanel(
+      "owner",
+      panelGroup
     );
 
-    updateGlobalBackButton();
-    return;
-  }
+    if (previousPanel) {
+      ownerSetCurrentPanel(
+        currentPage,
+        previousPanel
+      );
 
-  /* PRIORITAS 3: PANEL KELOLA MENU */
-  if (
-    currentPage === "menu" &&
-    menuPanelHistory.length > 0
-  ) {
-    const previousPanel = menuPanelHistory.pop();
+      switch (currentPage) {
+        case "menu":
+          showMenuPanel(
+            previousPanel,
+            false,
+            true
+          );
+          break;
 
-    showMenuPanel(
-      previousPanel,
-      false,
-      true
-    );
+        case "transaksi":
+          showTransactionPanel(
+            previousPanel,
+            true,
+            true
+          );
+          break;
 
-    updateGlobalBackButton();
-    return;
-  }
+        case "laporan":
+          showReportPanel(
+            previousPanel,
+            true,
+            true
+          );
+          break;
 
-  /* PRIORITAS 4: PANEL LAPORAN */
-  if (
-    currentPage === "laporan" &&
-    reportPanelHistory.length > 0
-  ) {
-    const previousPanel = reportPanelHistory.pop();
+        case "lainnya":
+          showSettingsPanel(
+            previousPanel,
+            true,
+            true
+          );
+          break;
+      }
 
-    showReportPanel(
-      previousPanel,
-      true,
-      true
-    );
-
-    updateGlobalBackButton();
-    return;
-  }
-
-  /* PRIORITAS 5: PANEL PENGATURAN */
-  if (
-    currentPage === "lainnya" &&
-    settingsPanelHistory.length > 0
-  ) {
-    const previousPanel = settingsPanelHistory.pop();
-
-    showSettingsPanel(
-      previousPanel,
-      true,
-      true
-    );
-
-    updateGlobalBackButton();
-    return;
-  }
-
-  /* PRIORITAS 6: HALAMAN SEBELUMNYA */
-  if (pageHistory.length === 0) {
-    navigateToPage("home", {
-      replace: true
-    });
-    return;
-  }
-
-  const previousPage = pageHistory.pop();
-
-  if (!pages[previousPage]) {
-    navigateToPage("home", {
-      replace: true
-    });
-    return;
-  }
-
-  Object.entries(pages).forEach(([name, element]) => {
-    if (element) {
-      element.hidden = name !== previousPage;
+      updateGlobalBackButton();
+      return;
     }
-  });
+  }
 
-  currentPage = previousPage;
-  updateGlobalBackButton();
+  // PRIORITAS 3: KEMBALI KE HALAMAN SEBELUMNYA.
+  if (
+    ownerNavigation.canGoBackPage("owner")
+  ) {
+    const previousPage = ownerNavigation.backPage(
+      "owner"
+    );
 
-  if (appScroll) {
-    appScroll.scrollTo({
-      top: 0,
-      behavior: "instant"
+    if (previousPage && pages[previousPage]) {
+      currentPage = previousPage;
+
+      Object.entries(pages).forEach(([name, element]) => {
+        if (element) {
+          element.hidden = name !== previousPage;
+        }
+      });
+
+      updateGlobalBackButton();
+
+      if (appScroll) {
+        appScroll.scrollTo({
+          top: 0,
+          behavior: "instant"
+        });
+      }
+
+      return;
+    }
+  }
+
+  // Jika tidak ada riwayat, kembali ke Dashboard Owner.
+  if (currentPage !== "home") {
+    navigateToPage("home", {
+      replace: true
     });
   }
+
+  updateGlobalBackButton();
 }
 
 /* =====================================================

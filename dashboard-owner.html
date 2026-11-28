@@ -1977,135 +1977,134 @@ a,
     </section>
 
     <!-- TRANSAKSI -->
-    <section class="page" id="page-transaksi" hidden>
-      <h1 class="page-heading" id="transaction-page-heading">Transaksi</h1>
-      <p class="page-description" id="transaction-page-description">
-        Pantau informasi dan riwayat transaksi kedai Anda.
+<section class="page" id="page-transaksi" hidden>
+  <h1 class="page-heading" id="transaction-page-heading">Transaksi</h1>
+  <p class="page-description" id="transaction-page-description">
+    Pantau informasi dan riwayat pesanan kedai Anda.
+  </p>
+
+  <div id="transaction-home-panel">
+    <section class="panel">
+      <h2>Transaksi Kedai</h2>
+      <p class="muted">
+        Pilih informasi pesanan, riwayat pesanan, atau akses Dashboard Kasir.
       </p>
 
-      <div id="transaction-home-panel">
-        <section class="panel">
-          <h2>Transaksi Kedai</h2>
-          <p class="muted">
-            Pilih informasi transaksi, riwayat pesanan, atau akses Dashboard Kasir.
-          </p>
+      <div class="kh-ui-nav-list">
+        <button class="kh-ui-nav-card" id="open-transaction-summary" type="button">
+          <span class="kh-ui-nav-icon">📊</span>
+          <span class="kh-ui-nav-content">
+            <span class="kh-ui-nav-title">Informasi Pesanan</span>
+            <span class="kh-ui-nav-description">
+              Ringkasan jumlah pesanan, pesanan lunas, dan belum dibayar
+            </span>
+          </span>
+          <span class="kh-ui-nav-arrow">›</span>
+        </button>
 
-          <div class="kh-ui-nav-list">
-            <button class="kh-ui-nav-card" id="open-transaction-summary" type="button">
-              <span class="kh-ui-nav-icon">📊</span>
-              <span class="kh-ui-nav-content">
-                <span class="kh-ui-nav-title">Informasi Transaksi</span>
-                <span class="kh-ui-nav-description">
-                  Ringkasan jumlah pesanan, transaksi lunas, dan belum dibayar
-                </span>
-              </span>
-              <span class="kh-ui-nav-arrow">›</span>
-            </button>
+        <button class="kh-ui-nav-card" id="open-transaction-history" type="button">
+          <span class="kh-ui-nav-icon">🧾</span>
+          <span class="kh-ui-nav-content">
+            <span class="kh-ui-nav-title">Riwayat Pesanan</span>
+            <span class="kh-ui-nav-description">
+              Lihat pesanan selesai dan rincian setiap pesanan
+            </span>
+          </span>
+          <span class="kh-ui-nav-arrow">›</span>
+        </button>
 
-            <button class="kh-ui-nav-card" id="open-transaction-history" type="button">
-              <span class="kh-ui-nav-icon">🧾</span>
-              <span class="kh-ui-nav-content">
-                <span class="kh-ui-nav-title">Riwayat Transaksi</span>
-                <span class="kh-ui-nav-description">
-                  Lihat seluruh pesanan dan rincian transaksi kedai
-                </span>
-              </span>
-              <span class="kh-ui-nav-arrow">›</span>
-            </button>
-
-            <button class="kh-ui-nav-card" id="open-transaction-cashier" type="button">
-              <span class="kh-ui-nav-icon">🧑‍💼</span>
-              <span class="kh-ui-nav-content">
-                <span class="kh-ui-nav-title">Dashboard Kasir</span>
-                <span class="kh-ui-nav-description">
-                  Kelola pesanan dan konfirmasi pembayaran
-                </span>
-              </span>
-              <span class="kh-ui-nav-arrow">›</span>
-            </button>
-          </div>
-        </section>
+        <button class="kh-ui-nav-card" id="open-transaction-cashier" type="button">
+          <span class="kh-ui-nav-icon">🧑‍💼</span>
+          <span class="kh-ui-nav-content">
+            <span class="kh-ui-nav-title">Dashboard Kasir</span>
+            <span class="kh-ui-nav-description">
+              Kelola pesanan dan konfirmasi pembayaran
+            </span>
+          </span>
+          <span class="kh-ui-nav-arrow">›</span>
+        </button>
       </div>
-
-      <section class="panel" id="transaction-summary-panel" hidden>
-        <h2>Informasi Transaksi</h2>
-        <p class="muted">
-          Ringkasan transaksi kedai pada hari ini.
-          Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
-        </p>
-
-        <div class="settings-item">
-          <div class="settings-icon">🧾</div>
-          <div class="settings-info">
-            <strong>Jumlah Pesanan Hari Ini</strong>
-            <span>Seluruh pesanan kedai</span>
-          </div>
-          <strong id="transaction-order-count">—</strong>
-        </div>
-
-        <div class="settings-item">
-          <div class="settings-icon">💳</div>
-          <div class="settings-info">
-            <strong>Transaksi Lunas</strong>
-            <span>Pesanan dengan pembayaran lunas</span>
-          </div>
-          <strong id="transaction-paid-count">—</strong>
-        </div>
-
-        <div class="settings-item">
-          <div class="settings-icon">⏳</div>
-          <div class="settings-info">
-            <strong>Belum Dibayar</strong>
-            <span>Pesanan menunggu pembayaran</span>
-          </div>
-          <strong id="transaction-unpaid-count">—</strong>
-        </div>
-      </section>
-
-      <section class="panel" id="transaction-history-panel" hidden>
-        <h2>Riwayat Transaksi</h2>
-        <p class="muted">
-          Seluruh transaksi sejak kedai bergabung sebagai mitra KopiHub.
-        </p>
-
-        <div class="transaction-filters">
-          <label for="transaction-start-date">Dari tanggal</label>
-          <input type="date" id="transaction-start-date">
-
-          <label for="transaction-end-date">Sampai tanggal</label>
-          <input type="date" id="transaction-end-date">
-
-          <button type="button" class="action-link" id="transaction-reset-filter">
-            Reset Tanggal
-          </button>
-        </div>
-
-        <p class="muted" id="transaction-result-count" aria-live="polite">
-          Memuat riwayat transaksi...
-        </p>
-
-        <div id="transaction-list">
-          <p class="muted">Memuat riwayat transaksi...</p>
-        </div>
-      </section>
-
-      <section class="panel" id="transaction-cashier-panel" hidden>
-        <h2>Dashboard Kasir</h2>
-        <p class="muted">
-          Gunakan Dashboard Kasir untuk menerima pesanan,
-          memproses pesanan, dan mengonfirmasi pembayaran pelanggan.
-        </p>
-        <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
-      </section>
-
-      <section class="panel owner-order-detail-panel" id="owner-order-detail-panel" hidden>
-        <div class="owner-order-detail-header">
-          <h2>Detail Pesanan</h2>
-        </div>
-        <div id="owner-order-detail-content"></div>
-      </section>
     </section>
+  </div>
 
+  <section class="panel" id="transaction-summary-panel" hidden>
+    <h2>Informasi Pesanan</h2>
+    <p class="muted">
+      Ringkasan pesanan kedai pada hari ini.
+      Pengelolaan pesanan dan konfirmasi pembayaran dilakukan melalui Dashboard Kasir.
+    </p>
+
+    <div class="settings-item">
+      <div class="settings-icon">🧾</div>
+      <div class="settings-info">
+        <strong>Jumlah Pesanan Hari Ini</strong>
+        <span>Seluruh pesanan kedai</span>
+      </div>
+      <strong id="transaction-order-count">—</strong>
+    </div>
+
+    <div class="settings-item">
+      <div class="settings-icon">💳</div>
+      <div class="settings-info">
+        <strong>Pesanan Lunas</strong>
+        <span>Pesanan dengan pembayaran lunas</span>
+      </div>
+      <strong id="transaction-paid-count">—</strong>
+    </div>
+
+    <div class="settings-item">
+      <div class="settings-icon">⏳</div>
+      <div class="settings-info">
+        <strong>Belum Dibayar</strong>
+        <span>Pesanan yang belum lunas</span>
+      </div>
+      <strong id="transaction-unpaid-count">—</strong>
+    </div>
+  </section>
+
+  <section class="panel" id="transaction-history-panel" hidden>
+    <h2>Riwayat Pesanan</h2>
+    <p class="muted">
+      Riwayat pesanan yang telah selesai sejak kedai bergabung sebagai mitra KopiHub.
+    </p>
+
+    <div class="transaction-filters">
+      <label for="transaction-start-date">Dari tanggal</label>
+      <input type="date" id="transaction-start-date">
+
+      <label for="transaction-end-date">Sampai tanggal</label>
+      <input type="date" id="transaction-end-date">
+
+      <button type="button" class="action-link" id="transaction-reset-filter">
+        Reset Tanggal
+      </button>
+    </div>
+
+    <p class="muted" id="transaction-result-count" aria-live="polite">
+      Memuat riwayat pesanan...
+    </p>
+
+    <div id="transaction-list">
+      <p class="muted">Memuat riwayat pesanan...</p>
+    </div>
+  </section>
+
+  <section class="panel" id="transaction-cashier-panel" hidden>
+    <h2>Dashboard Kasir</h2>
+    <p class="muted">
+      Gunakan Dashboard Kasir untuk menerima pesanan,
+      memproses pesanan, dan mengonfirmasi pembayaran pelanggan.
+    </p>
+    <a href="kasir.html" class="action-link primary">Buka Dashboard Kasir</a>
+  </section>
+
+  <section class="panel owner-order-detail-panel" id="owner-order-detail-panel" hidden>
+    <div class="owner-order-detail-header">
+      <h2>Detail Pesanan</h2>
+    </div>
+    <div id="owner-order-detail-content"></div>
+  </section>
+</section>
     
 <!-- LAPORAN -->
 <section class="page" id="page-laporan" hidden>
@@ -7114,10 +7113,6 @@ const visibleOrders = completedOrders
     new Date(b.created_at).getTime() -
     new Date(a.created_at).getTime()
   );
-    .sort((a, b) =>
-      new Date(b.created_at).getTime() -
-      new Date(a.created_at).getTime()
-    );
 
   container.replaceChildren();
 

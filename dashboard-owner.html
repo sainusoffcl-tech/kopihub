@@ -5827,9 +5827,11 @@ async function updateProductAvailability(
     );
   }
 }
-// =========================================
-// NAVIGASI PANEL KELOLA MENU
-// =========================================
+
+/* =========================================
+   NAVIGASI PANEL KELOLA MENU
+   TERINTEGRASI NAVIGASI GLOBAL
+========================================= */
 
 async function showMenuPanel(
   panelId,
@@ -5853,14 +5855,18 @@ async function showMenuPanel(
 
   const previousPanel = currentMenuPanel || "menu-home-panel";
 
-  // Simpan riwayat panel untuk tombol Kembali global.
+  /* RIWAYAT PANEL NAVIGASI GLOBAL */
   if (!fromBack && panelId !== previousPanel) {
-    menuPanelHistory.push(previousPanel);
+    ownerNavigation.navigatePanel(
+      "owner",
+      OWNER_PANEL_GROUPS.menu,
+      panelId
+    );
   }
 
   currentMenuPanel = panelId;
 
-  // Tampilkan panel yang dipilih.
+  /* TAMPILKAN PANEL */
   panels.forEach(id => {
     const panel = $(id);
 
@@ -5869,7 +5875,7 @@ async function showMenuPanel(
     }
   });
 
-  // Muat ulang data sesuai panel.
+  /* MUAT DATA */
   if (
     refreshData &&
     [
@@ -5883,19 +5889,19 @@ async function showMenuPanel(
     await refreshMenu();
   }
 
-  // Fokus ke nama produk saat membuka formulir.
+  /* FOKUS FORM PRODUK */
   if (panelId === "menu-form-panel") {
     $("menu-name")?.focus({
       preventScroll: true
     });
   }
 
-  // Perbarui tombol Kembali pada header global.
+  /* PERBARUI TOMBOL KEMBALI */
   if (typeof updateGlobalBackButton === "function") {
     updateGlobalBackButton();
   }
 
-  // Kembalikan tampilan ke bagian atas halaman.
+  /* SCROLL HALAMAN */
   const appScrollElement = $("app-scroll");
 
   if (appScrollElement) {
@@ -5907,13 +5913,16 @@ async function showMenuPanel(
 }
 
 
-// =========================================
-// HALAMAN UTAMA KELOLA MENU
-// =========================================
+/* =========================================
+   HALAMAN UTAMA KELOLA MENU
+========================================= */
 
 function showMenuHome() {
-  // Hapus riwayat panel turunan.
-  menuPanelHistory = [];
+  ownerNavigation.replacePanel(
+    "owner",
+    OWNER_PANEL_GROUPS.menu,
+    "menu-home-panel"
+  );
 
   showMenuPanel(
     "menu-home-panel",
@@ -5927,9 +5936,9 @@ function showMenuHome() {
 }
 
 
-// =========================================
-// TOMBOL TAMBAH PRODUK
-// =========================================
+/* =========================================
+   TOMBOL TAMBAH PRODUK
+========================================= */
 
 $("show-add-menu")?.addEventListener("click", () => {
   resetMenuForm();
@@ -5937,50 +5946,49 @@ $("show-add-menu")?.addEventListener("click", () => {
 });
 
 
-// =========================================
-// TOMBOL KATEGORI MENU
-// =========================================
+/* =========================================
+   TOMBOL KATEGORI MENU
+========================================= */
 
 $("open-menu-categories")?.addEventListener("click", () => {
   showMenuPanel("menu-category-panel");
 });
 
 
-// =========================================
-// TOMBOL DAFTAR PRODUK
-// =========================================
+/* =========================================
+   TOMBOL DAFTAR PRODUK
+========================================= */
 
 $("toggle-menu-list")?.addEventListener("click", () => {
   showMenuPanel("menu-list-panel");
 });
 
 
-// =========================================
-// TOMBOL QR MENU
-// =========================================
+/* =========================================
+   TOMBOL QR MENU
+========================================= */
 
 $("open-menu-qr")?.addEventListener("click", () => {
   showMenuPanel("menu-qr-panel");
 });
 
 
-// =========================================
-// TOMBOL STOK PRODUK
-// =========================================
+/* =========================================
+   TOMBOL STOK PRODUK
+========================================= */
 
 $("open-product-stock")?.addEventListener("click", () => {
   showMenuPanel("product-stock-panel");
 });
 
 
-// =========================================
-// TOMBOL KETERSEDIAAN MENU
-// =========================================
+/* =========================================
+   TOMBOL KETERSEDIAAN MENU
+========================================= */
 
 $("open-menu-availability")?.addEventListener("click", () => {
   showMenuPanel("menu-availability-panel");
 });
-
 
 // =========================================
 // PRATINJAU FOTO PRODUK

@@ -550,6 +550,7 @@ body.kh-header-menu-open {
 }
 
 
+
 /* =========================================================
    20. GLOBAL TOOLBAR — KOPIHUB VERSION 1
 
@@ -565,6 +566,7 @@ body.kh-header-menu-open {
    Posisi:
    - Tombol Kembali rata kiri.
    - Judul halaman dan submenu rata kanan.
+   - Toolbar berwarna putih.
    - Berlaku konsisten untuk seluruh halaman KopiHub.
 
    Toolbar menggunakan token dari design-system.css.
@@ -598,8 +600,8 @@ body.kh-header-menu-open {
     var(--kh-toolbar-radius-bottom-right)
     var(--kh-toolbar-radius-bottom-left);
 
-  color: var(--kh-toolbar-text);
-  background: var(--kh-toolbar-background);
+  color: #123B2C;
+  background: #FFFFFF;
 
   font-family: var(--kh-font-family);
   line-height: var(--kh-toolbar-line-height);
@@ -631,7 +633,7 @@ body.kh-header-menu-open {
   border: 0;
   border-radius: 0;
 
-  color: var(--kh-toolbar-text);
+  color: #123B2C;
   background: transparent;
 
   box-shadow: none;
@@ -650,6 +652,7 @@ body.kh-header-menu-open {
     opacity var(--kh-toolbar-transition),
     transform var(--kh-toolbar-transition);
 }
+
 
 /* SEMBUNYIKAN TOMBOL KEMBALI JIKA TIDAK DIPERLUKAN */
 
@@ -690,7 +693,7 @@ body.kh-header-menu-open {
 .kh-toolbar-back-label {
   display: inline-block;
 
-  color: var(--kh-toolbar-text);
+  color: #123B2C;
 
   font-size: var(--kh-toolbar-font-size);
   font-weight: var(--kh-toolbar-font-weight);
@@ -711,7 +714,7 @@ body.kh-header-menu-open {
 
   overflow: hidden;
 
-  color: var(--kh-toolbar-text);
+  color: #123B2C;
 
   font-size: var(--kh-toolbar-font-size);
   font-weight: var(--kh-toolbar-font-weight);
@@ -726,7 +729,7 @@ body.kh-header-menu-open {
 /* FOKUS AKSESIBILITAS TOOLBAR */
 
 .kh-toolbar-back:focus-visible {
-  outline: 2px solid #FFFFFF;
+  outline: 2px solid #123B2C;
   outline-offset: 4px;
 }
 

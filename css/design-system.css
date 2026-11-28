@@ -1,7 +1,7 @@
 
 /* =========================================================
    KOPIHUB — GLOBAL DESIGN SYSTEM
-   Versi: 1.4.0
+   Versi: 1.5.0
 
    SUMBER STANDAR VISUAL SELURUH PLATFORM KOPIHUB
 
@@ -257,6 +257,58 @@
 
   --kh-nav-card-gap: 13px;
   --kh-nav-list-gap: 10px;
+
+
+  /* =======================================================
+     8C. GLOBAL TOOLBAR — KOPIHUB VERSION 1
+
+     Digunakan sebagai standar toolbar global:
+     - Dashboard Admin
+     - Dashboard Owner
+     - Dashboard Kasir
+     - Menu Pelanggan
+     - Halaman terkait lainnya
+
+     DESAIN:
+     - Warna oranye KopiHub
+     - Posisi tepat di bawah header
+     - Sudut atas tetap 90 derajat
+     - Sudut bawah melengkung halus
+     - Tinggi ramping
+     - Tipografi ringkas dan konsisten
+     - Tanpa gradasi dan efek glass
+
+     Catatan:
+     Token ini belum menerapkan toolbar secara langsung.
+     Penerapan visual dilakukan melalui CSS Header.
+  ======================================================= */
+
+  /* WARNA */
+  --kh-toolbar-background: var(--kh-color-accent);
+  --kh-toolbar-text: #FFFFFF;
+
+  /* UKURAN */
+  --kh-toolbar-min-height: 44px;
+  --kh-toolbar-padding-x: 16px;
+  --kh-toolbar-padding-y: 8px;
+
+  /* TIPOGRAFI */
+  --kh-toolbar-font-size: 13px;
+  --kh-toolbar-font-weight: 500;
+  --kh-toolbar-line-height: 1.4;
+
+  /* SUDUT */
+  --kh-toolbar-radius-top-left: 0px;
+  --kh-toolbar-radius-top-right: 0px;
+  --kh-toolbar-radius-bottom-left: 14px;
+  --kh-toolbar-radius-bottom-right: 14px;
+
+  /* IKON */
+  --kh-toolbar-icon-size: 16px;
+  --kh-toolbar-icon-gap: 8px;
+
+  /* TRANSISI */
+  --kh-toolbar-transition: 0.2s ease;
 
 
   /* =======================================================
@@ -1221,7 +1273,7 @@ a {
 
 /* =========================================================
    SELESAI
-   KOPIHUB GLOBAL DESIGN SYSTEM v1.4.0
+   KOPIHUB GLOBAL DESIGN SYSTEM v1.5.0
 
    FILE INI BERTANGGUNG JAWAB ATAS:
    - Global design tokens
@@ -1230,12 +1282,14 @@ a {
    - Komponen KH-UI
    - Standar kartu navigasi global
    - Standar kartu ringkasan dashboard
+   - Token Global Toolbar KopiHub Versi 1
    - Responsivitas komponen global
    - Konsistensi kontrol formulir
 
    BUKAN TANGGUNG JAWAB FILE INI:
    - Global Header
    - Global Footer
+   - Penerapan visual toolbar
    - Tata letak khusus halaman
    - Fungsi JavaScript
    - Pengaturan data dan transaksi

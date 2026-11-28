@@ -2916,8 +2916,10 @@ const appScroll = $("app-scroll");
 const ownerHeader = $("owner-header");
 const headerBackButton = $("header-back-button");
 
+
 /* =========================================
    NAVIGASI HALAMAN UTAMA DAN PANEL TURUNAN
+   TERINTEGRASI DENGAN NAVIGASI GLOBAL
 ========================================= */
 
 const pages = {
@@ -2928,33 +2930,86 @@ const pages = {
   lainnya: $("page-lainnya")
 };
 
+// Pastikan pengelola navigasi global tersedia.
+const ownerNavigation = window.KopiHubNavigation;
+
+if (!ownerNavigation) {
+  throw new Error(
+    "KopiHubNavigation tidak ditemukan. Periksa js/navigation.js."
+  );
+}
+
+// Inisialisasi navigasi Owner.
+ownerNavigation.init("owner", "home");
+
+// Halaman aktif.
 let currentPage = "home";
-let pageHistory = [];
 
-/* RIWAYAT PANEL KELOLA MENU */
+// Panel aktif setiap halaman.
 let currentMenuPanel = "menu-home-panel";
-let menuPanelHistory = [];
-
-  /* RIWAYAT PANEL TRANSAKSI */
 let currentTransactionPanel = "transaction-home-panel";
-let transactionPanelHistory = [];
-
-  /* RIWAYAT PANEL LAPORAN */
-let currentReportPanel = "report-home-panel";
-let reportPanelHistory = [];
-
-/* RIWAYAT PANEL PENGATURAN */
+let currentReportPanel = "report-summary-panel";
 let currentSettingsPanel = "settings-home-panel";
-let settingsPanelHistory = [];
-  
-  const pageTitles = {
+
+// Panel transaksi sebelum detail pesanan dibuka.
+let ownerPreviousTransactionPanel = "transaction-history-panel";
+
+// Grup panel pada navigasi global.
+const OWNER_PANEL_GROUPS = {
+  menu: "menu",
+  transaksi: "transaksi",
+  laporan: "laporan",
+  lainnya: "pengaturan"
+};
+
+// Mengambil panel aktif berdasarkan halaman.
+function ownerGetCurrentPanel(page = currentPage) {
+  switch (page) {
+    case "menu":
+      return currentMenuPanel;
+
+    case "transaksi":
+      return currentTransactionPanel;
+
+    case "laporan":
+      return currentReportPanel;
+
+    case "lainnya":
+      return currentSettingsPanel;
+
+    default:
+      return null;
+  }
+}
+
+// Memperbarui panel aktif berdasarkan halaman.
+function ownerSetCurrentPanel(page, panelId) {
+  switch (page) {
+    case "menu":
+      currentMenuPanel = panelId;
+      break;
+
+    case "transaksi":
+      currentTransactionPanel = panelId;
+      break;
+
+    case "laporan":
+      currentReportPanel = panelId;
+      break;
+
+    case "lainnya":
+      currentSettingsPanel = panelId;
+      break;
+  }
+}
+
+const pageTitles = {
   home: "Dashboard Owner",
   menu: "Kelola Menu",
   transaksi: "Transaksi",
   laporan: "Laporan Penjualan",
   lainnya: "Pengaturan Kedai"
 };
-
 
 /* =========================================
    JUDUL DINAMIS TOOLBAR OWNER

@@ -3099,11 +3099,12 @@ function updateOwnerStickyTitle() {
 
    - Menjaga navigasi halaman dan panel tetap konsisten
 
+
+/* =========================================
+   UPDATE TOMBOL KEMBALI GLOBAL OWNER
 ========================================= */
 
-  function updateGlobalBackButton() {
-  const hasPageHistory = pageHistory.length > 0;
-
+function updateGlobalBackButton() {
   const orderDetailPanel = $("owner-order-detail-panel");
 
   const hasOrderDetail =
@@ -3111,29 +3112,22 @@ function updateOwnerStickyTitle() {
     orderDetailPanel &&
     !orderDetailPanel.hidden;
 
-  const hasMenuPanelHistory =
-    currentPage === "menu" &&
-    menuPanelHistory.length > 0;
+  const panelGroup = OWNER_PANEL_GROUPS[currentPage];
 
-  const hasTransactionPanelHistory =
-    currentPage === "transaksi" &&
-    transactionPanelHistory.length > 0;
+  const hasPanelHistory =
+    Boolean(panelGroup) &&
+    ownerNavigation.canGoBackPanel(
+      "owner",
+      panelGroup
+    );
 
-  const hasReportPanelHistory =
-    currentPage === "laporan" &&
-    reportPanelHistory.length > 0;
-
-  const hasSettingsPanelHistory =
-    currentPage === "lainnya" &&
-    settingsPanelHistory.length > 0;
+  const hasPageHistory =
+    ownerNavigation.canGoBackPage("owner");
 
   const hasHistory =
-    hasPageHistory ||
     hasOrderDetail ||
-    hasMenuPanelHistory ||
-    hasTransactionPanelHistory ||
-    hasReportPanelHistory ||
-    hasSettingsPanelHistory;
+    hasPanelHistory ||
+    hasPageHistory;
 
   /* TOMBOL KEMBALI TOOLBAR */
   if (headerBackButton) {
@@ -3155,7 +3149,6 @@ function updateOwnerStickyTitle() {
   /* PERBARUI JUDUL HALAMAN */
   updateOwnerStickyTitle();
 }
-
 
 /* =========================================
    PINDAH HALAMAN UTAMA

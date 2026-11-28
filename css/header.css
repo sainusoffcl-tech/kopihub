@@ -594,11 +594,7 @@ body.kh-header-menu-open {
       env(safe-area-inset-left, 0px)
     );
 
-  border-radius:
-    var(--kh-toolbar-radius-top-left)
-    var(--kh-toolbar-radius-top-right)
-    var(--kh-toolbar-radius-bottom-right)
-    var(--kh-toolbar-radius-bottom-left);
+  border-radius:0;
 
   color: #123B2C;
   background: #FFFFFF;

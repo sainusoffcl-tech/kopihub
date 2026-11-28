@@ -7096,16 +7096,24 @@ function renderOwnerOrderList() {
   const startDate = $("transaction-start-date").value;
   const endDate = $("transaction-end-date").value;
 
-  const visibleOrders = allOrders
-    .filter(order => {
-      const dateKey = getDateKey(order.created_at, formatter);
+  const completedOrders = allOrders.filter(order =>
+  String(order.order_status || "").trim().toLowerCase() === "completed"
+);
 
-      if (!dateKey) return false;
-      if (startDate && dateKey < startDate) return false;
-      if (endDate && dateKey > endDate) return false;
+const visibleOrders = completedOrders
+  .filter(order => {
+    const dateKey = getDateKey(order.created_at, formatter);
 
-      return true;
-    })
+    if (!dateKey) return false;
+    if (startDate && dateKey < startDate) return false;
+    if (endDate && dateKey > endDate) return false;
+
+    return true;
+  })
+  .sort((a, b) =>
+    new Date(b.created_at).getTime() -
+    new Date(a.created_at).getTime()
+  );
     .sort((a, b) =>
       new Date(b.created_at).getTime() -
       new Date(a.created_at).getTime()
@@ -7114,19 +7122,19 @@ function renderOwnerOrderList() {
   container.replaceChildren();
 
   resultCount.textContent =
-    visibleOrders.length + " dari " +
-    allOrders.length + " pesanan";
+  visibleOrders.length + " dari " +
+  completedOrders.length + " pesanan selesai";
 
-  if (!visibleOrders.length) {
-    const empty = document.createElement("div");
-    empty.className = "owner-order-empty";
-    empty.textContent = allOrders.length
-      ? "Tidak ada pesanan pada rentang tanggal tersebut."
-      : "Belum ada pesanan.";
+if (!visibleOrders.length) {
+  const empty = document.createElement("div");
+  empty.className = "owner-order-empty";
+  empty.textContent = completedOrders.length
+    ? "Tidak ada pesanan selesai pada rentang tanggal tersebut."
+    : "Belum ada pesanan yang selesai.";
 
-    container.appendChild(empty);
-    return;
-  }
+  container.appendChild(empty);
+  return;
+}
 
   const list = document.createElement("div");
   list.className = "owner-order-list";

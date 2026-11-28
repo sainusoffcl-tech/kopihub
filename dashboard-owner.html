@@ -10093,7 +10093,19 @@ $("owner-change-password-form")?.addEventListener(
   }
 );
 
+/* =========================================
+   LOGOUT DARI PENGATURAN AKUN OWNER
+========================================= */
 
+$("owner-account-logout")?.addEventListener("click", () => {
+  document.dispatchEvent(
+    new CustomEvent("kopihub:logout", {
+      detail: {
+        role: "owner"
+      }
+    })
+  );
+});
 /* LOGOUT OWNER */
 
 const logoutButton = $("logout");

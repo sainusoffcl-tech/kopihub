@@ -3380,9 +3380,11 @@ function goBackPage() {
   updateGlobalBackButton();
 }
 
+
 /* =====================================================
    NAVIGASI PANEL TRANSAKSI OWNER
-   ===================================================== */
+   TERINTEGRASI NAVIGASI GLOBAL
+===================================================== */
 
 function showTransactionPanel(
   panelId,
@@ -3408,8 +3410,16 @@ function showTransactionPanel(
   const previousPanel =
     currentTransactionPanel || "transaction-home-panel";
 
-  if (!fromBack && panelId !== previousPanel) {
-    transactionPanelHistory.push(previousPanel);
+  if (
+    panelId !== "owner-order-detail-panel" &&
+    !fromBack &&
+    panelId !== previousPanel
+  ) {
+    ownerNavigation.navigatePanel(
+      "owner",
+      OWNER_PANEL_GROUPS.transaksi,
+      panelId
+    );
   }
 
   currentTransactionPanel = panelId;
@@ -3469,7 +3479,11 @@ $("open-transaction-cashier")?.addEventListener(
     showTransactionPanel("transaction-cashier-panel");
   }
 );
-  /* AKTIFKAN TOMBOL KEMBALI HEADER */
+
+
+/* =========================================
+   TOMBOL KEMBALI HEADER GLOBAL
+========================================= */
 
 if (headerBackButton) {
   headerBackButton.addEventListener(
@@ -3492,20 +3506,38 @@ document.querySelectorAll("[data-page]").forEach(button => {
     }
   });
 });
-  /* TOMBOL PROFIL HEADER */
+
+
+/* =========================================
+   TOMBOL PROFIL HEADER
+========================================= */
 
 $("header-profile-button")?.addEventListener("click", () => {
   if (!selectedShop()) return;
 
   if (currentPage !== "lainnya") {
     navigateToPage("lainnya");
+
+    ownerNavigation.replacePanel(
+      "owner",
+      OWNER_PANEL_GROUPS.lainnya,
+      "profil-kedai"
+    );
+
+    showSettingsPanel(
+      "profil-kedai",
+      true,
+      true
+    );
+  } else {
+    showSettingsPanel("profil-kedai");
   }
 
-  showSettingsPanel("profil-kedai");
   showIdentityTab("profile");
 });
 
-  /* =========================================
+
+/* =========================================
    HEADER TETAP
    TIDAK ADA COLLAPSE SAAT SCROLL
 ========================================= */
@@ -3515,8 +3547,10 @@ $("header-profile-button")?.addEventListener("click", () => {
   Tidak ada listener scroll untuk mengecilkan header.
 */
 
-  /* =========================================
+
+/* =========================================
    NAVIGASI PANEL LAPORAN PENJUALAN
+   TERINTEGRASI NAVIGASI GLOBAL
 ========================================= */
 
 function showReportPanel(
@@ -3540,7 +3574,11 @@ function showReportPanel(
     currentReportPanel || "report-summary-panel";
 
   if (!fromBack && panelId !== previousPanel) {
-    reportPanelHistory.push(previousPanel);
+    ownerNavigation.navigatePanel(
+      "owner",
+      OWNER_PANEL_GROUPS.laporan,
+      panelId
+    );
   }
 
   currentReportPanel = panelId;
@@ -3587,8 +3625,11 @@ function showReportPanel(
     });
   }
 }
-/* TOMBOL PILIHAN LAPORAN */
 
+
+/* =========================================
+   TOMBOL PILIHAN LAPORAN
+========================================= */
 
 $("open-report-products")?.addEventListener("click", () => {
   showReportPanel("report-products-panel");
@@ -3605,6 +3646,7 @@ $("open-report-download")?.addEventListener("click", () => {
 
 /* =========================================
    NAVIGASI PANEL PENGATURAN KEDAI
+   TERINTEGRASI NAVIGASI GLOBAL
 ========================================= */
 
 function showSettingsPanel(
@@ -3632,7 +3674,11 @@ function showSettingsPanel(
     currentSettingsPanel || "settings-home-panel";
 
   if (!fromBack && panelId !== previousPanel) {
-    settingsPanelHistory.push(previousPanel);
+    ownerNavigation.navigatePanel(
+      "owner",
+      OWNER_PANEL_GROUPS.lainnya,
+      panelId
+    );
   }
 
   currentSettingsPanel = panelId;
